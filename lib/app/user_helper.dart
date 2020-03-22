@@ -1,0 +1,150 @@
+import 'dart:convert';
+
+import 'package:flutter_dmzj/app/api.dart';
+import 'package:flutter_dmzj/app/config_helper.dart';
+import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/models/user/user_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+
+class UserHelper {
+  static Future<bool> comicSubscribe(int comic_id,
+      {bool cancel = false}) async {
+    try {
+      if (!ConfigHelper.getUserIsLogined() ?? false) {
+        Fluttertoast.showToast(msg: '没有登录');
+        return false;
+      }
+     var uid =ConfigHelper.getUserInfo()?.uid??"";
+      var result = "";
+      if (cancel) {
+        var response = await http.get(Api.cancelComicSubscribe(comic_id, uid));
+        result = response.body;
+      } else {
+        var response = await http.post(Api.addComicSubscribe,
+            body: {"obj_ids": comic_id.toString(), "uid": uid, "type": "mh"});
+        result = response.body;
+      }
+      var jsonMap = jsonDecode(result);
+      if (jsonMap["code"] == 0) {
+        Fluttertoast.showToast(msg: cancel ? "已取消订阅" : "订阅成功");
+        return true;
+      } else {
+        Fluttertoast.showToast(msg: cancel ? "取消订阅失败" : "订阅失败");
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(msg: cancel ? "取消订阅出现错误" : "订阅出现错误");
+      return false;
+    }
+  }
+   static Future<bool> novelSubscribe(int novel_id,
+      {bool cancel = false}) async {
+    try {
+      if (!ConfigHelper.getUserIsLogined() ?? false) {
+        Fluttertoast.showToast(msg: '没有登录');
+        return false;
+      }
+     var uid =ConfigHelper.getUserInfo()?.uid??"";
+      var result = "";
+      if (cancel) {
+        var response = await http.get(Api.cancelNovelSubscribe(novel_id, uid));
+        result = response.body;
+      } else {
+        var response = await http.post(Api.addNovelSubscribe,
+            body: {"obj_ids": novel_id.toString(), "uid": uid, "type": "xs"});
+        result = response.body;
+      }
+      var jsonMap = jsonDecode(result);
+      if (jsonMap["code"] == 0) {
+        Fluttertoast.showToast(msg: cancel ? "已取消订阅" : "订阅成功");
+        return true;
+      } else {
+        Fluttertoast.showToast(msg: cancel ? "取消订阅失败" : "订阅失败");
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(msg: cancel ? "取消订阅出现错误" : "订阅出现错误");
+      return false;
+    }
+  }
+
+  static Future<bool> comicAddViewPoint( int comic_id, int chapter_id, String content,
+      {int page = 0}) async {
+    try {
+      if (!ConfigHelper.getUserIsLogined() ?? false) {
+        Fluttertoast.showToast(msg: '没有登录');
+        return false;
+      }
+     var uid =ConfigHelper.getUserInfo()?.uid??"";
+      var response = await http.post(Api.comicAddViewPoint(), body: {
+        "uid": uid.toString(),
+        "sub_type": comic_id.toString(),
+        "page": page.toString(),
+        "type": "0",
+        "content": content,
+        "third_type": chapter_id.toString(),
+      });
+      var jsonMap = jsonDecode(response.body);
+
+      if (jsonMap["code"] == 0) {
+        Fluttertoast.showToast(msg: "发表成功");
+        return true;
+      } else {
+        Fluttertoast.showToast(msg: "发表失败");
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(msg: "发表出现错误");
+      return false;
+    }
+  }
+
+  static Future<bool> comicLikeViewPoint( int id) async {
+    try {
+      // if (!ConfigHelper.getUserIsLogined() ?? false) {
+      //   Fluttertoast.showToast(msg: '没有登录');
+      //   return false;
+      // }
+
+      var response = await http.post(Api.comicLikeViewPoint(),
+          body: {"sub_type": "100", "vote_id": id.toString()});
+      var jsonMap = jsonDecode(response.body);
+
+      if (jsonMap["code"] == 0) {
+        Fluttertoast.showToast(msg: "点赞成功");
+        return true;
+      } else {
+        Fluttertoast.showToast(msg: "点赞失败");
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(msg: "点赞出现错误");
+      return false;
+    }
+  }
+
+ 
+  static Future<bool> comicAddComicHistory(int comic_id,int chapter_id,{int page = 1}) async {
+    try {
+      if (!ConfigHelper.getUserIsLogined() ?? false) {
+        return false;
+      }
+      var uid = ConfigHelper.getUserInfo()?.uid??"";
+      var response = await http.get(Api.addUserComicHistory(comic_id,chapter_id,uid,page:page));
+      var jsonMap = jsonDecode(response.body);
+      if (jsonMap["code"] == 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+}
