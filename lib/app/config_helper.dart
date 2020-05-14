@@ -57,6 +57,14 @@ class ConfigHelper{
     prefs.setString("userProfile", jsonEncode(value));
   }
 
+  /// 漫画阅读使用网页API
+  static bool getComicWebApi(){
+    return prefs.getBool("ComicWebAPI") ?? true;
+  }
+  static void setComicWebApi(bool value){
+    prefs.setBool("ComicWebAPI", value);
+  }
+  
 
   /// 漫画阅读记录
   static int getComicHistory(int comic_id){
@@ -99,7 +107,7 @@ class ConfigHelper{
   }
   /// 漫画阅读显示状态栏
   static bool getComicShowStatusBar(){
-    return prefs.getBool("ComicShowStatusBar") ?? false;
+    return prefs.getBool("ComicShowStatusBar") ?? true;
   }
   static void setComicShowStatusBar(bool value){
     prefs.setBool("ComicShowStatusBar", value);
@@ -113,7 +121,7 @@ class ConfigHelper{
   }
   /// 漫画阅读使用系统亮度
   static bool getComicSystemBrightness(){
-    return prefs.getBool("ComicSystemBrightness") ?? false;
+    return prefs.getBool("ComicSystemBrightness") ?? true;
   }
   static void setComicSystemBrightness(bool value){
     prefs.setBool("ComicSystemBrightness", value);

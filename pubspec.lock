@@ -240,6 +240,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.0.4"
+  package_info:
+    dependency: "direct main"
+    description:
+      name: package_info
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.4.0+16"
   path:
     dependency: transitive
     description:

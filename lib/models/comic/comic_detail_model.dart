@@ -249,6 +249,12 @@ class ComicDetailChapter {
   List<ComicDetailChapterItem> _data;
   List<ComicDetailChapterItem> get data => _data;
 
+  bool _desc=true;
+  bool get desc => _desc;
+  set desc(bool value){
+    _desc=value;
+  }
+
   ComicDetailChapter({
     String title,
     List<ComicDetailChapterItem> data,

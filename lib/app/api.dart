@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:crypto/crypto.dart';
+import 'package:convert/convert.dart';
 
 class Api {
   static final String apiHost = "https://v3api.dmzj.com";
@@ -12,6 +14,27 @@ class Api {
       "$apiHost/v3/article/recommend/header.json?${defaultParameter()}";
   static String newsList(int id, {int page = 0}) {
     return "$apiHost/v3/article/list/$id/${id == 0 ? 2 : 3}/$page.json";
+  }
+  /// 新闻数据
+  static String newsStat(int id) {
+    return "$apiHost/v3/article/total/$id.json?${defaultParameter()}";
+  }
+  /// 检查新闻收藏
+  static String checkNewsSub() {
+    return "https://interface.dmzj.com/api/news/subscribe/check";
+  }
+  /// 点赞新闻
+  static String addNewsLike(int id) {
+     return "$apiHost/article/mood/$id?${defaultParameter()}";
+  }
+
+  /// 添加新闻收藏
+  static String addNewsSub() {
+    return "https://interface.dmzj.com/api/news/subscribe/add";
+  }
+  /// 取消新闻收藏
+  static String cancelNewsSub() {
+    return "https://interface.dmzj.com/api/news/subscribe/del";
   }
 
   //用户相关
@@ -229,8 +252,21 @@ class Api {
     var json= Uri.encodeComponent(jsonEncode(map));
     return "https://interface.dmzj.com/api/record/getRe?st=comic&uid=$uid&callback=record_jsonpCallback&json=[$json]&type=3";
   }
+  /// 上传小说观看记录
+  static String addUserNovelHistory(int novel_id,int volume_id,int chapter_id,String uid,{int page = 1}) {
+    Map map={
+      novel_id.toString():chapter_id.toString(),
+      "lnovel_id":novel_id.toString(),
+      "volume_id":volume_id.toString(),
+      "chapterId":chapter_id.toString(),
+      "total_num":0,
+      "page":page,
+      "time":timeStamp
+    };
+    var json= Uri.encodeComponent(jsonEncode(map));
+    return "https://interface.dmzj.com/api/record/getRe?st=novel&uid=$uid&callback=record_jsonpCallback&json=[$json]&type=3";
+  }
 
-  
 
   /// 评论
   static String commentV2(int id, int type,
@@ -238,10 +274,26 @@ class Api {
     return "https://interface.dmzj.com/api/NewComment2/list?type=$type&obj_id=$id&hot=${ishot ? 1 : 0}&page_index=$page&_=${DateTime.now().millisecondsSinceEpoch}";
   }
 
+  /// 添加评论
+  static String addCommentV3(int type) {
+    return "http://v3comment.dmzj.com/v1/$type/add/app";
+  }
+  /// 检查是否可以评论
+  static String checkCommentV3(String uid) {
+    return "http://v3api.dmzj.com/comment2/gagcheckv2/$uid.json?${defaultParameter()}";
+  }
+
+   /// 点赞评论
+  static String likeCommentV3(int obj_id,String comment_id,int type) {
+    return "http://v3comment.dmzj.com/v1/$type/like/$comment_id?obj_id=$obj_id&comment_id=$comment_id&${defaultParameter()}";
+  }
+
   /// 评论数量
   static String commentCountV2(int id, int type) {
     return "https://interface.dmzj.com/api/NewComment2/total?type=$type&obj_id=$id&countType=1&authorId=&_=${DateTime.now().millisecondsSinceEpoch}";
   }
+
+
   ///  用户评论
   /// [type] 0=漫画，1=轻小说，2=新闻
   static String userComment(int uid,{int page = 1, int type=0}) {
@@ -269,4 +321,10 @@ class Api {
   static String defaultParameter() {
     return "channel=${Platform.operatingSystem}&version$version&timestamp=$timeStamp";
   }
+
+  static String sign(String content,String mode){
+     var _content = new Utf8Encoder().convert(mode+content);
+    return  hex.encode(md5.convert(_content).bytes);
+  }
+
 }

@@ -82,43 +82,43 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () => _doLogin(userName, passwrod)
               ),
             ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: IconButton(
-                    iconSize: 36.0,
-                    color: Colors.grey,
-                    icon: ImageIcon(
-                      AssetImage("assets/qq.png"),
-                    ),
-                    onPressed: () => Fluttertoast.showToast(
-                        msg: "暂未支持", toastLength: Toast.LENGTH_SHORT),
-                  ),
-                ),
-                Expanded(
-                  child: IconButton(
-                    iconSize: 36.0,
-                    color: Colors.grey,
-                    icon: ImageIcon(
-                      AssetImage("assets/weibo.png"),
-                    ),
-                    onPressed: () => Fluttertoast.showToast(
-                        msg: "暂未支持", toastLength: Toast.LENGTH_SHORT),
-                  ),
-                ),
-                Expanded(
-                  child: IconButton(
-                    iconSize: 36.0,
-                    color: Colors.grey,
-                    icon: ImageIcon(
-                      AssetImage("assets/weixin.png"),
-                    ),
-                    onPressed: () => Fluttertoast.showToast(
-                        msg: "暂未支持", toastLength: Toast.LENGTH_SHORT),
-                  ),
-                )
-              ],
-            )
+            // Row(
+            //   children: <Widget>[
+            //     Expanded(
+            //       child: IconButton(
+            //         iconSize: 36.0,
+            //         color: Colors.grey,
+            //         icon: ImageIcon(
+            //           AssetImage("assets/qq.png"),
+            //         ),
+            //         onPressed: () => Fluttertoast.showToast(
+            //             msg: "暂未支持", toastLength: Toast.LENGTH_SHORT),
+            //       ),
+            //     ),
+            //     Expanded(
+            //       child: IconButton(
+            //         iconSize: 36.0,
+            //         color: Colors.grey,
+            //         icon: ImageIcon(
+            //           AssetImage("assets/weibo.png"),
+            //         ),
+            //         onPressed: () => Fluttertoast.showToast(
+            //             msg: "暂未支持", toastLength: Toast.LENGTH_SHORT),
+            //       ),
+            //     ),
+            //     Expanded(
+            //       child: IconButton(
+            //         iconSize: 36.0,
+            //         color: Colors.grey,
+            //         icon: ImageIcon(
+            //           AssetImage("assets/weixin.png"),
+            //         ),
+            //         onPressed: () => Fluttertoast.showToast(
+            //             msg: "暂未支持", toastLength: Toast.LENGTH_SHORT),
+            //       ),
+            //     )
+            //   ],
+            // )
           ],
         ),
       ),

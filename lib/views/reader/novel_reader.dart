@@ -17,6 +17,8 @@ import 'package:flutter_dmzj/app/user_info.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/novel/novel_volume_item.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_easyrefresh/material_footer.dart';
+import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart' as http;
@@ -43,8 +45,10 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
   NovelVolumeChapterItem _current_item;
    Battery _battery = Battery();
   Uint8List _contents;
+
   double _ver_slider_max = 0;
   double _ver_slider_value = 0;
+
   double _fontSize = 16.0;
   double _lineHeight = 1.5;
   String _battery_str = "-%";
@@ -74,13 +78,28 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
     // _controller.addListener((){
     //   print(_controller.offset);
     // });
+     _controller_ver.addListener(() {
+      var value = _controller_ver.offset;
+      if (value < 0) {
+        value = 0;
+      }
+      if (value > _controller_ver.position.maxScrollExtent) {
+        value = _controller_ver.position.maxScrollExtent;
+      }
+      setState(() {
+        _ver_slider_max = _controller_ver.position.maxScrollExtent;
+        _ver_slider_value = value;
+      });
+    });
+
     loadData();
   }
 
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-
+     UserHelper.comicAddNovelHistory(
+          widget.novel_id, _current_item.volume_id,_current_item.chapter_id);
     super.dispose();
   }
 
@@ -94,6 +113,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
   bool _show_controls = false;
   bool _show_chapters = false;
   PageController _controller = PageController(initialPage: 1);
+  ScrollController _controller_ver=ScrollController();
   int _index_page = 1;
   bool _isPicture = false;
 
@@ -106,6 +126,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
         children: <Widget>[
           InkWell(
             hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
             onTap: () {
               setState(() {
                 if (_show_chapters) {
@@ -115,11 +137,9 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                 _show_controls = !_show_controls;
               });
             },
-            child: PageView.builder(
+            child: Provider.of<AppSetting>(context).novel_read_direction!=2? PageView.builder(
               scrollDirection:
-                  Provider.of<AppSetting>(context).novel_read_direction == 2
-                      ? Axis.vertical
-                      : Axis.horizontal,
+                 Axis.horizontal,
               pageSnapping:
                   Provider.of<AppSetting>(context).novel_read_direction != 2,
               controller: _controller,
@@ -205,18 +225,99 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                       );
                 return _widget;
               },
-            ),
+            ):EasyRefresh(
+              onRefresh: () async{
+                previousChapter();
+              },
+              onLoad: ()async{
+                nextChapter();
+              },
+              header: MaterialHeader(),
+              footer: MaterialFooter(displacement: 80),
+              child: SingleChildScrollView(
+              controller: _controller_ver,
+              child: _isPicture?
+              Column(
+                children: _page_contents.map((f)=>InkWell(
+                          onDoubleTap: () {
+                            Utils.showImageViewDialog(
+                                context,
+                               f);
+                          },
+                          onTap: () {
+                            setState(() {
+                              if (_show_chapters) {
+                                _show_chapters = false;
+                                return;
+                              }
+                              _show_controls = !_show_controls;
+                            });
+                          },
+                          child: Utils.createCacheImage(
+                              f, 100, 100),
+                        )).toList(),
+              ):
+              Container(
+                alignment: Alignment.topCenter,
+                 constraints: BoxConstraints(
+                   minHeight: MediaQuery.of(context).size.height,
+                 ),
+                 color: AppSetting.bgColors[
+                            Provider.of<AppSetting>(context).novel_read_theme],
+                        padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
+                child: Text(_page_contents.join(), style: TextStyle(
+                              fontSize: _fontSize,
+                              height: _lineHeight,
+                              color: AppSetting.fontColors[
+                                  Provider.of<AppSetting>(context)
+                                      .novel_read_theme])),
+              ),
+            ),),
           ),
+           Provider.of<AppSetting>(context).novel_read_direction==2
+              ? Positioned(child: Container())
+              : Positioned(
+                  left: 0,
+                  width: 40,
+                  height: MediaQuery.of(context).size.height,
+                  child: InkWell(
+                    onTap: () {
+                      if(Provider.of<AppSetting>(context,listen: false).novel_read_direction==1){
+                        previousPage();
+                      }else{
+                        nextPage();
+                      }
+                    },
+                    child: Container(),
+                  ),
+                ),
+          Provider.of<AppSetting>(context).novel_read_direction==2
+              ? Positioned(child: Container())
+              : Positioned(
+                  right: 0,
+                  width: 40,
+                  height: MediaQuery.of(context).size.height,
+                  child: InkWell(
+                    onTap: () {
+                       if(Provider.of<AppSetting>(context,listen: false).novel_read_direction==1){
+                        nextPage();
+                      }else{
+                        previousPage();
+                      }
+
+                    },
+                    child: Container(),
+                  ),
+          ),
+
+
           Positioned(
             bottom: 8,
             right: 12,
             child: Text(
-              _index_page.toString() +
-                  "/" +
-                  _page_contents.length.toString() +
-                  "  " +
-                  _battery_str +
-                  "电量",
+              Provider.of<AppSetting>(context).novel_read_direction==2? 
+                  "":
+                  "${_index_page}/${_page_contents.length} $_battery_str电量",
               style: TextStyle(color: Colors.grey, fontSize: 12),
             ),
           ),
@@ -298,7 +399,15 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                       ),
                       Expanded(
                         child: !_loading
-                            ? Slider(
+                            ? Provider.of<AppSetting>(context)
+                                    .novel_read_direction==2
+                                ? Slider(
+                                    value: _ver_slider_value,
+                                    max: _ver_slider_max,
+                                    onChanged: (e) {
+                                      _controller_ver.jumpTo(e);
+                                    },
+                                  ):Slider(
                                 value: _index_page >= 1
                                     ? _index_page - 1.toDouble()
                                     : 0,
@@ -438,6 +547,26 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
         ],
       ),
     );
+  }
+
+   void nextPage() {
+    if (_controller.page == 1) {
+      previousChapter();
+    } else {
+      setState(() {
+        _controller.jumpToPage(_index_page - 1);
+      });
+    }
+  }
+
+  void previousPage() {
+    if (_controller.page > _page_contents.length) {
+      nextChapter();
+    } else {
+      setState(() {
+        _controller.jumpToPage(_index_page + 1);
+      });
+    }
   }
 
   Widget createButton(String text, IconData icon, {Function onTap}) {
@@ -779,6 +908,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
       }
 
       ConfigHelper.setNovelHistory(widget.novel_id, _current_item.chapter_id);
+      UserHelper.comicAddNovelHistory(
+          widget.novel_id, _current_item.volume_id,_current_item.chapter_id);
     } catch (e) {
       print(e);
     } finally {
@@ -893,7 +1024,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
 
   void previousChapter() async {
     if (widget.chapters.indexOf(_current_item) == 0) {
-      Fluttertoast.showToast(msg: '已经是最后一章了');
+      Fluttertoast.showToast(msg: '已经是最前面一章了');
       return;
     }
     setState(() {

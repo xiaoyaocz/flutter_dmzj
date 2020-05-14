@@ -4,6 +4,7 @@ import 'package:flutter_dmzj/app/utils.dart';
 
 class AppSetting with ChangeNotifier {
   AppSetting() {
+    changeComicWebApi(ConfigHelper.getComicWebApi());
     changeComicVertical(ConfigHelper.getComicVertical());
     changeComicWakelock(ConfigHelper.getComicWakelock());
     changeReadReverse(ConfigHelper.getComicReadReverse());
@@ -29,6 +30,15 @@ class AppSetting with ChangeNotifier {
       changeReadReverse(false);
     }
   }
+
+  bool _comic_web_api;
+  get comic_web_api => _comic_web_api;
+  void changeComicWebApi(bool value) {
+    _comic_web_api = value;
+    notifyListeners();
+    ConfigHelper.setComicWebApi(value);
+  }
+
 
   bool _comic_wakelock;
   get comic_wakelock => _comic_wakelock;
@@ -117,7 +127,7 @@ class AppSetting with ChangeNotifier {
     Colors.black,
     Colors.black,
     Colors.black,
-    Color.fromRGBO(137,137,137, 1),
+    Color.fromRGBO(200,200,200, 1),
   ];
 
   int _novel_read_theme;

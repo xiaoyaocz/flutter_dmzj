@@ -1,4 +1,4 @@
-package com.example.flutter_dmzj
+package com.nsapp.dmzj
 
 import android.os.Bundle
 

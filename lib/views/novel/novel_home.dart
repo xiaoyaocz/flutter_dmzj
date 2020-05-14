@@ -40,7 +40,7 @@ class _NovelHomePageState extends State<NovelHomePage> with TickerProviderStateM
             indicatorSize: TabBarIndicatorSize.label,
               labelPadding: EdgeInsets.all(8),
             ),
-            leading: IconButton(icon: Icon(Icons.menu),onPressed: ()=>Scaffold.of(context).openDrawer(),),
+            
             actions: <Widget>[
               IconButton(icon: Icon(Icons.search),tooltip: "搜索",onPressed:() {
                 showSearch(context: context, delegate:NovelSearchBarDelegate());

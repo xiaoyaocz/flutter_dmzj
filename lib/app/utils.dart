@@ -30,6 +30,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Utils {
   static EventBus changeComicHomeTabIndex = EventBus();
   static EventBus changeNovelHomeTabIndex = EventBus();
+  static EventBus changHistory = EventBus();
   static void showSnackbarWithAction(
       BuildContext context, String content, String action, Function onPressed) {
     final snackBar = new SnackBar(
@@ -54,9 +55,13 @@ class Utils {
         context: context,
         builder: (_) {
           return Stack(
-            alignment: AlignmentDirectional.bottomEnd,
             children: <Widget>[
-              Container(
+              Material(
+                child: InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: Container(
                   child: PhotoView(
                 loadingBuilder: (context, event) {
                   return Center(
@@ -66,25 +71,32 @@ class Utils {
                 imageProvider: CachedNetworkImageProvider(image,
                     headers: {"Referer": "http://www.dmzj.com/"}),
               )),
-              FlatButton(
-                onPressed: () async {
-                  try {
-                    var file = DefaultCacheManager().getFileFromMemory(image);
-                    var byes = file.file.readAsBytesSync();
-                    var dir = await getExternalStorageDirectory();
-                    await File(dir.path +
-                            "/" +
-                            DateTime.now().millisecondsSinceEpoch.toString() +
-                            ".jpg")
-                        .writeAsBytes(byes, mode: FileMode.write);
-                    Fluttertoast.showToast(msg: '保存成功');
-                  } catch (e) {
-                    Fluttertoast.showToast(msg: '保存失败');
-                  }
-                },
-                textColor: Colors.white,
-                child: Text("保存"),
-              )
+              ),
+              ),
+            
+              Positioned(
+                bottom: 12,
+                right: 12,
+                child: FlatButton(
+                  onPressed: () async {
+                    try {
+                      var file = DefaultCacheManager().getFileFromMemory(image);
+                      var byes = file.file.readAsBytesSync();
+                      var dir = await getApplicationDocumentsDirectory();
+                      await File(dir.path +
+                              "/" +
+                              DateTime.now().millisecondsSinceEpoch.toString() +
+                              ".jpg")
+                          .writeAsBytes(byes, mode: FileMode.write);
+                      Fluttertoast.showToast(msg: '保存成功');
+                    } catch (e) {
+                      Fluttertoast.showToast(msg: '保存失败');
+                    }
+                  },
+                  textColor: Colors.white,
+                  child: Text("保存"),
+                ),
+              ),
             ],
           );
         });
@@ -117,11 +129,8 @@ class Utils {
   }
 
   static CachedNetworkImageProvider createCachedImageProvider(String url) {
-    return CachedNetworkImageProvider(
-      url,
-      headers: {"Referer": "http://www.dmzj.com/"}
-     
-    );
+    return CachedNetworkImageProvider(url,
+        headers: {"Referer": "http://www.dmzj.com/"});
   }
 
   /// 打开页面
@@ -278,6 +287,11 @@ class Utils {
         context,
         MaterialPageRoute(
             builder: (BuildContext context) => NovelReaderPage(
-                novel_id, novel_title, items, current_item,subscribe: is_subscribe,)));
+                  novel_id,
+                  novel_title,
+                  items,
+                  current_item,
+                  subscribe: is_subscribe,
+                )));
   }
 }

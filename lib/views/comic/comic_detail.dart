@@ -35,6 +35,9 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   void initState() {
     super.initState();
     updateHistory();
+    Utils.changHistory.on<int>().listen((e){
+       updateHistory();
+    });
     loadData();
   }
 
@@ -44,7 +47,11 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       history_chapter = his;
     });
   }
+  @override
+  void dispose() {
 
+    super.dispose();
+  }
   @override
   void setState(fn) {
     if (mounted) {
@@ -59,7 +66,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   Widget build(BuildContext context) {
     return _detail != null
         ? DefaultTabController(
-            length: 4,
+            length: 3,
             child: Scaffold(
               appBar: AppBar(
                 title: Text(_detail.title),
@@ -93,17 +100,12 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                       onPressed: () => Share.share(
                           "${_detail.title}\r\nhttp://m.dmzj.com/info/${_detail.comic_py}.html")),
                 ],
-                bottom: TabBar(tabs: [
-                  Tab(text: "详情"),
-                  Tab(text: "章节"),
-                  Tab(text: "评论"),
-                  Tab(text: "相关")
-                ]),
+                bottom: TabBar(
+                    tabs: [Tab(text: "详情"), Tab(text: "评论"), Tab(text: "相关")]),
               ),
               body: TabBarView(
                 children: [
                   createDetail(),
-                  createChpter(),
                   CommentWidget(4, widget.comic_id),
                   SingleChildScrollView(
                     child: Column(
@@ -145,154 +147,164 @@ class _ComicDetailPageState extends State<ComicDetailPage>
 
   Widget createDetail() {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Container(
-            color: Theme.of(context).cardColor,
-            padding: EdgeInsets.only(top: 12, left: 12, right: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () =>
-                          Utils.showImageViewDialog(context, _detail.cover),
-                      child: Container(
-                        width: 100,
-                        child: Utils.createCacheImage(_detail.cover, 270, 360),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              color: Theme.of(context).cardColor,
+              padding: EdgeInsets.only(top: 12, left: 12, right: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () =>
+                            Utils.showImageViewDialog(context, _detail.cover),
+                        child: Container(
+                          width: 100,
+                          child:
+                              Utils.createCacheImage(_detail.cover, 270, 360),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            _detail.title,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            "作者:" + tagsToString(_detail.authors ?? []),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            "点击:" + _detail.hot_num.toString(),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            "订阅:" + _detail.subscribe_num.toString(),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            "状态:" + tagsToString(_detail.status ?? []),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            "最后更新:" +
-                                DateUtil.formatDate(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        _detail.last_updatetime * 1000),
-                                    format: "yyyy-MM-dd"),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
+                      SizedBox(
+                        width: 12,
                       ),
-                    )
-                  ],
-                ),
-                Container(
-                  child: Wrap(
-                    children: _detail.types
-                        .map<Widget>((f) => createTagItem(f.tag_name, f.tag_id))
-                        .toList(),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              _detail.title,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              "作者:" + tagsToString(_detail.authors ?? []),
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              "点击:" + _detail.hot_num.toString(),
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              "订阅:" + _detail.subscribe_num.toString(),
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              "状态:" + tagsToString(_detail.status ?? []),
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              "最后更新:" +
+                                  DateUtil.formatDate(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          _detail.last_updatetime * 1000),
+                                      format: "yyyy-MM-dd"),
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
+                  Container(
+                    child: Wrap(
+                      children: _detail.types
+                          .map<Widget>(
+                              (f) => createTagItem(f.tag_name, f.tag_id))
+                          .toList(),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 12),
-          Container(
-            width: double.infinity,
-            color: Theme.of(context).cardColor,
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("简介", style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 4),
-                Text(
-                  _detail.description,
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
+            SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              color: Theme.of(context).cardColor,
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("简介", style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(height: 4),
+                  Text(
+                    _detail.description,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-          ),
-          _detail.copyright == 1
-              ? Column(
-                  children: <Widget>[
-                    SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      color: Theme.of(context).cardColor,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("作品公告",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(height: 4),
-                          Text(
-                            _detail.comic_notice != null &&
-                                    _detail.comic_notice != ""
-                                ? _detail.comic_notice
-                                : "无",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                )
-              : Container(),
-          _detail.copyright == 1
-              ? Column(
-                  children: <Widget>[
-                    SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      color: Theme.of(context).cardColor,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("作者公告",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(height: 4),
-                          Text(
-                            _detail.author_notice != null &&
-                                    _detail.author_notice != ""
-                                ? _detail.author_notice
-                                : "无",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                )
-              : Container(),
-        ],
+            _detail.copyright == 1
+                ? Column(
+                    children: <Widget>[
+                      SizedBox(height: 12),
+                      Container(
+                        width: double.infinity,
+                        color: Theme.of(context).cardColor,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text("作品公告",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(height: 4),
+                            Text(
+                              _detail.comic_notice != null &&
+                                      _detail.comic_notice != ""
+                                  ? _detail.comic_notice
+                                  : "无",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                : Container(),
+            _detail.copyright == 1
+                ? Column(
+                    children: <Widget>[
+                      SizedBox(height: 12),
+                      Container(
+                        width: double.infinity,
+                        color: Theme.of(context).cardColor,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text("作者公告",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(height: 4),
+                            Text(
+                              _detail.author_notice != null &&
+                                      _detail.author_notice != ""
+                                  ? _detail.author_notice
+                                  : "无",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                : Container(),
+            ComicChapterView(
+              widget.comic_id,
+              _detail,
+              history_chapter,
+              isSubscribe: _isSubscribe,
+            )
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
           heroTag: null, child: Icon(Icons.play_arrow), onPressed: openRead),
@@ -321,7 +333,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                       ),
                       GridView.builder(
                         shrinkWrap: true,
-                        physics: ScrollPhysics(),
+                        physics: null,
                         itemCount: f.data.length,
                         padding: EdgeInsets.all(2),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -419,8 +431,10 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         return;
       }
     }
+    var _chapters=_detail.chapters[0].data;
+    _chapters.sort((x,y)=>x.chapter_order.compareTo(y.chapter_order));
     await Utils.openComicReader(context, widget.comic_id, _detail.title,
-        _isSubscribe, _detail.chapters[0].data, _detail.chapters[0].data.last);
+        _isSubscribe, _chapters,_chapters.first);
     updateHistory();
   }
 
@@ -558,7 +572,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       var api = Api.comicDetail(widget.comic_id);
       Uint8List responseBody;
       var response = await http.get(api);
-      responseBody=response.bodyBytes;
+      responseBody = response.bodyBytes;
       if (response.body == "漫画不存在!!!") {
         var file = await _cacheManager.getFileFromCache(api);
         if (file == null) {
@@ -568,7 +582,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
           });
           return;
         }
-        responseBody=await file.file.readAsBytes();
+        responseBody = await file.file.readAsBytes();
       }
       var responseStr = utf8.decode(responseBody);
       var jsonMap = jsonDecode(responseStr);
@@ -581,7 +595,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         });
         return;
       }
-       await _cacheManager.putFile(api,responseBody);
+      await _cacheManager.putFile(api, responseBody);
       await checkSubscribe();
       await loadRelated();
       setState(() {
@@ -626,5 +640,157 @@ class _ComicDetailPageState extends State<ComicDetailPage>
     } catch (e) {
       print(e);
     }
+  }
+}
+
+class ComicChapterView extends StatefulWidget {
+  ComicDetail detail;
+  int comic_id;
+  bool isSubscribe;
+  int history_chapter;
+  Function openReader;
+  ComicChapterView(this.comic_id, this.detail,this.history_chapter,
+      {Key key, this.isSubscribe = false,this.openReader})
+      : super(key: key);
+
+  @override
+  _ComicChapterViewState createState() => _ComicChapterViewState();
+}
+
+class _ComicChapterViewState extends State<ComicChapterView>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        shrinkWrap: true,
+        padding: EdgeInsets.only(top: 12),
+        physics: ScrollPhysics(),
+        itemCount: widget.detail.chapters.length,
+        itemBuilder: (ctx, i) {
+          var f = widget.detail.chapters[i];
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+            width: double.infinity,
+            color: Theme.of(context).cardColor,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                            f.title + "(共" + f.data.length.toString() + "话)",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: (){
+                      setState(() {
+                        if(f.desc){
+                           f.data.sort((x,y)=>x.chapter_order.compareTo(y.chapter_order));
+                        }
+                        else{
+                          f.data.sort((x,y)=>y.chapter_order.compareTo(x.chapter_order));
+                        }
+                        f.desc=!f.desc;
+                      });
+                      
+                    }, child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 4,horizontal: 8),
+                      child: Text(f.desc? "排序 ↓":"排序 ↑"),
+                    ),),
+                  ],
+                ),
+               
+               GridView.builder(
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  itemCount: f.data.length,
+                  padding: EdgeInsets.all(2),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: MediaQuery.of(context).size.width~/120,
+                      mainAxisSpacing: 8.0,
+                      crossAxisSpacing: 8.0,
+                      childAspectRatio: 6 / 2),
+                  itemBuilder: (context, i) => OutlineButton(
+                    borderSide: BorderSide(
+                        color: f.data[i].chapter_id == widget.history_chapter
+                            ? Theme.of(context).accentColor
+                            : Colors.grey.withOpacity(0.6)),
+                    child: Text(
+                      f.data[i].chapter_title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: f.data[i].chapter_id == widget.history_chapter
+                              ? Theme.of(context).accentColor
+                              : Theme.of(context).textTheme.title.color),
+                    ),
+                    onPressed: ()  {
+                      Utils.openComicReader(
+                          context,
+                          widget.comic_id,
+                          widget.detail.title,
+                          widget.isSubscribe,
+                          f.data,
+                          f.data[i]);
+                    },
+                  ),
+                ),
+                SizedBox(height: 8)
+              ],
+            ),
+          );
+        });
+  }
+
+  void openRead() async {
+    if (widget.detail == null ||
+        widget.detail.chapters == null ||
+        widget.detail.chapters.length == 0 ||
+        widget.detail.chapters[0].data.length == 0) {
+      Fluttertoast.showToast(msg: '没有可读的章节');
+      return;
+    }
+    if (widget.history_chapter != 0) {
+      ComicDetailChapterItem _item = null;
+      ComicDetailChapter chpters = null;
+      for (var item in widget.detail.chapters) {
+        var first = item.data.firstWhere((f) => f.chapter_id == widget.history_chapter,
+            orElse: () => null);
+        if (first != null) {
+          chpters = item;
+          _item = first;
+        }
+      }
+      if (_item != null) {
+         Utils.openComicReader(context, widget.comic_id,
+            widget.detail.title, widget.isSubscribe, chpters.data, _item);
+        return;
+      }
+    }
+     Utils.openComicReader(
+        context,
+        widget.comic_id,
+        widget.detail.title,
+        widget.isSubscribe,
+        widget.detail.chapters[0].data,
+        widget.detail.chapters[0].data.last);
   }
 }

@@ -69,10 +69,7 @@ class _NewsHomePageState extends State<NewsHomePage>
             indicatorSize: TabBarIndicatorSize.tab,
             labelPadding: EdgeInsets.fromLTRB(12, 8, 12, 8),
           ),
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
+          
         ),
         body: TabBarView(
           controller: _tabController,

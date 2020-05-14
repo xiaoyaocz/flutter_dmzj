@@ -45,10 +45,7 @@ class _ComicHomePageState extends State<ComicHomePage>
             indicatorSize: TabBarIndicatorSize.label,
             labelPadding: EdgeInsets.all(8),
           ),
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
+         
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.search),
