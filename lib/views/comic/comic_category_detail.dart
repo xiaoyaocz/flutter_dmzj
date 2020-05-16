@@ -40,7 +40,11 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
       super.setState(fn);
     }
   }
-
+double getWidth() {
+    var count=MediaQuery.of(context).size.width~/160;
+    if(count<3)count=3;
+    return (MediaQuery.of(context).size.width - count*8) / count - 8;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,10 +74,10 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
                 physics: ScrollPhysics(),
                 itemCount: _list.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+                    crossAxisCount: MediaQuery.of(context).size.width~/160<3?3:MediaQuery.of(context).size.width~/160,
                     crossAxisSpacing: 2.0,
                     mainAxisSpacing: 4.0,
-                    childAspectRatio: 3 / 5.5),
+                  childAspectRatio: getWidth() / ((getWidth() * (360 / 270)) + 64)),
                 itemBuilder: (context, i) => _getComicItemBuilder(
                     _list[i].id, _list[i].cover, _list[i].title,
                     author: _list[i].authors, status: _list[i].status),
@@ -256,7 +260,7 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
           onTap: () => Utils.openPage(context, id, 1, title: title),
           child: Container(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Utils.createCacheImage(pic, 270, 360),
                 Padding(

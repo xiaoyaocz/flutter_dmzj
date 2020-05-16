@@ -41,7 +41,11 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
       super.setState(fn);
     }
   }
-
+  double getWidth() {
+    var count=MediaQuery.of(context).size.width~/160;
+    if(count<3)count=3;
+    return (MediaQuery.of(context).size.width - count*8) / count - 8;
+  } 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,10 +75,10 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
                 physics: ScrollPhysics(),
                 itemCount: _list.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+                    crossAxisCount: MediaQuery.of(context).size.width~/160<3?3:MediaQuery.of(context).size.width~/160,
                     crossAxisSpacing: 2.0,
                     mainAxisSpacing: 4.0,
-                    childAspectRatio: 3 / 5.2),
+                  childAspectRatio: getWidth() / ((getWidth() * (360 / 270)) + 48)),
                 itemBuilder: (context, i) => _getComicItemBuilder(
                     _list[i].id, _list[i].cover, _list[i].name,
                     author: _list[i].authors??""),
@@ -108,7 +112,7 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
     var list = _fiters
         .map<Widget>(
           (f) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(
                 padding: EdgeInsets.only(left: 4),

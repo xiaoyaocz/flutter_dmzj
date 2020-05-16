@@ -58,6 +58,9 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       super.setState(fn);
     }
   }
+  double getWidth() {
+    return (MediaQuery.of(context).size.width - 24) / 3 - 32;
+  }
 
   int _selectTabIndex = 0;
   ComicDetail _detail;
@@ -115,14 +118,15 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                               .map<Widget>((f) => _getItem(
                                       f.author_name + "的其他作品", f.data,
                                       icon: Icon(Icons.chevron_right),
+                                      ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                                       ontap: () {
                                     Utils.openPage(context, f.author_id, 8);
                                   }))
                               .toList(),
                         ),
-                        _getItem("同类题材作品", _related.theme_comics),
+                        _getItem("同类题材作品", _related.theme_comics,ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),),
                         _related.novels != null && _related.novels.length != 0
-                            ? _getItem("相关小说", _related.novels, type: 2)
+                            ? _getItem("相关小说", _related.novels, type: 2,ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),)
                             : Container()
                       ],
                     ),
@@ -520,7 +524,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       padding: EdgeInsets.all(4),
       child: Container(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Utils.createCacheImage(pic, width, height),
             Padding(

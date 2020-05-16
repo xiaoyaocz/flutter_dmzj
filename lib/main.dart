@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage>
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _index,
-        onTap: (index) { 
+        onTap: (index) {
           setState(() {
             if (index == 1 && newsPage == null) {
               newsPage = NewsHomePage();
@@ -113,9 +113,42 @@ class _MyHomePageState extends State<MyHomePage>
           ),
         ],
       ),
-      body: IndexedStack(
-        index: _index,
-        children: pages,
+      body: Row(
+        children: <Widget>[
+          // NavigationRail(
+          //   backgroundColor: Theme.of(context).bottomAppBarColor,
+          //     onDestinationSelected: (int index) {
+          //       setState(() {
+          //         _index = index;
+          //       });
+          //     },
+          //     labelType: NavigationRailLabelType.all,
+          //     destinations: [
+          //       NavigationRailDestination(
+          //         icon: Icon(Icons.library_books),
+          //         label: Text('漫画'),
+          //       ),
+          //       NavigationRailDestination(
+          //         icon: Icon(Icons.whatshot),
+          //         label: Text('新闻'),
+          //       ),
+          //       NavigationRailDestination(
+          //         icon: Icon(Icons.book),
+          //         label: Text('轻小说'),
+          //       ),
+          //       NavigationRailDestination(
+          //         icon: Icon(Icons.account_circle),
+          //         label: Text('我的'),
+          //       ),
+          //     ],
+          //     selectedIndex: _index),
+          // VerticalDivider(thickness: 1, width: 1),
+          Expanded(
+              child: IndexedStack(
+            index: _index,
+            children: pages,
+          ))
+        ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

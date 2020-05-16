@@ -102,9 +102,10 @@ class Utils {
         });
   }
 
-  static Widget createCacheImage(String url, double width, double height) {
+  static Widget createCacheImage(String url, double width, double height,{BoxFit fit=BoxFit.fitWidth}) {
     return CachedNetworkImage(
       imageUrl: url,
+      fit: fit,
       httpHeaders: {"Referer": "http://www.dmzj.com/"},
       placeholder: (context, url) => AspectRatio(
         aspectRatio: width / height,
@@ -129,7 +130,9 @@ class Utils {
   }
 
   static CachedNetworkImageProvider createCachedImageProvider(String url) {
-    return CachedNetworkImageProvider(url,
+    return CachedNetworkImageProvider(url,errorListener: (){
+      print("Image load error:"+url);
+    },
         headers: {"Referer": "http://www.dmzj.com/"});
   }
 

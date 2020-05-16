@@ -129,7 +129,7 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
   }
 
   Widget createWorditem(BuildContext context, String title, int id,
-      {int type = 1}) {
+      {int type = 2}) {
     return Padding(
       padding: EdgeInsets.all(4),
       child: InkWell(
@@ -153,7 +153,7 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
   Widget createItem(context, NovelSearchResultItem item) {
     return InkWell(
       onTap: () {
-        Utils.openPage(context, item.id, 1);
+        Utils.openPage(context, item.id, 2);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 8, 8, 0),

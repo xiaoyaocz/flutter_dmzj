@@ -31,7 +31,11 @@ class _NovelCategoryPageState extends State<NovelCategoryPage>
       super.setState(fn);
     }
   }
-
+ double getWidth() { 
+    var count=MediaQuery.of(context).size.width~/160;
+    if(count<3)count=3;
+    return (MediaQuery.of(context).size.width - count*8) / count - 8;
+  }
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -41,11 +45,11 @@ class _NovelCategoryPageState extends State<NovelCategoryPage>
         shrinkWrap: true,
         physics: ScrollPhysics(),
         itemCount: _list.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
+         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: MediaQuery.of(context).size.width~/160<3?3:MediaQuery.of(context).size.width~/160,
             crossAxisSpacing: 4.0,
             mainAxisSpacing: 4.0,
-            childAspectRatio: 1 / 1.25),
+            childAspectRatio: getWidth() / (getWidth()  + 32)),
         itemBuilder: (context, i) => Container(
           child: Card(
               child: InkWell(

@@ -203,7 +203,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                             });
                           },
                           child: Utils.createCacheImage(
-                              _page_contents[i-1], 100, 100),
+                              _page_contents[i-1], 100, 100,fit: BoxFit.fitWidth),
                         ),
                       )
                     : Container(

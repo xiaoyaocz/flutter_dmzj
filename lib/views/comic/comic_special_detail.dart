@@ -49,7 +49,7 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
                   SingleChildScrollView(
                     padding: EdgeInsets.all(12),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         Utils.createCacheImage(
                             _detail.mobile_header_pic, 710, 350),

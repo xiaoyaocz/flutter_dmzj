@@ -50,12 +50,43 @@ class ComicRecommendState extends State<ComicRecommend>
     }
   }
 
+  double getWidth() {
+    var width = MediaQuery.of(context).size.width;
+    if (width > 600) {
+      width = 600;
+    }
+    return (width - 24) / 3 - 32;
+  }
+
+  double getWidth2() {
+    var width = MediaQuery.of(context).size.width;
+    if (width > 600) {
+      width = 600;
+    }
+    return (width - 16) / 2 - 32;
+  }
+
+  bool _expand = false;
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+    return Scaffold(
+      floatingActionButton: MediaQuery.of(context).size.width > 600
+          ? FloatingActionButton(
+            heroTag:'comic',
+              child: Icon(_expand ? Icons.fullscreen_exit : Icons.zoom_out_map),
+              onPressed: () {
+                setState(() {
+                  _expand = !_expand;
+                });
+              })
+          : null,
+      body: RefreshIndicator(
         onRefresh: refreshData,
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: _expand
+                ? CrossAxisAlignment.stretch
+                : CrossAxisAlignment.center,
             children: <Widget>[
               //banner
               AppBanner(
@@ -67,49 +98,84 @@ class ComicRecommendState extends State<ComicRecommend>
                                 url: i.url, title: i.title),
                           ))
                       .toList()),
-              _getItem2("我的订阅", _my_sub,
-                  icon: Icon(Icons.chevron_right, color: Colors.grey),
-                  ontap: () => Utils.openSubscribePage(context),
-                  ratio: 3 / 4.7),
-              _getItem("近期必看", _recommend),
+              _getItem2(
+                "我的订阅",
+                _my_sub,
+                icon: Icon(Icons.chevron_right, color: Colors.grey),
+                ontap: () => Utils.openSubscribePage(context),
+                ratio: getWidth() / ((getWidth() * (360 / 270)) + 24),
+              ),
+              _getItem(
+                "近期必看",
+                _recommend,
+                ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+              ),
               _getItem("火热专题", _special,
                   needSubTitle: false,
                   imgHeight: 170,
                   imgWidth: 320,
                   count: 2,
-                  ratio: 3 / 2.2,
+                  ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
                   icon: Icon(Icons.chevron_right, color: Colors.grey),
                   ontap: () => Utils.changeComicHomeTabIndex.fire(4)),
               _getItem2("猜你喜欢", _like,
                   icon: Icon(Icons.refresh, color: Colors.grey),
+                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                   ontap: () async => await loadLike()),
-              _getItem("大师级作者怎能不看", _authors, ratio: 3 / 4.7),
+              _getItem(
+                "大师级作者怎能不看",
+                _authors,
+                ratio: getWidth() / ((getWidth() * (360 / 270)) + 24),
+              ),
               _getItem("国漫也精彩", _guoman,
                   icon: Icon(Icons.refresh, color: Colors.grey),
+                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                   ontap: () => loadGuoman()),
-              _getItem("美漫大事件", _meiman,
-                  needSubTitle: false,
-                  imgHeight: 170,
-                  imgWidth: 320,
-                  count: 2,
-                  ratio: 3 / 2.2),
+              _getItem(
+                "美漫大事件",
+                _meiman,
+                needSubTitle: false,
+                imgHeight: 170,
+                imgWidth: 320,
+                count: 2,
+                ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
+              ),
               _getItem("热门连载", _hot,
                   icon: Icon(Icons.refresh, color: Colors.grey),
+                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                   ontap: () => loadHot()),
-              _getItem("条漫专区", _tiaoman,
-                  needSubTitle: false,
-                  imgHeight: 170,
-                  imgWidth: 320,
-                  count: 2,
-                  ratio: 3 / 2.2),
-              _getItem("动画专区", _anime, icon: Icon(Icons.chevron_right, color: Colors.grey),
-                  ontap: () => Utils.openPage(context, 17192, 11,title:"动画")),
+              _getItem(
+                "条漫专区",
+                _tiaoman,
+                needSubTitle: false,
+                imgHeight: 170,
+                imgWidth: 320,
+                count: 2,
+                ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
+              ),
+              _getItem("动画专区", _anime,
+                  icon: Icon(Icons.chevron_right, color: Colors.grey),
+                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                  ontap: () => Utils.openPage(context, 17192, 11, title: "动画")),
               _getItem2("最新上架", _new,
                   icon: Icon(Icons.chevron_right, color: Colors.grey),
+                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                   ontap: () => Utils.changeComicHomeTabIndex.fire(1)),
+              Container(
+                width: double.infinity,
+                //padding: EdgeInsets.all(12),
+                child: Center(
+                  child: Text(
+                    '',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              )
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _getItem(String title, List items,
@@ -129,7 +195,7 @@ class ComicRecommendState extends State<ComicRecommend>
           decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(8)),
-          width: double.infinity,
+          constraints: BoxConstraints(maxWidth: 584),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -177,7 +243,7 @@ class ComicRecommendState extends State<ComicRecommend>
             decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(8)),
-            width: double.infinity,
+            constraints: BoxConstraints(maxWidth: 584),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -212,7 +278,7 @@ class ComicRecommendState extends State<ComicRecommend>
       children: <Widget>[
         Expanded(
           child: Padding(
-              padding: EdgeInsets.fromLTRB(4,4,4,0),
+              padding: EdgeInsets.fromLTRB(4, 4, 4, 0),
               child: Text(
                 title,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -250,12 +316,13 @@ class ComicRecommendState extends State<ComicRecommend>
       padding: EdgeInsets.all(4),
       child: Container(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: CachedNetworkImage(
                   imageUrl: pic,
+                  fit: BoxFit.cover,
                   httpHeaders: {"Referer": "http://www.dmzj.com/"},
                   placeholder: (context, url) => AspectRatio(
                     aspectRatio: width / height,
@@ -274,13 +341,18 @@ class ComicRecommendState extends State<ComicRecommend>
                     ),
                   ),
                 )),
-            Padding(
-              padding: EdgeInsets.only(top: 4, bottom: 4),
+            SizedBox(
+              height: 4,
+            ),
+            Flexible(
               child: Text(
                 title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
+            ),
+            SizedBox(
+              height: 4,
             ),
             author == ""
                 ? Container()

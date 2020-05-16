@@ -16,49 +16,53 @@ class _AppBannerState extends State<AppBanner> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(8),
+      constraints: BoxConstraints(
+        maxWidth: 600
+      ),
       child: Stack(
-      alignment: AlignmentDirectional.bottomEnd,
-      children: <Widget>[
-        ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child:CarouselSlider(
-          onPageChanged: (i) {
-            setState(() {
-              widget.currentBannerIndex = i;
-            });
-          },
-          aspectRatio: 7.5 / 4,
-          viewportFraction: 1.0,
-          autoPlay: true,
-          items: widget.items.length != 0
-              ? widget.items
-              : [
-                  Center(
-                    child: CircularProgressIndicator(),
-                  )
-                ],
-        )),
-        Positioned(
-            right: 8.0,
-            bottom: 4.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: widget.items.map<Widget>((index) {
-                return Container(
-                  width: 8.0,
-                  height: 8.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: widget.currentBannerIndex ==
-                              widget.items.indexOf(index)
-                          ? Theme.of(context).accentColor
-                          : Color.fromRGBO(0, 0, 0, 0.4)),
-                );
-              }).toList(),
-            ))
-      ],
-    ),
+        alignment: AlignmentDirectional.bottomEnd,
+        children: <Widget>[
+          ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: CarouselSlider(
+                onPageChanged: (i) {
+                  setState(() {
+                    widget.currentBannerIndex = i;
+                  });
+                },
+                aspectRatio: 7.5 / 4,
+                viewportFraction: 1.0,
+                autoPlay: true,
+                items: widget.items.length != 0
+                    ? widget.items
+                    : [
+                        Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      ],
+              )),
+          Positioned(
+              right: 8.0,
+              bottom: 4.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: widget.items.map<Widget>((index) {
+                  return Container(
+                    width: 8.0,
+                    height: 8.0,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: widget.currentBannerIndex ==
+                                widget.items.indexOf(index)
+                            ? Theme.of(context).accentColor
+                            : Color.fromRGBO(0, 0, 0, 0.4)),
+                  );
+                }).toList(),
+              ))
+        ],
+      ),
     );
   }
 }
@@ -76,12 +80,12 @@ class BannerImageItem extends StatelessWidget {
       onTap: onTaped,
       child: Stack(
         alignment: AlignmentDirectional.bottomStart,
+        fit: StackFit.expand,
         children: <Widget>[
           CachedNetworkImage(
             imageUrl: pic,
-             httpHeaders: {
-                "Referer":"http://www.dmzj.com/"
-              },
+            fit: BoxFit.cover,
+            httpHeaders: {"Referer": "http://www.dmzj.com/"},
             placeholder: (context, url) => Center(
               child: Center(child: Icon(Icons.photo)),
             ),
@@ -89,21 +93,24 @@ class BannerImageItem extends StatelessWidget {
                 Center(child: Icon(Icons.error)),
           ),
           Positioned(
+              bottom: 4,
+              left: 8,
+              
               child: Container(
-            padding: EdgeInsets.all(8),
-            width: double.infinity,
-            child: Text(title,
-                style: TextStyle(
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 6.0,
-                      color: Colors.black26,
-                      offset: Offset(2.0, 2.0),
-                    ),
-                  ],
-                )),
-          ))
+                padding: EdgeInsets.all(8),
+                
+                child: Text(title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 6.0,
+                          color: Colors.black26,
+                          offset: Offset(2.0, 2.0),
+                        ),
+                      ],
+                    )),
+              ))
         ],
       ),
     );

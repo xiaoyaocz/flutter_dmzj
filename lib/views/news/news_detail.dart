@@ -60,7 +60,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
         },
         navigationDelegate: (args) {
           var uri = Uri.parse(args.url);
-          print(uri.scheme);
+          print(args.url);
           if (uri.scheme == "dmzjimage") {
             Utils.showImageViewDialog(context, uri.queryParameters["src"]);
           } else if (uri.scheme == "dmzjandroid") {
@@ -68,8 +68,10 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
             Utils.openPage(context, int.parse(uri.queryParameters["id"]),
                 uri.path == "/cartoon_description" ? 1 : 2);
             //print(uri.queryParameters["id"]);
-          } else if (uri.scheme == "https" || uri.scheme == "http") {
-            _controller.loadUrl(args.url);
+          }
+           else if (uri.scheme == "https" || uri.scheme == "http") {
+            //_controller.loadUrl(args.url);
+            return NavigationDecision.navigate;
           }
 
           return NavigationDecision.prevent;
@@ -77,8 +79,12 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
         initialUrl: widget.page_url,
         javascriptMode: JavascriptMode.unrestricted,
         onPageFinished: (e) {
-          _controller.evaluateJavascript(
-              "\$(\".news_box\").css(\"min-height\",\"680px\");");
+          //try {
+             //_controller.evaluateJavascript(
+             // "\$(\".news_box\").css(\"min-height\",\"680px\");");
+          //} catch (e) {
+          //}
+         
         },
       ),
       bottomNavigationBar: Offstage(

@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
             )
           ],
         ),
-        body: Column(
+        body: SingleChildScrollView(child: Column(
           children: <Widget>[
             Padding(
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -120,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
             //   ],
             // )
           ],
+        ),
         ),
       ),
     );

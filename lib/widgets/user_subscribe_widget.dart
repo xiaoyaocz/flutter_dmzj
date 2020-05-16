@@ -2,32 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/user/user_subscribe_item.dart';
 
-class UserSubscribeWidget extends StatelessWidget {
-  List<SubscribeItem> list;
+class UserSubscribeWidget extends StatefulWidget {
+   List<SubscribeItem> list;
   int type=0;
   UserSubscribeWidget(this.list,{this.type=0,Key key}) : super(key: key);
 
   @override
+  _UserSubscribeWidgetState createState() => _UserSubscribeWidgetState();
+}
+
+class _UserSubscribeWidgetState extends State<UserSubscribeWidget> {
+
+  double getWidth() {
+    var count=MediaQuery.of(context).size.width~/160;
+    if(count<3)count=3;
+    return (MediaQuery.of(context).size.width - count*8) / count - 8;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return  list.length != 0
+    return  widget.list.length != 0
                 ? GridView.builder(
                     shrinkWrap: true,
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                     physics: ScrollPhysics(),
-                    itemCount: list.length,
+                    itemCount: widget.list.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                        crossAxisCount: MediaQuery.of(context).size.width~/160<3?3:MediaQuery.of(context).size.width~/160,
                         crossAxisSpacing: 2.0,
                         mainAxisSpacing: 4.0,
-                        childAspectRatio: 3 / 5.5),
+                        childAspectRatio: getWidth() / ((getWidth() * (360 / 270)) + 64)),
                     itemBuilder: (context, i) => _getComicItemBuilder(
                       context,
-                        list[i].id,
-                        type + 1,
-                        list[i].sub_img,
-                        list[i].name,
-                        '更新:' + list[i].sub_update,
-                        list[i].status),
+                        widget.list[i].id,
+                        widget.type + 1,
+                        widget.list[i].sub_img,
+                        widget.list[i].name,
+                        '更新:' + widget.list[i].sub_update,
+                        widget.list[i].status),
                   )
                 : Center(
                     child: Container(
@@ -47,7 +59,7 @@ class UserSubscribeWidget extends StatelessWidget {
           onTap: () => Utils.openPage(context, id, type, title: title),
           child: Container(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Utils.createCacheImage(pic, 270, 360),
                 Padding(

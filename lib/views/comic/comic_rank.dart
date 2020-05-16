@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
+import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_rank_item.dart';
@@ -171,6 +172,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
                     Text(
                       item.title,
                       maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(
                       height: 2,
@@ -206,6 +208,13 @@ class _ComicUpdatePageState extends State<ComicRankPage>
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                   ],
                 ),
+              ),
+            Center(
+                child: IconButton(
+                    icon: Icon(Icons.favorite_border),
+                    onPressed: () {
+                      UserHelper.comicSubscribe(int.parse(item.comic_id) );
+                    }),
               )
             ],
           ),

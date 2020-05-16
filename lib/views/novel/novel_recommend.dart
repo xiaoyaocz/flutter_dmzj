@@ -43,14 +43,37 @@ class NovelRecommendState extends State<NovelRecommend>
     }
   }
 
+  double getWidth() {
+    var width = MediaQuery.of(context).size.width;
+    if (width > 600) {
+      width = 600;
+    }
+    return (width - 24) / 3 - 32;
+  }
+
+  bool _expand = false;
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+    return Scaffold(
+      floatingActionButton: MediaQuery.of(context).size.width > 600
+          ? FloatingActionButton(
+             heroTag:'novel',
+              child: Icon(_expand ? Icons.fullscreen_exit : Icons.zoom_out_map),
+              onPressed: () {
+                setState(() {
+                  _expand = !_expand;
+                });
+              })
+          : null,
+      body: RefreshIndicator(
         onRefresh: refreshData,
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: _expand
+                ? CrossAxisAlignment.stretch
+                : CrossAxisAlignment.center,
             children: <Widget>[
-              //banner
+              //bannera
               AppBanner(
                   items: _banners
                       .map<Widget>((i) => BannerImageItem(
@@ -64,20 +87,43 @@ class NovelRecommendState extends State<NovelRecommend>
               //     icon: Icon(Icons.chevron_right, color: Colors.grey),
               //     ontap: () => Utils.openSubscribePage(context),
               //     ratio: 3 / 4.7),
-            
-              
+
               _getItem("最近更新", _new,
                   icon: Icon(Icons.chevron_right, color: Colors.grey),
-                  needSubTitle:false,
-                  ratio: 3 / 4.8,
+                  needSubTitle: false,
+                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 28),
                   ontap: () => Utils.changeNovelHomeTabIndex.fire(1)),
 
-              _getItem("动画进行时", _anime_ing),
-              _getItem("即将动画化", _anime),
-              _getItem("经典必看", _hot),
+              _getItem(
+                "动画进行时",
+                _anime_ing,
+                ratio: getWidth() / ((getWidth() * (360 / 270)) + 44),
+              ),
+              _getItem(
+                "即将动画化",
+                _anime,
+                ratio: getWidth() / ((getWidth() * (360 / 270)) + 44),
+              ),
+              _getItem(
+                "经典必看",
+                _hot,
+                ratio: getWidth() / ((getWidth() * (360 / 270)) + 44),
+              ),
+              Container(
+                width: double.infinity,
+                //padding: EdgeInsets.all(12),
+                child: Center(
+                  child: Text(
+                    '',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _getItem(String title, List items,
@@ -97,7 +143,7 @@ class NovelRecommendState extends State<NovelRecommend>
           decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(8)),
-          width: double.infinity,
+          constraints: BoxConstraints(maxWidth: 584),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -127,13 +173,13 @@ class NovelRecommendState extends State<NovelRecommend>
       ),
     );
   }
- 
+
   Widget _getTitle(String title, {Icon icon, Function ontap}) {
     return Row(
       children: <Widget>[
         Expanded(
           child: Padding(
-              padding: EdgeInsets.fromLTRB(4,4,4,0),
+              padding: EdgeInsets.fromLTRB(4, 4, 4, 0),
               child: Text(
                 title,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -171,32 +217,34 @@ class NovelRecommendState extends State<NovelRecommend>
       padding: EdgeInsets.all(4),
       child: Container(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-           AspectRatio(
-             aspectRatio: width / height,
-             child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: CachedNetworkImage(
-                  imageUrl: pic,
-                  httpHeaders: {"Referer": "http://www.dmzj.com/"},
-                  placeholder: (context, url) => AspectRatio(
-                    aspectRatio: width / height,
-                    child: Container(
-                      width: width,
-                      height: height,
-                      child: Icon(Icons.photo),
+            AspectRatio(
+              aspectRatio: width / height,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: CachedNetworkImage(
+                    imageUrl: pic,
+                    fit: BoxFit.cover,
+                    httpHeaders: {"Referer": "http://www.dmzj.com/"},
+                    placeholder: (context, url) => AspectRatio(
+                      aspectRatio: width / height,
+                      child: Container(
+                        width: width,
+                        height: height,
+                        child: Icon(Icons.photo),
+                      ),
                     ),
-                  ),
-                  errorWidget: (context, url, error) => AspectRatio(
-                    aspectRatio: width / height,
-                    child: Container(
-                      width: width,
-                      height: height,
-                      child: Icon(Icons.error),
+                    errorWidget: (context, url, error) => AspectRatio(
+                      aspectRatio: width / height,
+                      child: Container(
+                        width: width,
+                        height: height,
+                        child: Icon(Icons.error),
+                      ),
                     ),
-                  ),
-                )),) ,
+                  )),
+            ),
             Padding(
               padding: EdgeInsets.only(top: 4, bottom: 4),
               child: Text(
@@ -296,7 +344,6 @@ class NovelRecommendState extends State<NovelRecommend>
     }
   }
 
-
   Future loadMySub() async {
     try {
       if (!Provider.of<AppUserInfo>(context, listen: false).isLogin) {
@@ -309,12 +356,9 @@ class NovelRecommendState extends State<NovelRecommend>
       List items = jsonMap["data"]["data"];
       List<ComicHomeNewItem> _items =
           items.map((i) => ComicHomeNewItem.fromJson(i)).toList();
-      if (_items.length != 0) {
-        
-      }
+      if (_items.length != 0) {}
     } catch (e) {
       print(e);
     }
   }
 }
-
