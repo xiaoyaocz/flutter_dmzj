@@ -624,10 +624,6 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                         Fluttertoast.showToast(msg: '不能再小了');
                         return;
                       }
-                      if (size == 30) {
-                        Fluttertoast.showToast(msg: '不能再大了');
-                        return;
-                      }
                       Provider.of<AppSetting>(context, listen: false)
                           .changeNovelFontSize(size - 1);
                        await handelContent();
@@ -640,10 +636,6 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     child: createOutlineButton("大", onPressed: () async{
                       var size = Provider.of<AppSetting>(context, listen: false)
                           .novel_font_size;
-                      if (size == 10) {
-                        Fluttertoast.showToast(msg: '不能再小了');
-                        return;
-                      }
                       if (size == 30) {
                         Fluttertoast.showToast(msg: '不能再大了');
                         return;

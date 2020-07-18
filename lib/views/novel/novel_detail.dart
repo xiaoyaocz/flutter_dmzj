@@ -221,55 +221,50 @@ class _NovelDetailPageState extends State<NovelDetailPage>
               itemCount: volumes.length,
               itemBuilder: (ctx, i) {
                 var f = volumes[i];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(height: 8),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(
-                        f.volume_name,
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: ScrollPhysics(),
-                      itemCount: f.chapters.length,
-                      itemBuilder: (ctx, j) {
-                        var item = f.chapters[j];
+                var his = f.chapters.firstWhere(
+                    (x) => x.chapter_id == history_chapter,
+                    orElse: () => null);
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: Container(
+                    color: Theme.of(context).cardColor,
+                    child: ExpansionTile(
+                      title: Text(f.volume_name),
+                      subtitle:
+                          his != null ? Text("上次看到:" + his.chapter_name) : null,
+                      children: f.chapters.map((item) {
                         return InkWell(
-                            onTap: () async {
-                              await Utils.openNovelReader(
-                                  context, widget.novel_id, volumes, item,
-                                  novel_title: _detail.name,
-                                  is_subscribe: _isSubscribe);
-                              updateHistory();
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                border: Border(
-                                    top: BorderSide(
-                                        color: Colors.grey.withOpacity(0.1))),
-                                color: Theme.of(context).cardColor,
-                              ),
-                              child: Text(
-                                item.chapter_name,
-                                style: TextStyle(
-                                    color: item.chapter_id == history_chapter
-                                        ? Theme.of(context).accentColor
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .title
-                                            .color),
-                              ),
-                            ));
-                      },
-                    )
-                  ],
+                          onTap: () async {
+                            await Utils.openNovelReader(
+                                context, widget.novel_id, volumes, item,
+                                novel_title: _detail.name,
+                                is_subscribe: _isSubscribe);
+                            updateHistory();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                  top: BorderSide(
+                                      color: Colors.grey.withOpacity(0.1))),
+                            ),
+                            child: Text(
+                              item.chapter_name,
+                              style: TextStyle(
+                                  color: item.chapter_id == history_chapter
+                                      ? Theme.of(context).accentColor
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .title
+                                          .color),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 );
               },
             )
@@ -337,7 +332,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
       setState(() {
         _loading = true;
       });
-      Uint8List  responseBody;
+      Uint8List responseBody;
       var api = Api.novelDetail(widget.novel_id);
       try {
         var response = await http.get(api);
@@ -348,9 +343,9 @@ class _NovelDetailPageState extends State<NovelDetailPage>
           responseBody = await file.file.readAsBytes();
         }
       }
-      var responseStr=utf8.decode(responseBody) ;
+      var responseStr = utf8.decode(responseBody);
       var jsonMap = jsonDecode(responseStr);
-    
+
       NovelDetail detail = NovelDetail.fromJson(jsonMap);
       if (detail.name == null || detail.name == "") {
         setState(() {
@@ -358,7 +353,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         });
         return;
       }
-      await _cacheManager.putFile(api,responseBody );
+      await _cacheManager.putFile(api, responseBody);
       await loadVolumes();
       await checkSubscribe();
       setState(() {
@@ -375,7 +370,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
 
   Future loadVolumes() async {
     try {
-       Uint8List  responseBody;
+      Uint8List responseBody;
       var api = Api.novelVolumeDetail(widget.novel_id);
       try {
         var response = await http.get(api);
@@ -386,13 +381,13 @@ class _NovelDetailPageState extends State<NovelDetailPage>
           responseBody = await file.file.readAsBytes();
         }
       }
-      var responseStr=utf8.decode(responseBody) ;
+      var responseStr = utf8.decode(responseBody);
       List jsonMap = jsonDecode(responseStr);
 
       List<NovelVolumeItem> detail =
           jsonMap.map((f) => NovelVolumeItem.fromJson(f)).toList();
       if (detail != null) {
-        await _cacheManager.putFile(api,responseBody);
+        await _cacheManager.putFile(api, responseBody);
         setState(() {
           volumes = detail;
         });

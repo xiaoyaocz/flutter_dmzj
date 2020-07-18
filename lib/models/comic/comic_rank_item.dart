@@ -90,7 +90,7 @@ String tag_id,
     last_updatetime : jsonRes['last_updatetime'],
     last_update_chapter_name : jsonRes['last_update_chapter_name'],
     comic_py : jsonRes['comic_py'],
-    num : jsonRes['num'],
+    num : jsonRes['num'].toString(),
     tag_id : jsonRes['tag_id'],
 );
   Map<String, dynamic> toJson() => {

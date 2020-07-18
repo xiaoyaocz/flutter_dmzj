@@ -5,7 +5,6 @@ import 'package:battery/battery.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +18,7 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_chapter_view_point.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_web_chapter_detail.dart';
+import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_dmzj/views/reader/comic_tc.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_footer.dart';
@@ -131,6 +131,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
             "%";
       });
     });
+
     loadData();
   }
 
@@ -153,7 +154,19 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         page = _detail.picnum;
       }
     }
-    Utils.changHistory.fire(widget.comic_id);
+
+    ComicHistoryProvider.getItem(widget.comic_id).then((history_item) async {
+      if (history_item != null) {
+        history_item.chapter_id = _current_item.chapter_id;
+        history_item.page = page.toDouble();
+        await ComicHistoryProvider.update(history_item);
+      } else {
+        await ComicHistoryProvider.insert(ComicHistory(
+            widget.comic_id, _current_item.chapter_id, page.toDouble(), 1));
+      }
+      Utils.changHistory.fire(widget.comic_id);
+    });
+
     UserHelper.comicAddComicHistory(widget.comic_id, _current_item.chapter_id,
         page: page);
     super.dispose();
@@ -513,6 +526,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   PreloadPageController _pageController = PreloadPageController(initialPage: 1);
   //PageController _pageController = PageController(initialPage: 1);
   ScrollController _scrollController = ScrollController();
+
   Widget createHorizontalReader() {
     return InkWell(
       onTap: () {
@@ -670,22 +684,40 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         });
       },
       child: EasyRefresh(
-          scrollController: _scrollController,
-          onRefresh: () async {
-            previousChapter();
-          },
-          onLoad: () async {
-            nextChapter();
-          },
-          footer: MaterialFooter(displacement: 100, enableInfiniteLoad: false),
-          header: MaterialHeader(displacement: 100),
-          child: SingleChildScrollView(
+        scrollController: _scrollController,
+        onRefresh: () async {
+          previousChapter();
+        },
+        onLoad: () async {
+          nextChapter();
+        },
+        footer: MaterialFooter(displacement: 100, enableInfiniteLoad: false),
+        header: MaterialHeader(displacement: 100),
+        child: ListView.builder(
+            itemCount: _detail.page_url.length + 1,
             controller: _scrollController,
-            child: Container(
-              color: Colors.black,
-              child: createVerticalColumn(),
-            ),
-          )),
+            itemBuilder: (ctx, i) {
+              if (i == _detail.page_url.length) {
+                return createTucao(24);
+              } else {
+                var f = _detail.page_url[i];
+                return Container(
+                  color: Colors.black,
+                  padding: EdgeInsets.only(bottom: 0),
+                  child: CachedNetworkImage(
+                      imageUrl: f,
+                      httpHeaders: {"Referer": "http://www.dmzj.com/"},
+                      placeholder: (ctx, i) => Container(
+                            height: 400,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                      filterQuality: FilterQuality.high),
+                );
+              }
+            }),
+      ),
     );
   }
 
@@ -924,7 +956,6 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       }
       setState(() {
         _loading = true;
-        _select_index = 1;
       });
       var api =
           Api.comicChapterDetail(widget.comic_id, _current_item.chapter_id);
@@ -948,13 +979,32 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       var jsonMap = jsonDecode(responseStr);
 
       ComicWebChapterDetail detail = ComicWebChapterDetail.fromJson(jsonMap);
+      var history_item = await ComicHistoryProvider.getItem(widget.comic_id);
+      if (history_item != null &&
+          history_item.chapter_id == _current_item.chapter_id) {
+        var page = history_item.page.toInt();
+        if (page > detail.page_url.length) {
+          page = detail.page_url.length;
+        }
+        _pageController = new PreloadPageController(initialPage: page);
+        setState(() {
+          _select_index = page;
+        });
+        // _pageController.=;
+      } else {
+        _pageController = new PreloadPageController(initialPage: 1);
+        setState(() {
+          _select_index = 1;
+        });
+      }
 
       setState(() {
         _detail = detail;
       });
       await _cacheManager.putFile(api, responseBody);
       await loadViewPoint();
-      ConfigHelper.setComicHistory(widget.comic_id, _current_item.chapter_id);
+
+      //ConfigHelper.setComicHistory(widget.comic_id, _current_item.chapter_id);
       await UserHelper.comicAddComicHistory(
           widget.comic_id, _current_item.chapter_id);
     } catch (e) {

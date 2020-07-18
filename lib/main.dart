@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
+import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/sql/comic_down.dart';
+import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_dmzj/views/comic/comic_home.dart';
+import 'package:flutter_dmzj/views/settings/comic_reader_settings.dart';
+import 'package:flutter_dmzj/views/settings/novel_reader_settings.dart';
 import 'package:flutter_dmzj/views/user/login_page.dart';
 import 'package:flutter_dmzj/views/news/news_home.dart';
 import 'package:flutter_dmzj/views/novel/novel_home.dart';
@@ -10,6 +17,8 @@ import 'package:flutter_dmzj/views/user/personal_page.dart';
 import 'package:flutter_dmzj/views/user/user_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'app/app_theme.dart';
 import 'app/user_info.dart';
@@ -17,7 +26,7 @@ import 'app/user_info.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ConfigHelper.prefs = await SharedPreferences.getInstance();
-
+  await initDatabase();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<AppTheme>(create: (_) => AppTheme(), lazy: false),
@@ -28,6 +37,38 @@ void main() async {
     ],
     child: MyApp(),
   ));
+}
+
+Future initDatabase() async {
+  var databasesPath = await getDatabasesPath();
+  // File(databasesPath+"/nsplayer.db").deleteSync();
+  var db = await openDatabase(databasesPath + "/comic_history.db", version: 1,
+      onCreate: (Database _db, int version) async {
+    await _db.execute('''
+create table $comicHistoryTable ( 
+  $comicHistoryColumnComicID integer primary key not null, 
+  $comicHistoryColumnChapterID integer not null,
+  $comicHistoryColumnPage double not null,
+  $comicHistoryMode integer not null)
+''');
+
+    await _db.execute('''
+create table $comicDownloadTableName (
+$comicDownloadColumnChapterID integer primary key not null,
+$comicDownloadColumnChapterName text not null,
+$comicDownloadColumnComicID integer not null,
+$comicDownloadColumnComicName text not null,
+$comicDownloadColumnStatus integer not null,
+$comicDownloadColumnVolume text not null,
+$comicDownloadColumnPage integer ,
+$comicDownloadColumnCount integer ,
+$comicDownloadColumnSavePath text ,
+$comicDownloadColumnUrls text )
+''');
+  });
+
+  ComicHistoryProvider.db = db;
+  ComicDownloadProvider.db = db;
 }
 
 class MyApp extends StatelessWidget {
@@ -48,6 +89,8 @@ class MyApp extends StatelessWidget {
         "/Setting": (_) => SettingPage(),
         "/Login": (_) => LoginPage(),
         "/User": (_) => UserPage(),
+        "/ComicReaderSettings": (_) => ComicReaderSettings(),
+        "/NovelReaderSettings": (_) => NovelReaderSettings(),
       },
     );
   }
@@ -73,6 +116,22 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
+    checkUpdate();
+  }
+
+  void checkUpdate() async {
+    var newVer = await Utils.checkVersion();
+    if (newVer == null) {
+      return;
+    }
+    if (await Utils.showAlertDialogAsync(
+        context, Text('有新版本可以更新'), Text(newVer.message))) {
+      if (Platform.isAndroid) {
+        launch(newVer.android_url);
+      } else {
+        launch(newVer.ios_url);
+      }
+    }
   }
 
   @override

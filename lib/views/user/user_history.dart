@@ -8,6 +8,7 @@ import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_history_item.dart';
 import 'package:flutter_dmzj/models/novel/novel_history_item.dart';
+import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
@@ -84,41 +85,42 @@ class _HistoryTabItemState extends State<HistoryTabItem>
               child: CircularProgressIndicator(),
             ),
           )
-        : widget.type ==0? EasyRefresh(
-            onRefresh: () async {
-              if (widget.type == 0) {
-                await loadDataComic();
-              } else {
-                await loadDataNovel();
-              }
-            },
-            header: MaterialHeader(),
-            child: ListView(
-                children: _list.map(
-              (f) {
-                return createItem(f);
-              },
-            ).toList()),
-          ):EasyRefresh(
-            onRefresh: () async {
-              if (widget.type == 0) {
-                await loadDataComic();
-              } else {
-                await loadDataNovel();
-              }
-            },
-            header: MaterialHeader(),
-            child: ListView(
-                children: _novel_list.map(
-              (f) {
-                return createNovelItem(f);
-              },
-            ).toList()),
-          );
+        : widget.type == 0
+            ? EasyRefresh(
+                onRefresh: () async {
+                  if (widget.type == 0) {
+                    await loadDataComic();
+                  } else {
+                    await loadDataNovel();
+                  }
+                },
+                header: MaterialHeader(),
+                child: ListView(
+                    children: _list.map(
+                  (f) {
+                    return createItem(f);
+                  },
+                ).toList()),
+              )
+            : EasyRefresh(
+                onRefresh: () async {
+                  if (widget.type == 0) {
+                    await loadDataComic();
+                  } else {
+                    await loadDataNovel();
+                  }
+                },
+                header: MaterialHeader(),
+                child: ListView(
+                    children: _novel_list.map(
+                  (f) {
+                    return createNovelItem(f);
+                  },
+                ).toList()),
+              );
   }
 
   Widget createItem(ComicHistoryItem item) {
-  
     return InkWell(
       onTap: () {
         Utils.openPage(context, item.comic_id, 1);
@@ -175,7 +177,7 @@ class _HistoryTabItemState extends State<HistoryTabItem>
   }
 
   Widget createNovelItem(NovelHistoryItem item) {
-      print(item.novel_name);
+    print(item.novel_name);
     return InkWell(
       onTap: () {
         Utils.openPage(context, int.parse(item.lnovel_id), 2);
@@ -210,7 +212,11 @@ class _HistoryTabItemState extends State<HistoryTabItem>
                     SizedBox(
                       height: 2,
                     ),
-                    Text("看到" + item.volume_name+" · "+(item.chapter_name??""),
+                    Text(
+                        "看到" +
+                            item.volume_name +
+                            " · " +
+                            (item.chapter_name ?? ""),
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                     SizedBox(
                       height: 2,
@@ -281,10 +287,22 @@ class _HistoryTabItemState extends State<HistoryTabItem>
       List jsonMap = jsonDecode(response.body);
       List<ComicHistoryItem> detail =
           jsonMap.map((i) => ComicHistoryItem.fromJson(i)).toList();
-      if (detail != null) {
+      if (detail != null&&detail.length!=0) {
         for (var item in detail) {
-          ConfigHelper.setComicHistory(item.comic_id, item.chapter_id);
+          var history_item = await ComicHistoryProvider.getItem(item.comic_id);
+          print(item.comic_name);
+          if (history_item != null) {
+            history_item.chapter_id = item.chapter_id;
+            history_item.page = item.progress?.toDouble() ?? 1;
+            await ComicHistoryProvider.update(history_item);
+          } else {
+            await ComicHistoryProvider.insert(ComicHistory(item.comic_id,
+                item.chapter_id, item.progress?.toDouble() ?? 1, 1));
+          }
+
+          //ConfigHelper.setComicHistory(item.comic_id, item.chapter_id);
         }
+        //_comicPage++;
         setState(() {
           _list = detail;
         });

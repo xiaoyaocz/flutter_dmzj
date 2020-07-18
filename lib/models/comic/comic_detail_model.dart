@@ -110,8 +110,8 @@ class ComicDetail {
         _subscribe_num = subscribe_num,
         _chapters = chapters,
         _isHideChapter = isHideChapter,
-        _comic_notice=comic_notice,
-        _author_notice=author_notice,
+        _comic_notice = comic_notice,
+        _author_notice = author_notice,
         _is_dot = is_dot;
   factory ComicDetail.fromJson(jsonRes) {
     if (jsonRes == null) return null;
@@ -152,34 +152,33 @@ class ComicDetail {
     }
 
     return ComicDetail(
-      id: jsonRes['id'],
-      islong: jsonRes['islong'],
-      direction: jsonRes['direction'],
-      title: jsonRes['title'],
-      is_dmzj: jsonRes['is_dmzj'],
-      cover: jsonRes['cover'],
-      description: jsonRes['description'],
-      last_updatetime: jsonRes['last_updatetime'],
-      last_update_chapter_name: jsonRes['last_update_chapter_name'],
-      copyright: jsonRes['copyright'],
-      first_letter: jsonRes['first_letter'],
-      comic_py: jsonRes['comic_py'],
-      hidden: jsonRes['hidden'],
-      hot_num: jsonRes['hot_num'],
-      hit_num: jsonRes['hit_num'],
-      uid: jsonRes['uid'],
-      is_lock: jsonRes['is_lock'],
-      last_update_chapter_id: jsonRes['last_update_chapter_id'],
-      types: types,
-      status: status,
-      authors: authors,
-      subscribe_num: jsonRes['subscribe_num'],
-      chapters: chapters,
-      isHideChapter: jsonRes['isHideChapter'],
-      is_dot: jsonRes['is_dot'],
-      author_notice: jsonRes['author_notice'],
-      comic_notice:  jsonRes['comic_notice']
-    );
+        id: jsonRes['id'],
+        islong: jsonRes['islong'],
+        direction: jsonRes['direction'],
+        title: jsonRes['title'],
+        is_dmzj: jsonRes['is_dmzj'],
+        cover: jsonRes['cover'],
+        description: jsonRes['description'],
+        last_updatetime: jsonRes['last_updatetime'],
+        last_update_chapter_name: jsonRes['last_update_chapter_name'],
+        copyright: jsonRes['copyright'],
+        first_letter: jsonRes['first_letter'],
+        comic_py: jsonRes['comic_py'],
+        hidden: jsonRes['hidden'],
+        hot_num: jsonRes['hot_num'],
+        hit_num: jsonRes['hit_num'],
+        uid: jsonRes['uid'],
+        is_lock: jsonRes['is_lock'],
+        last_update_chapter_id: jsonRes['last_update_chapter_id'],
+        types: types,
+        status: status,
+        authors: authors,
+        subscribe_num: jsonRes['subscribe_num'],
+        chapters: chapters,
+        isHideChapter: jsonRes['isHideChapter'],
+        is_dot: jsonRes['is_dot'],
+        author_notice: jsonRes['author_notice'],
+        comic_notice: jsonRes['comic_notice']);
   }
   Map<String, dynamic> toJson() => {
         'id': _id,
@@ -249,10 +248,16 @@ class ComicDetailChapter {
   List<ComicDetailChapterItem> _data;
   List<ComicDetailChapterItem> get data => _data;
 
-  bool _desc=true;
+  bool _desc = true;
   bool get desc => _desc;
-  set desc(bool value){
-    _desc=value;
+  set desc(bool value) {
+    _desc = value;
+  }
+
+  int _showNum = 14;
+  int get showNum => _showNum;
+  set showNum(int value) {
+    _showNum = value;
   }
 
   ComicDetailChapter({
@@ -298,6 +303,20 @@ class ComicDetailChapterItem {
   int get filesize => _filesize;
   int _chapter_order;
   int get chapter_order => _chapter_order;
+
+  String volume_name;
+
+  bool _selected = false;
+  bool get selected => _selected;
+  set selected(e) {
+    _selected = e;
+  }
+
+  bool _downloaded = false;
+  bool get downloaded => _downloaded;
+  set downloaded(e) {
+    _downloaded = e;
+  }
 
   ComicDetailChapterItem({
     int chapter_id,

@@ -21,8 +21,8 @@ class ComicWebChapterDetail {
   int get chaptertype => _chaptertype;
   int _chapter_true_type;
   int get chapter_true_type => _chapter_true_type;
-  int _chapter_num;
-  int get chapter_num => _chapter_num;
+  double _chapter_num;
+  double get chapter_num => _chapter_num;
   int _updatetime;
   int get updatetime => _updatetime;
   int _sum_pages;
@@ -60,75 +60,108 @@ class ComicWebChapterDetail {
   int _comment_count;
   int get comment_count => _comment_count;
 
-    ComicWebChapterDetail({
-int id,
-int comic_id,
-String chapter_name,
-int chapter_order,
-int createtime,
-String folder,
-List<String> page_url,
-int chapter_type,
-int chaptertype,
-int chapter_true_type,
-int chapter_num,
-int updatetime,
-int sum_pages,
-int sns_tag,
-int uid,
-String username,
-String translatorid,
-String translator,
-String link,
-String message,
-String download,
-int hidden,
-int direction,
-int filesize,
-int high_file_size,
-int picnum,
-int hit,
-int prev_chap_id,
-int comment_count,
-}):_id=id,_comic_id=comic_id,_chapter_name=chapter_name,_chapter_order=chapter_order,_createtime=createtime,_folder=folder,_page_url=page_url,_chapter_type=chapter_type,_chaptertype=chaptertype,_chapter_true_type=chapter_true_type,_chapter_num=chapter_num,_updatetime=updatetime,_sum_pages=sum_pages,_sns_tag=sns_tag,_uid=uid,_username=username,_translatorid=translatorid,_translator=translator,_link=link,_message=message,_download=download,_hidden=hidden,_direction=direction,_filesize=filesize,_high_file_size=high_file_size,_picnum=picnum,_hit=hit,_prev_chap_id=prev_chap_id,_comment_count=comment_count;
-  factory ComicWebChapterDetail.fromJson(jsonRes){ if(jsonRes == null) return null;
-    List<String> page_url = jsonRes['page_url'] is List ? []: null; 
-    if(page_url!=null) {
- for (var item in jsonRes['page_url']) { if (item != null) { page_url.add(item);  }
-    }
+  ComicWebChapterDetail({
+    int id,
+    int comic_id,
+    String chapter_name,
+    int chapter_order,
+    int createtime,
+    String folder,
+    List<String> page_url,
+    int chapter_type,
+    int chaptertype,
+    int chapter_true_type,
+    double chapter_num,
+    int updatetime,
+    int sum_pages,
+    int sns_tag,
+    int uid,
+    String username,
+    String translatorid,
+    String translator,
+    String link,
+    String message,
+    String download,
+    int hidden,
+    int direction,
+    int filesize,
+    int high_file_size,
+    int picnum,
+    int hit,
+    int prev_chap_id,
+    int comment_count,
+  })  : _id = id,
+        _comic_id = comic_id,
+        _chapter_name = chapter_name,
+        _chapter_order = chapter_order,
+        _createtime = createtime,
+        _folder = folder,
+        _page_url = page_url,
+        _chapter_type = chapter_type,
+        _chaptertype = chaptertype,
+        _chapter_true_type = chapter_true_type,
+        _chapter_num = chapter_num,
+        _updatetime = updatetime,
+        _sum_pages = sum_pages,
+        _sns_tag = sns_tag,
+        _uid = uid,
+        _username = username,
+        _translatorid = translatorid,
+        _translator = translator,
+        _link = link,
+        _message = message,
+        _download = download,
+        _hidden = hidden,
+        _direction = direction,
+        _filesize = filesize,
+        _high_file_size = high_file_size,
+        _picnum = picnum,
+        _hit = hit,
+        _prev_chap_id = prev_chap_id,
+        _comment_count = comment_count;
+  factory ComicWebChapterDetail.fromJson(jsonRes) {
+    if (jsonRes == null) return null;
+    List<String> page_url = jsonRes['page_url'] is List ? [] : null;
+    if (page_url != null) {
+      for (var item in jsonRes['page_url']) {
+        if (item != null) {
+          page_url.add(item);
+        }
+      }
     }
 
-
-return ComicWebChapterDetail(    id : jsonRes['id'],
-    comic_id : jsonRes['comic_id'],
-    chapter_name : jsonRes['chapter_name'],
-    chapter_order : jsonRes['chapter_order'],
-    createtime : jsonRes['createtime'],
-    folder : jsonRes['folder'],
- page_url:page_url,
-    chapter_type : jsonRes['chapter_type'],
-    chaptertype : jsonRes['chaptertype'],
-    chapter_true_type : jsonRes['chapter_true_type'],
-    chapter_num : jsonRes['chapter_num'],
-    updatetime : jsonRes['updatetime'],
-    sum_pages : jsonRes['sum_pages'],
-    sns_tag : jsonRes['sns_tag'],
-    uid : jsonRes['uid'],
-    username : jsonRes['username'],
-    translatorid : jsonRes['translatorid'],
-    translator : jsonRes['translator'],
-    link : jsonRes['link'],
-    message : jsonRes['message'],
-    download : jsonRes['download'],
-    hidden : jsonRes['hidden'],
-    direction : jsonRes['direction'],
-    filesize : jsonRes['filesize'],
-    high_file_size : jsonRes['high_file_size'],
-    picnum : jsonRes['picnum'],
-    hit : jsonRes['hit'],
-    prev_chap_id : jsonRes['prev_chap_id'],
-    comment_count : jsonRes['comment_count'],
-);}
+    return ComicWebChapterDetail(
+      id: jsonRes['id'],
+      comic_id: jsonRes['comic_id'],
+      chapter_name: jsonRes['chapter_name'],
+      chapter_order: jsonRes['chapter_order'],
+      createtime: jsonRes['createtime'],
+      folder: jsonRes['folder'],
+      page_url: page_url,
+      chapter_type: jsonRes['chapter_type'],
+      chaptertype: jsonRes['chaptertype'],
+      chapter_true_type: jsonRes['chapter_true_type'],
+      chapter_num: double.parse(jsonRes['chapter_num'].toString()),
+      updatetime: jsonRes['updatetime'],
+      sum_pages: jsonRes['sum_pages'],
+      sns_tag: jsonRes['sns_tag'],
+      uid: jsonRes['uid'],
+      username: jsonRes['username'],
+      translatorid: jsonRes['translatorid'],
+      translator: jsonRes['translator'],
+      link: jsonRes['link'],
+      message: jsonRes['message'],
+      download: jsonRes['download'],
+      hidden: jsonRes['hidden'],
+      direction: jsonRes['direction'],
+      filesize: jsonRes['filesize'],
+      high_file_size: jsonRes['high_file_size'],
+      picnum: jsonRes['picnum'],
+      hit: jsonRes['hit'],
+      prev_chap_id: jsonRes['prev_chap_id'],
+      comment_count: jsonRes['comment_count'],
+    );
+  }
   Map<String, dynamic> toJson() => {
         'id': _id,
         'comic_id': _comic_id,
@@ -159,11 +192,10 @@ return ComicWebChapterDetail(    id : jsonRes['id'],
         'hit': _hit,
         'prev_chap_id': _prev_chap_id,
         'comment_count': _comment_count,
-};
+      };
 
   @override
-String  toString() {
+  String toString() {
     return json.encode(this);
   }
 }
-

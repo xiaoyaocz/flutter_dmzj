@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/novel/novel_volume_item.dart';
+import 'package:flutter_dmzj/models/version_info.dart';
 import 'package:flutter_dmzj/views/comic/comic_author.dart';
 import 'package:flutter_dmzj/views/comic/comic_category_detail.dart';
 import 'package:flutter_dmzj/views/comic/comic_detail.dart';
@@ -23,9 +25,11 @@ import 'package:flutter_dmzj/views/user/user_detail.dart';
 import 'package:flutter_dmzj/views/user/user_history.dart';
 import 'package:flutter_dmzj/views/user/user_subscribe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class Utils {
   static EventBus changeComicHomeTabIndex = EventBus();
@@ -50,6 +54,52 @@ class Utils {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
+  static Future<VersionInfo> checkVersion() async {
+    try {
+      var new_version = await http.get(
+          "https://pic.nsapps.cn/dmzj_flutter/dmzj_ver.json?ts=" +
+              DateTime.now().millisecondsSinceEpoch.toString());
+      var ver_info =
+          VersionInfo.fromJson(jsonDecode(utf8.decode(new_version.bodyBytes)));
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      if (packageInfo.buildNumber != ver_info.version_code) {
+        return ver_info;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<bool> showAlertDialogAsync(
+      BuildContext context, Widget title, Widget content) async {
+    bool result = false;
+    await showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: title,
+              content: content,
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text("确定"),
+                  onPressed: () {
+                    result = true;
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                  child: new Text("取消"),
+                  onPressed: () {
+                    result = false;
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
+    return result;
+  }
+
   static void showImageViewDialog(BuildContext context, String image) {
     showDialog(
         context: context,
@@ -58,22 +108,21 @@ class Utils {
             children: <Widget>[
               Material(
                 child: InkWell(
-                onTap: (){
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  child: PhotoView(
-                loadingBuilder: (context, event) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-                imageProvider: CachedNetworkImageProvider(image,
-                    headers: {"Referer": "http://www.dmzj.com/"}),
-              )),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                      child: PhotoView(
+                    loadingBuilder: (context, event) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                    imageProvider: CachedNetworkImageProvider(image,
+                        headers: {"Referer": "http://www.dmzj.com/"}),
+                  )),
+                ),
               ),
-              ),
-            
               Positioned(
                 bottom: 12,
                 right: 12,
@@ -102,7 +151,8 @@ class Utils {
         });
   }
 
-  static Widget createCacheImage(String url, double width, double height,{BoxFit fit=BoxFit.fitWidth}) {
+  static Widget createCacheImage(String url, double width, double height,
+      {BoxFit fit = BoxFit.fitWidth}) {
     return CachedNetworkImage(
       imageUrl: url,
       fit: fit,
@@ -130,10 +180,9 @@ class Utils {
   }
 
   static CachedNetworkImageProvider createCachedImageProvider(String url) {
-    return CachedNetworkImageProvider(url,errorListener: (){
-      print("Image load error:"+url);
-    },
-        headers: {"Referer": "http://www.dmzj.com/"});
+    return CachedNetworkImageProvider(url, errorListener: () {
+      print("Image load error:" + url);
+    }, headers: {"Referer": "http://www.dmzj.com/"});
   }
 
   /// 打开页面

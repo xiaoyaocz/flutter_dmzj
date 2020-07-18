@@ -18,7 +18,6 @@ class AppSetting with ChangeNotifier {
     changeNovelReadTheme(ConfigHelper.getNovelTheme());
   }
 
-
   bool _comic_vertical_mode;
   get comic_vertical_mode => _comic_vertical_mode;
   void changeComicVertical(bool value) {
@@ -38,7 +37,6 @@ class AppSetting with ChangeNotifier {
     notifyListeners();
     ConfigHelper.setComicWebApi(value);
   }
-
 
   bool _comic_wakelock;
   get comic_wakelock => _comic_wakelock;
@@ -64,7 +62,7 @@ class AppSetting with ChangeNotifier {
   void changeComicReadShowState(bool value) {
     _comic_read_showstate = value;
     notifyListeners();
-    ConfigHelper.setComicReadShowState( value);
+    ConfigHelper.setComicReadShowState(value);
   }
 
   bool _comic_read_showStatusBar;
@@ -91,9 +89,8 @@ class AppSetting with ChangeNotifier {
     ConfigHelper.setComicBrightness(value);
   }
 
-
   double _novel_font_size;
-  get novel_font_size => _novel_font_size;
+  double get novel_font_size => _novel_font_size;
   void changeNovelFontSize(double value) {
     _novel_font_size = value;
     notifyListeners();
@@ -101,13 +98,12 @@ class AppSetting with ChangeNotifier {
   }
 
   double _novel_line_height;
-  get novel_line_height => _novel_line_height;
+  double get novel_line_height => _novel_line_height;
   void changeNovelLineHeight(double value) {
     _novel_line_height = value;
     notifyListeners();
     ConfigHelper.setNovelLineHeight(value);
   }
-
 
   int _novel_read_direction;
   get novel_read_direction => _novel_read_direction;
@@ -117,17 +113,17 @@ class AppSetting with ChangeNotifier {
     ConfigHelper.setNovelReadDirection(value);
   }
 
-  static List<Color> bgColors=[
-    Color.fromRGBO(245,239,217, 1),
-    Color.fromRGBO(248,247,252, 1),
-    Color.fromRGBO(192,237,198, 1),
-     Colors.black
+  static List<Color> bgColors = [
+    Color.fromRGBO(245, 239, 217, 1),
+    Color.fromRGBO(248, 247, 252, 1),
+    Color.fromRGBO(192, 237, 198, 1),
+    Colors.black
   ];
-  static List<Color> fontColors=[
+  static List<Color> fontColors = [
     Colors.black,
     Colors.black,
     Colors.black,
-    Color.fromRGBO(200,200,200, 1),
+    Color.fromRGBO(200, 200, 200, 1),
   ];
 
   int _novel_read_theme;
@@ -137,6 +133,4 @@ class AppSetting with ChangeNotifier {
     notifyListeners();
     ConfigHelper.setNovelTheme(value);
   }
-
-
 }

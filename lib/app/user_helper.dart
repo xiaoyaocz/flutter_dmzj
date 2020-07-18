@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/models/comic/comic_history_item.dart';
 import 'package:flutter_dmzj/models/user/user_model.dart';
+import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -232,4 +234,36 @@ class UserHelper {
       return false;
     }
   }
+
+  static Future<bool> loadComicHistory() async {
+    try {
+       if (!ConfigHelper.getUserIsLogined() ?? false) {
+        return false;
+      }
+      var response =
+          await http.get(Api.userComicHistory(ConfigHelper.getUserInfo().uid));
+      List jsonMap = jsonDecode(response.body);
+      List<ComicHistoryItem> detail =
+          jsonMap.map((i) => ComicHistoryItem.fromJson(i)).toList();
+      if (detail != null) {
+        for (var item in detail) {
+          var historyItem = await ComicHistoryProvider.getItem(item.comic_id);
+          if (historyItem != null) {
+            historyItem.chapter_id = item.chapter_id;
+            historyItem.page = item.progress?.toDouble() ?? 1;
+            await ComicHistoryProvider.update(historyItem);
+          } else {
+            await ComicHistoryProvider.insert(ComicHistory(item.comic_id,
+                item.chapter_id, item.progress?.toDouble() ?? 1, 1));
+          }
+        }
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+
+
 }
