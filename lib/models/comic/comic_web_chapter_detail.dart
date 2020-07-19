@@ -141,7 +141,7 @@ class ComicWebChapterDetail {
       chapter_type: jsonRes['chapter_type'],
       chaptertype: jsonRes['chaptertype'],
       chapter_true_type: jsonRes['chapter_true_type'],
-      chapter_num: double.parse(jsonRes['chapter_num'].toString()),
+      chapter_num: double.tryParse(jsonRes['chapter_num'].toString()) ?? 0,
       updatetime: jsonRes['updatetime'],
       sum_pages: jsonRes['sum_pages'],
       sns_tag: jsonRes['sns_tag'],
