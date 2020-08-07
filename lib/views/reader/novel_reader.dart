@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:battery/battery.dart';
+//import 'package:battery/battery.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+//import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
@@ -40,10 +40,10 @@ class NovelReaderPage extends StatefulWidget {
 }
 
 class _NovelReaderPageState extends State<NovelReaderPage> {
-   //EventBus settingEvent = EventBus();
+  //EventBus settingEvent = EventBus();
   List<String> _page_contents = ["加载中"];
   NovelVolumeChapterItem _current_item;
-   Battery _battery = Battery();
+  //Battery _battery = Battery();
   Uint8List _contents;
 
   double _ver_slider_max = 0;
@@ -58,18 +58,18 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
     _current_item = widget.current_item;
     //全屏
     SystemChrome.setEnabledSystemUIOverlays([]);
-    _battery.batteryLevel.then((e) {
-      setState(() {
-        _battery_str = e.toString() + "%";
-      });
-    });
+    // _battery.batteryLevel.then((e) {
+    //   setState(() {
+    //     _battery_str = e.toString() + "%";
+    //   });
+    // });
 
-    _battery.onBatteryStateChanged.listen((BatteryState state) async {
-      var e = await _battery.batteryLevel;
-      setState(() {
-        _battery_str = e.toString() + "%";
-      });
-    });
+    // _battery.onBatteryStateChanged.listen((BatteryState state) async {
+    //   var e = await _battery.batteryLevel;
+    //   setState(() {
+    //     _battery_str = e.toString() + "%";
+    //   });
+    // });
     //刷新内容
     // settingEvent.on<double>().listen((e) async {
     //   await handelContent();
@@ -78,7 +78,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
     // _controller.addListener((){
     //   print(_controller.offset);
     // });
-     _controller_ver.addListener(() {
+    _controller_ver.addListener(() {
       var value = _controller_ver.offset;
       if (value < 0) {
         value = 0;
@@ -98,8 +98,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-     UserHelper.comicAddNovelHistory(
-          widget.novel_id, _current_item.volume_id,_current_item.chapter_id);
+    UserHelper.comicAddNovelHistory(
+        widget.novel_id, _current_item.volume_id, _current_item.chapter_id);
     super.dispose();
   }
 
@@ -113,7 +113,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
   bool _show_controls = false;
   bool _show_chapters = false;
   PageController _controller = PageController(initialPage: 1);
-  ScrollController _controller_ver=ScrollController();
+  ScrollController _controller_ver = ScrollController();
   int _index_page = 1;
   bool _isPicture = false;
 
@@ -137,144 +137,153 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                 _show_controls = !_show_controls;
               });
             },
-            child: Provider.of<AppSetting>(context).novel_read_direction!=2? PageView.builder(
-              scrollDirection:
-                 Axis.horizontal,
-              pageSnapping:
-                  Provider.of<AppSetting>(context).novel_read_direction != 2,
-              controller: _controller,
-              itemCount: _page_contents.length + 2,
-              reverse:
-                  Provider.of<AppSetting>(context).novel_read_direction == 1,
-              onPageChanged: (i) {
-                if (i == _page_contents.length + 1 && !_loading) {
-                  nextChapter();
-                  return;
-                }
-                if (i == 0 && !_loading) {
-                  previousChapter();
-                  return;
-                }
-                if (i < _page_contents.length + 1) {
-                  setState(() {
-                    _index_page = i;
-                  });
-                }
+            child: Provider.of<AppSetting>(context).novel_read_direction != 2
+                ? PageView.builder(
+                    scrollDirection: Axis.horizontal,
+                    pageSnapping:
+                        Provider.of<AppSetting>(context).novel_read_direction !=
+                            2,
+                    controller: _controller,
+                    itemCount: _page_contents.length + 2,
+                    reverse:
+                        Provider.of<AppSetting>(context).novel_read_direction ==
+                            1,
+                    onPageChanged: (i) {
+                      if (i == _page_contents.length + 1 && !_loading) {
+                        nextChapter();
+                        return;
+                      }
+                      if (i == 0 && !_loading) {
+                        previousChapter();
+                        return;
+                      }
+                      if (i < _page_contents.length + 1) {
+                        setState(() {
+                          _index_page = i;
+                        });
+                      }
 
-                // setState(() {
-                //   _index_page = i;
-                // });
-              },
-              itemBuilder: (ctx, i) {
-                if (i == 0) {
-                  return Container(
-                    child: Center(
-                        child:
-                            Text("上一章", style: TextStyle(color: Colors.grey))),
-                  );
-                }
-                if (i == _page_contents.length + 1) {
-                  return Container(
-                    child: Center(
-                        child:
-                            Text("下一章", style: TextStyle(color: Colors.grey))),
-                  );
-                }
+                      // setState(() {
+                      //   _index_page = i;
+                      // });
+                    },
+                    itemBuilder: (ctx, i) {
+                      if (i == 0) {
+                        return Container(
+                          child: Center(
+                              child: Text("上一章",
+                                  style: TextStyle(color: Colors.grey))),
+                        );
+                      }
+                      if (i == _page_contents.length + 1) {
+                        return Container(
+                          child: Center(
+                              child: Text("下一章",
+                                  style: TextStyle(color: Colors.grey))),
+                        );
+                      }
 
-                var _widget = _isPicture
-                    ? Container(
-                        color: AppSetting.bgColors[
-                            Provider.of<AppSetting>(context).novel_read_theme],
-                        child: InkWell(
-                          onDoubleTap: () {
-                            Utils.showImageViewDialog(
-                                context,
+                      var _widget = _isPicture
+                          ? Container(
+                              color: AppSetting.bgColors[
+                                  Provider.of<AppSetting>(context)
+                                      .novel_read_theme],
+                              child: InkWell(
+                                onDoubleTap: () {
+                                  Utils.showImageViewDialog(
+                                      context,
+                                      _page_contents.length == 0
+                                          ? ""
+                                          : _page_contents[i - 1]);
+                                },
+                                onTap: () {
+                                  setState(() {
+                                    if (_show_chapters) {
+                                      _show_chapters = false;
+                                      return;
+                                    }
+                                    _show_controls = !_show_controls;
+                                  });
+                                },
+                                child: Utils.createCacheImage(
+                                    _page_contents[i - 1], 100, 100,
+                                    fit: BoxFit.fitWidth),
+                              ),
+                            )
+                          : Container(
+                              color: AppSetting.bgColors[
+                                  Provider.of<AppSetting>(context)
+                                      .novel_read_theme],
+                              padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
+                              alignment: Alignment.topCenter,
+                              child: Text(
                                 _page_contents.length == 0
                                     ? ""
-                                    : _page_contents[i - 1]);
-                          },
-                          onTap: () {
-                            setState(() {
-                              if (_show_chapters) {
-                                _show_chapters = false;
-                                return;
-                              }
-                              _show_controls = !_show_controls;
-                            });
-                          },
-                          child: Utils.createCacheImage(
-                              _page_contents[i-1], 100, 100,fit: BoxFit.fitWidth),
-                        ),
-                      )
-                    : Container(
-                        color: AppSetting.bgColors[
-                            Provider.of<AppSetting>(context).novel_read_theme],
-                        padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          _page_contents.length == 0
-                              ? ""
-                              : _page_contents[i - 1],
-                          style: TextStyle(
-                              fontSize: _fontSize,
-                              height: _lineHeight,
-                              color: AppSetting.fontColors[
+                                    : _page_contents[i - 1],
+                                style: TextStyle(
+                                    fontSize: _fontSize,
+                                    height: _lineHeight,
+                                    color: AppSetting.fontColors[
+                                        Provider.of<AppSetting>(context)
+                                            .novel_read_theme]),
+                              ),
+                            );
+                      return _widget;
+                    },
+                  )
+                : EasyRefresh(
+                    onRefresh: () async {
+                      previousChapter();
+                    },
+                    onLoad: () async {
+                      nextChapter();
+                    },
+                    header: MaterialHeader(),
+                    footer: MaterialFooter(displacement: 80),
+                    child: SingleChildScrollView(
+                      controller: _controller_ver,
+                      child: _isPicture
+                          ? Column(
+                              children: _page_contents
+                                  .map((f) => InkWell(
+                                        onDoubleTap: () {
+                                          Utils.showImageViewDialog(context, f);
+                                        },
+                                        onTap: () {
+                                          setState(() {
+                                            if (_show_chapters) {
+                                              _show_chapters = false;
+                                              return;
+                                            }
+                                            _show_controls = !_show_controls;
+                                          });
+                                        },
+                                        child:
+                                            Utils.createCacheImage(f, 100, 100),
+                                      ))
+                                  .toList(),
+                            )
+                          : Container(
+                              alignment: Alignment.topCenter,
+                              constraints: BoxConstraints(
+                                minHeight: MediaQuery.of(context).size.height,
+                              ),
+                              color: AppSetting.bgColors[
                                   Provider.of<AppSetting>(context)
-                                      .novel_read_theme]),
-                        ),
-                      );
-                return _widget;
-              },
-            ):EasyRefresh(
-              onRefresh: () async{
-                previousChapter();
-              },
-              onLoad: ()async{
-                nextChapter();
-              },
-              header: MaterialHeader(),
-              footer: MaterialFooter(displacement: 80),
-              child: SingleChildScrollView(
-              controller: _controller_ver,
-              child: _isPicture?
-              Column(
-                children: _page_contents.map((f)=>InkWell(
-                          onDoubleTap: () {
-                            Utils.showImageViewDialog(
-                                context,
-                               f);
-                          },
-                          onTap: () {
-                            setState(() {
-                              if (_show_chapters) {
-                                _show_chapters = false;
-                                return;
-                              }
-                              _show_controls = !_show_controls;
-                            });
-                          },
-                          child: Utils.createCacheImage(
-                              f, 100, 100),
-                        )).toList(),
-              ):
-              Container(
-                alignment: Alignment.topCenter,
-                 constraints: BoxConstraints(
-                   minHeight: MediaQuery.of(context).size.height,
-                 ),
-                 color: AppSetting.bgColors[
-                            Provider.of<AppSetting>(context).novel_read_theme],
-                        padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
-                child: Text(_page_contents.join(), style: TextStyle(
-                              fontSize: _fontSize,
-                              height: _lineHeight,
-                              color: AppSetting.fontColors[
-                                  Provider.of<AppSetting>(context)
-                                      .novel_read_theme])),
-              ),
-            ),),
+                                      .novel_read_theme],
+                              padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
+                              child: Text(_page_contents.join(),
+                                  style: TextStyle(
+                                      fontSize: _fontSize,
+                                      height: _lineHeight,
+                                      color: AppSetting.fontColors[
+                                          Provider.of<AppSetting>(context)
+                                              .novel_read_theme])),
+                            ),
+                    ),
+                  ),
           ),
-           Provider.of<AppSetting>(context).novel_read_direction==2
+          Provider.of<AppSetting>(context).novel_read_direction == 2
               ? Positioned(child: Container())
               : Positioned(
                   left: 0,
@@ -282,16 +291,18 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   height: MediaQuery.of(context).size.height,
                   child: InkWell(
                     onTap: () {
-                      if(Provider.of<AppSetting>(context,listen: false).novel_read_direction==1){
+                      if (Provider.of<AppSetting>(context, listen: false)
+                              .novel_read_direction ==
+                          1) {
                         previousPage();
-                      }else{
+                      } else {
                         nextPage();
                       }
                     },
                     child: Container(),
                   ),
                 ),
-          Provider.of<AppSetting>(context).novel_read_direction==2
+          Provider.of<AppSetting>(context).novel_read_direction == 2
               ? Positioned(child: Container())
               : Positioned(
                   right: 0,
@@ -299,25 +310,25 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   height: MediaQuery.of(context).size.height,
                   child: InkWell(
                     onTap: () {
-                       if(Provider.of<AppSetting>(context,listen: false).novel_read_direction==1){
+                      if (Provider.of<AppSetting>(context, listen: false)
+                              .novel_read_direction ==
+                          1) {
                         nextPage();
-                      }else{
+                      } else {
                         previousPage();
                       }
-
                     },
                     child: Container(),
                   ),
-          ),
-
+                ),
 
           Positioned(
             bottom: 8,
             right: 12,
             child: Text(
-              Provider.of<AppSetting>(context).novel_read_direction==2? 
-                  "":
-                  "${_index_page}/${_page_contents.length} $_battery_str电量",
+              Provider.of<AppSetting>(context).novel_read_direction == 2
+                  ? ""
+                  : "${_index_page}/${_page_contents.length}",
               style: TextStyle(color: Colors.grey, fontSize: 12),
             ),
           ),
@@ -400,25 +411,27 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                       Expanded(
                         child: !_loading
                             ? Provider.of<AppSetting>(context)
-                                    .novel_read_direction==2
+                                        .novel_read_direction ==
+                                    2
                                 ? Slider(
                                     value: _ver_slider_value,
                                     max: _ver_slider_max,
                                     onChanged: (e) {
                                       _controller_ver.jumpTo(e);
                                     },
-                                  ):Slider(
-                                value: _index_page >= 1
-                                    ? _index_page - 1.toDouble()
-                                    : 0,
-                                max: _page_contents.length - 1.toDouble(),
-                                onChanged: (e) {
-                                  setState(() {
-                                    _index_page = e.toInt() + 1;
-                                    _controller.jumpToPage(e.toInt()+1);
-                                  });
-                                },
-                              )
+                                  )
+                                : Slider(
+                                    value: _index_page >= 1
+                                        ? _index_page - 1.toDouble()
+                                        : 0,
+                                    max: _page_contents.length - 1.toDouble(),
+                                    onChanged: (e) {
+                                      setState(() {
+                                        _index_page = e.toInt() + 1;
+                                        _controller.jumpToPage(e.toInt() + 1);
+                                      });
+                                    },
+                                  )
                             : Text(
                                 "加载中",
                                 style: TextStyle(color: Colors.white),
@@ -549,7 +562,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
     );
   }
 
-   void nextPage() {
+  void nextPage() {
     if (_controller.page == 1) {
       previousChapter();
     } else {
@@ -617,7 +630,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     ),
                   ),
                   Expanded(
-                    child: createOutlineButton("小", onPressed: () async{
+                    child: createOutlineButton("小", onPressed: () async {
                       var size = Provider.of<AppSetting>(context, listen: false)
                           .novel_font_size;
                       if (size == 10) {
@@ -626,14 +639,14 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                       }
                       Provider.of<AppSetting>(context, listen: false)
                           .changeNovelFontSize(size - 1);
-                       await handelContent();
+                      await handelContent();
                     }),
                   ),
                   SizedBox(
                     width: 24,
                   ),
                   Expanded(
-                    child: createOutlineButton("大", onPressed: () async{
+                    child: createOutlineButton("大", onPressed: () async {
                       var size = Provider.of<AppSetting>(context, listen: false)
                           .novel_font_size;
                       if (size == 30) {
@@ -657,7 +670,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     ),
                   ),
                   Expanded(
-                    child: createOutlineButton("减少", onPressed: () async{
+                    child: createOutlineButton("减少", onPressed: () async {
                       var height =
                           Provider.of<AppSetting>(context, listen: false)
                               .novel_line_height;
@@ -674,7 +687,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     width: 24,
                   ),
                   Expanded(
-                    child: createOutlineButton("增加", onPressed: () async{
+                    child: createOutlineButton("增加", onPressed: () async {
                       var height =
                           Provider.of<AppSetting>(context, listen: false)
                               .novel_line_height;
@@ -684,7 +697,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                       }
                       Provider.of<AppSetting>(context, listen: false)
                           .changeNovelLineHeight(height + 0.1);
-                     await handelContent();
+                      await handelContent();
                     }),
                   )
                 ],
@@ -850,7 +863,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
   }
 
   bool _loading = false;
-  DefaultCacheManager _cacheManager = DefaultCacheManager();
+  //DefaultCacheManager _cacheManager = DefaultCacheManager();
   Future loadData() async {
     try {
       if (_loading) {
@@ -861,21 +874,20 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
 
         _page_contents = ["加载中"];
         try {
-           _controller.jumpToPage(1);
-        } catch (e) {
-        }
+          _controller.jumpToPage(1);
+        } catch (e) {}
       });
 
       //检查缓存
       var url = Api.novelRead(
           widget.novel_id, _current_item.volume_id, _current_item.chapter_id);
-      var file = await _cacheManager.getFileFromCache(url);
-      if (file == null) {
-        file = await _cacheManager.downloadFile(url);
-      }
+      // var file = await _cacheManager.getFileFromCache(url);
+      // if (file == null) {
+      //   file = await _cacheManager.downloadFile(url);
+      // }
 
-      //var response = await http.get(url);
-      var bodyBytes = await file.file.readAsBytes();
+      var response = await http.get(url);
+      var bodyBytes = response.bodyBytes;
       if (String.fromCharCodes(bodyBytes.take(200))
           .contains(RegExp('<img.*?>'))) {
         var str = Utf8Decoder().convert(bodyBytes);
@@ -901,7 +913,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
 
       ConfigHelper.setNovelHistory(widget.novel_id, _current_item.chapter_id);
       UserHelper.comicAddNovelHistory(
-          widget.novel_id, _current_item.volume_id,_current_item.chapter_id);
+          widget.novel_id, _current_item.volume_id, _current_item.chapter_id);
     } catch (e) {
       print(e);
     } finally {

@@ -72,7 +72,7 @@ class ComicRecommendState extends State<ComicRecommend>
     return Scaffold(
       floatingActionButton: MediaQuery.of(context).size.width > 600
           ? FloatingActionButton(
-            heroTag:'comic',
+              heroTag: 'comic',
               child: Icon(_expand ? Icons.fullscreen_exit : Icons.zoom_out_map),
               onPressed: () {
                 setState(() {
@@ -320,27 +320,29 @@ class ComicRecommendState extends State<ComicRecommend>
           children: <Widget>[
             ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child: CachedNetworkImage(
-                  imageUrl: pic,
-                  fit: BoxFit.cover,
-                  httpHeaders: {"Referer": "http://www.dmzj.com/"},
-                  placeholder: (context, url) => AspectRatio(
-                    aspectRatio: width / height,
-                    child: Container(
-                      width: width,
-                      height: height,
-                      child: Icon(Icons.photo),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => AspectRatio(
-                    aspectRatio: width / height,
-                    child: Container(
-                      width: width,
-                      height: height,
-                      child: Icon(Icons.error),
-                    ),
-                  ),
-                )),
+                child: Utils.createCacheImage(pic, width, height)
+                //CachedNetworkImage(
+                //   imageUrl: pic,
+                //   fit: BoxFit.cover,
+                //   httpHeaders: {"Referer": "http://www.dmzj.com/"},
+                //   placeholder: (context, url) => AspectRatio(
+                //     aspectRatio: width / height,
+                //     child: Container(
+                //       width: width,
+                //       height: height,
+                //       child: Icon(Icons.photo),
+                //     ),
+                //   ),
+                //   errorWidget: (context, url, error) => AspectRatio(
+                //     aspectRatio: width / height,
+                //     child: Container(
+                //       width: width,
+                //       height: height,
+                //       child: Icon(Icons.error),
+                //     ),
+                //   ),
+                // ),
+                ),
             SizedBox(
               height: 4,
             ),

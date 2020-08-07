@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:battery/battery.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:battery/battery.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
-import 'package:connectivity/connectivity.dart';
+// import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+//import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
@@ -18,7 +18,7 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_chapter_view_point.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_web_chapter_detail.dart';
-import 'package:flutter_dmzj/sql/comic_history.dart';
+// import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_dmzj/views/reader/comic_tc.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_footer.dart';
@@ -28,7 +28,7 @@ import 'package:http/http.dart' as http;
 import 'package:photo_view/photo_view.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
-import 'package:screen/screen.dart';
+// import 'package:screen/screen.dart';
 import 'package:share/share.dart';
 
 class ComicReaderPage extends StatefulWidget {
@@ -48,8 +48,8 @@ class ComicReaderPage extends StatefulWidget {
 
 class _ComicReaderPageState extends State<ComicReaderPage> {
   ComicDetailChapterItem _current_item;
-  Battery _battery = Battery();
-  Connectivity _connectivity = Connectivity();
+  // Battery _battery = Battery();
+  //Connectivity _connectivity = Connectivity();
   String _battery_str = "-%";
   String _network_state = "";
 
@@ -62,55 +62,55 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     if (ConfigHelper.getComicShowStatusBar()) {
       SystemChrome.setEnabledSystemUIOverlays([]);
     }
-    //亮度信息
-    if (!ConfigHelper.getComicSystemBrightness()) {
-      Screen.setBrightness(ConfigHelper.getComicBrightness());
-    }
-    Screen.keepOn(ConfigHelper.getComicWakelock());
+    // //亮度信息
+    // if (!ConfigHelper.getComicSystemBrightness()) {
+    //   Screen.setBrightness(ConfigHelper.getComicBrightness());
+    // }
+    // Screen.keepOn(ConfigHelper.getComicWakelock());
 
     _current_item = widget.item;
 
-    _connectivity.checkConnectivity().then((e) {
-      var str = "";
-      if (e == ConnectivityResult.mobile) {
-        str = "移动网络";
-      } else if (e == ConnectivityResult.wifi) {
-        str = "WIFI";
-      } else if (e == ConnectivityResult.none) {
-        str = "无网络";
-      } else {
-        str = "未知网络";
-      }
-      setState(() {
-        _network_state = str;
-      });
-    });
-    _connectivity.onConnectivityChanged.listen((e) {
-      var str = "";
-      if (e == ConnectivityResult.mobile) {
-        str = "移动网络";
-      } else if (e == ConnectivityResult.wifi) {
-        str = "WIFI";
-      } else if (e == ConnectivityResult.none) {
-        str = "无网络";
-      } else {
-        str = "未知网络";
-      }
-      setState(() {
-        _network_state = str;
-      });
-    });
-    _battery.batteryLevel.then((e) {
-      setState(() {
-        _battery_str = e.toString() + "%";
-      });
-    });
-    _battery.onBatteryStateChanged.listen((BatteryState state) async {
-      var e = await _battery.batteryLevel;
-      setState(() {
-        _battery_str = e.toString() + "%";
-      });
-    });
+    // _connectivity.checkConnectivity().then((e) {
+    //   var str = "";
+    //   if (e == ConnectivityResult.mobile) {
+    //     str = "移动网络";
+    //   } else if (e == ConnectivityResult.wifi) {
+    //     str = "WIFI";
+    //   } else if (e == ConnectivityResult.none) {
+    //     str = "无网络";
+    //   } else {
+    //     str = "未知网络";
+    //   }
+    //   setState(() {
+    //     _network_state = str;
+    //   });
+    // });
+    // _connectivity.onConnectivityChanged.listen((e) {
+    //   var str = "";
+    //   if (e == ConnectivityResult.mobile) {
+    //     str = "移动网络";
+    //   } else if (e == ConnectivityResult.wifi) {
+    //     str = "WIFI";
+    //   } else if (e == ConnectivityResult.none) {
+    //     str = "无网络";
+    //   } else {
+    //     str = "未知网络";
+    //   }
+    //   setState(() {
+    //     _network_state = str;
+    //   });
+    // });
+    // _battery.batteryLevel.then((e) {
+    //   setState(() {
+    //     _battery_str = e.toString() + "%";
+    //   });
+    // });
+    // _battery.onBatteryStateChanged.listen((BatteryState state) async {
+    //   var e = await _battery.batteryLevel;
+    //   setState(() {
+    //     _battery_str = e.toString() + "%";
+    //   });
+    // });
 
     _scrollController.addListener(() {
       var value = _scrollController.offset;
@@ -145,7 +145,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    Screen.keepOn(false);
+    //Screen.keepOn(false);
     int page = 1;
     if (!ConfigHelper.getComicVertical() ?? false) {
       print(_select_index);
@@ -155,17 +155,17 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       }
     }
 
-    ComicHistoryProvider.getItem(widget.comic_id).then((history_item) async {
-      if (history_item != null) {
-        history_item.chapter_id = _current_item.chapter_id;
-        history_item.page = page.toDouble();
-        await ComicHistoryProvider.update(history_item);
-      } else {
-        await ComicHistoryProvider.insert(ComicHistory(
-            widget.comic_id, _current_item.chapter_id, page.toDouble(), 1));
-      }
-      Utils.changHistory.fire(widget.comic_id);
-    });
+    // ComicHistoryProvider.getItem(widget.comic_id).then((history_item) async {
+    //   if (history_item != null) {
+    //     history_item.chapter_id = _current_item.chapter_id;
+    //     history_item.page = page.toDouble();
+    //     await ComicHistoryProvider.update(history_item);
+    //   } else {
+    //     await ComicHistoryProvider.insert(ComicHistory(
+    //         widget.comic_id, _current_item.chapter_id, page.toDouble(), 1));
+    //   }
+    //   Utils.changHistory.fire(widget.comic_id);
+    // });
 
     UserHelper.comicAddComicHistory(widget.comic_id, _current_item.chapter_id,
         page: page);
@@ -197,10 +197,10 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                     color: Color.fromARGB(255, 34, 34, 34),
                     child: Text(
                       _loading
-                          ? "${_current_item.chapter_title}  加载中 WIFI  100%电量"
+                          ? "${_current_item.chapter_title}  加载中"
                           : Provider.of<AppSetting>(context).comic_vertical_mode
-                              ? "${_current_item.chapter_title}  ${_vertical_value}  $_network_state  ${_battery_str}电量"
-                              : "${_current_item.chapter_title}  ${_select_index}/${_detail.page_url.length}  $_network_state  ${_battery_str}电量",
+                              ? "${_current_item.chapter_title}  ${_vertical_value}"
+                              : "${_current_item.chapter_title}  ${_select_index}/${_detail.page_url.length}",
                       style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   )
@@ -704,15 +704,14 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                 return Container(
                   color: Colors.black,
                   padding: EdgeInsets.only(bottom: 0),
-                  child: CachedNetworkImage(
-                      imageUrl: f,
-                      httpHeaders: {"Referer": "http://www.dmzj.com/"},
-                      placeholder: (ctx, i) => Container(
-                            height: 400,
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
+                  child: Image.network(f,
+                      headers: {"Referer": "http://www.dmzj.com/"},
+                      // placeholder: (ctx, i) => Container(
+                      //       height: 400,
+                      //       child: Center(
+                      //         child: CircularProgressIndicator(),
+                      //       ),
+                      //     ),
                       filterQuality: FilterQuality.high),
                 );
               }
@@ -726,15 +725,14 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         .map<Widget>(
           (f) => Padding(
             padding: EdgeInsets.only(bottom: 0),
-            child: CachedNetworkImage(
-                imageUrl: f,
-                httpHeaders: {"Referer": "http://www.dmzj.com/"},
-                placeholder: (ctx, i) => Container(
-                      height: 100,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
+            child: Image.network(f,
+                headers: {"Referer": "http://www.dmzj.com/"},
+                // placeholder: (ctx, i) => Container(
+                //       height: 100,
+                //       child: Center(
+                //         child: CircularProgressIndicator(),
+                //       ),
+                //     ),
                 filterQuality: FilterQuality.high),
           ),
         )
@@ -846,7 +844,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                                   max: 1,
                                   min: 0.01,
                                   onChanged: (e) {
-                                    Screen.setBrightness(e);
+                                    //Screen.setBrightness(e);
                                     Provider.of<AppSetting>(context,
                                             listen: false)
                                         .changeBrightness(e);
@@ -903,7 +901,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                     ),
                     value: Provider.of<AppSetting>(context).comic_wakelock,
                     onChanged: (e) {
-                      Screen.keepOn(e);
+                      //Screen.keepOn(e);
                       Provider.of<AppSetting>(context, listen: false)
                           .changeComicWakelock(e);
                     }),
@@ -948,7 +946,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
 
   bool _loading = false;
   ComicWebChapterDetail _detail;
-  DefaultCacheManager _cacheManager = DefaultCacheManager();
+  //DefaultCacheManager _cacheManager = DefaultCacheManager();
   Future loadData() async {
     try {
       if (_loading) {
@@ -969,39 +967,39 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         var response = await http.get(api);
         responseBody = response.bodyBytes;
       } catch (e) {
-        var file = await _cacheManager.getFileFromCache(api);
-        if (file != null) {
-          responseBody = await file.file.readAsBytes();
-        }
+        // var file = await _cacheManager.getFileFromCache(api);
+        // if (file != null) {
+        //   responseBody = await file.file.readAsBytes();
+        // }
       }
 
       var responseStr = utf8.decode(responseBody);
       var jsonMap = jsonDecode(responseStr);
 
       ComicWebChapterDetail detail = ComicWebChapterDetail.fromJson(jsonMap);
-      var history_item = await ComicHistoryProvider.getItem(widget.comic_id);
-      if (history_item != null &&
-          history_item.chapter_id == _current_item.chapter_id) {
-        var page = history_item.page.toInt();
-        if (page > detail.page_url.length) {
-          page = detail.page_url.length;
-        }
-        _pageController = new PreloadPageController(initialPage: page);
-        setState(() {
-          _select_index = page;
-        });
-        // _pageController.=;
-      } else {
-        _pageController = new PreloadPageController(initialPage: 1);
-        setState(() {
-          _select_index = 1;
-        });
-      }
+      // var history_item = await ComicHistoryProvider.getItem(widget.comic_id);
+      // if (history_item != null &&
+      //     history_item.chapter_id == _current_item.chapter_id) {
+      //   var page = history_item.page.toInt();
+      //   if (page > detail.page_url.length) {
+      //     page = detail.page_url.length;
+      //   }
+      //   _pageController = new PreloadPageController(initialPage: page);
+      //   setState(() {
+      //     _select_index = page;
+      //   });
+      //   // _pageController.=;
+      // } else {
+      // _pageController = new PreloadPageController(initialPage: 1);
+      // setState(() {
+      //   _select_index = 1;
+      // });
+      // }
 
       setState(() {
         _detail = detail;
       });
-      await _cacheManager.putFile(api, responseBody);
+      //await _cacheManager.putFile(api, responseBody);
       await loadViewPoint();
 
       //ConfigHelper.setComicHistory(widget.comic_id, _current_item.chapter_id);

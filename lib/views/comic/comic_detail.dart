@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+//import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_dmzj/app/user_info.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_related_model.dart';
-import 'package:flutter_dmzj/sql/comic_history.dart';
+//import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_dmzj/views/download/comic_download.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -44,10 +44,10 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   }
 
   void updateHistory() async {
-    var his = await ComicHistoryProvider.getItem(widget.comic_id);
-    setState(() {
-      history_chapter = his?.chapter_id ?? 0;
-    });
+    // var his = await ComicHistoryProvider.getItem(widget.comic_id);
+    // setState(() {
+    //   history_chapter = his?.chapter_id ?? 0;
+    // });
   }
 
   @override
@@ -611,7 +611,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   bool _loading = false;
   bool _isLock = false;
   bool _isSubscribe = false;
-  DefaultCacheManager _cacheManager = DefaultCacheManager();
+  //DefaultCacheManager _cacheManager = DefaultCacheManager();
   Future loadData() async {
     try {
       if (_loading) {
@@ -625,18 +625,18 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       Uint8List responseBody;
       var response = await http.get(api);
       responseBody = response.bodyBytes;
-      if (response.body == "漫画不存在!!!") {
-        var file = await _cacheManager
-            .getFileFromCache('http://comic.cache/${widget.comic_id}');
-        if (file == null) {
-          setState(() {
-            _loading = false;
-            _noCopyright = true;
-          });
-          return;
-        }
-        responseBody = await file.file.readAsBytes();
-      }
+      // if (response.body == "漫画不存在!!!") {
+      //   var file = await _cacheManager
+      //       .getFileFromCache('http://comic.cache/${widget.comic_id}');
+      //   if (file == null) {
+      //     setState(() {
+      //       _loading = false;
+      //       _noCopyright = true;
+      //     });
+      //     return;
+      //   }
+      //   responseBody = await file.file.readAsBytes();
+      // }
       var responseStr = utf8.decode(responseBody);
       var jsonMap = jsonDecode(responseStr);
 
@@ -648,9 +648,9 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         });
         return;
       }
-      await _cacheManager.putFile(
-          'http://comic.cache/${widget.comic_id}', responseBody,
-          eTag: api, maxAge: Duration(days: 7), fileExtension: 'json');
+      // await _cacheManager.putFile(
+      //     'http://comic.cache/${widget.comic_id}', responseBody,
+      //     eTag: api, maxAge: Duration(days: 7), fileExtension: 'json');
       await checkSubscribe();
       await loadRelated();
       setState(() {

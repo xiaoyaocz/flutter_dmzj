@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart';
+//import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+//import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
@@ -320,7 +320,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
     return str;
   }
 
-  DefaultCacheManager _cacheManager = DefaultCacheManager();
+  //DefaultCacheManager _cacheManager = DefaultCacheManager();
   bool _loading = false;
   bool _isSubscribe = false;
   List<NovelVolumeItem> volumes = [];
@@ -338,10 +338,10 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         var response = await http.get(api);
         responseBody = response.bodyBytes;
       } catch (e) {
-        var file = await _cacheManager.getFileFromCache(api);
-        if (file != null) {
-          responseBody = await file.file.readAsBytes();
-        }
+        // var file = await _cacheManager.getFileFromCache(api);
+        // if (file != null) {
+        //   responseBody = await file.file.readAsBytes();
+        // }
       }
       var responseStr = utf8.decode(responseBody);
       var jsonMap = jsonDecode(responseStr);
@@ -353,7 +353,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         });
         return;
       }
-      await _cacheManager.putFile(api, responseBody);
+      //await _cacheManager.putFile(api, responseBody);
       await loadVolumes();
       await checkSubscribe();
       setState(() {
@@ -376,10 +376,10 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         var response = await http.get(api);
         responseBody = response.bodyBytes;
       } catch (e) {
-        var file = await _cacheManager.getFileFromCache(api);
-        if (file != null) {
-          responseBody = await file.file.readAsBytes();
-        }
+        // var file = await _cacheManager.getFileFromCache(api);
+        // if (file != null) {
+        //   responseBody = await file.file.readAsBytes();
+        // }
       }
       var responseStr = utf8.decode(responseBody);
       List jsonMap = jsonDecode(responseStr);
@@ -387,7 +387,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
       List<NovelVolumeItem> detail =
           jsonMap.map((f) => NovelVolumeItem.fromJson(f)).toList();
       if (detail != null) {
-        await _cacheManager.putFile(api, responseBody);
+        //await _cacheManager.putFile(api, responseBody);
         setState(() {
           volumes = detail;
         });

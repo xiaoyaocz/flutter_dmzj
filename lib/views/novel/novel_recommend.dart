@@ -57,7 +57,7 @@ class NovelRecommendState extends State<NovelRecommend>
     return Scaffold(
       floatingActionButton: MediaQuery.of(context).size.width > 600
           ? FloatingActionButton(
-             heroTag:'novel',
+              heroTag: 'novel',
               child: Icon(_expand ? Icons.fullscreen_exit : Icons.zoom_out_map),
               onPressed: () {
                 setState(() {
@@ -223,27 +223,29 @@ class NovelRecommendState extends State<NovelRecommend>
               aspectRatio: width / height,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: CachedNetworkImage(
-                    imageUrl: pic,
-                    fit: BoxFit.cover,
-                    httpHeaders: {"Referer": "http://www.dmzj.com/"},
-                    placeholder: (context, url) => AspectRatio(
-                      aspectRatio: width / height,
-                      child: Container(
-                        width: width,
-                        height: height,
-                        child: Icon(Icons.photo),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => AspectRatio(
-                      aspectRatio: width / height,
-                      child: Container(
-                        width: width,
-                        height: height,
-                        child: Icon(Icons.error),
-                      ),
-                    ),
-                  )),
+                  child: Utils.createCacheImage(pic, width, height)
+                  // CachedNetworkImage(
+                  //   imageUrl: pic,
+                  //   fit: BoxFit.cover,
+                  //   httpHeaders: {"Referer": "http://www.dmzj.com/"},
+                  //   placeholder: (context, url) => AspectRatio(
+                  //     aspectRatio: width / height,
+                  //     child: Container(
+                  //       width: width,
+                  //       height: height,
+                  //       child: Icon(Icons.photo),
+                  //     ),
+                  //   ),
+                  //   errorWidget: (context, url, error) => AspectRatio(
+                  //     aspectRatio: width / height,
+                  //     child: Container(
+                  //       width: width,
+                  //       height: height,
+                  //       child: Icon(Icons.error),
+                  //     ),
+                  //   ),
+                  // ),
+                  ),
             ),
             Padding(
               padding: EdgeInsets.only(top: 4, bottom: 4),

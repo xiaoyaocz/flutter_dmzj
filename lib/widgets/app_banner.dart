@@ -16,9 +16,7 @@ class _AppBannerState extends State<AppBanner> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(8),
-      constraints: BoxConstraints(
-        maxWidth: 600
-      ),
+      constraints: BoxConstraints(maxWidth: 600),
       child: Stack(
         alignment: AlignmentDirectional.bottomEnd,
         children: <Widget>[
@@ -82,23 +80,21 @@ class BannerImageItem extends StatelessWidget {
         alignment: AlignmentDirectional.bottomStart,
         fit: StackFit.expand,
         children: <Widget>[
-          CachedNetworkImage(
-            imageUrl: pic,
+          Image.network(
+            pic,
             fit: BoxFit.cover,
-            httpHeaders: {"Referer": "http://www.dmzj.com/"},
-            placeholder: (context, url) => Center(
-              child: Center(child: Icon(Icons.photo)),
-            ),
-            errorWidget: (context, url, error) =>
-                Center(child: Icon(Icons.error)),
+            headers: {"Referer": "http://www.dmzj.com/"},
+            // placeholder: (context, url) => Center(
+            //   child: Center(child: Icon(Icons.photo)),
+            // ),
+            // errorWidget: (context, url, error) =>
+            //     Center(child: Icon(Icons.error)),
           ),
           Positioned(
               bottom: 4,
               left: 8,
-              
               child: Container(
                 padding: EdgeInsets.all(8),
-                
                 child: Text(title,
                     style: TextStyle(
                       color: Colors.white,

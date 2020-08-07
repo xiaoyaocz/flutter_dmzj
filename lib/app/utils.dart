@@ -153,19 +153,37 @@ class Utils {
 
   static Widget createCacheImage(String url, double width, double height,
       {BoxFit fit = BoxFit.fitWidth}) {
-    return CachedNetworkImage(
-      imageUrl: url,
-      fit: fit,
-      httpHeaders: {"Referer": "http://www.dmzj.com/"},
-      placeholder: (context, url) => AspectRatio(
-        aspectRatio: width / height,
-        child: Container(
-          width: width,
-          height: height,
-          child: Icon(Icons.photo, color: Colors.grey),
+    if (Platform.isAndroid || Platform.isIOS) {
+      return CachedNetworkImage(
+        imageUrl: url,
+        fit: fit,
+        httpHeaders: {"Referer": "http://www.dmzj.com/"},
+        placeholder: (context, url) => AspectRatio(
+          aspectRatio: width / height,
+          child: Container(
+            width: width,
+            height: height,
+            child: Icon(Icons.photo, color: Colors.grey),
+          ),
         ),
-      ),
-      errorWidget: (context, url, error) => AspectRatio(
+        errorWidget: (context, url, error) => AspectRatio(
+          aspectRatio: width / height,
+          child: Container(
+            width: width,
+            height: height,
+            child: Icon(
+              Icons.error,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      );
+    }
+    return Image.network(
+      url,
+      fit: fit,
+      headers: {"Referer": "http://www.dmzj.com/"},
+      errorBuilder: (context, url, error) => AspectRatio(
         aspectRatio: width / height,
         child: Container(
           width: width,
@@ -179,10 +197,14 @@ class Utils {
     );
   }
 
-  static CachedNetworkImageProvider createCachedImageProvider(String url) {
-    return CachedNetworkImageProvider(url, errorListener: () {
-      print("Image load error:" + url);
-    }, headers: {"Referer": "http://www.dmzj.com/"});
+  static ImageProvider createCachedImageProvider(String url) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      return CachedNetworkImageProvider(url, errorListener: () {
+        print("Image load error:" + url);
+      }, headers: {"Referer": "http://www.dmzj.com/"});
+    } else {
+      return NetworkImage(url, headers: {"Referer": "http://www.dmzj.com/"});
+    }
   }
 
   /// 打开页面

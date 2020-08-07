@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cross_local_storage/cross_local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
@@ -16,7 +17,7 @@ import 'package:flutter_dmzj/views/setting_page.dart';
 import 'package:flutter_dmzj/views/user/personal_page.dart';
 import 'package:flutter_dmzj/views/user/user_page.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,8 +26,8 @@ import 'app/user_info.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  ConfigHelper.prefs = await SharedPreferences.getInstance();
-  await initDatabase();
+  ConfigHelper.prefs = await LocalStorage.getInstance();
+  //await initDatabase();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<AppTheme>(create: (_) => AppTheme(), lazy: false),
