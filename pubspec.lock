@@ -113,6 +113,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.4"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.16.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -198,6 +205,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_widget_from_html_core:
+    dependency: "direct main"
+    description:
+      name: flutter_widget_from_html_core
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.4.3"
   fluttertoast:
     dependency: "direct main"
     description:
@@ -205,6 +219,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.3"
+  html:
+    dependency: transitive
+    description:
+      name: html
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.14.0+3"
   html_unescape:
     dependency: "direct main"
     description:
@@ -366,13 +387,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.0.5"
-  share:
-    dependency: "direct main"
-    description:
-      name: share
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.6.4+2"
   shared_preferences:
     dependency: transitive
     description:
@@ -476,6 +490,20 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.3.0-nullsafety.2"
+  universal_html:
+    dependency: "direct main"
+    description:
+      name: universal_html
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.2.3"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.1"
   url_launcher:
     dependency: "direct main"
     description:
@@ -518,13 +546,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.0-nullsafety.2"
-  webview_flutter:
-    dependency: "direct main"
-    description:
-      name: webview_flutter
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.3.21"
   xdg_directories:
     dependency: transitive
     description:
@@ -532,6 +553,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.0"
+  zone_local:
+    dependency: transitive
+    description:
+      name: zone_local
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.2"
 sdks:
   dart: ">=2.10.0-0.0.dev <2.10.0"
   flutter: ">=1.12.13+hotfix.5 <2.0.0"

@@ -29,7 +29,6 @@ import 'package:photo_view/photo_view.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
 // import 'package:screen/screen.dart';
-import 'package:share/share.dart';
 
 class ComicReaderPage extends StatefulWidget {
   int comic_id;
@@ -276,8 +275,9 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          Share.share(
-                              '${widget.comic_title}-${_current_item.chapter_title}\r\nhttps://m.dmzj.com/view/${widget.comic_id}/${_current_item.chapter_id}.html');
+                          Clipboard.setData(ClipboardData(
+                              text:
+                                  '${widget.comic_title}-${_current_item.chapter_title}\r\nhttps://m.dmzj.com/view/${widget.comic_id}/${_current_item.chapter_id}.html'));
                         }),
                   )),
             ),

@@ -20,17 +20,17 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   String _version = "";
   //String _cacheSize = "计算中";
-  DefaultCacheManager _cacheManager = DefaultCacheManager();
-  PackageInfo _packageInfo;
+  //DefaultCacheManager _cacheManager = DefaultCacheManager();
+  //PackageInfo _packageInfo;
   @override
   void initState() {
     super.initState();
-    PackageInfo.fromPlatform().then((value) {
-      setState(() {
-        _packageInfo = value;
-        _version = "Ver " + _packageInfo.version;
-      });
-    });
+    // PackageInfo.fromPlatform().then((value) {
+    //   setState(() {
+    //     _packageInfo = value;
+    //     _version = "Ver " + _packageInfo.version;
+    //   });
+    // });
     //getCacheSize();
   }
 

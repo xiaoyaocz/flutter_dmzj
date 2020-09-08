@@ -17,7 +17,6 @@ import 'package:flutter_dmzj/views/news/news_detail.dart';
 import 'package:flutter_dmzj/views/novel/novel_category_detail.dart';
 import 'package:flutter_dmzj/views/novel/novel_detail.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
-import 'package:flutter_dmzj/views/other/web_page.dart';
 import 'package:flutter_dmzj/views/reader/comic_reader.dart';
 import 'package:flutter_dmzj/views/reader/novel_reader.dart';
 import 'package:flutter_dmzj/views/user/my_comment_page.dart';
@@ -30,6 +29,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
   static EventBus changeComicHomeTabIndex = EventBus();
@@ -118,8 +118,10 @@ class Utils {
                         child: CircularProgressIndicator(),
                       );
                     },
-                    imageProvider: CachedNetworkImageProvider(image,
-                        headers: {"Referer": "http://www.dmzj.com/"}),
+                    imageProvider: CachedNetworkImageProvider(
+                      image,
+                      headers: {"Referer": "http://www.dmzj.com/"},
+                    ),
                   )),
                 ),
               ),
@@ -238,9 +240,10 @@ class Utils {
         break;
       case 6:
         print("打开网页" + id.toString());
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return WebViewPage(url);
-        }));
+        // Navigator.push(context, MaterialPageRoute(builder: (context) {
+        //   return WebViewPage(url);
+        // }));
+        launch(url);
         break;
       case 7:
         Navigator.push(context, MaterialPageRoute(builder: (context) {

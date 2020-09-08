@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_specia_datail_model.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
 import 'package:http/http.dart' as http;
-import 'package:share/share.dart';
 
 class ComicSpecialDetailPage extends StatefulWidget {
   int id;
@@ -38,8 +38,13 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
                 actions: <Widget>[
                   IconButton(
                       icon: Icon(Icons.share),
-                      onPressed: () => Share.share(
-                          "${_detail.title}\r\nhttp://m.dmzj.com/zhuanti/${_detail.page_url}"))
+                      onPressed: () {
+                        Clipboard.setData(
+                          ClipboardData(
+                              text:
+                                  "${_detail.title}\r\nhttp://m.dmzj.com/zhuanti/${_detail.page_url}"),
+                        );
+                      })
                 ],
                 bottom: TabBar(
                     tabs: [Tab(text: "介绍"), Tab(text: "漫画"), Tab(text: "评论")]),
@@ -124,12 +129,12 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
               ),
             ),
             Center(
-                child: IconButton(
-                    icon: Icon(Icons.favorite_border),
-                    onPressed: () {
-                      UserHelper.comicSubscribe(item.id);
-                    }),
-              )
+              child: IconButton(
+                  icon: Icon(Icons.favorite_border),
+                  onPressed: () {
+                    UserHelper.comicSubscribe(item.id);
+                  }),
+            )
           ],
         ),
       ),

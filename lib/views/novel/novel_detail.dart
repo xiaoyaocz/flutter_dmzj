@@ -4,6 +4,7 @@ import 'dart:typed_data';
 //import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 //import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
@@ -16,7 +17,6 @@ import 'package:flutter_dmzj/views/other/comment_widget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
 
 class NovelDetailPage extends StatefulWidget {
   int novel_id;
@@ -90,9 +90,13 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                             }
                           }),
                   IconButton(
-                      icon: Icon(Icons.share),
-                      onPressed: () => Share.share(
-                          "${_detail.name}\r\nhttp://q.dmzj.com/${widget.novel_id}/index.shtml")),
+                    icon: Icon(Icons.share),
+                    onPressed: () => Clipboard.setData(
+                      ClipboardData(
+                          text:
+                              "${_detail.name}\r\nhttp://q.dmzj.com/${widget.novel_id}/index.shtml"),
+                    ),
+                  ),
                 ],
                 bottom: TabBar(tabs: [
                   Tab(text: "详情"),
