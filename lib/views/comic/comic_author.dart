@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
@@ -28,14 +29,18 @@ class _ComicAuthorPageState extends State<ComicAuthorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_detail==null? "作者":_detail.nickname+"的作品"),
+        title: Text(_detail == null ? "作者" : _detail.nickname + "的作品"),
       ),
       body: EasyRefresh(
         enableControlFinishLoad: false,
         header: MaterialHeader(),
         onRefresh: loadData,
-        child: ListView(
-          children: _detail!=null? _detail.data.map<Widget>((f) => createItem(f)).toList():[],
+        child: CupertinoScrollbar(
+          child: ListView(
+            children: _detail != null
+                ? _detail.data.map<Widget>((f) => createItem(f)).toList()
+                : [],
+          ),
         ),
       ),
     );

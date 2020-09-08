@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
@@ -82,96 +83,100 @@ class ComicRecommendState extends State<ComicRecommend>
           : null,
       body: RefreshIndicator(
         onRefresh: refreshData,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: _expand
-                ? CrossAxisAlignment.stretch
-                : CrossAxisAlignment.center,
-            children: <Widget>[
-              //banner
-              AppBanner(
-                  items: _banners
-                      .map<Widget>((i) => BannerImageItem(
-                            pic: i.cover,
-                            title: i.title,
-                            onTaped: () => Utils.openPage(context, i.id, i.type,
-                                url: i.url, title: i.title),
-                          ))
-                      .toList()),
-              _getItem2(
-                "我的订阅",
-                _my_sub,
-                icon: Icon(Icons.chevron_right, color: Colors.grey),
-                ontap: () => Utils.openSubscribePage(context),
-                ratio: getWidth() / ((getWidth() * (360 / 270)) + 24),
-              ),
-              _getItem(
-                "近期必看",
-                _recommend,
-                ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-              ),
-              _getItem("火热专题", _special,
+        child: CupertinoScrollbar(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: _expand
+                  ? CrossAxisAlignment.stretch
+                  : CrossAxisAlignment.center,
+              children: <Widget>[
+                //banner
+                AppBanner(
+                    items: _banners
+                        .map<Widget>((i) => BannerImageItem(
+                              pic: i.cover,
+                              title: i.title,
+                              onTaped: () => Utils.openPage(
+                                  context, i.id, i.type,
+                                  url: i.url, title: i.title),
+                            ))
+                        .toList()),
+                _getItem2(
+                  "我的订阅",
+                  _my_sub,
+                  icon: Icon(Icons.chevron_right, color: Colors.grey),
+                  ontap: () => Utils.openSubscribePage(context),
+                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 24),
+                ),
+                _getItem(
+                  "近期必看",
+                  _recommend,
+                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                ),
+                _getItem("火热专题", _special,
+                    needSubTitle: false,
+                    imgHeight: 170,
+                    imgWidth: 320,
+                    count: 2,
+                    ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
+                    icon: Icon(Icons.chevron_right, color: Colors.grey),
+                    ontap: () => Utils.changeComicHomeTabIndex.fire(4)),
+                _getItem2("猜你喜欢", _like,
+                    icon: Icon(Icons.refresh, color: Colors.grey),
+                    ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                    ontap: () async => await loadLike()),
+                _getItem(
+                  "大师级作者怎能不看",
+                  _authors,
+                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 24),
+                ),
+                _getItem("国漫也精彩", _guoman,
+                    icon: Icon(Icons.refresh, color: Colors.grey),
+                    ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                    ontap: () => loadGuoman()),
+                _getItem(
+                  "美漫大事件",
+                  _meiman,
                   needSubTitle: false,
                   imgHeight: 170,
                   imgWidth: 320,
                   count: 2,
                   ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
-                  icon: Icon(Icons.chevron_right, color: Colors.grey),
-                  ontap: () => Utils.changeComicHomeTabIndex.fire(4)),
-              _getItem2("猜你喜欢", _like,
-                  icon: Icon(Icons.refresh, color: Colors.grey),
-                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-                  ontap: () async => await loadLike()),
-              _getItem(
-                "大师级作者怎能不看",
-                _authors,
-                ratio: getWidth() / ((getWidth() * (360 / 270)) + 24),
-              ),
-              _getItem("国漫也精彩", _guoman,
-                  icon: Icon(Icons.refresh, color: Colors.grey),
-                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-                  ontap: () => loadGuoman()),
-              _getItem(
-                "美漫大事件",
-                _meiman,
-                needSubTitle: false,
-                imgHeight: 170,
-                imgWidth: 320,
-                count: 2,
-                ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
-              ),
-              _getItem("热门连载", _hot,
-                  icon: Icon(Icons.refresh, color: Colors.grey),
-                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-                  ontap: () => loadHot()),
-              _getItem(
-                "条漫专区",
-                _tiaoman,
-                needSubTitle: false,
-                imgHeight: 170,
-                imgWidth: 320,
-                count: 2,
-                ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
-              ),
-              _getItem("动画专区", _anime,
-                  icon: Icon(Icons.chevron_right, color: Colors.grey),
-                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-                  ontap: () => Utils.openPage(context, 17192, 11, title: "动画")),
-              _getItem2("最新上架", _new,
-                  icon: Icon(Icons.chevron_right, color: Colors.grey),
-                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-                  ontap: () => Utils.changeComicHomeTabIndex.fire(1)),
-              Container(
-                width: double.infinity,
-                //padding: EdgeInsets.all(12),
-                child: Center(
-                  child: Text(
-                    '',
-                    style: TextStyle(color: Colors.grey),
-                  ),
                 ),
-              )
-            ],
+                _getItem("热门连载", _hot,
+                    icon: Icon(Icons.refresh, color: Colors.grey),
+                    ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                    ontap: () => loadHot()),
+                _getItem(
+                  "条漫专区",
+                  _tiaoman,
+                  needSubTitle: false,
+                  imgHeight: 170,
+                  imgWidth: 320,
+                  count: 2,
+                  ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
+                ),
+                _getItem("动画专区", _anime,
+                    icon: Icon(Icons.chevron_right, color: Colors.grey),
+                    ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                    ontap: () =>
+                        Utils.openPage(context, 17192, 11, title: "动画")),
+                _getItem2("最新上架", _new,
+                    icon: Icon(Icons.chevron_right, color: Colors.grey),
+                    ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                    ontap: () => Utils.changeComicHomeTabIndex.fire(1)),
+                Container(
+                  width: double.infinity,
+                  //padding: EdgeInsets.all(12),
+                  child: Center(
+                    child: Text(
+                      '',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

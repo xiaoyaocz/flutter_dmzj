@@ -27,6 +27,9 @@ import 'app/user_info.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ConfigHelper.prefs = await LocalStorage.getInstance();
+  if (ConfigHelper.prefs.getString('fontFamily') == null) {
+    ConfigHelper.prefs.setString('fontFamily', 'Microsoft YaHei');
+  }
   //await initDatabase();
   runApp(MultiProvider(
     providers: [
@@ -83,6 +86,8 @@ class MyApp extends StatelessWidget {
             ? Brightness.dark
             : Brightness.light,
         primarySwatch: Provider.of<AppTheme>(context).themeColor,
+        fontFamily:
+            ConfigHelper.prefs.getString('fontFamily') ?? 'Microsoft YaHei',
       ),
       home: MyHomePage(),
       initialRoute: "/",
