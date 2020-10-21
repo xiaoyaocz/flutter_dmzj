@@ -68,8 +68,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
             Utils.openPage(context, int.parse(uri.queryParameters["id"]),
                 uri.path == "/cartoon_description" ? 1 : 2);
             //print(uri.queryParameters["id"]);
-          }
-           else if (uri.scheme == "https" || uri.scheme == "http") {
+          } else if (uri.scheme == "https" || uri.scheme == "http") {
             //_controller.loadUrl(args.url);
             return NavigationDecision.navigate;
           }
@@ -80,11 +79,10 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
         javascriptMode: JavascriptMode.unrestricted,
         onPageFinished: (e) {
           //try {
-             //_controller.evaluateJavascript(
-             // "\$(\".news_box\").css(\"min-height\",\"680px\");");
+          //_controller.evaluateJavascript(
+          // "\$(\".news_box\").css(\"min-height\",\"680px\");");
           //} catch (e) {
           //}
-         
         },
       ),
       bottomNavigationBar: Offstage(
@@ -142,7 +140,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
 
   void addLike() async {
     try {
-      if(_is_like){
+      if (_is_like) {
         return;
       }
       var api = Api.addNewsLike(widget.article_id);

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/user/user_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +18,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _loading = false;
-  String userName = "";
-  String passwrod = "";
+  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,52 +39,51 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             children: <Widget>[
               Padding(
-                  padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  child: TextField(
-                      onChanged: (text) {
-                        setState(() {
-                          userName = text;
-                        });
-                      },
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.account_circle),
-                          fillColor: Colors.transparent,
-                          filled: true,
-                          labelText: '用户名'))),
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: TextField(
+                  controller: _userController,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.account_circle),
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    labelText: '用户名',
+                  ),
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: TextField(
-                    onChanged: (text) {
-                      setState(() {
-                        passwrod = text;
-                      });
-                    },
-                    onSubmitted: (text) {
-                      setState(() {
-                        passwrod = text;
-                      });
-                      _doLogin(userName, text);
-                    },
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock),
-                        fillColor: Colors.transparent,
-                        filled: true,
-                        labelText: '密码')),
+                  controller: _passwordController,
+                  onSubmitted: (text) {
+                    _doLogin(_userController.text, _passwordController.text);
+                  },
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.lock),
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    labelText: '密码',
+                  ),
+                ),
               ),
-              !_loading? Padding(
-                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: MaterialButton(
-                    color: Theme.of(context).accentColor,
-                    textColor: Colors.white,
-                    minWidth: double.infinity,
-                    child:Text("登录"),
-                    onPressed: () => _doLogin(userName, passwrod)),
-              ):Padding(
-                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child:Center(
-                child: CircularProgressIndicator(),
-              ),),
+              !_loading
+                  ? Padding(
+                      padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      child: MaterialButton(
+                        color: Theme.of(context).accentColor,
+                        textColor: Colors.white,
+                        minWidth: double.infinity,
+                        child: Text("登录"),
+                        onPressed: () => _doLogin(
+                            _userController.text, _passwordController.text),
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
               // Row(
               //   children: <Widget>[
               //     Expanded(
@@ -140,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _doLogin(String username, String password) async {
-    if (username.length == 0 || passwrod.length == 0) {
+    if (username.length == 0 || password.length == 0) {
       Fluttertoast.showToast(msg: "检查你的输入", toastLength: Toast.LENGTH_SHORT);
       return;
     }
@@ -150,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       var result = await http
-          .post(Api.loginV2, body: {"passwd": passwrod, "nickname": username});
+          .post(Api.loginV2, body: {"passwd": password, "nickname": username});
       var body = result.body;
       var data = UserLgoinModel.fromJson(jsonDecode(body));
       if (data.result == 1) {
