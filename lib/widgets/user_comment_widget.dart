@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/comment_model.dart';
 import 'package:flutter_dmzj/models/user_comment_model.dart';
 import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
@@ -18,10 +15,14 @@ import 'package:html_unescape/html_unescape.dart';
 
 class UserCommentWidget extends StatefulWidget {
   /// Type 0=漫画，1=新闻，2=轻小说
-  int type = 0;
-  int user_id;
+  final int type;
+  final int userId;
 
-  UserCommentWidget(this.type, this.user_id, {Key key}) : super(key: key);
+  UserCommentWidget(
+    this.userId, {
+    Key key,
+    this.type = 0,
+  }) : super(key: key);
 
   @override
   _UserCommentWidgetState createState() => _UserCommentWidgetState();
@@ -31,12 +32,7 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-
-  bool _isHot = false;
-
   int _page = 0;
-
-  int _comment_count = 0;
 
   List<UserCommentItem> _list = [];
 
@@ -58,6 +54,7 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return EasyRefresh(
       child: _list.length != 0
           ? ListView.builder(
@@ -248,7 +245,7 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
                 TextSpan(
                     text: ": " + _htmlUnescape.convert(item.content),
                     style: TextStyle(
-                        color: Theme.of(context).textTheme.body1.color))
+                        color: Theme.of(context).textTheme.bodyText1.color))
               ]),
             ),
           ],
@@ -268,7 +265,7 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
       });
 
       var response = await http
-          .get(Api.userComment(widget.user_id, type: widget.type, page: _page));
+          .get(Api.userComment(widget.userId, type: widget.type, page: _page));
 
       List jsonMap = jsonDecode(response.body);
 

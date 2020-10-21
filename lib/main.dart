@@ -155,19 +155,19 @@ class _MyHomePageState extends State<MyHomePage>
         },
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            title: Text("漫画"),
+            label: "漫画",
             icon: Icon(Icons.library_books),
           ),
           BottomNavigationBarItem(
-            title: Text("新闻"),
+            label: "新闻",
             icon: Icon(Icons.whatshot),
           ),
           BottomNavigationBarItem(
-            title: Text("轻小说"),
+            label: "轻小说",
             icon: Icon(Icons.book),
           ),
           BottomNavigationBarItem(
-            title: Text("我的"),
+            label: "我的",
             icon: Icon(Icons.account_circle),
           ),
         ],

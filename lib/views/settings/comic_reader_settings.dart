@@ -22,12 +22,12 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
               title: Text(
                 "使用系统亮度",
               ),
-              value: Provider.of<AppSetting>(context).comic_system_brightness,
+              value: Provider.of<AppSetting>(context).comicSystemBrightness,
               onChanged: (e) {
                 Provider.of<AppSetting>(context, listen: false)
                     .changeComicSystemBrightness(e);
               }),
-          !Provider.of<AppSetting>(context).comic_system_brightness
+          !Provider.of<AppSetting>(context).comicSystemBrightness
               ? Row(
                   children: <Widget>[
                     SizedBox(width: 12),
@@ -38,7 +38,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                     Expanded(
                         child: Slider(
                             value: Provider.of<AppSetting>(context)
-                                .comic_brightness,
+                                .comicBrightness,
                             max: 1,
                             min: 0.01,
                             onChanged: (e) {
@@ -58,7 +58,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                 "网页API部分单行本不分页",
                 style: TextStyle(color: Colors.grey),
               ),
-              value: Provider.of<AppSetting>(context).comic_web_api,
+              value: Provider.of<AppSetting>(context).comicWebApi,
               onChanged: (e) {
                 Provider.of<AppSetting>(context, listen: false)
                     .changeComicWebApi(e);
@@ -67,18 +67,18 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
               title: Text(
                 "竖向阅读",
               ),
-              value: Provider.of<AppSetting>(context).comic_vertical_mode,
+              value: Provider.of<AppSetting>(context).comicVerticalMode,
               onChanged: (e) {
                 Provider.of<AppSetting>(context, listen: false)
                     .changeComicVertical(e);
                 //Navigator.pop(context);
               }),
-          !Provider.of<AppSetting>(context).comic_vertical_mode
+          !Provider.of<AppSetting>(context).comicVerticalMode
               ? SwitchListTile(
                   title: Text(
                     "日漫模式",
                   ),
-                  value: Provider.of<AppSetting>(context).comic_read_reverse,
+                  value: Provider.of<AppSetting>(context).comicReadReverse,
                   onChanged: (e) {
                     Provider.of<AppSetting>(context, listen: false)
                         .changeReadReverse(e);
@@ -88,7 +88,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
               title: Text(
                 "屏幕常亮",
               ),
-              value: Provider.of<AppSetting>(context).comic_wakelock,
+              value: Provider.of<AppSetting>(context).comicWakelock,
               onChanged: (e) {
                 Provider.of<AppSetting>(context, listen: false)
                     .changeComicWakelock(e);
@@ -97,7 +97,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
               title: Text(
                 "全屏阅读",
               ),
-              value: Provider.of<AppSetting>(context).comic_read_showStatusBar,
+              value: Provider.of<AppSetting>(context).comicReadShowStatusBar,
               onChanged: (e) {
                 Provider.of<AppSetting>(context, listen: false)
                     .changeComicReadShowStatusBar(e);
@@ -106,7 +106,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
               title: Text(
                 "显示状态信息",
               ),
-              value: Provider.of<AppSetting>(context).comic_read_showstate,
+              value: Provider.of<AppSetting>(context).comicReadShowstate,
               onChanged: (e) {
                 Provider.of<AppSetting>(context, listen: false)
                     .changeComicReadShowState(e);

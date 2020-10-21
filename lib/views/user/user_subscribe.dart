@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/user/user_subscribe_item.dart';
 import 'package:flutter_dmzj/widgets/user_subscribe_widget.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -15,7 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class UserSubscribePage extends StatefulWidget {
-  int index = 0;
+  final int index;
   UserSubscribePage({Key key, this.index = 0}) : super(key: key);
 
   @override
@@ -49,7 +47,7 @@ class _UserSubscribeStatePage extends State<UserSubscribePage> {
 }
 
 class SubscribeTabView extends StatefulWidget {
-  int type = 0;
+  final int type;
   SubscribeTabView(this.type, {Key key}) : super(key: key);
 
   @override
@@ -67,9 +65,9 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
     loadData();
   }
 
-  int _sub_type = 1;
+  int _subType = 1;
   List<String> _subTypes = ["全部订阅", "未读", "已读", "完结"];
-  int _select_letters = 0;
+  int _selectLetters = 0;
   Map _letters = {
     "全部": "all",
     "数字开头": "number",
@@ -99,14 +97,16 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
     "Y开头": "y",
     "Z开头": "z"
   };
-    @override
+  @override
   void setState(fn) {
     if (mounted) {
       super.setState(fn);
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return EasyRefresh(
       header: MaterialHeader(),
       footer: MaterialFooter(),
@@ -124,9 +124,9 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(_select_letters == 0
+                          Text(_selectLetters == 0
                               ? "字母筛选"
-                              : _letters.keys.toList()[_select_letters]),
+                              : _letters.keys.toList()[_selectLetters]),
                           Icon(
                             Icons.arrow_drop_down,
                             color: Colors.grey,
@@ -136,7 +136,7 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
                     ),
                     onSelected: (v) async {
                       setState(() {
-                        _select_letters = _letters.values.toList().indexOf(v);
+                        _selectLetters = _letters.values.toList().indexOf(v);
                       });
                       _page = 0;
                       await loadData();
@@ -145,7 +145,7 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
                         .map((f) => CheckedPopupMenuItem<String>(
                               child: Text(f),
                               value: _letters[f],
-                              checked: _select_letters ==
+                              checked: _selectLetters ==
                                   _letters.keys.toList().indexOf(f),
                             ))
                         .toList(),
@@ -158,7 +158,7 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(_subTypes[_sub_type - 1]),
+                          Text(_subTypes[_subType - 1]),
                           Icon(
                             Icons.arrow_drop_down,
                             color: Colors.grey,
@@ -167,7 +167,7 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
                       )),
                   onSelected: (v) async {
                     setState(() {
-                      _sub_type = v;
+                      _subType = v;
                     });
                     _page = 0;
                     await loadData();
@@ -176,15 +176,20 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
                       .map((f) => CheckedPopupMenuItem<int>(
                             child: Text(f),
                             value: _subTypes.indexOf(f) + 1,
-                            checked: _subTypes.indexOf(f) + 1 == _sub_type,
+                            checked: _subTypes.indexOf(f) + 1 == _subType,
                           ))
                       .toList(),
                 ))
               ],
             ),
-            _loading&&_page==0?Center(
-              child: CircularProgressIndicator(),
-            ): UserSubscribeWidget(_list,type: widget.type,),
+            _loading && _page == 0
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : UserSubscribeWidget(
+                    _list,
+                    type: widget.type,
+                  ),
           ],
         ),
       ),
@@ -197,7 +202,6 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
     );
   }
 
- 
   List<SubscribeItem> _list = [];
   int _page = 0;
   bool _loading = false;
@@ -211,10 +215,10 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
       });
       var response = await http.get(Api.userSubscribe(
           widget.type,
-          _sub_type,
+          _subType,
           Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid,
           Provider.of<AppUserInfo>(context, listen: false).loginInfo.dmzj_token,
-          letter: _letters.values.toList()[_select_letters],
+          letter: _letters.values.toList()[_selectLetters],
           page: _page));
 
       List jsonMap = jsonDecode(response.body);
@@ -243,6 +247,4 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
       });
     }
   }
-
-
 }

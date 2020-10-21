@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 
 class AppTheme with ChangeNotifier {
-
-  AppTheme(){
+  AppTheme() {
     changeDark(ConfigHelper.getOpenDarkMode());
     changeThemeColor(ConfigHelper.getAppTheme());
   }
-
 
   static Map<String, Color> themeColors = {
     "胖次蓝": Colors.blue,
@@ -38,7 +35,10 @@ class AppTheme with ChangeNotifier {
       widgets.add(RadioListTile(
         groupValue: item,
         value: _themeColorName,
-        title: new Text(item,style: TextStyle(color: AppTheme.themeColors[item]),),
+        title: new Text(
+          item,
+          style: TextStyle(color: AppTheme.themeColors[item]),
+        ),
         onChanged: (value) {
           changeThemeColor(AppTheme.themeColors.keys.toList().indexOf(item));
           Navigator.of(context).pop();

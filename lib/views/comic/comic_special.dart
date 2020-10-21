@@ -46,6 +46,7 @@ class _ComicSpecialPageState extends State<ComicSpecialPage>
   int _page = 0;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return EasyRefresh(
       onRefresh: () async {
         _page = 0;

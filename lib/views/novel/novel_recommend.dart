@@ -8,7 +8,6 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_banner_item.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_comic_item.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_new_item.dart';
-import 'package:flutter_dmzj/views/comic/comic_detail.dart';
 import 'package:flutter_dmzj/widgets/app_banner.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -26,7 +25,7 @@ class NovelRecommendState extends State<NovelRecommend>
 
   List<ComicHomeBannerItem> _banners = [];
   List<ComicHomeComicItem> _new = [];
-  List<ComicHomeComicItem> _anime_ing = [];
+  List<ComicHomeComicItem> _animeIng = [];
   List<ComicHomeComicItem> _anime = [];
   List<ComicHomeComicItem> _hot = [];
 
@@ -54,10 +53,11 @@ class NovelRecommendState extends State<NovelRecommend>
   bool _expand = false;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       floatingActionButton: MediaQuery.of(context).size.width > 600
           ? FloatingActionButton(
-             heroTag:'novel',
+              heroTag: 'novel',
               child: Icon(_expand ? Icons.fullscreen_exit : Icons.zoom_out_map),
               onPressed: () {
                 setState(() {
@@ -96,7 +96,7 @@ class NovelRecommendState extends State<NovelRecommend>
 
               _getItem(
                 "动画进行时",
-                _anime_ing,
+                _animeIng,
                 ratio: getWidth() / ((getWidth() * (360 / 270)) + 44),
               ),
               _getItem(
@@ -283,9 +283,9 @@ class NovelRecommendState extends State<NovelRecommend>
       List jsonMap = jsonDecode(response.body);
       //Banner
       {
-        List banner_item = jsonMap[0]["data"];
+        List bannerItem = jsonMap[0]["data"];
         List<ComicHomeBannerItem> banners =
-            banner_item.map((i) => ComicHomeBannerItem.fromJson(i)).toList();
+            bannerItem.map((i) => ComicHomeBannerItem.fromJson(i)).toList();
         if (banners.length != 0) {
           setState(() {
             _banners = banners.where((e) => e.type != 10).toList();
@@ -311,7 +311,7 @@ class NovelRecommendState extends State<NovelRecommend>
             items.map((i) => ComicHomeComicItem.fromJson(i)).toList();
         if (_items.length != 0) {
           setState(() {
-            _anime_ing = _items;
+            _animeIng = _items;
           });
         }
       }

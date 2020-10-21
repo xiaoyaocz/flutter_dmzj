@@ -70,23 +70,23 @@ class Api {
   }
 
   //漫画详情
-  static String comicDetail(int comic_id) {
-    return "$apiHost/comic/comic_$comic_id.json?${defaultParameter()}";
+  static String comicDetail(int comicId) {
+    return "$apiHost/comic/comic_$comicId.json?${defaultParameter()}";
   }
 
   /// 轻小说详情
-  static String novelDetail(int novel_id) {
-    return "$apiHost/novel/$novel_id.json";
+  static String novelDetail(int novelId) {
+    return "$apiHost/novel/$novelId.json";
   }
 
   /// 轻小说章节详情
-  static String novelVolumeDetail(int novel_id) {
-    return "$apiHost/novel/chapter/$novel_id.json";
+  static String novelVolumeDetail(int novelId) {
+    return "$apiHost/novel/chapter/$novelId.json";
   }
 
   /// 轻小说阅读
-  static String novelRead(int novel_id, int volume_id, int chapter_id) {
-    return "$apiHost/novel/download/${novel_id}_${volume_id}_${chapter_id}.txt";
+  static String novelRead(int novelId, int volumeId, int chapterId) {
+    return "$apiHost/novel/download/${novelId}_${volumeId}_$chapterId.txt";
   }
 
   /// 漫画专题
@@ -104,22 +104,22 @@ class Api {
 
   /// 漫画排行榜详情
   static String comicRank(
-      {String tag_id = "0",
+      {String tagId = "0",
       String rank = "0",
       String sort = "0",
       int page = 0}) {
-    return "$apiHost/rank/$tag_id/$rank/$sort/$page.json?${defaultParameter()}";
+    return "$apiHost/rank/$tagId/$rank/$sort/$page.json?${defaultParameter()}";
   }
 
   /// 轻小说排行榜详情
   static String novelRank(
-      {String tag_id = "0", String sort = "0", int page = 0}) {
-    return "$apiHost/novel/rank/$sort/$tag_id/$page.json?${defaultParameter()}";
+      {String tagId = "0", String sort = "0", int page = 0}) {
+    return "$apiHost/novel/rank/$sort/$tagId/$page.json?${defaultParameter()}";
   }
 
   /// 漫画专题详情
-  static String comicSpeciaDetail(int specia_id) {
-    return "$apiHost/subject/$specia_id.json?${defaultParameter()}";
+  static String comicSpeciaDetail(int speciaId) {
+    return "$apiHost/subject/$speciaId.json?${defaultParameter()}";
   }
 
   /// 漫画更新
@@ -141,23 +141,23 @@ class Api {
   static get novelCategory => "$apiHost/1/category.json?${defaultParameter()}";
 
   /// 漫画作者
-  static String comicAuthorDetail(int author_id) {
-    return "$apiHost/UCenter/author/$author_id.json?${defaultParameter()}";
+  static String comicAuthorDetail(int authorId) {
+    return "$apiHost/UCenter/author/$authorId.json?${defaultParameter()}";
   }
 
   /// 漫画章节详情
-  static String comicChapterDetail(int comic_id, int chapter_id) {
-    return "$apiHost/chapter/$comic_id/$chapter_id.json?${defaultParameter()}";
+  static String comicChapterDetail(int comicId, int chapterId) {
+    return "$apiHost/chapter/$comicId/$chapterId.json?${defaultParameter()}";
   }
 
   /// 漫画章节详情(手机网页)
-  static String comicWebChapterDetail(int comic_id, int chapter_id) {
-    return "http://m.dmzj.com/chapinfo/$comic_id/$chapter_id.html";
+  static String comicWebChapterDetail(int comicId, int chapterId) {
+    return "http://m.dmzj.com/chapinfo/$comicId/$chapterId.html";
   }
 
   /// 漫画吐槽
-  static String comicChapterViewPoint(int comic_id, int chapter_id) {
-    return "$apiHost/viewPoint/0/$comic_id/$chapter_id.json?${defaultParameter()}";
+  static String comicChapterViewPoint(int comicId, int chapterId) {
+    return "$apiHost/viewPoint/0/$comicId/$chapterId.json?${defaultParameter()}";
   }
 
   /// 发表吐槽
@@ -171,13 +171,13 @@ class Api {
   }
 
   /// 查询是否订阅漫画
-  static String comicCheckSubscribe(int comic_id, String uid) {
-    return "$apiHost/subscribe/0/$uid/$comic_id?${defaultParameter()}";
+  static String comicCheckSubscribe(int comicId, String uid) {
+    return "$apiHost/subscribe/0/$uid/$comicId?${defaultParameter()}";
   }
 
   /// 查询是否订阅小说
-  static String novelCheckSubscribe(int novel_id, String uid) {
-    return "$apiHost/subscribe/1/$uid/$novel_id?${defaultParameter()}";
+  static String novelCheckSubscribe(int novelId, String uid) {
+    return "$apiHost/subscribe/1/$uid/$novelId?${defaultParameter()}";
   }
 
   /// 漫画筛选条件
@@ -208,35 +208,35 @@ class Api {
 
   /// 轻小说类目详情
   static String novelCategoryDetail(
-      {int cate_id = 0, int status = 0, int sort = 0, int page = 0}) {
-    return "$apiHost/novel/$cate_id/$status/$sort/$page.json?${defaultParameter()}";
+      {int cateId = 0, int status = 0, int sort = 0, int page = 0}) {
+    return "$apiHost/novel/$cateId/$status/$sort/$page.json?${defaultParameter()}";
   }
 
   //漫画相关内容
-  static String comicRelated(int comic_id) {
-    return "$apiHost/v3/comic/related/$comic_id.json?${defaultParameter()}";
+  static String comicRelated(int comicId) {
+    return "$apiHost/v3/comic/related/$comicId.json?${defaultParameter()}";
   }
 
   //添加漫画订阅
   static get addComicSubscribe => "http://v3api.dmzj.com/subscribe/add";
 
   //取消漫画订阅
-  static String cancelComicSubscribe(int comic_id, String uid) {
-    return "$apiHost/subscribe/cancel?obj_ids=$comic_id&uid=$uid&type=mh";
+  static String cancelComicSubscribe(int comicId, String uid) {
+    return "$apiHost/subscribe/cancel?obj_ids=$comicId&uid=$uid&type=mh";
   }
 
   //添加小说订阅
   static get addNovelSubscribe => "http://v3api.dmzj.com/subscribe/add";
 
   //取消小说订阅
-  static String cancelNovelSubscribe(int novel_id, String uid) {
-    return "$apiHost/subscribe/cancel?obj_ids=$novel_id&uid=$uid&type=xs";
+  static String cancelNovelSubscribe(int novelId, String uid) {
+    return "$apiHost/subscribe/cancel?obj_ids=$novelId&uid=$uid&type=xs";
   }
 
   //用户订阅,type 0=漫画,1=轻小说,sub_type 全部=1，未读=2，已读=3，完结=4
-  static String userSubscribe(int type, int sub_type, String uid, String token,
+  static String userSubscribe(int type, int subType, String uid, String token,
       {int page = 0, String letter = "all"}) {
-    return "$apiHost/UCenter/subscribe?uid=$uid&sub_type=$sub_type&letter=$letter&dmzj_token=$token&page=$page&type=$type&${defaultParameter()}";
+    return "$apiHost/UCenter/subscribe?uid=$uid&sub_type=$subType&letter=$letter&dmzj_token=$token&page=$page&type=$type&${defaultParameter()}";
   }
 
   /// 用户漫画记录
@@ -250,12 +250,12 @@ class Api {
   }
 
   /// 上传观看记录
-  static String addUserComicHistory(int comic_id, int chapter_id, String uid,
+  static String addUserComicHistory(int comicId, int chapterId, String uid,
       {int page = 1}) {
     Map map = {
-      comic_id.toString(): chapter_id.toString(),
-      "comicId": comic_id.toString(),
-      "chapterId": chapter_id.toString(),
+      comicId.toString(): chapterId.toString(),
+      "comicId": comicId.toString(),
+      "chapterId": chapterId.toString(),
       "page": page,
       "time": timeStamp
     };
@@ -265,13 +265,13 @@ class Api {
 
   /// 上传小说观看记录
   static String addUserNovelHistory(
-      int novel_id, int volume_id, int chapter_id, String uid,
+      int novelId, int volumeId, int chapterId, String uid,
       {int page = 1}) {
     Map map = {
-      novel_id.toString(): chapter_id.toString(),
-      "lnovel_id": novel_id.toString(),
-      "volume_id": volume_id.toString(),
-      "chapterId": chapter_id.toString(),
+      novelId.toString(): chapterId.toString(),
+      "lnovel_id": novelId.toString(),
+      "volume_id": volumeId.toString(),
+      "chapterId": chapterId.toString(),
       "total_num": 0,
       "page": page,
       "time": timeStamp
@@ -297,8 +297,8 @@ class Api {
   }
 
   /// 点赞评论
-  static String likeCommentV3(int obj_id, String comment_id, int type) {
-    return "http://v3comment.dmzj.com/v1/$type/like/$comment_id?obj_id=$obj_id&comment_id=$comment_id&${defaultParameter()}";
+  static String likeCommentV3(int objId, String commentId, int type) {
+    return "http://v3comment.dmzj.com/v1/$type/like/$commentId?obj_id=$objId&comment_id=$commentId&${defaultParameter()}";
   }
 
   /// 评论数量

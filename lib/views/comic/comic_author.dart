@@ -10,8 +10,8 @@ import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:http/http.dart' as http;
 
 class ComicAuthorPage extends StatefulWidget {
-  int auhtor_id;
-  ComicAuthorPage(this.auhtor_id, {Key key}) : super(key: key);
+  final int auhtoId;
+  ComicAuthorPage(this.auhtoId, {Key key}) : super(key: key);
 
   @override
   _ComicAuthorPageState createState() => _ComicAuthorPageState();
@@ -28,14 +28,16 @@ class _ComicAuthorPageState extends State<ComicAuthorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_detail==null? "作者":_detail.nickname+"的作品"),
+        title: Text(_detail == null ? "作者" : _detail.nickname + "的作品"),
       ),
       body: EasyRefresh(
         enableControlFinishLoad: false,
         header: MaterialHeader(),
         onRefresh: loadData,
         child: ListView(
-          children: _detail!=null? _detail.data.map<Widget>((f) => createItem(f)).toList():[],
+          children: _detail != null
+              ? _detail.data.map<Widget>((f) => createItem(f)).toList()
+              : [],
         ),
       ),
     );
@@ -100,7 +102,7 @@ class _ComicAuthorPageState extends State<ComicAuthorPage> {
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Api.comicAuthorDetail(widget.auhtor_id));
+      var response = await http.get(Api.comicAuthorDetail(widget.auhtoId));
 
       var jsonMap = jsonDecode(response.body);
 

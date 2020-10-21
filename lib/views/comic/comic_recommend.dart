@@ -8,7 +8,6 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_banner_item.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_comic_item.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_new_item.dart';
-import 'package:flutter_dmzj/views/comic/comic_detail.dart';
 import 'package:flutter_dmzj/widgets/app_banner.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -35,7 +34,7 @@ class ComicRecommendState extends State<ComicRecommend>
   List<ComicHomeNewItem> _new = [];
   List<ComicHomeComicItem> _tiaoman = [];
   List<ComicHomeComicItem> _anime = [];
-  List<ComicHomeNewItem> _my_sub = [];
+  List<ComicHomeNewItem> _mySub = [];
 
   @override
   void initState() {
@@ -69,10 +68,11 @@ class ComicRecommendState extends State<ComicRecommend>
   bool _expand = false;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       floatingActionButton: MediaQuery.of(context).size.width > 600
           ? FloatingActionButton(
-            heroTag:'comic',
+              heroTag: 'comic',
               child: Icon(_expand ? Icons.fullscreen_exit : Icons.zoom_out_map),
               onPressed: () {
                 setState(() {
@@ -100,7 +100,7 @@ class ComicRecommendState extends State<ComicRecommend>
                       .toList()),
               _getItem2(
                 "我的订阅",
-                _my_sub,
+                _mySub,
                 icon: Icon(Icons.chevron_right, color: Colors.grey),
                 ontap: () => Utils.openSubscribePage(context),
                 ratio: getWidth() / ((getWidth() * (360 / 270)) + 24),
@@ -384,9 +384,9 @@ class ComicRecommendState extends State<ComicRecommend>
       List jsonMap = jsonDecode(response.body);
       //Banner
       {
-        List banner_item = jsonMap[0]["data"];
+        List bannerItem = jsonMap[0]["data"];
         List<ComicHomeBannerItem> banners =
-            banner_item.map((i) => ComicHomeBannerItem.fromJson(i)).toList();
+            bannerItem.map((i) => ComicHomeBannerItem.fromJson(i)).toList();
         if (banners.length != 0) {
           setState(() {
             _banners = banners.where((e) => e.type != 10).toList();
@@ -395,9 +395,9 @@ class ComicRecommendState extends State<ComicRecommend>
       }
       //近期必看
       {
-        List recommend_item = jsonMap[1]["data"];
+        List recommendItem = jsonMap[1]["data"];
         List<ComicHomeComicItem> recommends =
-            recommend_item.map((i) => ComicHomeComicItem.fromJson(i)).toList();
+            recommendItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
         if (recommends.length != 0) {
           setState(() {
             _recommend = recommends;
@@ -406,9 +406,9 @@ class ComicRecommendState extends State<ComicRecommend>
       }
       //火热专题
       {
-        List special_item = jsonMap[2]["data"];
+        List specialItem = jsonMap[2]["data"];
         List<ComicHomeComicItem> special =
-            special_item.map((i) => ComicHomeComicItem.fromJson(i)).toList();
+            specialItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
         if (special.length != 0) {
           setState(() {
             _special = special;
@@ -417,9 +417,9 @@ class ComicRecommendState extends State<ComicRecommend>
       }
       //大师级作者
       {
-        List author_item = jsonMap[3]["data"];
+        List authorItem = jsonMap[3]["data"];
         List<ComicHomeComicItem> authors =
-            author_item.map((i) => ComicHomeComicItem.fromJson(i)).toList();
+            authorItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
         if (authors.length != 0) {
           setState(() {
             _authors = authors;
@@ -428,9 +428,9 @@ class ComicRecommendState extends State<ComicRecommend>
       }
       //国漫
       {
-        List guoman_item = jsonMap[4]["data"];
+        List guomanItem = jsonMap[4]["data"];
         List<ComicHomeComicItem> guoman =
-            guoman_item.map((i) => ComicHomeComicItem.fromJson(i)).toList();
+            guomanItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
         if (guoman.length != 0) {
           setState(() {
             _guoman = guoman;
@@ -439,9 +439,9 @@ class ComicRecommendState extends State<ComicRecommend>
       }
       //美漫
       {
-        List meiman_item = jsonMap[5]["data"];
+        List meimanItem = jsonMap[5]["data"];
         List<ComicHomeComicItem> meiman =
-            meiman_item.map((i) => ComicHomeComicItem.fromJson(i)).toList();
+            meimanItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
         if (meiman.length != 0) {
           setState(() {
             _meiman = meiman;
@@ -501,13 +501,13 @@ class ComicRecommendState extends State<ComicRecommend>
     }
   }
 
-  bool _loading_like = false;
+  bool _loadingLike = false;
   Future loadLike() async {
     try {
-      if (_loading_like) {
+      if (_loadingLike) {
         return;
       }
-      _loading_like = true;
+      _loadingLike = true;
       var response = await http.get(Api.comicLike);
       var jsonMap = jsonDecode(response.body);
       //最新
@@ -524,17 +524,17 @@ class ComicRecommendState extends State<ComicRecommend>
     } catch (e) {
       print(e);
     } finally {
-      _loading_like = false;
+      _loadingLike = false;
     }
   }
 
-  bool _loading_guoman = false;
+  bool _loadingGuoman = false;
   Future loadGuoman() async {
     try {
-      if (_loading_guoman) {
+      if (_loadingGuoman) {
         return;
       }
-      _loading_guoman = true;
+      _loadingGuoman = true;
       var response = await http.get(Api.comicGuoman);
       var jsonMap = jsonDecode(response.body);
       //最新
@@ -551,17 +551,17 @@ class ComicRecommendState extends State<ComicRecommend>
     } catch (e) {
       print(e);
     } finally {
-      _loading_guoman = false;
+      _loadingGuoman = false;
     }
   }
 
-  bool _loading_hot = false;
+  bool _loadingHot = false;
   Future loadHot() async {
     try {
-      if (_loading_hot) {
+      if (_loadingHot) {
         return;
       }
-      _loading_hot = true;
+      _loadingHot = true;
       var response = await http.get(Api.comicHot);
       var jsonMap = jsonDecode(response.body);
       //最新
@@ -578,7 +578,7 @@ class ComicRecommendState extends State<ComicRecommend>
     } catch (e) {
       print(e);
     } finally {
-      _loading_hot = false;
+      _loadingHot = false;
     }
   }
 
@@ -596,7 +596,7 @@ class ComicRecommendState extends State<ComicRecommend>
           items.map((i) => ComicHomeNewItem.fromJson(i)).toList();
       if (_items.length != 0) {
         setState(() {
-          _my_sub = _items;
+          _mySub = _items;
         });
       }
     } catch (e) {

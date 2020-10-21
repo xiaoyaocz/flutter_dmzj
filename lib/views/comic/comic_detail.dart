@@ -19,8 +19,8 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 class ComicDetailPage extends StatefulWidget {
-  int comic_id;
-  ComicDetailPage(this.comic_id, {Key key}) : super(key: key);
+  final int comicId;
+  ComicDetailPage(this.comicId, {Key key}) : super(key: key);
 
   @override
   _ComicDetailPageState createState() => _ComicDetailPageState();
@@ -31,7 +31,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   @override
   bool get wantKeepAlive => true;
 
-  int history_chapter = 0;
+  int historyChapter = 0;
 
   @override
   void initState() {
@@ -44,9 +44,9 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   }
 
   void updateHistory() async {
-    var his = await ComicHistoryProvider.getItem(widget.comic_id);
+    var his = await ComicHistoryProvider.getItem(widget.comicId);
     setState(() {
-      history_chapter = his?.chapter_id ?? 0;
+      historyChapter = his?.chapter_id ?? 0;
     });
   }
 
@@ -66,11 +66,11 @@ class _ComicDetailPageState extends State<ComicDetailPage>
     return (MediaQuery.of(context).size.width - 24) / 3 - 32;
   }
 
-  int _selectTabIndex = 0;
   ComicDetail _detail;
   ComicRelated _related;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _detail != null
         ? DefaultTabController(
             length: 3,
@@ -83,7 +83,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                           icon: Icon(Icons.favorite),
                           onPressed: () async {
                             var result = await UserHelper.comicSubscribe(
-                                widget.comic_id,
+                                widget.comicId,
                                 cancel: true);
                             if (result) {
                               setState(() {
@@ -94,8 +94,8 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                       : IconButton(
                           icon: Icon(Icons.favorite_border),
                           onPressed: () async {
-                            var result = await UserHelper.comicSubscribe(
-                                widget.comic_id);
+                            var result =
+                                await UserHelper.comicSubscribe(widget.comicId);
                             if (result) {
                               setState(() {
                                 _isSubscribe = true;
@@ -141,7 +141,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
               body: TabBarView(
                 children: [
                   createDetail(),
-                  CommentWidget(4, widget.comic_id),
+                  CommentWidget(4, widget.comicId),
                   SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
@@ -186,7 +186,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                 : Container(
                     padding: EdgeInsets.all(24),
                     child: Text(_noCopyright
-                        ? "漫画ID:${widget.comic_id}\r\n因版权、国家法规等原因，该漫画暂时无法观看。"
+                        ? "漫画ID:${widget.comicId}\r\n因版权、国家法规等原因，该漫画暂时无法观看。"
                         : ""),
                   ),
           );
@@ -345,9 +345,9 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                   )
                 : Container(),
             ComicChapterView(
-              widget.comic_id,
+              widget.comicId,
               _detail,
-              history_chapter,
+              historyChapter,
               isSubscribe: _isSubscribe,
             )
           ],
@@ -391,24 +391,24 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                         itemBuilder: (context, i) {
                           return OutlineButton(
                             borderSide: BorderSide(
-                                color: f.data[i].chapter_id == history_chapter
+                                color: f.data[i].chapter_id == historyChapter
                                     ? Theme.of(context).accentColor
                                     : Colors.grey.withOpacity(0.6)),
                             child: Text(
                               f.data[i].chapter_title,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: f.data[i].chapter_id == history_chapter
+                                  color: f.data[i].chapter_id == historyChapter
                                       ? Theme.of(context).accentColor
                                       : Theme.of(context)
                                           .textTheme
-                                          .title
+                                          .bodyText1
                                           .color),
                             ),
                             onPressed: () async {
                               await Utils.openComicReader(
                                   context,
-                                  widget.comic_id,
+                                  widget.comicId,
                                   _detail.title,
                                   _isSubscribe,
                                   f.data,
@@ -465,11 +465,11 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       Fluttertoast.showToast(msg: '没有可读的章节');
       return;
     }
-    if (history_chapter != 0) {
-      ComicDetailChapterItem _item = null;
-      ComicDetailChapter chpters = null;
+    if (historyChapter != 0) {
+      ComicDetailChapterItem _item;
+      ComicDetailChapter chpters;
       for (var item in _detail.chapters) {
-        var first = item.data.firstWhere((f) => f.chapter_id == history_chapter,
+        var first = item.data.firstWhere((f) => f.chapter_id == historyChapter,
             orElse: () => null);
         if (first != null) {
           chpters = item;
@@ -477,7 +477,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         }
       }
       if (_item != null) {
-        await Utils.openComicReader(context, widget.comic_id, _detail.title,
+        await Utils.openComicReader(context, widget.comicId, _detail.title,
             _isSubscribe, chpters.data, _item);
         updateHistory();
         return;
@@ -485,7 +485,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
     }
     var _chapters = _detail.chapters[0].data;
     _chapters.sort((x, y) => x.chapter_order.compareTo(y.chapter_order));
-    await Utils.openComicReader(context, widget.comic_id, _detail.title,
+    await Utils.openComicReader(context, widget.comicId, _detail.title,
         _isSubscribe, _chapters, _chapters.first);
     updateHistory();
   }
@@ -609,7 +609,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
 
   bool _noCopyright = false;
   bool _loading = false;
-  bool _isLock = false;
+
   bool _isSubscribe = false;
   DefaultCacheManager _cacheManager = DefaultCacheManager();
   Future loadData() async {
@@ -621,13 +621,13 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         _loading = true;
         _noCopyright = false;
       });
-      var api = Api.comicDetail(widget.comic_id);
+      var api = Api.comicDetail(widget.comicId);
       Uint8List responseBody;
       var response = await http.get(api);
       responseBody = response.bodyBytes;
       if (response.body == "漫画不存在!!!") {
         var file = await _cacheManager
-            .getFileFromCache('http://comic.cache/${widget.comic_id}');
+            .getFileFromCache('http://comic.cache/${widget.comicId}');
         if (file == null) {
           setState(() {
             _loading = false;
@@ -649,7 +649,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         return;
       }
       await _cacheManager.putFile(
-          'http://comic.cache/${widget.comic_id}', responseBody,
+          'http://comic.cache/${widget.comicId}', responseBody,
           eTag: api, maxAge: Duration(days: 7), fileExtension: 'json');
       await checkSubscribe();
       await loadRelated();
@@ -667,7 +667,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
 
   Future loadRelated() async {
     try {
-      var response = await http.get(Api.comicRelated(widget.comic_id));
+      var response = await http.get(Api.comicRelated(widget.comicId));
 
       var jsonMap = jsonDecode(response.body);
 
@@ -686,7 +686,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       if (!ConfigHelper.getUserIsLogined() ?? false) {
         return;
       }
-      var response = await http.get(Api.comicCheckSubscribe(widget.comic_id,
+      var response = await http.get(Api.comicCheckSubscribe(widget.comicId,
           Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid));
       var jsonMap = jsonDecode(response.body);
       setState(() {
@@ -699,12 +699,12 @@ class _ComicDetailPageState extends State<ComicDetailPage>
 }
 
 class ComicChapterView extends StatefulWidget {
-  ComicDetail detail;
-  int comic_id;
-  bool isSubscribe;
-  int history_chapter;
-  Function openReader;
-  ComicChapterView(this.comic_id, this.detail, this.history_chapter,
+  final ComicDetail detail;
+  final int comicId;
+  final bool isSubscribe;
+  final int historyChapter;
+  final Function openReader;
+  ComicChapterView(this.comicId, this.detail, this.historyChapter,
       {Key key, this.isSubscribe = false, this.openReader})
       : super(key: key);
 
@@ -731,6 +731,7 @@ class _ComicChapterViewState extends State<ComicChapterView>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return widget.detail.chapters != null && widget.detail.chapters.length != 0
         ? ListView.builder(
             shrinkWrap: true,
@@ -808,7 +809,7 @@ class _ComicChapterViewState extends State<ComicChapterView>
                         return OutlineButton(
                           borderSide: BorderSide(
                               color:
-                                  f.data[i].chapter_id == widget.history_chapter
+                                  f.data[i].chapter_id == widget.historyChapter
                                       ? Theme.of(context).accentColor
                                       : Colors.grey.withOpacity(0.4)),
                           child: Text(
@@ -816,14 +817,17 @@ class _ComicChapterViewState extends State<ComicChapterView>
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: f.data[i].chapter_id ==
-                                        widget.history_chapter
+                                        widget.historyChapter
                                     ? Theme.of(context).accentColor
-                                    : Theme.of(context).textTheme.title.color),
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .color),
                           ),
                           onPressed: () {
                             Utils.openComicReader(
                                 context,
-                                widget.comic_id,
+                                widget.comicId,
                                 widget.detail.title,
                                 widget.isSubscribe,
                                 f.data,
@@ -853,12 +857,12 @@ class _ComicChapterViewState extends State<ComicChapterView>
       Fluttertoast.showToast(msg: '没有可读的章节');
       return;
     }
-    if (widget.history_chapter != 0) {
-      ComicDetailChapterItem _item = null;
-      ComicDetailChapter chpters = null;
+    if (widget.historyChapter != 0) {
+      ComicDetailChapterItem _item;
+      ComicDetailChapter chpters;
       for (var item in widget.detail.chapters) {
         var first = item.data.firstWhere(
-            (f) => f.chapter_id == widget.history_chapter,
+            (f) => f.chapter_id == widget.historyChapter,
             orElse: () => null);
         if (first != null) {
           chpters = item;
@@ -866,14 +870,14 @@ class _ComicChapterViewState extends State<ComicChapterView>
         }
       }
       if (_item != null) {
-        Utils.openComicReader(context, widget.comic_id, widget.detail.title,
+        Utils.openComicReader(context, widget.comicId, widget.detail.title,
             widget.isSubscribe, chpters.data, _item);
         return;
       }
     }
     Utils.openComicReader(
         context,
-        widget.comic_id,
+        widget.comicId,
         widget.detail.title,
         widget.isSubscribe,
         widget.detail.chapters[0].data,

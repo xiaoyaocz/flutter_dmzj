@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
 
 class ComicSpecialDetailPage extends StatefulWidget {
-  int id;
+  final int id;
   ComicSpecialDetailPage(this.id, {Key key}) : super(key: key);
 
   @override
@@ -29,6 +29,7 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _detail != null
         ? DefaultTabController(
             length: 3, // This is the number of tabs.
@@ -124,12 +125,12 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
               ),
             ),
             Center(
-                child: IconButton(
-                    icon: Icon(Icons.favorite_border),
-                    onPressed: () {
-                      UserHelper.comicSubscribe(item.id);
-                    }),
-              )
+              child: IconButton(
+                  icon: Icon(Icons.favorite_border),
+                  onPressed: () {
+                    UserHelper.comicSubscribe(item.id);
+                  }),
+            )
           ],
         ),
       ),

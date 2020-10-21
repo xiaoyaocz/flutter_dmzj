@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
 import 'package:flutter_dmzj/app/utils.dart';
@@ -14,23 +13,22 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
-        title:Row(
-            children: <Widget>[
-               Container(
-                height: 36,
-                width: 36,
-                child: CircleAvatar(
-                  backgroundImage:Utils.createCachedImageProvider(
-                     Provider.of<AppUserInfo>(context).userProfile?.cover),
-                ),
+        title: Row(
+          children: <Widget>[
+            Container(
+              height: 36,
+              width: 36,
+              child: CircleAvatar(
+                backgroundImage: Utils.createCachedImageProvider(
+                    Provider.of<AppUserInfo>(context).userProfile?.cover),
               ),
-              SizedBox(width: 12),
-              Text(Provider.of<AppUserInfo>(context).loginInfo?.nickname),
-            ],
-          ),
+            ),
+            SizedBox(width: 12),
+            Text(Provider.of<AppUserInfo>(context).loginInfo?.nickname),
+          ],
+        ),
         actions: <Widget>[
           FlatButton(
             child: Text("退出登录"),
@@ -39,8 +37,8 @@ class _UserPageState extends State<UserPage> {
               showDialog(
                   context: context,
                   builder: (_) => AlertDialog(
-                      title: Text("退出登录"),
-                      content: Text("确定要退出登录吗?"),
+                        title: Text("退出登录"),
+                        content: Text("确定要退出登录吗?"),
                         actions: <Widget>[
                           new FlatButton(
                             child: new Text("取消"),

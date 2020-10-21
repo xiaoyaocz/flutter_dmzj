@@ -6,25 +6,22 @@ import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/news/news_stat_detail.dart';
 import 'package:flutter_dmzj/widgets/icon_text_button.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:share/share.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class NewsDetailPage extends StatefulWidget {
-  int article_id;
-  String page_url;
-  String title;
+  final int articleId;
+  final String pageUrl;
+  final String title;
 
-  NewsDetailPage(this.article_id, this.page_url, this.title, {Key key})
+  NewsDetailPage(this.articleId, this.pageUrl, this.title, {Key key})
       : super(key: key);
 
   _NewsDetailPageState createState() => _NewsDetailPageState();
 }
 
 class _NewsDetailPageState extends State<NewsDetailPage> {
-  WebViewController _controller;
-
   @override
   void initState() {
     super.initState();
@@ -38,8 +35,8 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
     }
   }
 
-  bool _is_like = false;
-  bool _is_sub = false;
+  bool _isLike = false;
+  bool _isSub = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,15 +46,12 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () {
-              Share.share(widget.title + "\r\n" + widget.page_url);
+              Share.share(widget.title + "\r\n" + widget.pageUrl);
             },
           )
         ],
       ),
       body: WebView(
-        onWebViewCreated: (e) {
-          _controller = e;
-        },
         navigationDelegate: (args) {
           var uri = Uri.parse(args.url);
           print(args.url);
@@ -75,7 +69,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
 
           return NavigationDecision.prevent;
         },
-        initialUrl: widget.page_url,
+        initialUrl: widget.pageUrl,
         javascriptMode: JavascriptMode.unrestricted,
         onPageFinished: (e) {
           //try {
@@ -86,13 +80,13 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
         },
       ),
       bottomNavigationBar: Offstage(
-        offstage: widget.article_id == null || widget.article_id == 0,
+        offstage: widget.articleId == null || widget.articleId == 0,
         child: BottomAppBar(
           child: Row(
             children: <Widget>[
               IconTextButton(
                   Icon(
-                    _is_like ? Icons.favorite : Icons.favorite_border,
+                    _isLike ? Icons.favorite : Icons.favorite_border,
                     size: 18.0,
                   ),
                   "点赞(${_stat.mood_amount})",
@@ -104,13 +98,13 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                   ),
                   "评论(${_stat.comment_amount})",
                   () => Utils.openCommentPage(
-                      context, widget.article_id, 6, widget.title)),
+                      context, widget.articleId, 6, widget.title)),
               IconTextButton(
                   Icon(
-                    _is_sub ? Icons.star : Icons.star_border,
+                    _isSub ? Icons.star : Icons.star_border,
                     size: 18.0,
                   ),
-                  _is_sub ? "已收藏" : "收藏",
+                  _isSub ? "已收藏" : "收藏",
                   addOrCancelSub)
             ],
           ),
@@ -122,16 +116,16 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
   NewsStatDetail _stat = NewsStatDetail();
   Future loadStat() async {
     try {
-      var api = Api.newsStat(widget.article_id);
+      var api = Api.newsStat(widget.articleId);
       var response = await http.get(api);
       var jsonMap = jsonDecode(response.body);
       var detail = NewsStatDetail.fromJson(jsonMap["data"]);
       setState(() {
         _stat = detail;
       });
-      var result = await UserHelper.newsCheckSub(widget.article_id);
+      var result = await UserHelper.newsCheckSub(widget.articleId);
       setState(() {
-        _is_sub = result;
+        _isSub = result;
       });
     } catch (e) {
       print(e);
@@ -140,15 +134,15 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
 
   void addLike() async {
     try {
-      if (_is_like) {
+      if (_isLike) {
         return;
       }
-      var api = Api.addNewsLike(widget.article_id);
+      var api = Api.addNewsLike(widget.articleId);
       var response = await http.get(api);
       var jsonMap = jsonDecode(response.body);
       if (jsonMap["code"] == 0) {
         setState(() {
-          _is_like = true;
+          _isLike = true;
           _stat.mood_amount++;
         });
       }
@@ -160,10 +154,10 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
   void addOrCancelSub() async {
     try {
       var result =
-          await UserHelper.addOrCancelNewsSub(widget.article_id, _is_sub);
+          await UserHelper.addOrCancelNewsSub(widget.articleId, _isSub);
       if (result == true) {
         setState(() {
-          _is_sub = !_is_sub;
+          _isSub = !_isSub;
         });
       }
     } catch (e) {

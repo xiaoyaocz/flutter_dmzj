@@ -8,7 +8,6 @@ import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_rank_item.dart';
-import 'package:flutter_dmzj/models/comic/comic_update_item.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
@@ -60,6 +59,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -236,7 +236,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
         _loading = true;
       });
       var response = await http.get(Api.comicRank(
-          tag_id: _types[_type],
+          tagId: _types[_type],
           rank: _ranks[_rank],
           sort: _sorts[_sort],
           page: _page));

@@ -5,11 +5,7 @@ import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_ns_search_item.dart';
 import 'package:flutter_dmzj/models/search_hot_word.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_footer.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 
 class ComicSearchBarDelegate extends SearchDelegate<String> {
   ComicSearchBarDelegate(
@@ -44,7 +40,7 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    if (this.query.length ==0) {
+    if (this.query.length == 0) {
       return Container();
     }
 
@@ -77,7 +73,7 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-     return FutureBuilder<List<SearchHotWord>>(
+    return FutureBuilder<List<SearchHotWord>>(
       future: loadHotWord(),
       builder:
           (BuildContext context, AsyncSnapshot<List<SearchHotWord>> snapshot) {
@@ -106,13 +102,14 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 8),child:Wrap(
-                    
-                    children: snapshot.data
-                        .map((f) =>
-                            createWorditem(context, f.name, f.id, type: 1))
-                        .toList(),
-                  ))
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Wrap(
+                        children: snapshot.data
+                            .map((f) =>
+                                createWorditem(context, f.name, f.id, type: 1))
+                            .toList(),
+                      ))
                 ],
               ),
             );
@@ -128,11 +125,10 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
       padding: EdgeInsets.all(4),
       child: InkWell(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12,vertical: 4),
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Theme.of(context).accentColor)
-          ),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Theme.of(context).accentColor)),
           child: Text(
             title,
             style: TextStyle(color: Theme.of(context).accentColor),

@@ -3,14 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/comic/comic_ns_search_item.dart';
 import 'package:flutter_dmzj/models/novel/novel_search_result_item.dart';
 import 'package:flutter_dmzj/models/search_hot_word.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_footer.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 
 class NovelSearchBarDelegate extends SearchDelegate<String> {
   NovelSearchBarDelegate(

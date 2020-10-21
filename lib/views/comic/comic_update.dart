@@ -45,6 +45,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
   String _mode = "100";
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[

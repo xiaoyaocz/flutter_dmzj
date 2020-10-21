@@ -1,17 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/views/news/news_detail.dart';
 
 class AppBanner extends StatefulWidget {
-  List<Widget> items = [];
-  int currentBannerIndex = 0;
+  final List<Widget> items;
+
   AppBanner({Key key, this.items}) : super(key: key);
 
   _AppBannerState createState() => _AppBannerState();
 }
 
 class _AppBannerState extends State<AppBanner> {
+  int currentBannerIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +26,7 @@ class _AppBannerState extends State<AppBanner> {
               options: CarouselOptions(
                 onPageChanged: (i, e) {
                   setState(() {
-                    widget.currentBannerIndex = i;
+                    currentBannerIndex = i;
                   });
                 },
                 aspectRatio: 7.5 / 4,
@@ -55,8 +55,7 @@ class _AppBannerState extends State<AppBanner> {
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: widget.currentBannerIndex ==
-                                widget.items.indexOf(index)
+                        color: currentBannerIndex == widget.items.indexOf(index)
                             ? Theme.of(context).accentColor
                             : Color.fromRGBO(0, 0, 0, 0.4)),
                   );
@@ -69,9 +68,9 @@ class _AppBannerState extends State<AppBanner> {
 }
 
 class BannerImageItem extends StatelessWidget {
-  String pic = "";
-  Function onTaped;
-  String title = "";
+  final String pic;
+  final Function onTaped;
+  final String title;
   BannerImageItem({Key key, this.pic, this.onTaped, this.title = ""})
       : super(key: key);
 

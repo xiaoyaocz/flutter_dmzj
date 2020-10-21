@@ -2,18 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/user/user_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class CommentHelper {
-  static Future<bool> likeComment(
-      int obj_id, String comment_id, int type) async {
+  static Future<bool> likeComment(int objId, String commentId, int type) async {
     try {
       var result = "";
-      var response =
-          await http.get(Api.likeCommentV3(obj_id, comment_id, type));
+      var response = await http.get(Api.likeCommentV3(objId, commentId, type));
       result = response.body;
       var jsonMap = jsonDecode(result);
       if (jsonMap["code"] == 0) {
@@ -49,10 +45,10 @@ class CommentHelper {
     }
   }
 
-  static Future<CommnetResult> addComment(int obj_id, int type, String content,
-      {String to_comment_id = "0",
-      String origin_comment_id = "0",
-      String to_uid = "0"}) async {
+  static Future<CommnetResult> addComment(int objId, int type, String content,
+      {String toCommentId = "0",
+      String originCommentId = "0",
+      String toUid = "0"}) async {
     try {
       if (!ConfigHelper.getUserIsLogined() ?? false) {
         //TODO 跳转登录
@@ -60,10 +56,10 @@ class CommentHelper {
       }
       var token = ConfigHelper.getUserInfo()?.dmzj_token ?? "";
       var response = await http.post(Api.addCommentV3(type), body: {
-        "obj_id": obj_id,
-        "to_comment_id": to_comment_id,
-        "origin_comment_id": origin_comment_id,
-        "to_uid": to_uid,
+        "obj_id": objId,
+        "to_comment_id": toCommentId,
+        "origin_comment_id": originCommentId,
+        "to_uid": toUid,
         "sender_terminal": 1,
         "content": content,
         "dmzj_token": token,

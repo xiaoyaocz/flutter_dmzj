@@ -14,11 +14,7 @@ class ComicHomePage extends StatefulWidget {
 
 class _ComicHomePageState extends State<ComicHomePage>
     with TickerProviderStateMixin {
-
-  TabController _tabController ;
-
-  @override
-  bool get wantKeepAlive => true;
+  TabController _tabController;
 
   @override
   void initState() {
@@ -28,7 +24,7 @@ class _ComicHomePageState extends State<ComicHomePage>
       _tabController.animateTo(e);
     });
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,16 +41,15 @@ class _ComicHomePageState extends State<ComicHomePage>
             indicatorSize: TabBarIndicatorSize.label,
             labelPadding: EdgeInsets.all(8),
           ),
-         
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.search),
-              tooltip: "搜索",
-              onPressed: (){
-                showSearch(context: context, delegate: ComicSearchBarDelegate());
-                //Utils.openPage(context, 1798, 1);
-              }
-            ) //18417
+                icon: Icon(Icons.search),
+                tooltip: "搜索",
+                onPressed: () {
+                  showSearch(
+                      context: context, delegate: ComicSearchBarDelegate());
+                  //Utils.openPage(context, 1798, 1);
+                }) //18417
           ],
         ),
         body: TabBarView(

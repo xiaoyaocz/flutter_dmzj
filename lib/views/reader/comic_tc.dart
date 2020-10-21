@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_chapter_view_point.dart';
 
 class ComicTCPage extends StatefulWidget {
-  List<ComicChapterViewPoint> list;
-  int comic_id;
-  int chapter_id;
-  ComicTCPage(this.list, this.comic_id, this.chapter_id, {Key key})
+  final List<ComicChapterViewPoint> list;
+  final int comicId;
+  final int chapterId;
+  ComicTCPage(this.list, this.comicId, this.chapterId, {Key key})
       : super(key: key);
 
   @override
@@ -47,8 +45,7 @@ class ComicTCPageState extends State<ComicTCPage> {
               padding: EdgeInsets.all(2),
               child: InkWell(
                 onTap: () async {
-                  var result =
-                      await UserHelper.comicLikeViewPoint(f.id);
+                  var result = await UserHelper.comicLikeViewPoint(f.id);
                   if (result) {
                     setState(() {
                       f.num++;
@@ -96,8 +93,8 @@ class ComicTCPageState extends State<ComicTCPage> {
                     return;
                   }
                   var result = await UserHelper.comicAddViewPoint(
-                      widget.comic_id,
-                      widget.chapter_id,
+                      widget.comicId,
+                      widget.chapterId,
                       _textEditingController.text);
                   if (result) {
                     setState(() {
@@ -106,7 +103,7 @@ class ComicTCPageState extends State<ComicTCPage> {
                           num: 0,
                           page: 0));
                     });
-                    _textEditingController.text="";
+                    _textEditingController.text = "";
                   }
                 },
                 icon: Icon(Icons.send),

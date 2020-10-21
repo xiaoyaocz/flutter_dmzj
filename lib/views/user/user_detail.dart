@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/utils.dart';
@@ -15,21 +14,21 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class UserDetailPage extends StatefulWidget {
-  int user_id;
-  int initPage=0;
-  UserDetailPage(this.user_id, {Key key,this.initPage=0}) : super(key: key);
+  final int userId;
+  final int initPage;
+  UserDetailPage(this.userId, {Key key, this.initPage = 0}) : super(key: key);
 
   @override
   _UserDetailPageState createState() => _UserDetailPageState();
 }
 
 class _UserDetailPageState extends State<UserDetailPage> {
-
   @override
   void initState() {
     super.initState();
     loadProfile();
   }
+
   @override
   void setState(fn) {
     if (mounted) {
@@ -44,19 +43,22 @@ class _UserDetailPageState extends State<UserDetailPage> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title:_profile!=null? Row(
-            children: <Widget>[
-               Container(
-                height: 36,
-                width: 36,
-                child: CircleAvatar(
-                  backgroundImage:Utils.createCachedImageProvider( _profile.cover),
-                ),
-              ),
-              SizedBox(width: 12),
-              Text(_profile.nickname),
-            ],
-          ):Container(),
+          title: _profile != null
+              ? Row(
+                  children: <Widget>[
+                    Container(
+                      height: 36,
+                      width: 36,
+                      child: CircleAvatar(
+                        backgroundImage:
+                            Utils.createCachedImageProvider(_profile.cover),
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Text(_profile.nickname),
+                  ],
+                )
+              : Container(),
           bottom: TabBar(tabs: [
             Tab(text: "漫画订阅"),
             Tab(text: "漫画评论"),
@@ -64,42 +66,54 @@ class _UserDetailPageState extends State<UserDetailPage> {
             Tab(text: "小说评论"),
           ]),
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.mail_outline), onPressed: () {
-              Fluttertoast.showToast(msg: '啊，还没写完呢');
-            })
+            IconButton(
+                icon: Icon(Icons.mail_outline),
+                onPressed: () {
+                  Fluttertoast.showToast(msg: '啊，还没写完呢');
+                })
           ],
         ),
         body: TabBarView(children: [
-          SubscribeTabView(widget.user_id,type: 0,),
-          UserCommentWidget(0,widget.user_id),
-          SubscribeTabView(widget.user_id,type: 1,),
-          UserCommentWidget(1,widget.user_id),
+          SubscribeTabView(
+            uid: widget.userId,
+            type: 0,
+          ),
+          UserCommentWidget(
+            widget.userId,
+            type: 0,
+          ),
+          SubscribeTabView(
+            uid: widget.userId,
+            type: 1,
+          ),
+          UserCommentWidget(widget.userId, type: 1),
         ]),
       ),
     );
   }
+
   UserProfileModel _profile;
-  Future loadProfile() async{
-     try {
-      var result = await http.get(Api.userProfile(widget.user_id.toString(), ""));
+  Future loadProfile() async {
+    try {
+      var result =
+          await http.get(Api.userProfile(widget.userId.toString(), ""));
       var body = result.body;
       var data = UserProfileModel.fromJson(jsonDecode(body));
       if (data != null) {
-       setState(() {
-         _profile=data;
-       });
+        setState(() {
+          _profile = data;
+        });
       }
     } catch (e) {
       print(e);
     }
   }
-  
 }
 
 class SubscribeTabView extends StatefulWidget {
-  int type = 0;
-  int uid=0;
-  SubscribeTabView( this.uid,{Key key,this.type=0}) : super(key: key);
+  final int type;
+  final int uid;
+  SubscribeTabView({Key key, this.uid = 0, this.type = 0}) : super(key: key);
 
   @override
   _SubscribeTabViewState createState() => _SubscribeTabViewState();
@@ -116,25 +130,30 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
     loadData();
   }
 
-  int _sub_type = 1;
-  
-  int _select_letters = 0;
-  
-    @override
+  int _subType = 1;
+
+  @override
   void setState(fn) {
     if (mounted) {
       super.setState(fn);
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return EasyRefresh(
       header: MaterialHeader(),
       footer: MaterialFooter(),
       child: SingleChildScrollView(
-        child:  _loading&&_page==0?Center(
-              child: CircularProgressIndicator(),
-            ): UserSubscribeWidget(_list,type: widget.type,),
+        child: _loading && _page == 0
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : UserSubscribeWidget(
+                _list,
+                type: widget.type,
+              ),
       ),
       onRefresh: () async {
         _page = 0;
@@ -145,7 +164,6 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
     );
   }
 
- 
   List<SubscribeItem> _list = [];
   int _page = 0;
   bool _loading = false;
@@ -158,12 +176,8 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
         _loading = true;
       });
       var response = await http.get(Api.userSubscribe(
-          widget.type,
-          _sub_type,
-          widget.uid.toString(),
-          "",
-          letter: "all",
-          page: _page));
+          widget.type, _subType, widget.uid.toString(), "",
+          letter: "all", page: _page));
 
       List jsonMap = jsonDecode(response.body);
 
@@ -191,6 +205,4 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
       });
     }
   }
-
-
 }

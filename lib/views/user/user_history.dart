@@ -4,15 +4,12 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
-import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_history_item.dart';
 import 'package:flutter_dmzj/models/novel/novel_history_item.dart';
 import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class UserHistoryPage extends StatefulWidget {
@@ -48,7 +45,7 @@ class _UserHistoryPageState extends State<UserHistoryPage> {
 }
 
 class HistoryTabItem extends StatefulWidget {
-  int type = 0;
+  final int type;
   HistoryTabItem(this.type, {Key key}) : super(key: key);
 
   @override
@@ -79,6 +76,7 @@ class _HistoryTabItemState extends State<HistoryTabItem>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _loading
         ? Container(
             child: Center(
@@ -112,7 +110,7 @@ class _HistoryTabItemState extends State<HistoryTabItem>
                 },
                 header: MaterialHeader(),
                 child: ListView(
-                    children: _novel_list.map(
+                    children: _novelList.map(
                   (f) {
                     return createNovelItem(f);
                   },
@@ -238,7 +236,7 @@ class _HistoryTabItemState extends State<HistoryTabItem>
   }
 
   List<ComicHistoryItem> _list = [];
-  List<NovelHistoryItem> _novel_list = [];
+  List<NovelHistoryItem> _novelList = [];
   bool _loading = false;
   //int _page = 0;
   Future loadDataNovel() async {
@@ -261,7 +259,7 @@ class _HistoryTabItemState extends State<HistoryTabItem>
               int.parse(item.lnovel_id), item.chapter_id);
         }
         setState(() {
-          _novel_list = detail;
+          _novelList = detail;
         });
       }
     } catch (e) {
@@ -287,14 +285,14 @@ class _HistoryTabItemState extends State<HistoryTabItem>
       List jsonMap = jsonDecode(response.body);
       List<ComicHistoryItem> detail =
           jsonMap.map((i) => ComicHistoryItem.fromJson(i)).toList();
-      if (detail != null&&detail.length!=0) {
+      if (detail != null && detail.length != 0) {
         for (var item in detail) {
-          var history_item = await ComicHistoryProvider.getItem(item.comic_id);
+          var historyItem = await ComicHistoryProvider.getItem(item.comic_id);
           print(item.comic_name);
-          if (history_item != null) {
-            history_item.chapter_id = item.chapter_id;
-            history_item.page = item.progress?.toDouble() ?? 1;
-            await ComicHistoryProvider.update(history_item);
+          if (historyItem != null) {
+            historyItem.chapter_id = item.chapter_id;
+            historyItem.page = item.progress?.toDouble() ?? 1;
+            await ComicHistoryProvider.update(historyItem);
           } else {
             await ComicHistoryProvider.insert(ComicHistory(item.comic_id,
                 item.chapter_id, item.progress?.toDouble() ?? 1, 1));

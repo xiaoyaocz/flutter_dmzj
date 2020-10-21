@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -19,8 +18,8 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 class NovelDetailPage extends StatefulWidget {
-  int novel_id;
-  NovelDetailPage(this.novel_id, {Key key}) : super(key: key);
+  final int novelId;
+  NovelDetailPage(this.novelId, {Key key}) : super(key: key);
 
   @override
   _NovelDetailPageState createState() => _NovelDetailPageState();
@@ -31,7 +30,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   @override
   bool get wantKeepAlive => true;
 
-  int history_chapter = 0;
+  int historyChapter = 0;
 
   @override
   void initState() {
@@ -41,9 +40,9 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   }
 
   void updateHistory() {
-    var his = ConfigHelper.getNovelHistory(widget.novel_id);
+    var his = ConfigHelper.getNovelHistory(widget.novelId);
     setState(() {
-      history_chapter = his;
+      historyChapter = his;
     });
   }
 
@@ -54,10 +53,10 @@ class _NovelDetailPageState extends State<NovelDetailPage>
     }
   }
 
-  int _selectTabIndex = 0;
   NovelDetail _detail;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _detail != null
         ? DefaultTabController(
             length: 3,
@@ -70,7 +69,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                           icon: Icon(Icons.favorite),
                           onPressed: () async {
                             var result = await UserHelper.novelSubscribe(
-                                widget.novel_id,
+                                widget.novelId,
                                 cancel: true);
                             if (result) {
                               setState(() {
@@ -81,8 +80,8 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                       : IconButton(
                           icon: Icon(Icons.favorite_border),
                           onPressed: () async {
-                            var result = await UserHelper.novelSubscribe(
-                                widget.novel_id);
+                            var result =
+                                await UserHelper.novelSubscribe(widget.novelId);
                             if (result) {
                               setState(() {
                                 _isSubscribe = true;
@@ -92,7 +91,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                   IconButton(
                       icon: Icon(Icons.share),
                       onPressed: () => Share.share(
-                          "${_detail.name}\r\nhttp://q.dmzj.com/${widget.novel_id}/index.shtml")),
+                          "${_detail.name}\r\nhttp://q.dmzj.com/${widget.novelId}/index.shtml")),
                 ],
                 bottom: TabBar(tabs: [
                   Tab(text: "详情"),
@@ -104,7 +103,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                 children: [
                   createDetail(),
                   cerateVolume(),
-                  CommentWidget(1, widget.novel_id),
+                  CommentWidget(1, widget.novelId),
                 ],
               ),
             ))
@@ -222,7 +221,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
               itemBuilder: (ctx, i) {
                 var f = volumes[i];
                 var his = f.chapters.firstWhere(
-                    (x) => x.chapter_id == history_chapter,
+                    (x) => x.chapter_id == historyChapter,
                     orElse: () => null);
                 return Padding(
                   padding: EdgeInsets.only(bottom: 8),
@@ -236,9 +235,9 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                         return InkWell(
                           onTap: () async {
                             await Utils.openNovelReader(
-                                context, widget.novel_id, volumes, item,
-                                novel_title: _detail.name,
-                                is_subscribe: _isSubscribe);
+                                context, widget.novelId, volumes, item,
+                                novelTitle: _detail.name,
+                                isSubscribe: _isSubscribe);
                             updateHistory();
                           },
                           child: Container(
@@ -253,11 +252,11 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                             child: Text(
                               item.chapter_name,
                               style: TextStyle(
-                                  color: item.chapter_id == history_chapter
+                                  color: item.chapter_id == historyChapter
                                       ? Theme.of(context).accentColor
                                       : Theme.of(context)
                                           .textTheme
-                                          .title
+                                          .bodyText1
                                           .color),
                             ),
                           ),
@@ -287,27 +286,27 @@ class _NovelDetailPageState extends State<NovelDetailPage>
       return;
     }
 
-    if (history_chapter != 0) {
-      NovelVolumeChapterItem chapter_item = null;
+    if (historyChapter != 0) {
+      NovelVolumeChapterItem chapterItem;
       for (var item in volumes) {
         var first = item.chapters.firstWhere(
-            (f) => f.chapter_id == history_chapter,
+            (f) => f.chapter_id == historyChapter,
             orElse: () => null);
         if (first != null) {
-          chapter_item = first;
+          chapterItem = first;
         }
       }
-      if (chapter_item != null) {
+      if (chapterItem != null) {
         await Utils.openNovelReader(
-            context, widget.novel_id, volumes, chapter_item,
-            novel_title: _detail.name, is_subscribe: _isSubscribe);
+            context, widget.novelId, volumes, chapterItem,
+            novelTitle: _detail.name, isSubscribe: _isSubscribe);
         updateHistory();
         return;
       }
     } else {
       await Utils.openNovelReader(
-          context, widget.novel_id, volumes, volumes[0].chapters[0],
-          novel_title: _detail.name, is_subscribe: _isSubscribe);
+          context, widget.novelId, volumes, volumes[0].chapters[0],
+          novelTitle: _detail.name, isSubscribe: _isSubscribe);
       updateHistory();
     }
   }
@@ -333,7 +332,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         _loading = true;
       });
       Uint8List responseBody;
-      var api = Api.novelDetail(widget.novel_id);
+      var api = Api.novelDetail(widget.novelId);
       try {
         var response = await http.get(api);
         responseBody = response.bodyBytes;
@@ -371,7 +370,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   Future loadVolumes() async {
     try {
       Uint8List responseBody;
-      var api = Api.novelVolumeDetail(widget.novel_id);
+      var api = Api.novelVolumeDetail(widget.novelId);
       try {
         var response = await http.get(api);
         responseBody = response.bodyBytes;
@@ -402,7 +401,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
       if (!ConfigHelper.getUserIsLogined() ?? false) {
         return;
       }
-      var response = await http.get(Api.novelCheckSubscribe(widget.novel_id,
+      var response = await http.get(Api.novelCheckSubscribe(widget.novelId,
           Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid));
       var jsonMap = jsonDecode(response.body);
       setState(() {

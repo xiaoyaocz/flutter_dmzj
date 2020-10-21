@@ -55,14 +55,14 @@ class Utils {
 
   static Future<VersionInfo> checkVersion() async {
     try {
-      var new_version = await http.get(
+      var newVersion = await http.get(
           "https://pic.nsapps.cn/dmzj_flutter/dmzj_ver.json?ts=" +
               DateTime.now().millisecondsSinceEpoch.toString());
-      var ver_info =
-          VersionInfo.fromJson(jsonDecode(utf8.decode(new_version.bodyBytes)));
+      var verInfo =
+          VersionInfo.fromJson(jsonDecode(utf8.decode(newVersion.bodyBytes)));
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      if (packageInfo.buildNumber != ver_info.version_code) {
-        return ver_info;
+      if (packageInfo.buildNumber != verInfo.version_code) {
+        return verInfo;
       } else {
         return null;
       }
@@ -179,9 +179,10 @@ class Utils {
   }
 
   static CachedNetworkImageProvider createCachedImageProvider(String url) {
-    return CachedNetworkImageProvider(url, errorListener: () {
-      print("Image load error:" + url);
-    }, headers: {"Referer": "http://www.dmzj.com/"});
+    return CachedNetworkImageProvider(
+      url,
+      headers: {"Referer": "http://www.dmzj.com/"},
+    );
   }
 
   /// 打开页面
@@ -299,33 +300,35 @@ class Utils {
 
   static Future openComicReader(
       BuildContext context,
-      int comic_id,
-      String comic_title,
-      bool is_subscribe,
+      int comicId,
+      String comicTitle,
+      bool isSubscribe,
       List<ComicDetailChapterItem> chapters,
       ComicDetailChapterItem item) async {
     var ls = chapters.toList();
     ls.sort((a, b) => a.chapter_order.compareTo(b.chapter_order));
     await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => ComicReaderPage(
-                comic_id, comic_title, ls, item, is_subscribe)));
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) =>
+            ComicReaderPage(comicId, comicTitle, ls, item, isSubscribe),
+      ),
+    );
   }
 
-  static Future openNovelReader(BuildContext context, int novel_id,
-      List<NovelVolumeItem> chapters, NovelVolumeChapterItem current_item,
-      {String novel_title, bool is_subscribe}) async {
+  static Future openNovelReader(BuildContext context, int novelId,
+      List<NovelVolumeItem> chapters, NovelVolumeChapterItem currentItem,
+      {String novelTitle, bool isSubscribe}) async {
     // var ls = chapters.toList();
 
     List<NovelVolumeChapterItem> items = [];
 
     for (var item in chapters) {
       for (var item2 in item.chapters) {
-        if (item2.chapter_id == current_item.chapter_id) {
-          current_item.volume_id = item.volume_id;
-          current_item.volume_name = item.volume_name;
-          items.add(current_item);
+        if (item2.chapter_id == currentItem.chapter_id) {
+          currentItem.volume_id = item.volume_id;
+          currentItem.volume_name = item.volume_name;
+          items.add(currentItem);
         } else {
           item2.volume_id = item.volume_id;
           item2.volume_name = item.volume_name;
@@ -335,14 +338,16 @@ class Utils {
     }
     // ls.sort((a, b) => a.chapter_order.compareTo(b.chapter_order));
     await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => NovelReaderPage(
-                  novel_id,
-                  novel_title,
-                  items,
-                  current_item,
-                  subscribe: is_subscribe,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => NovelReaderPage(
+          novelId,
+          novelTitle,
+          items,
+          currentItem,
+          subscribe: isSubscribe,
+        ),
+      ),
+    );
   }
 }

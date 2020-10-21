@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/utils.dart';
@@ -11,11 +10,10 @@ import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class ComicCategoryDetailPage extends StatefulWidget {
-  String title;
-  int id;
+  final String title;
+  final int id;
   ComicCategoryDetailPage(this.id, this.title, {Key key}) : super(key: key);
 
   @override
@@ -40,13 +38,16 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
       super.setState(fn);
     }
   }
-double getWidth() {
-    var count=MediaQuery.of(context).size.width~/160;
-    if(count<3)count=3;
-    return (MediaQuery.of(context).size.width - count*8) / count - 8;
+
+  double getWidth() {
+    var count = MediaQuery.of(context).size.width ~/ 160;
+    if (count < 3) count = 3;
+    return (MediaQuery.of(context).size.width - count * 8) / count - 8;
   }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -74,10 +75,13 @@ double getWidth() {
                 physics: ScrollPhysics(),
                 itemCount: _list.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: MediaQuery.of(context).size.width~/160<3?3:MediaQuery.of(context).size.width~/160,
+                    crossAxisCount: MediaQuery.of(context).size.width ~/ 160 < 3
+                        ? 3
+                        : MediaQuery.of(context).size.width ~/ 160,
                     crossAxisSpacing: 2.0,
                     mainAxisSpacing: 4.0,
-                  childAspectRatio: getWidth() / ((getWidth() * (360 / 270)) + 64)),
+                    childAspectRatio:
+                        getWidth() / ((getWidth() * (360 / 270)) + 64)),
                 itemBuilder: (context, i) => _getComicItemBuilder(
                     _list[i].id, _list[i].cover, _list[i].title,
                     author: _list[i].authors, status: _list[i].status),
@@ -162,91 +166,86 @@ double getWidth() {
           ),
         )
         .toList();
-    list.insert(0, Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(left: 4),
+    list.insert(
+        0,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 4),
+              child: Text(
+                "排序",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Wrap(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 4, right: 4),
+                  child: ButtonTheme(
+                    minWidth: 20,
+                    height: 28,
+                    child: OutlineButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      textColor: Theme.of(context).accentColor,
+                      borderSide: BorderSide(
+                          color: _sort == 0
+                              ? Theme.of(context).accentColor
+                              : Colors.transparent),
                       child: Text(
-                        "排序",
+                        "人气排序",
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            color: _sort == 0
+                                ? Theme.of(context).accentColor
+                                : Theme.of(context).textTheme.button.color),
                       ),
+                      onPressed: () async {
+                        _page = 0;
+                        setState(() {
+                          _sort = 0;
+                        });
+                        Navigator.pop(context);
+                        await loadData();
+                      },
                     ),
-                    Wrap(
-                      children: [
-                        Padding(
-                                padding: EdgeInsets.only(left: 4, right: 4),
-                                child: ButtonTheme(
-                                  minWidth: 20,
-                                  height: 28,
-                                  child: OutlineButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    textColor: Theme.of(context).accentColor,
-                                    borderSide: BorderSide(
-                                        color: _sort==0
-                                            ? Theme.of(context).accentColor
-                                            : Colors.transparent),
-                                    child: Text(
-                                      "人气排序",
-                                      style: TextStyle(
-                                          color: _sort==0
-                                              ? Theme.of(context).accentColor
-                                              : Theme.of(context)
-                                                  .textTheme
-                                                  .button
-                                                  .color),
-                                    ),
-                                    onPressed: () async {
-                                      _page = 0;
-                                      setState(() {
-                                        _sort=0;
-                                      });
-                                      Navigator.pop(context);
-                                      await loadData();
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 4, right: 4),
-                                child: ButtonTheme(
-                                  minWidth: 20,
-                                  height: 28,
-                                  child: OutlineButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    textColor: Theme.of(context).accentColor,
-                                    borderSide: BorderSide(
-                                        color: _sort==1
-                                            ? Theme.of(context).accentColor
-                                            : Colors.transparent),
-                                    child: Text(
-                                      "更新排序",
-                                      style: TextStyle(
-                                          color: _sort==1
-                                              ? Theme.of(context).accentColor
-                                              : Theme.of(context)
-                                                  .textTheme
-                                                  .button
-                                                  .color),
-                                    ),
-                                    onPressed: () async {
-                                      _page = 0;
-                                      setState(() {
-                                        _sort=1;
-                                      });
-                                      Navigator.pop(context);
-                                      await loadData();
-                                    },
-                                  ),
-                                ),
-                              )
-                      ],
-                    )
-                  ],
-                ));
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 4, right: 4),
+                  child: ButtonTheme(
+                    minWidth: 20,
+                    height: 28,
+                    child: OutlineButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      textColor: Theme.of(context).accentColor,
+                      borderSide: BorderSide(
+                          color: _sort == 1
+                              ? Theme.of(context).accentColor
+                              : Colors.transparent),
+                      child: Text(
+                        "更新排序",
+                        style: TextStyle(
+                            color: _sort == 1
+                                ? Theme.of(context).accentColor
+                                : Theme.of(context).textTheme.button.color),
+                      ),
+                      onPressed: () async {
+                        _page = 0;
+                        setState(() {
+                          _sort = 1;
+                        });
+                        Navigator.pop(context);
+                        await loadData();
+                      },
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ));
     return Container(
       padding: EdgeInsets.all(8),
       child: ListView(children: list),

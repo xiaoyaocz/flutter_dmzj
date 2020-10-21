@@ -3,7 +3,7 @@ import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class ComicDownloadPage extends StatefulWidget {
-  ComicDetail detail;
+  final ComicDetail detail;
   ComicDownloadPage(this.detail, {Key key}) : super(key: key);
 
   @override

@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
-import 'package:flutter_dmzj/models/comic/comic_rank_item.dart';
-import 'package:flutter_dmzj/models/comic/comic_update_item.dart';
 import 'package:flutter_dmzj/models/novel/novel_rank_item.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_footer.dart';
@@ -51,6 +49,7 @@ class _NovelRankPageState extends State<NovelRankPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -218,7 +217,7 @@ class _NovelRankPageState extends State<NovelRankPage>
         _loading = true;
       });
       var response = await http.get(Api.novelRank(
-          tag_id: _types[_type], sort: _sorts[_sort], page: _page));
+          tagId: _types[_type], sort: _sorts[_sort], page: _page));
       List jsonMap = jsonDecode(response.body);
       List<NovelRankItem> detail =
           jsonMap.map((i) => NovelRankItem.fromJson(i)).toList();

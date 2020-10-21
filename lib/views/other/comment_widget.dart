@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,11 +16,11 @@ import 'package:html_unescape/html_unescape.dart';
 
 class CommentWidget extends StatefulWidget {
   /// Type 4=漫画，6=新闻，2=专题，1=轻小说
-  int type;
+  final int type;
 
-  int obj_id;
+  final int objId;
 
-  CommentWidget(this.type, this.obj_id, {Key key}) : super(key: key);
+  CommentWidget(this.type, this.objId, {Key key}) : super(key: key);
 
   @override
   _CommentWidgetState createState() => _CommentWidgetState();
@@ -36,7 +35,7 @@ class _CommentWidgetState extends State<CommentWidget>
 
   int _page = 1;
 
-  int _comment_count = 0;
+  int _commentCount = 0;
 
   List<CommentItem> _list = [];
 
@@ -59,6 +58,7 @@ class _CommentWidgetState extends State<CommentWidget>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var text = "";
     if (widget.type == 4) {
       text = "漫画";
@@ -81,7 +81,7 @@ class _CommentWidgetState extends State<CommentWidget>
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        text + "评论" + "($_comment_count)",
+                        text + "评论" + "($_commentCount)",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
@@ -273,8 +273,8 @@ class _CommentWidgetState extends State<CommentWidget>
                           children:
                               item.upload_images.split(",").map<Widget>((f) {
                             var str = f.split(".").toList();
-                            var file_img = str[0];
-                            var file_img_suffix = str[1];
+                            var fileImg = str[0];
+                            var fileImgSuffix = str[1];
                             return InkWell(
                                 onTap: () => Utils.showImageViewDialog(context,
                                     "https://images.dmzj.com/commentImg/${item.obj_id % 500}/$f"),
@@ -282,7 +282,7 @@ class _CommentWidgetState extends State<CommentWidget>
                                   padding: EdgeInsets.only(right: 8),
                                   width: 100,
                                   child: Utils.createCacheImage(
-                                      "https://images.dmzj.com/commentImg/${item.obj_id % 500}/${file_img}_small.${file_img_suffix}",
+                                      "https://images.dmzj.com/commentImg/${item.obj_id % 500}/${fileImg}_small.$fileImgSuffix",
                                       100,
                                       100),
                                 ));
@@ -340,7 +340,7 @@ class _CommentWidgetState extends State<CommentWidget>
 
   Widget createMasterComment(CommentItem comment) {
     var list = comment.masterComment;
-    var item = list.last;
+
     List<Widget> items = [];
     if (list.length > 2) {
       items.add(createMsterCommentItem(list.first));
@@ -441,7 +441,7 @@ class _CommentWidgetState extends State<CommentWidget>
                   TextSpan(
                       text: ": " + _htmlUnescape.convert(item.content),
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.body1.color))
+                          color: Theme.of(context).textTheme.bodyText1.color))
                 ]),
               ),
               item.upload_images != null && item.upload_images.length != 0
@@ -451,15 +451,15 @@ class _CommentWidgetState extends State<CommentWidget>
                         children:
                             item.upload_images.split(",").map<Widget>((f) {
                           var str = f.split(".").toList();
-                          var file_img = str[0];
-                          var file_img_suffix = str[1];
+                          var fileImg = str[0];
+                          var fileImgSuffix = str[1];
                           return InkWell(
                             onTap: () => Utils.showImageViewDialog(context,
                                 "https://images.dmzj.com/commentImg/${item.obj_id % 500}/$f"),
                             child: Container(
                               width: 100,
                               child: Utils.createCacheImage(
-                                  "https://images.dmzj.com/commentImg/${item.obj_id % 500}/${file_img}_small.${file_img_suffix}",
+                                  "https://images.dmzj.com/commentImg/${item.obj_id % 500}/${fileImg}_small.$fileImgSuffix",
                                   100,
                                   100),
                             ),
@@ -487,8 +487,8 @@ class _CommentWidgetState extends State<CommentWidget>
       if (_page == 1) {
         await loadCount();
       }
-      var response = await http.get(Api.commentV2(widget.obj_id, widget.type,
-          page: _page, ishot: _isHot));
+      var response = await http.get(
+          Api.commentV2(widget.objId, widget.type, page: _page, ishot: _isHot));
 
       List jsonMap = jsonDecode(response.body);
 
@@ -520,11 +520,11 @@ class _CommentWidgetState extends State<CommentWidget>
   Future loadCount() async {
     try {
       var response =
-          await http.get(Api.commentCountV2(widget.obj_id, widget.type));
+          await http.get(Api.commentCountV2(widget.objId, widget.type));
       var jsonMap = jsonDecode(response.body);
       int num = jsonMap["data"];
       setState(() {
-        _comment_count = num;
+        _commentCount = num;
       });
     } catch (e) {
       print(e);

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
@@ -11,7 +10,6 @@ import 'package:flutter_dmzj/models/news/news_tag_model.dart';
 import 'package:flutter_dmzj/views/news/news_detail.dart';
 import 'package:flutter_dmzj/widgets/app_banner.dart';
 import 'package:http/http.dart' as http;
-import 'package:carousel_slider/carousel_slider.dart';
 
 class NewsHomePage extends StatefulWidget {
   @override
@@ -22,11 +20,7 @@ class _NewsHomePageState extends State<NewsHomePage>
     with TickerProviderStateMixin {
   List<NewsTagItemModel> _tabItems = [];
 
-  bool _loading = false;
   TabController _tabController;
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -50,10 +44,6 @@ class _NewsHomePageState extends State<NewsHomePage>
     } catch (e) {
       Utils.showSnackbarWithAction(context, "加载数据出现错误", "重试", () => loadCate());
       print(e);
-    } finally {
-      setState(() {
-        _loading = false;
-      });
     }
   }
 
@@ -90,8 +80,8 @@ class _NewsHomePageState extends State<NewsHomePage>
 }
 
 class NewsNewTabView extends StatefulWidget {
-  int id;
-  bool hasBanner = false;
+  final int id;
+  final bool hasBanner;
   NewsNewTabView(this.id, this.hasBanner, {Key key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {

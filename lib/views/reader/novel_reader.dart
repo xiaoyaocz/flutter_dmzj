@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:battery/battery.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -21,17 +20,16 @@ import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html_unescape/html_unescape.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class NovelReaderPage extends StatefulWidget {
-  int novel_id;
-  String novel_title;
-  List<NovelVolumeChapterItem> chapters;
-  NovelVolumeChapterItem current_item;
+  final int novelId;
+  final String novelTitle;
+  final List<NovelVolumeChapterItem> chapters;
+  final NovelVolumeChapterItem currentItem;
   bool subscribe;
   NovelReaderPage(
-      this.novel_id, this.novel_title, this.chapters, this.current_item,
+      this.novelId, this.novelTitle, this.chapters, this.currentItem,
       {this.subscribe, Key key})
       : super(key: key);
 
@@ -40,34 +38,34 @@ class NovelReaderPage extends StatefulWidget {
 }
 
 class _NovelReaderPageState extends State<NovelReaderPage> {
-   //EventBus settingEvent = EventBus();
-  List<String> _page_contents = ["加载中"];
-  NovelVolumeChapterItem _current_item;
-   Battery _battery = Battery();
+  //EventBus settingEvent = EventBus();
+  List<String> _pageContents = ["加载中"];
+  NovelVolumeChapterItem _currentItem;
+  Battery _battery = Battery();
   Uint8List _contents;
 
-  double _ver_slider_max = 0;
-  double _ver_slider_value = 0;
+  double _verSliderMax = 0;
+  double _verSliderValue = 0;
 
   double _fontSize = 16.0;
   double _lineHeight = 1.5;
-  String _battery_str = "-%";
+  String _batteryStr = "-%";
   @override
   void initState() {
     super.initState();
-    _current_item = widget.current_item;
+    _currentItem = widget.currentItem;
     //全屏
     SystemChrome.setEnabledSystemUIOverlays([]);
     _battery.batteryLevel.then((e) {
       setState(() {
-        _battery_str = e.toString() + "%";
+        _batteryStr = e.toString() + "%";
       });
     });
 
     _battery.onBatteryStateChanged.listen((BatteryState state) async {
       var e = await _battery.batteryLevel;
       setState(() {
-        _battery_str = e.toString() + "%";
+        _batteryStr = e.toString() + "%";
       });
     });
     //刷新内容
@@ -78,17 +76,17 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
     // _controller.addListener((){
     //   print(_controller.offset);
     // });
-     _controller_ver.addListener(() {
-      var value = _controller_ver.offset;
+    _controllerVer.addListener(() {
+      var value = _controllerVer.offset;
       if (value < 0) {
         value = 0;
       }
-      if (value > _controller_ver.position.maxScrollExtent) {
-        value = _controller_ver.position.maxScrollExtent;
+      if (value > _controllerVer.position.maxScrollExtent) {
+        value = _controllerVer.position.maxScrollExtent;
       }
       setState(() {
-        _ver_slider_max = _controller_ver.position.maxScrollExtent;
-        _ver_slider_value = value;
+        _verSliderMax = _controllerVer.position.maxScrollExtent;
+        _verSliderValue = value;
       });
     });
 
@@ -98,8 +96,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-     UserHelper.comicAddNovelHistory(
-          widget.novel_id, _current_item.volume_id,_current_item.chapter_id);
+    UserHelper.comicAddNovelHistory(
+        widget.novelId, _currentItem.volume_id, _currentItem.chapter_id);
     super.dispose();
   }
 
@@ -110,18 +108,18 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
     }
   }
 
-  bool _show_controls = false;
-  bool _show_chapters = false;
+  bool _showControls = false;
+  bool _showChapters = false;
   PageController _controller = PageController(initialPage: 1);
-  ScrollController _controller_ver=ScrollController();
-  int _index_page = 1;
+  ScrollController _controllerVer = ScrollController();
+  int _indexPage = 1;
   bool _isPicture = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppSetting
-          .bgColors[Provider.of<AppSetting>(context).novel_read_theme],
+      backgroundColor:
+          AppSetting.bgColors[Provider.of<AppSetting>(context).novelReadTheme],
       body: Stack(
         children: <Widget>[
           InkWell(
@@ -130,151 +128,160 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
             splashColor: Colors.transparent,
             onTap: () {
               setState(() {
-                if (_show_chapters) {
-                  _show_chapters = false;
+                if (_showChapters) {
+                  _showChapters = false;
                   return;
                 }
-                _show_controls = !_show_controls;
+                _showControls = !_showControls;
               });
             },
-            child: Provider.of<AppSetting>(context).novel_read_direction!=2? PageView.builder(
-              scrollDirection:
-                 Axis.horizontal,
-              pageSnapping:
-                  Provider.of<AppSetting>(context).novel_read_direction != 2,
-              controller: _controller,
-              itemCount: _page_contents.length + 2,
-              reverse:
-                  Provider.of<AppSetting>(context).novel_read_direction == 1,
-              onPageChanged: (i) {
-                if (i == _page_contents.length + 1 && !_loading) {
-                  nextChapter();
-                  return;
-                }
-                if (i == 0 && !_loading) {
-                  previousChapter();
-                  return;
-                }
-                if (i < _page_contents.length + 1) {
-                  setState(() {
-                    _index_page = i;
-                  });
-                }
+            child: Provider.of<AppSetting>(context).novelReadDirection != 2
+                ? PageView.builder(
+                    scrollDirection: Axis.horizontal,
+                    pageSnapping:
+                        Provider.of<AppSetting>(context).novelReadDirection !=
+                            2,
+                    controller: _controller,
+                    itemCount: _pageContents.length + 2,
+                    reverse:
+                        Provider.of<AppSetting>(context).novelReadDirection ==
+                            1,
+                    onPageChanged: (i) {
+                      if (i == _pageContents.length + 1 && !_loading) {
+                        nextChapter();
+                        return;
+                      }
+                      if (i == 0 && !_loading) {
+                        previousChapter();
+                        return;
+                      }
+                      if (i < _pageContents.length + 1) {
+                        setState(() {
+                          _indexPage = i;
+                        });
+                      }
 
-                // setState(() {
-                //   _index_page = i;
-                // });
-              },
-              itemBuilder: (ctx, i) {
-                if (i == 0) {
-                  return Container(
-                    child: Center(
-                        child:
-                            Text("上一章", style: TextStyle(color: Colors.grey))),
-                  );
-                }
-                if (i == _page_contents.length + 1) {
-                  return Container(
-                    child: Center(
-                        child:
-                            Text("下一章", style: TextStyle(color: Colors.grey))),
-                  );
-                }
+                      // setState(() {
+                      //   _indexPage = i;
+                      // });
+                    },
+                    itemBuilder: (ctx, i) {
+                      if (i == 0) {
+                        return Container(
+                          child: Center(
+                              child: Text("上一章",
+                                  style: TextStyle(color: Colors.grey))),
+                        );
+                      }
+                      if (i == _pageContents.length + 1) {
+                        return Container(
+                          child: Center(
+                              child: Text("下一章",
+                                  style: TextStyle(color: Colors.grey))),
+                        );
+                      }
 
-                var _widget = _isPicture
-                    ? Container(
-                        color: AppSetting.bgColors[
-                            Provider.of<AppSetting>(context).novel_read_theme],
-                        child: InkWell(
-                          onDoubleTap: () {
-                            Utils.showImageViewDialog(
-                                context,
-                                _page_contents.length == 0
+                      var _widget = _isPicture
+                          ? Container(
+                              color: AppSetting.bgColors[
+                                  Provider.of<AppSetting>(context)
+                                      .novelReadTheme],
+                              child: InkWell(
+                                onDoubleTap: () {
+                                  Utils.showImageViewDialog(
+                                      context,
+                                      _pageContents.length == 0
+                                          ? ""
+                                          : _pageContents[i - 1]);
+                                },
+                                onTap: () {
+                                  setState(() {
+                                    if (_showChapters) {
+                                      _showChapters = false;
+                                      return;
+                                    }
+                                    _showControls = !_showControls;
+                                  });
+                                },
+                                child: Utils.createCacheImage(
+                                    _pageContents[i - 1], 100, 100,
+                                    fit: BoxFit.fitWidth),
+                              ),
+                            )
+                          : Container(
+                              color: AppSetting.bgColors[
+                                  Provider.of<AppSetting>(context)
+                                      .novelReadTheme],
+                              padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                _pageContents.length == 0
                                     ? ""
-                                    : _page_contents[i - 1]);
-                          },
-                          onTap: () {
-                            setState(() {
-                              if (_show_chapters) {
-                                _show_chapters = false;
-                                return;
-                              }
-                              _show_controls = !_show_controls;
-                            });
-                          },
-                          child: Utils.createCacheImage(
-                              _page_contents[i-1], 100, 100,fit: BoxFit.fitWidth),
-                        ),
-                      )
-                    : Container(
-                        color: AppSetting.bgColors[
-                            Provider.of<AppSetting>(context).novel_read_theme],
-                        padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          _page_contents.length == 0
-                              ? ""
-                              : _page_contents[i - 1],
-                          style: TextStyle(
-                              fontSize: _fontSize,
-                              height: _lineHeight,
-                              color: AppSetting.fontColors[
+                                    : _pageContents[i - 1],
+                                style: TextStyle(
+                                    fontSize: _fontSize,
+                                    height: _lineHeight,
+                                    color: AppSetting.fontColors[
+                                        Provider.of<AppSetting>(context)
+                                            .novelReadTheme]),
+                              ),
+                            );
+                      return _widget;
+                    },
+                  )
+                : EasyRefresh(
+                    onRefresh: () async {
+                      previousChapter();
+                    },
+                    onLoad: () async {
+                      nextChapter();
+                    },
+                    header: MaterialHeader(),
+                    footer: MaterialFooter(displacement: 80),
+                    child: SingleChildScrollView(
+                      controller: _controllerVer,
+                      child: _isPicture
+                          ? Column(
+                              children: _pageContents
+                                  .map((f) => InkWell(
+                                        onDoubleTap: () {
+                                          Utils.showImageViewDialog(context, f);
+                                        },
+                                        onTap: () {
+                                          setState(() {
+                                            if (_showChapters) {
+                                              _showChapters = false;
+                                              return;
+                                            }
+                                            _showControls = !_showControls;
+                                          });
+                                        },
+                                        child:
+                                            Utils.createCacheImage(f, 100, 100),
+                                      ))
+                                  .toList(),
+                            )
+                          : Container(
+                              alignment: Alignment.topCenter,
+                              constraints: BoxConstraints(
+                                minHeight: MediaQuery.of(context).size.height,
+                              ),
+                              color: AppSetting.bgColors[
                                   Provider.of<AppSetting>(context)
-                                      .novel_read_theme]),
-                        ),
-                      );
-                return _widget;
-              },
-            ):EasyRefresh(
-              onRefresh: () async{
-                previousChapter();
-              },
-              onLoad: ()async{
-                nextChapter();
-              },
-              header: MaterialHeader(),
-              footer: MaterialFooter(displacement: 80),
-              child: SingleChildScrollView(
-              controller: _controller_ver,
-              child: _isPicture?
-              Column(
-                children: _page_contents.map((f)=>InkWell(
-                          onDoubleTap: () {
-                            Utils.showImageViewDialog(
-                                context,
-                               f);
-                          },
-                          onTap: () {
-                            setState(() {
-                              if (_show_chapters) {
-                                _show_chapters = false;
-                                return;
-                              }
-                              _show_controls = !_show_controls;
-                            });
-                          },
-                          child: Utils.createCacheImage(
-                              f, 100, 100),
-                        )).toList(),
-              ):
-              Container(
-                alignment: Alignment.topCenter,
-                 constraints: BoxConstraints(
-                   minHeight: MediaQuery.of(context).size.height,
-                 ),
-                 color: AppSetting.bgColors[
-                            Provider.of<AppSetting>(context).novel_read_theme],
-                        padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
-                child: Text(_page_contents.join(), style: TextStyle(
-                              fontSize: _fontSize,
-                              height: _lineHeight,
-                              color: AppSetting.fontColors[
-                                  Provider.of<AppSetting>(context)
-                                      .novel_read_theme])),
-              ),
-            ),),
+                                      .novelReadTheme],
+                              padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
+                              child: Text(_pageContents.join(),
+                                  style: TextStyle(
+                                      fontSize: _fontSize,
+                                      height: _lineHeight,
+                                      color: AppSetting.fontColors[
+                                          Provider.of<AppSetting>(context)
+                                              .novelReadTheme])),
+                            ),
+                    ),
+                  ),
           ),
-           Provider.of<AppSetting>(context).novel_read_direction==2
+          Provider.of<AppSetting>(context).novelReadDirection == 2
               ? Positioned(child: Container())
               : Positioned(
                   left: 0,
@@ -282,16 +289,18 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   height: MediaQuery.of(context).size.height,
                   child: InkWell(
                     onTap: () {
-                      if(Provider.of<AppSetting>(context,listen: false).novel_read_direction==1){
+                      if (Provider.of<AppSetting>(context, listen: false)
+                              .novelReadDirection ==
+                          1) {
                         previousPage();
-                      }else{
+                      } else {
                         nextPage();
                       }
                     },
                     child: Container(),
                   ),
                 ),
-          Provider.of<AppSetting>(context).novel_read_direction==2
+          Provider.of<AppSetting>(context).novelReadDirection == 2
               ? Positioned(child: Container())
               : Positioned(
                   right: 0,
@@ -299,25 +308,25 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   height: MediaQuery.of(context).size.height,
                   child: InkWell(
                     onTap: () {
-                       if(Provider.of<AppSetting>(context,listen: false).novel_read_direction==1){
+                      if (Provider.of<AppSetting>(context, listen: false)
+                              .novelReadDirection ==
+                          1) {
                         nextPage();
-                      }else{
+                      } else {
                         previousPage();
                       }
-
                     },
                     child: Container(),
                   ),
-          ),
-
+                ),
 
           Positioned(
             bottom: 8,
             right: 12,
             child: Text(
-              Provider.of<AppSetting>(context).novel_read_direction==2? 
-                  "":
-                  "${_index_page}/${_page_contents.length} $_battery_str电量",
+              Provider.of<AppSetting>(context).novelReadDirection == 2
+                  ? ""
+                  : "$_indexPage/${_pageContents.length} $_batteryStr电量",
               style: TextStyle(color: Colors.grey, fontSize: 12),
             ),
           ),
@@ -341,7 +350,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
             width: MediaQuery.of(context).size.width,
             child: Container(
               padding: EdgeInsets.only(
-                  top: Provider.of<AppSetting>(context).comic_read_showStatusBar
+                  top: Provider.of<AppSetting>(context).comicReadShowStatusBar
                       ? 0
                       : MediaQuery.of(context).padding.top),
               width: MediaQuery.of(context).size.width,
@@ -350,13 +359,13 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   child: ListTile(
                     dense: true,
                     title: Text(
-                      widget.novel_title,
+                      widget.novelTitle,
                       style: TextStyle(color: Colors.white),
                     ),
                     subtitle: Text(
-                      _current_item.volume_name.trim() +
+                      _currentItem.volume_name.trim() +
                           " · " +
-                          _current_item.chapter_name.trim(),
+                          _currentItem.chapter_name.trim(),
                       style: TextStyle(color: Colors.white),
                     ),
                     leading: BackButton(
@@ -370,7 +379,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                         onPressed: () {}),
                   )),
             ),
-            top: _show_controls ? 0 : -100,
+            top: _showControls ? 0 : -100,
             left: 0,
           ),
           //底部
@@ -400,25 +409,27 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                       Expanded(
                         child: !_loading
                             ? Provider.of<AppSetting>(context)
-                                    .novel_read_direction==2
+                                        .novelReadDirection ==
+                                    2
                                 ? Slider(
-                                    value: _ver_slider_value,
-                                    max: _ver_slider_max,
+                                    value: _verSliderValue,
+                                    max: _verSliderMax,
                                     onChanged: (e) {
-                                      _controller_ver.jumpTo(e);
+                                      _controllerVer.jumpTo(e);
                                     },
-                                  ):Slider(
-                                value: _index_page >= 1
-                                    ? _index_page - 1.toDouble()
-                                    : 0,
-                                max: _page_contents.length - 1.toDouble(),
-                                onChanged: (e) {
-                                  setState(() {
-                                    _index_page = e.toInt() + 1;
-                                    _controller.jumpToPage(e.toInt()+1);
-                                  });
-                                },
-                              )
+                                  )
+                                : Slider(
+                                    value: _indexPage >= 1
+                                        ? _indexPage - 1.toDouble()
+                                        : 0,
+                                    max: _pageContents.length - 1.toDouble(),
+                                    onChanged: (e) {
+                                      setState(() {
+                                        _indexPage = e.toInt() + 1;
+                                        _controller.jumpToPage(e.toInt() + 1);
+                                      });
+                                    },
+                                  )
                             : Text(
                                 "加载中",
                                 style: TextStyle(color: Colors.white),
@@ -447,7 +458,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                               Icons.favorite,
                               onTap: () async {
                                 if (await UserHelper.novelSubscribe(
-                                    widget.novel_id,
+                                    widget.novelId,
                                     cancel: true)) {
                                   setState(() {
                                     widget.subscribe = false;
@@ -460,7 +471,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                               Icons.favorite_border,
                               onTap: () async {
                                 if (await UserHelper.novelSubscribe(
-                                    widget.novel_id)) {
+                                    widget.novelId)) {
                                   setState(() {
                                     widget.subscribe = true;
                                   });
@@ -470,7 +481,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                       createButton("设置", Icons.settings, onTap: openSetting),
                       createButton("章节", Icons.format_list_bulleted, onTap: () {
                         setState(() {
-                          _show_chapters = true;
+                          _showChapters = true;
                         });
                       }),
                     ],
@@ -479,7 +490,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                 ],
               ),
             ),
-            bottom: _show_controls ? 0 : -180,
+            bottom: _showControls ? 0 : -180,
             left: 0,
           ),
 
@@ -491,8 +502,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                 height: MediaQuery.of(context).size.height,
                 color: Color.fromARGB(255, 24, 24, 24),
                 padding: EdgeInsets.only(
-                    top: Provider.of<AppSetting>(context)
-                            .comic_read_showStatusBar
+                    top: Provider.of<AppSetting>(context).comicReadShowStatusBar
                         ? 0
                         : MediaQuery.of(context).padding.top),
                 width: MediaQuery.of(context).size.width,
@@ -514,11 +524,11 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                             .map((f) => ListTile(
                                   dense: true,
                                   onTap: () async {
-                                    if (f != _current_item) {
+                                    if (f != _currentItem) {
                                       setState(() {
-                                        _current_item = f;
-                                        _show_chapters = false;
-                                        _show_controls = false;
+                                        _currentItem = f;
+                                        _showChapters = false;
+                                        _showControls = false;
                                       });
 
                                       await loadData();
@@ -527,7 +537,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                                   title: Text(
                                     f.chapter_name,
                                     style: TextStyle(
-                                        color: f == _current_item
+                                        color: f == _currentItem
                                             ? Theme.of(context).accentColor
                                             : Colors.white),
                                   ),
@@ -542,29 +552,29 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   ],
                 )),
             top: 0,
-            right: _show_chapters ? 0 : -200,
+            right: _showChapters ? 0 : -200,
           ),
         ],
       ),
     );
   }
 
-   void nextPage() {
+  void nextPage() {
     if (_controller.page == 1) {
       previousChapter();
     } else {
       setState(() {
-        _controller.jumpToPage(_index_page - 1);
+        _controller.jumpToPage(_indexPage - 1);
       });
     }
   }
 
   void previousPage() {
-    if (_controller.page > _page_contents.length) {
+    if (_controller.page > _pageContents.length) {
       nextChapter();
     } else {
       setState(() {
-        _controller.jumpToPage(_index_page + 1);
+        _controller.jumpToPage(_indexPage + 1);
       });
     }
   }
@@ -617,25 +627,25 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     ),
                   ),
                   Expanded(
-                    child: createOutlineButton("小", onPressed: () async{
+                    child: createOutlineButton("小", onPressed: () async {
                       var size = Provider.of<AppSetting>(context, listen: false)
-                          .novel_font_size;
+                          .novelFontSize;
                       if (size == 10) {
                         Fluttertoast.showToast(msg: '不能再小了');
                         return;
                       }
                       Provider.of<AppSetting>(context, listen: false)
                           .changeNovelFontSize(size - 1);
-                       await handelContent();
+                      await handelContent();
                     }),
                   ),
                   SizedBox(
                     width: 24,
                   ),
                   Expanded(
-                    child: createOutlineButton("大", onPressed: () async{
+                    child: createOutlineButton("大", onPressed: () async {
                       var size = Provider.of<AppSetting>(context, listen: false)
-                          .novel_font_size;
+                          .novelFontSize;
                       if (size == 30) {
                         Fluttertoast.showToast(msg: '不能再大了');
                         return;
@@ -657,10 +667,10 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     ),
                   ),
                   Expanded(
-                    child: createOutlineButton("减少", onPressed: () async{
+                    child: createOutlineButton("减少", onPressed: () async {
                       var height =
                           Provider.of<AppSetting>(context, listen: false)
-                              .novel_line_height;
+                              .novelLineHeight;
                       if (height == 0.8) {
                         Fluttertoast.showToast(msg: '不能再减少了');
                         return;
@@ -674,17 +684,17 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     width: 24,
                   ),
                   Expanded(
-                    child: createOutlineButton("增加", onPressed: () async{
+                    child: createOutlineButton("增加", onPressed: () async {
                       var height =
                           Provider.of<AppSetting>(context, listen: false)
-                              .novel_line_height;
+                              .novelLineHeight;
                       if (height == 2.0) {
                         Fluttertoast.showToast(msg: '不能再增加了');
                         return;
                       }
                       Provider.of<AppSetting>(context, listen: false)
                           .changeNovelLineHeight(height + 0.1);
-                     await handelContent();
+                      await handelContent();
                     }),
                   )
                 ],
@@ -701,7 +711,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   Expanded(
                     child: createOutlineButton("左右",
                         borderColor: Provider.of<AppSetting>(context)
-                                    .novel_read_direction ==
+                                    .novelReadDirection ==
                                 0
                             ? Colors.blue
                             : null, onPressed: () {
@@ -715,7 +725,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   Expanded(
                     child: createOutlineButton("右左",
                         borderColor: Provider.of<AppSetting>(context)
-                                    .novel_read_direction ==
+                                    .novelReadDirection ==
                                 1
                             ? Colors.blue
                             : null, onPressed: () {
@@ -729,7 +739,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   Expanded(
                     child: createOutlineButton("上下",
                         borderColor: Provider.of<AppSetting>(context)
-                                    .novel_read_direction ==
+                                    .novelReadDirection ==
                                 2
                             ? Colors.blue
                             : null, onPressed: () {
@@ -754,8 +764,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   Expanded(
                     child: createOutlineButtonColor(AppSetting.bgColors[0],
                         borderColor:
-                            Provider.of<AppSetting>(context).novel_read_theme ==
-                                    0
+                            Provider.of<AppSetting>(context).novelReadTheme == 0
                                 ? Colors.blue
                                 : null, onPressed: () {
                       Provider.of<AppSetting>(context, listen: false)
@@ -768,8 +777,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   Expanded(
                     child: createOutlineButtonColor(AppSetting.bgColors[1],
                         borderColor:
-                            Provider.of<AppSetting>(context).novel_read_theme ==
-                                    1
+                            Provider.of<AppSetting>(context).novelReadTheme == 1
                                 ? Colors.blue
                                 : null, onPressed: () {
                       Provider.of<AppSetting>(context, listen: false)
@@ -782,8 +790,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   Expanded(
                     child: createOutlineButtonColor(AppSetting.bgColors[2],
                         borderColor:
-                            Provider.of<AppSetting>(context).novel_read_theme ==
-                                    2
+                            Provider.of<AppSetting>(context).novelReadTheme == 2
                                 ? Colors.blue
                                 : null, onPressed: () {
                       Provider.of<AppSetting>(context, listen: false)
@@ -796,8 +803,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   Expanded(
                     child: createOutlineButtonColor(AppSetting.bgColors[3],
                         borderColor:
-                            Provider.of<AppSetting>(context).novel_read_theme ==
-                                    3
+                            Provider.of<AppSetting>(context).novelReadTheme == 3
                                 ? Colors.blue
                                 : null, onPressed: () {
                       Provider.of<AppSetting>(context, listen: false)
@@ -859,16 +865,15 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
       setState(() {
         _loading = true;
 
-        _page_contents = ["加载中"];
+        _pageContents = ["加载中"];
         try {
-           _controller.jumpToPage(1);
-        } catch (e) {
-        }
+          _controller.jumpToPage(1);
+        } catch (e) {}
       });
 
       //检查缓存
       var url = Api.novelRead(
-          widget.novel_id, _current_item.volume_id, _current_item.chapter_id);
+          widget.novelId, _currentItem.volume_id, _currentItem.chapter_id);
       var file = await _cacheManager.getFileFromCache(url);
       if (file == null) {
         file = await _cacheManager.downloadFile(url);
@@ -888,7 +893,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
         _contents = Uint8List(0);
         setState(() {
           _isPicture = true;
-          _page_contents = imgs;
+          _pageContents = imgs;
         });
       } else {
         setState(() {
@@ -899,9 +904,9 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
         await handelContent();
       }
 
-      ConfigHelper.setNovelHistory(widget.novel_id, _current_item.chapter_id);
+      ConfigHelper.setNovelHistory(widget.novelId, _currentItem.chapter_id);
       UserHelper.comicAddNovelHistory(
-          widget.novel_id, _current_item.volume_id,_current_item.chapter_id);
+          widget.novelId, _currentItem.volume_id, _currentItem.chapter_id);
     } catch (e) {
       print(e);
     } finally {
@@ -924,7 +929,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
     var ls = await compute(computeContent, par);
 
     setState(() {
-      _page_contents = ls;
+      _pageContents = ls;
       _fontSize = ConfigHelper.getNovelFontSize();
       _lineHeight = ConfigHelper.getNovelLineHeight();
     });
@@ -948,13 +953,13 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
 
     //计算每行字数
     var maxNum = (width - 12 * 2) / par.fontSize;
-    var maxNum_int = maxNum.toInt();
+    var maxNumInt = maxNum.toInt();
 
     //对每行字数进行添加换行符
     var result = '';
     for (var item in content.split('\n')) {
       for (var i = 0; i < item.length; i++) {
-        if ((i + 1) % maxNum_int == 0 && i != item.length - 1) {
+        if ((i + 1) % maxNumInt == 0 && i != item.length - 1) {
           result += item[i] + "\n";
         } else {
           result += item[i];
@@ -964,11 +969,11 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
     }
     //result = result.replaceAll('\n\n' , '\n');
     //计算每页行数
-    double pageLineNum_double =
+    double pageLineNumDouble =
         (height - (12 * 4)) / (par.fontSize * par.lineHeight);
     //int pageLineNum=  ((height - 12 * 2) %(_fontSize * _lineHeight)==0)? pageLineNum_double.truncate():pageLineNum_double.truncate()-1;
-    int pageLineNum = pageLineNum_double.floor();
-    print(pageLineNum_double);
+    int pageLineNum = pageLineNumDouble.floor();
+    print(pageLineNumDouble);
     print(pageLineNum);
     //计算页数
     var lines = result.split("\n");
@@ -1003,25 +1008,23 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
   }
 
   void nextChapter() async {
-    if (widget.chapters.indexOf(_current_item) == widget.chapters.length - 1) {
+    if (widget.chapters.indexOf(_currentItem) == widget.chapters.length - 1) {
       Fluttertoast.showToast(msg: '已经是最后一章了');
       return;
     }
     setState(() {
-      _current_item =
-          widget.chapters[widget.chapters.indexOf(_current_item) + 1];
+      _currentItem = widget.chapters[widget.chapters.indexOf(_currentItem) + 1];
     });
     await loadData();
   }
 
   void previousChapter() async {
-    if (widget.chapters.indexOf(_current_item) == 0) {
+    if (widget.chapters.indexOf(_currentItem) == 0) {
       Fluttertoast.showToast(msg: '已经是最前面一章了');
       return;
     }
     setState(() {
-      _current_item =
-          widget.chapters[widget.chapters.indexOf(_current_item) - 1];
+      _currentItem = widget.chapters[widget.chapters.indexOf(_currentItem) - 1];
     });
     await loadData();
   }
