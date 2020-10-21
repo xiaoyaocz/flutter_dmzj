@@ -450,7 +450,9 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                                   subtitle: Text(
                                     "更新于" +
                                         TimelineUtil.format(
-                                            f.updatetime * 1000),
+                                          f.updatetime * 1000,
+                                          locale: 'zh',
+                                        ),
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                 ))

@@ -59,23 +59,25 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
   @override
   Widget build(BuildContext context) {
     return EasyRefresh(
-      child:  _list.length != 0
+      child: _list.length != 0
           ? ListView.builder(
               itemCount: _list.length,
               itemBuilder: (ctx, i) {
                 return createItem(_list[i]);
               })
-          : _loading?Center(
-            child: CircularProgressIndicator(),
-          ): Center(
-              child: Container(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  "什么都没有呢~",
-                  style: TextStyle(color: Colors.grey),
+          : _loading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Center(
+                  child: Container(
+                    padding: EdgeInsets.all(24),
+                    child: Text(
+                      "什么都没有呢~",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
                 ),
-              ),
-            ),
       onLoad: loadData,
       onRefresh: () async {
         _page = 0;
@@ -103,12 +105,12 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
             width: 60,
             child: InkWell(
               onTap: () {
-                if( widget.type==2){
-                  Utils.openPage(context, item.obj_id, 7,title: item.obj_name,url: item.page_url);
-                }else{
-                  Utils.openPage(context, item.obj_id, widget.type+1);
+                if (widget.type == 2) {
+                  Utils.openPage(context, item.obj_id, 7,
+                      title: item.obj_name, url: item.page_url);
+                } else {
+                  Utils.openPage(context, item.obj_id, widget.type + 1);
                 }
-                
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
@@ -140,7 +142,7 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
                 height: 8,
               ),
               InkWell(
-                onTap: (){
+                onTap: () {
                   print("打开评论");
                 },
                 child: Container(
@@ -191,7 +193,10 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
                           ),
                           Expanded(child: Container()),
                           Text(
-                            TimelineUtil.format(item.create_time * 1000),
+                            TimelineUtil.format(
+                              item.create_time * 1000,
+                              locale: 'zh',
+                            ),
                             style: TextStyle(color: Colors.grey, fontSize: 12),
                           )
                         ],

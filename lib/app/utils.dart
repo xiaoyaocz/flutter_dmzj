@@ -28,7 +28,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class Utils {
@@ -130,7 +129,7 @@ class Utils {
                   onPressed: () async {
                     try {
                       var file = DefaultCacheManager().getFileFromMemory(image);
-                      var byes = file.file.readAsBytesSync();
+                      var byes = (await file).file.readAsBytesSync();
                       var dir = await getApplicationDocumentsDirectory();
                       await File(dir.path +
                               "/" +

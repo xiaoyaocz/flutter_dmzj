@@ -72,14 +72,15 @@ class _NovelRankPageState extends State<NovelRankPage>
             onLoad: loadData,
             header: MaterialHeader(),
             footer: MaterialFooter(),
-            child: _loading&&_page==0?Center(
-              child: CircularProgressIndicator(),
-            ): ListView.builder(
-              itemCount:_list.length,
-              itemBuilder: (cxt,i){
-                return createItem(_list[i]);
-              }
-            ),
+            child: _loading && _page == 0
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.builder(
+                    itemCount: _list.length,
+                    itemBuilder: (cxt, i) {
+                      return createItem(_list[i]);
+                    }),
           ),
         )
       ],
@@ -107,11 +108,10 @@ class _NovelRankPageState extends State<NovelRankPage>
       onSelected: (v) async {
         setState(() {
           if (type == 1) {
-           _sort=v;
-          } else{
-            _type=v;
+            _sort = v;
+          } else {
+            _type = v;
           }
-         
         });
         print(v);
         _page = 0;
@@ -191,7 +191,9 @@ class _NovelRankPageState extends State<NovelRankPage>
                     Text(
                         "更新于" +
                             TimelineUtil.format(
-                               item.last_update_time * 1000),
+                              item.last_update_time * 1000,
+                              locale: 'zh',
+                            ),
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                   ],
                 ),
@@ -206,8 +208,8 @@ class _NovelRankPageState extends State<NovelRankPage>
   List<NovelRankItem> _list = [];
   bool _loading = true;
   int _page = 0;
-  
-    Future loadData() async {
+
+  Future loadData() async {
     try {
       if (_loading) {
         return;
@@ -216,9 +218,7 @@ class _NovelRankPageState extends State<NovelRankPage>
         _loading = true;
       });
       var response = await http.get(Api.novelRank(
-          tag_id: _types[_type],
-          sort: _sorts[_sort],
-          page: _page));
+          tag_id: _types[_type], sort: _sorts[_sort], page: _page));
       List jsonMap = jsonDecode(response.body);
       List<NovelRankItem> detail =
           jsonMap.map((i) => NovelRankItem.fromJson(i)).toList();
@@ -245,30 +245,27 @@ class _NovelRankPageState extends State<NovelRankPage>
     }
   }
 
-  
   Future loadFilter() async {
     try {
-     
       var response = await http.get(Api.novelRankFilter);
       List jsonMap = jsonDecode(response.body);
       List<ComicDetailTagItem> detail =
           jsonMap.map((i) => ComicDetailTagItem.fromJson(i)).toList();
       if (detail != null) {
-        Map list={};
+        Map list = {};
         for (var item in detail) {
-         
-          list.addAll({(item.tag_id==0?"全部分类": item.tag_name):item.tag_id.toString()});
+          list.addAll({
+            (item.tag_id == 0 ? "全部分类" : item.tag_name): item.tag_id.toString()
+          });
         }
         setState(() {
-            _types = list;
-            _loading=false;
+          _types = list;
+          _loading = false;
         });
         await loadData();
       }
     } catch (e) {
       print(e);
-    } 
+    }
   }
-
-
 }

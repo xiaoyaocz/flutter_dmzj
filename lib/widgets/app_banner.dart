@@ -16,16 +16,15 @@ class _AppBannerState extends State<AppBanner> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(8),
-      constraints: BoxConstraints(
-        maxWidth: 600
-      ),
+      constraints: BoxConstraints(maxWidth: 600),
       child: Stack(
         alignment: AlignmentDirectional.bottomEnd,
         children: <Widget>[
           ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: CarouselSlider(
-                onPageChanged: (i) {
+            borderRadius: BorderRadius.circular(8),
+            child: CarouselSlider(
+              options: CarouselOptions(
+                onPageChanged: (i, e) {
                   setState(() {
                     widget.currentBannerIndex = i;
                   });
@@ -33,14 +32,16 @@ class _AppBannerState extends State<AppBanner> {
                 aspectRatio: 7.5 / 4,
                 viewportFraction: 1.0,
                 autoPlay: true,
-                items: widget.items.length != 0
-                    ? widget.items
-                    : [
-                        Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      ],
-              )),
+              ),
+              items: widget.items.length != 0
+                  ? widget.items
+                  : [
+                      Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    ],
+            ),
+          ),
           Positioned(
               right: 8.0,
               bottom: 4.0,
@@ -95,10 +96,8 @@ class BannerImageItem extends StatelessWidget {
           Positioned(
               bottom: 4,
               left: 8,
-              
               child: Container(
                 padding: EdgeInsets.all(8),
-                
                 child: Text(title,
                     style: TextStyle(
                       color: Colors.white,

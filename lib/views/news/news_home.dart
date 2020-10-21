@@ -61,16 +61,19 @@ class _NewsHomePageState extends State<NewsHomePage>
   Widget build(BuildContext context) {
     _tabController = new TabController(length: _tabItems.length, vsync: this);
     return Scaffold(
-        appBar: AppBar(
-          title: TabBar(
-            controller: _tabController,
-            tabs: _tabItems.map((x) => Tab(child: Text(x.tag_name))).toList(),
-            isScrollable: true,
-            indicatorSize: TabBarIndicatorSize.tab,
-            labelPadding: EdgeInsets.fromLTRB(12, 8, 12, 8),
-          ),
-          
-        ),
+        appBar: _tabItems.length == 0
+            ? AppBar()
+            : AppBar(
+                title: TabBar(
+                  controller: _tabController,
+                  tabs: _tabItems
+                      .map((x) => Tab(child: Text(x.tag_name)))
+                      .toList(),
+                  isScrollable: true,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelPadding: EdgeInsets.fromLTRB(12, 8, 12, 8),
+                ),
+              ),
         body: TabBarView(
           controller: _tabController,
           children: _tabItems.map((x) => createTabView(x)).toList(),
@@ -164,87 +167,90 @@ class NewsNewTabViewState extends State<NewsNewTabView>
   Widget listItemBuilder(context, index) {
     return index != _news.length
         ? InkWell(
-          onTap: ()=>Utils.openPage(context, _news[index].article_id, 7,title:_news[index].title,url:_news[index].page_url ),
-          child: Container(
-            padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+            onTap: () => Utils.openPage(context, _news[index].article_id, 7,
+                title: _news[index].title, url: _news[index].page_url),
             child: Container(
-              padding: EdgeInsets.only(bottom: 12),
-              decoration: BoxDecoration(
-                border: Border(bottom:BorderSide(color:Colors.grey.withOpacity(0.1)))
-              ),
-              child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  height: 62,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: Utils.createCacheImage(
-                        _news[index].row_pic_url, 720, 450),
-                  ),
-                ),
-                SizedBox(
-                  width: 12,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        height: 44,
-                        child: Text(_news[index].title),
+              padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+              child: Container(
+                padding: EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom:
+                            BorderSide(color: Colors.grey.withOpacity(0.1)))),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: 100,
+                      height: 62,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: Utils.createCacheImage(
+                            _news[index].row_pic_url, 720, 450),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              TimelineUtil.format(
-                                  _news[index].create_time * 1000),
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
+                          Container(
+                            height: 44,
+                            child: Text(_news[index].title),
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              Padding(
-                                child: Icon(
-                                  Icons.thumb_up,
-                                  size: 12.0,
-                                  color: Colors.grey,
+                              Expanded(
+                                child: Text(
+                                  TimelineUtil.format(
+                                    _news[index].create_time * 1000,
+                                    locale: 'zh',
+                                  ),
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12),
                                 ),
-                                padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
                               ),
-                              Text(
-                                _news[index].mood_amount.toString(),
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 12),
-                              ),
-                              Padding(
-                                child: Icon(Icons.chat,
-                                    size: 12.0, color: Colors.grey),
-                                padding: EdgeInsets.fromLTRB(8, 0, 4, 0),
-                              ),
-                              Text(
-                                _news[index].comment_amount.toString(),
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 12),
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                    child: Icon(
+                                      Icons.thumb_up,
+                                      size: 12.0,
+                                      color: Colors.grey,
+                                    ),
+                                    padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
+                                  ),
+                                  Text(
+                                    _news[index].mood_amount.toString(),
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 12),
+                                  ),
+                                  Padding(
+                                    child: Icon(Icons.chat,
+                                        size: 12.0, color: Colors.grey),
+                                    padding: EdgeInsets.fromLTRB(8, 0, 4, 0),
+                                  ),
+                                  Text(
+                                    _news[index].comment_amount.toString(),
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 12),
+                                  )
+                                ],
                               )
                             ],
                           )
                         ],
-                      )
-                    ],
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
-                
-              ],
+              ),
             ),
-            ),
-          ),
-        )
+          )
         : Offstage(
             child: Center(
               child: Padding(

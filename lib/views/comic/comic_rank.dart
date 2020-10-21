@@ -83,11 +83,10 @@ class _ComicUpdatePageState extends State<ComicRankPage>
             header: MaterialHeader(),
             footer: MaterialFooter(),
             child: ListView.builder(
-              itemCount:_list.length,
-              itemBuilder: (cxt,i){
-                return createItem(_list[i]);
-              }
-            ),
+                itemCount: _list.length,
+                itemBuilder: (cxt, i) {
+                  return createItem(_list[i]);
+                }),
           ),
         )
       ],
@@ -119,11 +118,10 @@ class _ComicUpdatePageState extends State<ComicRankPage>
           if (type == 1) {
             _rank = v;
           } else if (type == 2) {
-            _sort=v;
-          }else{
-            _type=v;
+            _sort = v;
+          } else {
+            _type = v;
           }
-         
         });
         print(v);
         _page = 0;
@@ -204,16 +202,18 @@ class _ComicUpdatePageState extends State<ComicRankPage>
                     Text(
                         "更新于" +
                             TimelineUtil.format(
-                                int.parse(item.last_updatetime) * 1000),
+                              int.parse(item.last_updatetime) * 1000,
+                              locale: 'zh',
+                            ),
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                   ],
                 ),
               ),
-            Center(
+              Center(
                 child: IconButton(
                     icon: Icon(Icons.favorite_border),
                     onPressed: () {
-                      UserHelper.comicSubscribe(int.parse(item.comic_id) );
+                      UserHelper.comicSubscribe(int.parse(item.comic_id));
                     }),
               )
             ],
@@ -226,8 +226,8 @@ class _ComicUpdatePageState extends State<ComicRankPage>
   List<ComicRankItem> _list = [];
   bool _loading = false;
   int _page = 0;
-  
-    Future loadData() async {
+
+  Future loadData() async {
     try {
       if (_loading) {
         return;
@@ -266,29 +266,26 @@ class _ComicUpdatePageState extends State<ComicRankPage>
     }
   }
 
-  
   Future loadFilter() async {
     try {
-     
       var response = await http.get(Api.comicRankFilter());
       List jsonMap = jsonDecode(response.body);
       List<ComicDetailTagItem> detail =
           jsonMap.map((i) => ComicDetailTagItem.fromJson(i)).toList();
       if (detail != null) {
-        Map list={};
+        Map list = {};
         for (var item in detail) {
-         
-          list.addAll({(item.tag_id==0?"全部分类": item.tag_name):item.tag_id.toString()});
+          list.addAll({
+            (item.tag_id == 0 ? "全部分类" : item.tag_name): item.tag_id.toString()
+          });
         }
         setState(() {
-            _types = list;
+          _types = list;
         });
         await loadData();
       }
     } catch (e) {
       print(e);
-    } 
+    }
   }
-
-
 }

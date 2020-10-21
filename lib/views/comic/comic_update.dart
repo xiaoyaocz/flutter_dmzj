@@ -69,7 +69,6 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
                         child: Text(
                           f,
                           style: TextStyle(
-                            
                               color: _types[f] == _mode
                                   ? Theme.of(context).accentColor
                                   : Theme.of(context).textTheme.button.color),
@@ -98,10 +97,10 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
             header: MaterialHeader(),
             footer: MaterialFooter(),
             child: ListView.builder(
-              itemCount:_list.length,
-              itemBuilder: (ctx,i){
-              return  createItem(_list[i]);
-            }),
+                itemCount: _list.length,
+                itemBuilder: (ctx, i) {
+                  return createItem(_list[i]);
+                }),
           ),
         )
       ],
@@ -175,16 +174,19 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
                     ),
                     Text(
                         "更新于" +
-                            TimelineUtil.format(item.last_updatetime * 1000),
+                            TimelineUtil.format(
+                              item.last_updatetime * 1000,
+                              locale: 'zh',
+                            ),
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                   ],
                 ),
               ),
-            Center(
+              Center(
                 child: IconButton(
                     icon: Icon(Icons.favorite_border),
                     onPressed: () {
-                      UserHelper.comicSubscribe(item.id );
+                      UserHelper.comicSubscribe(item.id);
                     }),
               )
             ],

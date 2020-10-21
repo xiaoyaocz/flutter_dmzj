@@ -6,7 +6,8 @@ import 'package:convert/convert.dart';
 class Api {
   static final String apiHost = "https://v3api.dmzj.com";
   static final String version = "2.7.017";
-  static get timeStamp => (DateTime.now().millisecondsSinceEpoch/1000).toStringAsFixed(0);
+  static get timeStamp =>
+      (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0);
 
   static get newsCategory =>
       "$apiHost/article/category.json?${defaultParameter()}";
@@ -15,23 +16,27 @@ class Api {
   static String newsList(int id, {int page = 0}) {
     return "$apiHost/v3/article/list/$id/${id == 0 ? 2 : 3}/$page.json";
   }
+
   /// 新闻数据
   static String newsStat(int id) {
     return "$apiHost/v3/article/total/$id.json?${defaultParameter()}";
   }
+
   /// 检查新闻收藏
   static String checkNewsSub() {
     return "https://interface.dmzj.com/api/news/subscribe/check";
   }
+
   /// 点赞新闻
   static String addNewsLike(int id) {
-     return "$apiHost/article/mood/$id?${defaultParameter()}";
+    return "$apiHost/article/mood/$id?${defaultParameter()}";
   }
 
   /// 添加新闻收藏
   static String addNewsSub() {
     return "https://interface.dmzj.com/api/news/subscribe/add";
   }
+
   /// 取消新闻收藏
   static String cancelNewsSub() {
     return "https://interface.dmzj.com/api/news/subscribe/del";
@@ -46,6 +51,7 @@ class Api {
   //漫画
   static get comicRecommend =>
       "$apiHost/recommend_new.json?${defaultParameter()}";
+
   /// 轻小说首页
   static get novelRecommend =>
       "$apiHost/novel/recommend.json?${defaultParameter()}";
@@ -67,17 +73,19 @@ class Api {
   static String comicDetail(int comic_id) {
     return "$apiHost/comic/comic_$comic_id.json?${defaultParameter()}";
   }
+
   /// 轻小说详情
   static String novelDetail(int novel_id) {
     return "$apiHost/novel/$novel_id.json";
   }
+
   /// 轻小说章节详情
   static String novelVolumeDetail(int novel_id) {
     return "$apiHost/novel/chapter/$novel_id.json";
   }
 
   /// 轻小说阅读
-  static String novelRead(int novel_id,int volume_id,int chapter_id) {
+  static String novelRead(int novel_id, int volume_id, int chapter_id) {
     return "$apiHost/novel/download/${novel_id}_${volume_id}_${chapter_id}.txt";
   }
 
@@ -90,20 +98,24 @@ class Api {
   static String comicRankFilter() {
     return "$apiHost/rank/type_filter.json?${defaultParameter()}";
   }
+
   /// 轻小说排行榜筛选
-  static get novelRankFilter=>"$apiHost/novel/tag.json?${defaultParameter()}";
-  
+  static get novelRankFilter => "$apiHost/novel/tag.json?${defaultParameter()}";
 
   /// 漫画排行榜详情
-  static String comicRank( {String tag_id="0",String rank="0",String sort="0",int page = 0}) {
+  static String comicRank(
+      {String tag_id = "0",
+      String rank = "0",
+      String sort = "0",
+      int page = 0}) {
     return "$apiHost/rank/$tag_id/$rank/$sort/$page.json?${defaultParameter()}";
   }
 
   /// 轻小说排行榜详情
-  static String novelRank( {String tag_id="0",String sort="0",int page = 0}) {
+  static String novelRank(
+      {String tag_id = "0", String sort = "0", int page = 0}) {
     return "$apiHost/novel/rank/$sort/$tag_id/$page.json?${defaultParameter()}";
   }
-
 
   /// 漫画专题详情
   static String comicSpeciaDetail(int specia_id) {
@@ -124,9 +136,9 @@ class Api {
   static String comicCategory() {
     return "$apiHost/0/category.json?${defaultParameter()}";
   }
-    /// 轻小说分类
-  static get novelCategory  => "$apiHost/1/category.json?${defaultParameter()}";
 
+  /// 轻小说分类
+  static get novelCategory => "$apiHost/1/category.json?${defaultParameter()}";
 
   /// 漫画作者
   static String comicAuthorDetail(int author_id) {
@@ -162,6 +174,7 @@ class Api {
   static String comicCheckSubscribe(int comic_id, String uid) {
     return "$apiHost/subscribe/0/$uid/$comic_id?${defaultParameter()}";
   }
+
   /// 查询是否订阅小说
   static String novelCheckSubscribe(int novel_id, String uid) {
     return "$apiHost/subscribe/1/$uid/$novel_id?${defaultParameter()}";
@@ -171,9 +184,10 @@ class Api {
   static String comicCategoryFilter() {
     return "$apiHost/classify/filter.json?${defaultParameter()}";
   }
+
   /// 轻小说筛选条件
-  static get novelCategoryFilter=>"$apiHost/novel/filter.json?${defaultParameter()}";
-  
+  static get novelCategoryFilter =>
+      "$apiHost/novel/filter.json?${defaultParameter()}";
 
   //漫画类目详情
   static String comicCategoryDetail(List<int> ids,
@@ -184,24 +198,19 @@ class Api {
         path += "$item-";
       }
     }
-    if(path=="classify/"){
-      path="classify/0";
-    }else{
-      path=path.substring(0,path.length-1);
+    if (path == "classify/") {
+      path = "classify/0";
+    } else {
+      path = path.substring(0, path.length - 1);
     }
     return "$apiHost/$path/$sort/$page.json?${defaultParameter()}";
   }
 
- /// 轻小说类目详情
+  /// 轻小说类目详情
   static String novelCategoryDetail(
-      {int cate_id=0,int status=0,int sort = 0, int page = 0}) {
-    
+      {int cate_id = 0, int status = 0, int sort = 0, int page = 0}) {
     return "$apiHost/novel/$cate_id/$status/$sort/$page.json?${defaultParameter()}";
   }
-
-
-
-
 
   //漫画相关内容
   static String comicRelated(int comic_id) {
@@ -216,14 +225,13 @@ class Api {
     return "$apiHost/subscribe/cancel?obj_ids=$comic_id&uid=$uid&type=mh";
   }
 
-   //添加小说订阅
+  //添加小说订阅
   static get addNovelSubscribe => "http://v3api.dmzj.com/subscribe/add";
 
   //取消小说订阅
   static String cancelNovelSubscribe(int novel_id, String uid) {
     return "$apiHost/subscribe/cancel?obj_ids=$novel_id&uid=$uid&type=xs";
   }
-
 
   //用户订阅,type 0=漫画,1=轻小说,sub_type 全部=1，未读=2，已读=3，完结=4
   static String userSubscribe(int type, int sub_type, String uid, String token,
@@ -232,41 +240,45 @@ class Api {
   }
 
   /// 用户漫画记录
-  static String userComicHistory(String uid,{int page = 0}) {
+  static String userComicHistory(String uid, {int page = 0}) {
     return "https://interface.dmzj.com/api/getReInfo/comic/$uid/$page?${defaultParameter()}";
   }
+
   /// 用户小说记录
-  static String userNovelHistory(String uid,{int page = 0}) {
+  static String userNovelHistory(String uid, {int page = 0}) {
     return "https://interface.dmzj.com/api/getReInfo/novel/$uid/$page?${defaultParameter()}";
   }
 
   /// 上传观看记录
-  static String addUserComicHistory(int comic_id,int chapter_id,String uid,{int page = 1}) {
-    Map map={
-      comic_id.toString():chapter_id.toString(),
-      "comicId":comic_id.toString(),
-      "chapterId":chapter_id.toString(),
-      "page":page,
-      "time":timeStamp
+  static String addUserComicHistory(int comic_id, int chapter_id, String uid,
+      {int page = 1}) {
+    Map map = {
+      comic_id.toString(): chapter_id.toString(),
+      "comicId": comic_id.toString(),
+      "chapterId": chapter_id.toString(),
+      "page": page,
+      "time": timeStamp
     };
-    var json= Uri.encodeComponent(jsonEncode(map));
+    var json = Uri.encodeComponent(jsonEncode(map));
     return "https://interface.dmzj.com/api/record/getRe?st=comic&uid=$uid&callback=record_jsonpCallback&json=[$json]&type=3";
   }
+
   /// 上传小说观看记录
-  static String addUserNovelHistory(int novel_id,int volume_id,int chapter_id,String uid,{int page = 1}) {
-    Map map={
-      novel_id.toString():chapter_id.toString(),
-      "lnovel_id":novel_id.toString(),
-      "volume_id":volume_id.toString(),
-      "chapterId":chapter_id.toString(),
-      "total_num":0,
-      "page":page,
-      "time":timeStamp
+  static String addUserNovelHistory(
+      int novel_id, int volume_id, int chapter_id, String uid,
+      {int page = 1}) {
+    Map map = {
+      novel_id.toString(): chapter_id.toString(),
+      "lnovel_id": novel_id.toString(),
+      "volume_id": volume_id.toString(),
+      "chapterId": chapter_id.toString(),
+      "total_num": 0,
+      "page": page,
+      "time": timeStamp
     };
-    var json= Uri.encodeComponent(jsonEncode(map));
+    var json = Uri.encodeComponent(jsonEncode(map));
     return "https://interface.dmzj.com/api/record/getRe?st=novel&uid=$uid&callback=record_jsonpCallback&json=[$json]&type=3";
   }
-
 
   /// 评论
   static String commentV2(int id, int type,
@@ -278,13 +290,14 @@ class Api {
   static String addCommentV3(int type) {
     return "http://v3comment.dmzj.com/v1/$type/add/app";
   }
+
   /// 检查是否可以评论
   static String checkCommentV3(String uid) {
     return "http://v3api.dmzj.com/comment2/gagcheckv2/$uid.json?${defaultParameter()}";
   }
 
-   /// 点赞评论
-  static String likeCommentV3(int obj_id,String comment_id,int type) {
+  /// 点赞评论
+  static String likeCommentV3(int obj_id, String comment_id, int type) {
     return "http://v3comment.dmzj.com/v1/$type/like/$comment_id?obj_id=$obj_id&comment_id=$comment_id&${defaultParameter()}";
   }
 
@@ -293,28 +306,29 @@ class Api {
     return "https://interface.dmzj.com/api/NewComment2/total?type=$type&obj_id=$id&countType=1&authorId=&_=${DateTime.now().millisecondsSinceEpoch}";
   }
 
-
   ///  用户评论
   /// [type] 0=漫画，1=轻小说，2=新闻
-  static String userComment(int uid,{int page = 1, int type=0}) {
-    var url="$apiHost/v3/old/comment/owner/$type/$uid/$page.json";
-    if(type==1){
-      url="$apiHost/comment/owner/$type/$uid/$page.json";
+  static String userComment(int uid, {int page = 1, int type = 0}) {
+    var url = "$apiHost/v3/old/comment/owner/$type/$uid/$page.json";
+    if (type == 1) {
+      url = "$apiHost/comment/owner/$type/$uid/$page.json";
     }
     return "$url?${defaultParameter()}";
   }
 
   /// 漫画搜索热词
-  static get comicSearchHotWord=>"$apiHost/search/hot/0.json?${defaultParameter()}";
+  static get comicSearchHotWord =>
+      "$apiHost/search/hot/0.json?${defaultParameter()}";
 
-   /// 轻小说搜索热词
-  static get novelSearchHotWord=>"$apiHost/search/hot/1.json?${defaultParameter()}";
+  /// 轻小说搜索热词
+  static get novelSearchHotWord =>
+      "$apiHost/search/hot/1.json?${defaultParameter()}";
 
   static String cmoicNSSearch(String keyword) {
     return "https://dmzj.nsapps.cn/api/dmzj/search?keyword=${Uri.encodeComponent(keyword)}";
   }
 
-  static String novelSearch(String keyword,{int page=0}) {
+  static String novelSearch(String keyword, {int page = 0}) {
     return "$apiHost/search/show/1/${Uri.encodeComponent(keyword)}/$page.json?${defaultParameter()}";
   }
 
@@ -322,9 +336,8 @@ class Api {
     return "channel=${Platform.operatingSystem}&version$version&timestamp=$timeStamp";
   }
 
-  static String sign(String content,String mode){
-     var _content = new Utf8Encoder().convert(mode+content);
-    return  hex.encode(md5.convert(_content).bytes);
+  static String sign(String content, String mode) {
+    var _content = new Utf8Encoder().convert(mode + content);
+    return hex.encode(md5.convert(_content).bytes);
   }
-
 }

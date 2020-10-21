@@ -24,7 +24,7 @@ class _NovelUpdatePageState extends State<NovelUpdatePage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
- 
+
   @override
   void initState() {
     super.initState();
@@ -38,23 +38,22 @@ class _NovelUpdatePageState extends State<NovelUpdatePage>
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return EasyRefresh(
-            onRefresh: () async {
-              _page = 0;
-              await loadData();
-            },
-            onLoad: loadData,
-            header: MaterialHeader(),
-            footer: MaterialFooter(),
-            child: ListView.builder(
-              itemCount:_list.length,
-              itemBuilder: (ctx,i){
-              return  createItem(_list[i]);
-            }),
-          );
+      onRefresh: () async {
+        _page = 0;
+        await loadData();
+      },
+      onLoad: loadData,
+      header: MaterialHeader(),
+      footer: MaterialFooter(),
+      child: ListView.builder(
+          itemCount: _list.length,
+          itemBuilder: (ctx, i) {
+            return createItem(_list[i]);
+          }),
+    );
   }
 
   Widget createItem(NovelUpdateItem item) {
@@ -111,19 +110,22 @@ class _NovelUpdatePageState extends State<NovelUpdatePage>
                     SizedBox(
                       height: 2,
                     ),
-                    Text(item.type??"",
+                    Text(item.type ?? "",
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                     SizedBox(
                       height: 2,
                     ),
-                    Text(item.last_update_chapter_name??"",
+                    Text(item.last_update_chapter_name ?? "",
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                     SizedBox(
                       height: 2,
                     ),
                     Text(
                         "更新于" +
-                            TimelineUtil.format(item.last_update_time * 1000),
+                            TimelineUtil.format(
+                              item.last_update_time * 1000,
+                              locale: 'zh',
+                            ),
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                   ],
                 ),

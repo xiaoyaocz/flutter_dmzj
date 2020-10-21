@@ -221,7 +221,7 @@ class _CommentWidgetState extends State<CommentWidget>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             InkWell(
-              onTap: (){
+              onTap: () {
                 Utils.openPage(context, item.sender_uid, 12);
               },
               child: Container(
@@ -298,7 +298,10 @@ class _CommentWidgetState extends State<CommentWidget>
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        TimelineUtil.format(item.create_time * 1000),
+                        TimelineUtil.format(
+                          item.create_time * 1000,
+                          locale: 'zh',
+                        ),
                         style: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ),
