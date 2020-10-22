@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +61,8 @@ class _NewsHomePageState extends State<NewsHomePage>
                       .map((x) => Tab(child: Text(x.tag_name)))
                       .toList(),
                   isScrollable: true,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  labelPadding: EdgeInsets.fromLTRB(12, 8, 12, 8),
+                  indicatorSize: TabBarIndicatorSize.label,
+                  //labelPadding: EdgeInsets.fromLTRB(12, 8, 12, 8),
                 ),
               ),
         body: TabBarView(
@@ -100,9 +101,18 @@ class NewsNewTabViewState extends State<NewsNewTabView>
   @override
   bool get wantKeepAlive => true;
 
+  //如果是IOS，且在审核期间，隐藏Banner
+  bool _hideBanner = false;
+
   @override
   void initState() {
     super.initState();
+    _hideBanner = Utils.hideBanner;
+    Utils.changeHideBanner.on<bool>().listen((event) {
+      setState(() {
+        _hideBanner = event;
+      });
+    });
     loadData();
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
@@ -122,20 +132,22 @@ class NewsNewTabViewState extends State<NewsNewTabView>
               controller: scrollController,
               child: Column(
                 children: <Widget>[
-                  AppBanner(
-                      items: _banners
-                          .map<Widget>((i) => BannerImageItem(
-                                pic: i.pic_url,
-                                title: i.title,
-                                onTaped: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => NewsDetailPage(
-                                            i.object_id,
-                                            i.object_url,
-                                            i.title))),
-                              ))
-                          .toList()),
+                  (Platform.isIOS && _hideBanner)
+                      ? Container()
+                      : AppBanner(
+                          items: _banners
+                              .map<Widget>((i) => BannerImageItem(
+                                    pic: i.pic_url,
+                                    title: i.title,
+                                    onTaped: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => NewsDetailPage(
+                                                i.object_id,
+                                                i.object_url,
+                                                i.title))),
+                                  ))
+                              .toList()),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: ScrollPhysics(),

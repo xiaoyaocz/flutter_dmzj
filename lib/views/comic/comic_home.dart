@@ -39,7 +39,7 @@ class _ComicHomePageState extends State<ComicHomePage>
               Tab(child: Text("专题")),
             ],
             indicatorSize: TabBarIndicatorSize.label,
-            labelPadding: EdgeInsets.all(8),
+            //labelPadding: EdgeInsets.all(8),
           ),
           actions: <Widget>[
             IconButton(

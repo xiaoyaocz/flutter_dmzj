@@ -6,6 +6,7 @@ class VersionInfo {
   String message;
   String android_url;
   String ios_url;
+  bool hide_banner;
 
   VersionInfo({
     this.version,
@@ -13,6 +14,7 @@ class VersionInfo {
     this.message,
     this.android_url,
     this.ios_url,
+    this.hide_banner,
   });
 
   factory VersionInfo.fromJson(jsonRes) => jsonRes == null
@@ -23,6 +25,7 @@ class VersionInfo {
           message: jsonRes['message'],
           android_url: jsonRes['android_url'],
           ios_url: jsonRes['ios_url'],
+          hide_banner: jsonRes['hide_banner'],
         );
   Map<String, dynamic> toJson() => {
         'version': version,
@@ -30,6 +33,7 @@ class VersionInfo {
         'message': message,
         'android_url': android_url,
         'ios_url': ios_url,
+        'hide_banner': hide_banner,
       };
 
   @override

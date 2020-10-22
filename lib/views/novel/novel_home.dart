@@ -37,7 +37,7 @@ class _NovelHomePageState extends State<NovelHomePage>
               Tab(child: Text("排行"))
             ],
             indicatorSize: TabBarIndicatorSize.label,
-            labelPadding: EdgeInsets.all(8),
+            //labelPadding: EdgeInsets.all(8),
           ),
           actions: <Widget>[
             IconButton(

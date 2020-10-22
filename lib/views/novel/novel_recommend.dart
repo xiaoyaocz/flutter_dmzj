@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +30,18 @@ class NovelRecommendState extends State<NovelRecommend>
   List<ComicHomeComicItem> _anime = [];
   List<ComicHomeComicItem> _hot = [];
 
+  //如果是IOS，且在审核期间，隐藏Banner
+  bool _hideBanner = false;
+
   @override
   void initState() {
     super.initState();
+    _hideBanner = Utils.hideBanner;
+    Utils.changeHideBanner.on<bool>().listen((event) {
+      setState(() {
+        _hideBanner = event;
+      });
+    });
     loadData();
   }
 
@@ -74,15 +84,18 @@ class NovelRecommendState extends State<NovelRecommend>
                 : CrossAxisAlignment.center,
             children: <Widget>[
               //bannera
-              AppBanner(
-                  items: _banners
-                      .map<Widget>((i) => BannerImageItem(
-                            pic: i.cover,
-                            title: i.title,
-                            onTaped: () => Utils.openPage(context, i.id, i.type,
-                                url: i.url, title: i.title),
-                          ))
-                      .toList()),
+              (Platform.isIOS && _hideBanner)
+                  ? Container()
+                  : AppBanner(
+                      items: _banners
+                          .map<Widget>((i) => BannerImageItem(
+                                pic: i.cover,
+                                title: i.title,
+                                onTaped: () => Utils.openPage(
+                                    context, i.id, i.type,
+                                    url: i.url, title: i.title),
+                              ))
+                          .toList()),
               // _getItem2("我的订阅", _my_sub,
               //     icon: Icon(Icons.chevron_right, color: Colors.grey),
               //     ontap: () => Utils.openSubscribePage(context),

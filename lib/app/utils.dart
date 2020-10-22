@@ -34,6 +34,7 @@ class Utils {
   static EventBus changeComicHomeTabIndex = EventBus();
   static EventBus changeNovelHomeTabIndex = EventBus();
   static EventBus changHistory = EventBus();
+  static EventBus changeHideBanner = EventBus();
   static void showSnackbarWithAction(
       BuildContext context, String content, String action, Function onPressed) {
     final snackBar = new SnackBar(
@@ -53,6 +54,7 @@ class Utils {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
+  static bool hideBanner = true;
   static Future<VersionInfo> checkVersion() async {
     try {
       var newVersion = await http.get(
@@ -60,6 +62,8 @@ class Utils {
               DateTime.now().millisecondsSinceEpoch.toString());
       var verInfo =
           VersionInfo.fromJson(jsonDecode(utf8.decode(newVersion.bodyBytes)));
+      hideBanner = verInfo.hide_banner;
+      changeHideBanner.fire(hideBanner);
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       if (packageInfo.buildNumber != verInfo.version_code) {
         return verInfo;
