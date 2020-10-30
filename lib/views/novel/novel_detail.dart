@@ -370,15 +370,20 @@ class _NovelDetailPageState extends State<NovelDetailPage>
       });
       Uint8List responseBody;
       var api = Api.novelDetail(widget.novelId);
-      try {
-        var response = await http.get(api);
-        responseBody = response.bodyBytes;
-      } catch (e) {
-        var file = await _cacheManager.getFileFromCache(api);
-        if (file != null) {
-          responseBody = await file.file.readAsBytes();
+      //优先从缓存读取信息，加快加载速度
+      var file = await _cacheManager.getFileFromCache(api);
+      if (file != null) {
+        responseBody = await file.file.readAsBytes();
+        print('load from cache ${widget.novelId}');
+      } else {
+        try {
+          var response = await http.get(api);
+          responseBody = response.bodyBytes;
+        } catch (e) {
+          return;
         }
       }
+
       var responseStr = utf8.decode(responseBody);
       var jsonMap = jsonDecode(responseStr);
 

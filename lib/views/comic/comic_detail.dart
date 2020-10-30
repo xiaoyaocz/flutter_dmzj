@@ -674,20 +674,24 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       });
       var api = Api.comicDetail(widget.comicId);
       Uint8List responseBody;
-      var response = await http.get(api);
-      responseBody = response.bodyBytes;
-      if (response.body == "漫画不存在!!!") {
-        var file = await _cacheManager
-            .getFileFromCache('http://comic.cache/${widget.comicId}');
-        if (file == null) {
+      //优先从缓存读取信息，加快加载速度
+      var file = await _cacheManager
+          .getFileFromCache('http://comic.cache/${widget.comicId}');
+      if (file == null) {
+        var response = await http.get(api);
+        responseBody = response.bodyBytes;
+        if (response.body == "漫画不存在!!!") {
           setState(() {
             _loading = false;
             _noCopyright = true;
           });
           return;
         }
+      } else {
         responseBody = await file.file.readAsBytes();
+        // print('load from cache ${widget.comicId}');
       }
+
       var responseStr = utf8.decode(responseBody);
       var jsonMap = jsonDecode(responseStr);
 
