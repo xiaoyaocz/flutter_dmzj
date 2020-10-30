@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/models/novel/novel_volume_item.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
+import 'package:flutter_dmzj/widgets/stickyTabBarDelegate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -19,17 +21,18 @@ import 'package:share/share.dart';
 
 class NovelDetailPage extends StatefulWidget {
   final int novelId;
-  NovelDetailPage(this.novelId, {Key key}) : super(key: key);
+  final String coverUrl;
+  NovelDetailPage(this.novelId, this.coverUrl, {Key key}) : super(key: key);
 
   @override
   _NovelDetailPageState createState() => _NovelDetailPageState();
 }
 
 class _NovelDetailPageState extends State<NovelDetailPage>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   @override
   bool get wantKeepAlive => true;
-
+  TabController _tabController;
   int historyChapter = 0;
 
   @override
@@ -56,14 +59,14 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   NovelDetail _detail;
   @override
   Widget build(BuildContext context) {
+    _tabController = TabController(length: 3, vsync: this);
     super.build(context);
-    return _detail != null
-        ? DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(_detail.name),
-                actions: <Widget>[
+    return Scaffold(
+      appBar: AppBar(
+          elevation: 0,
+          title: (_detail != null) ? Text(_detail.name) : Text(""),
+          actions: (_detail != null)
+              ? <Widget>[
                   Provider.of<AppUserInfo>(context).isLogin && _isSubscribe
                       ? IconButton(
                           icon: Icon(Icons.favorite),
@@ -92,24 +95,150 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                       icon: Icon(Icons.share),
                       onPressed: () => Share.share(
                           "${_detail.name}\r\nhttp://q.dmzj.com/${widget.novelId}/index.shtml")),
-                ],
-                bottom: TabBar(tabs: [
-                  Tab(text: "详情"),
-                  Tab(text: "章节"),
-                  Tab(text: "评论"),
-                ]),
+                ]
+              : null),
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverToBoxAdapter(
+                child: Stack(
+              fit: StackFit.loose,
+              children: [
+                Positioned(
+                  top: 0,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 300,
+                    child: Hero(
+                      tag: widget.novelId,
+                      child: Utils.createCacheImage(widget.coverUrl,
+                          MediaQuery.of(context).size.width, 200,
+                          fit: BoxFit.cover),
+                    ),
+                  ),
+                ),
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                  child: Center(
+                      child: Container(
+                    color: Theme.of(context).cardColor.withAlpha(75),
+                    padding: EdgeInsets.only(top: 12, left: 12, right: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () => Utils.showImageViewDialog(
+                                  context, widget.coverUrl),
+                              child: Container(
+                                width: 100,
+                                child: Utils.createCacheImage(
+                                    widget.coverUrl, 270, 360),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Expanded(
+                              child: (_detail != null)
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          _detail.name,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 2),
+                                        Text(
+                                          "作者:" + _detail.authors,
+                                        ),
+                                        SizedBox(height: 2),
+                                        Text(
+                                          "点击:" + _detail.hot_hits.toString(),
+                                        ),
+                                        SizedBox(height: 2),
+                                        Text(
+                                          "订阅:" +
+                                              _detail.subscribe_num.toString(),
+                                        ),
+                                        SizedBox(height: 2),
+                                        Text(
+                                          "状态:" + _detail.status,
+                                        ),
+                                        SizedBox(height: 2),
+                                        Text(
+                                          "最后更新:" +
+                                              DateUtil.formatDate(
+                                                  DateTime.fromMillisecondsSinceEpoch(
+                                                      _detail.last_update_time *
+                                                          1000),
+                                                  format: "yyyy-MM-dd"),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox(
+                                      width: 12,
+                                    ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12,
+                        )
+                      ],
+                    ),
+                  )),
+                ),
+              ],
+            )),
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: StickyTabBarDelegate(
+                child: TabBar(
+                    controller: _tabController,
+                    indicatorWeight: 4,
+                    indicatorColor: Theme.of(context).indicatorColor,
+                    tabs: [
+                      Tab(text: "详情"),
+                      Tab(text: "章节"),
+                      Tab(text: "评论"),
+                    ]),
               ),
-              body: TabBarView(
+            ),
+          ];
+        },
+        body: (_detail != null)
+            ? TabBarView(
+                controller: _tabController,
                 children: [
-                  createDetail(),
+                  SingleChildScrollView(
+                    child: Container(
+                      width: double.infinity,
+                      color: Theme.of(context).cardColor,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text("简介",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          SizedBox(height: 4),
+                          Text(
+                            _detail.introduction,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   cerateVolume(),
                   CommentWidget(1, widget.novelId),
                 ],
-              ),
-            ))
-        : Scaffold(
-            appBar: AppBar(),
-            body: _loading
+              )
+            : _loading
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
@@ -117,165 +246,73 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                     padding: EdgeInsets.all(24),
                     child: Text("读取轻小说失败"),
                   ),
-          );
-  }
-
-  Widget createDetail() {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Container(
-            color: Theme.of(context).cardColor,
-            padding: EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () =>
-                          Utils.showImageViewDialog(context, _detail.cover),
-                      child: Container(
-                        width: 100,
-                        child: Utils.createCacheImage(_detail.cover, 270, 360),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            _detail.name,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            "作者:" + _detail.authors,
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            "点击:" + _detail.hot_hits.toString(),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            "订阅:" + _detail.subscribe_num.toString(),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            "状态:" + _detail.status,
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            "最后更新:" +
-                                DateUtil.formatDate(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        _detail.last_update_time * 1000),
-                                    format: "yyyy-MM-dd"),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 12),
-          Container(
-            width: double.infinity,
-            color: Theme.of(context).cardColor,
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("简介", style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 4),
-                Text(
-                  _detail.introduction,
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
-          heroTag: null, child: Icon(Icons.play_arrow), onPressed: openRead),
+          heroTag: "read_novel",
+          child: Icon(Icons.play_arrow),
+          onPressed: openRead),
     );
   }
 
   Widget cerateVolume() {
-    return Scaffold(
-      body: volumes != null && volumes.length != 0
-          ? ListView.builder(
-              itemCount: volumes.length,
-              itemBuilder: (ctx, i) {
-                var f = volumes[i];
-                var his = f.chapters.firstWhere(
-                    (x) => x.chapter_id == historyChapter,
-                    orElse: () => null);
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: Container(
-                    color: Theme.of(context).cardColor,
-                    child: ExpansionTile(
-                      title: Text(f.volume_name),
-                      subtitle:
-                          his != null ? Text("上次看到:" + his.chapter_name) : null,
-                      children: f.chapters.map((item) {
-                        return InkWell(
-                          onTap: () async {
-                            await Utils.openNovelReader(
-                                context, widget.novelId, volumes, item,
-                                novelTitle: _detail.name,
-                                isSubscribe: _isSubscribe);
-                            updateHistory();
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                  top: BorderSide(
-                                      color: Colors.grey.withOpacity(0.1))),
-                            ),
-                            child: Text(
-                              item.chapter_name,
-                              style: TextStyle(
-                                  color: item.chapter_id == historyChapter
-                                      ? Theme.of(context).accentColor
-                                      : Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          .color),
-                            ),
+    return volumes != null && volumes.length != 0
+        ? ListView.builder(
+            itemCount: volumes.length,
+            itemBuilder: (ctx, i) {
+              var f = volumes[i];
+              var his = f.chapters.firstWhere(
+                  (x) => x.chapter_id == historyChapter,
+                  orElse: () => null);
+              return Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: Container(
+                  color: Theme.of(context).cardColor,
+                  child: ExpansionTile(
+                    title: Text(f.volume_name),
+                    subtitle:
+                        his != null ? Text("上次看到:" + his.chapter_name) : null,
+                    children: f.chapters.map((item) {
+                      return InkWell(
+                        onTap: () async {
+                          await Utils.openNovelReader(
+                              context, widget.novelId, volumes, item,
+                              novelTitle: _detail.name,
+                              isSubscribe: _isSubscribe);
+                          updateHistory();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            border: Border(
+                                top: BorderSide(
+                                    color: Colors.grey.withOpacity(0.1))),
                           ),
-                        );
-                      }).toList(),
-                    ),
+                          child: Text(
+                            item.chapter_name,
+                            style: TextStyle(
+                                color: item.chapter_id == historyChapter
+                                    ? Theme.of(context).accentColor
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .color),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                );
-              },
-            )
-          : Center(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text("岂可修！竟然没有章节！"),
-              ),
+                ),
+              );
+            },
+          )
+        : Center(
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: Text("岂可修！竟然没有章节！"),
             ),
-      floatingActionButton: FloatingActionButton(
-          heroTag: null, child: Icon(Icons.play_arrow), onPressed: openRead),
-    );
+          );
   }
 
   void openRead() async {

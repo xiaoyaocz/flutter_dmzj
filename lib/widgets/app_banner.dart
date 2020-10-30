@@ -96,6 +96,10 @@ class BannerImageItem extends StatelessWidget {
               bottom: 4,
               left: 8,
               child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Colors.black.withAlpha(75),
+                ),
                 padding: EdgeInsets.all(8),
                 child: Text(title,
                     style: TextStyle(

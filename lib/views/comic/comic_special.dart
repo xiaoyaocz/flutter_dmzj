@@ -71,15 +71,20 @@ class _ComicSpecialPageState extends State<ComicSpecialPage>
                 child: Card(
                   child: RawMaterialButton(
                     onPressed: () {
-                      Utils.openPage(context, f.id, 5);
+                      Utils.openPage(context, f.id, 5,
+                          url: f.small_cover, title: f.title);
                     },
                     child: Container(
                         padding: EdgeInsets.all(4),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            Utils.createCacheImage(f.small_cover, 710, 280),
-                            SizedBox(height: 4),
+                            Hero(
+                              tag: f.id,
+                              child: Utils.createCacheImage(
+                                  f.small_cover, 710, 280),
+                            ),
+                            SizedBox(height: 5),
                             Flexible(
                               child: Row(
                                 children: <Widget>[

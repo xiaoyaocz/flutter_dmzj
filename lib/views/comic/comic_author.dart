@@ -47,7 +47,7 @@ class _ComicAuthorPageState extends State<ComicAuthorPage> {
   Widget createItem(ComicAuthorItem item) {
     return InkWell(
       onTap: () {
-        Utils.openPage(context, item.id, 1);
+        Utils.openPage(context, item.id, 1, url: item.cover, title: item.name);
       },
       child: Container(
         padding: EdgeInsets.all(8),
@@ -57,7 +57,10 @@ class _ComicAuthorPageState extends State<ComicAuthorPage> {
           children: <Widget>[
             Container(
               height: 100,
-              child: Utils.createCacheImage(item.cover, 270, 360),
+              child: Hero(
+                tag: item.id,
+                child: Utils.createCacheImage(item.cover, 270, 360),
+              ),
             ),
             SizedBox(
               width: 12,

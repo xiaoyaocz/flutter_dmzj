@@ -174,16 +174,6 @@ class ComicRecommendState extends State<ComicRecommend>
                   icon: Icon(Icons.chevron_right, color: Colors.grey),
                   ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                   ontap: () => Utils.changeComicHomeTabIndex.fire(1)),
-              Container(
-                width: double.infinity,
-                //padding: EdgeInsets.all(12),
-                child: Center(
-                  child: Text(
-                    '',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              )
             ],
           ),
         ),
@@ -324,7 +314,7 @@ class ComicRecommendState extends State<ComicRecommend>
       double height = 360}) {
     return RawMaterialButton(
       onPressed: () =>
-          Utils.openPage(context, id, type, url: url, title: title),
+          Utils.openPage(context, id, type, url: pic, title: title),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       padding: EdgeInsets.all(4),
       child: Container(
@@ -332,28 +322,10 @@ class ComicRecommendState extends State<ComicRecommend>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: CachedNetworkImage(
-                  imageUrl: pic,
-                  fit: BoxFit.cover,
-                  httpHeaders: {"Referer": "http://www.dmzj.com/"},
-                  placeholder: (context, url) => AspectRatio(
-                    aspectRatio: width / height,
-                    child: Container(
-                      width: width,
-                      height: height,
-                      child: Icon(Icons.photo),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => AspectRatio(
-                    aspectRatio: width / height,
-                    child: Container(
-                      width: width,
-                      height: height,
-                      child: Icon(Icons.error),
-                    ),
-                  ),
-                )),
+              borderRadius: BorderRadius.circular(4),
+              child:
+                  Utils.createCacheImage(pic, width, height, fit: BoxFit.cover),
+            ),
             SizedBox(
               height: 4,
             ),

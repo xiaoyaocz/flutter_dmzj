@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/views/comic/comic_category.dart';
@@ -28,39 +30,42 @@ class _ComicHomePageState extends State<ComicHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: TabBar(
-            controller: _tabController,
-            tabs: <Widget>[
-              Tab(child: Text("推荐")),
-              Tab(child: Text("更新")),
-              Tab(child: Text("分类")),
-              Tab(child: Text("排行")),
-              Tab(child: Text("专题")),
-            ],
-            indicatorSize: TabBarIndicatorSize.label,
-            //labelPadding: EdgeInsets.all(8),
-          ),
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.search),
-                tooltip: "搜索",
-                onPressed: () {
-                  showSearch(
-                      context: context, delegate: ComicSearchBarDelegate());
-                  //Utils.openPage(context, 1798, 1);
-                }) //18417
-          ],
-        ),
-        body: TabBarView(
+      appBar: AppBar(
+        titleSpacing: 0.0,
+        title: TabBar(
           controller: _tabController,
-          children: <Widget>[
-            ComicRecommend(),
-            ComicUpdatePage(),
-            ComicCategoryPage(),
-            ComicRankPage(),
-            ComicSpecialPage(),
+          labelPadding: EdgeInsets.only(left: 5, right: 5),
+          tabs: <Widget>[
+            Tab(child: Text("推荐")),
+            Tab(child: Text("更新")),
+            Tab(child: Text("分类")),
+            Tab(child: Text("排行")),
+            Tab(child: Text("专题")),
           ],
-        ));
+          labelStyle:
+              new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          // unselectedLabelStyle: new TextStyle(fontSize: 12.0),
+          indicatorSize: TabBarIndicatorSize.label,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'comic search',
+        child: Icon(Icons.search),
+        tooltip: "搜索",
+        onPressed: () {
+          showSearch(context: context, delegate: ComicSearchBarDelegate());
+        },
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: <Widget>[
+          ComicRecommend(),
+          ComicUpdatePage(),
+          ComicCategoryPage(),
+          ComicRankPage(),
+          ComicSpecialPage(),
+        ],
+      ),
+    );
   }
 }

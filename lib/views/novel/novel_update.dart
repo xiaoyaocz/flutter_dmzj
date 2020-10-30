@@ -59,7 +59,7 @@ class _NovelUpdatePageState extends State<NovelUpdatePage>
   Widget createItem(NovelUpdateItem item) {
     return InkWell(
       onTap: () {
-        Utils.openPage(context, item.id, 2);
+        Utils.openPage(context, item.id, 2, url: item.cover, title: item.name);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -74,9 +74,11 @@ class _NovelUpdatePageState extends State<NovelUpdatePage>
               ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: Container(
-                    width: 80,
-                    child: Utils.createCacheImage(item.cover, 270, 360),
-                  )),
+                      width: 80,
+                      child: Hero(
+                        tag: item.id,
+                        child: Utils.createCacheImage(item.cover, 270, 360),
+                      ))),
               SizedBox(
                 width: 12,
               ),

@@ -1,5 +1,5 @@
 name: flutter_dmzj
-description: A new Flutter project.
+description: based on flutter_dmzj project
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.5+201022
+version: 1.0.5+201029
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

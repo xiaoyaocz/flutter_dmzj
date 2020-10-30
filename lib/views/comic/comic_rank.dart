@@ -142,7 +142,8 @@ class _ComicUpdatePageState extends State<ComicRankPage>
   Widget createItem(ComicRankItem item) {
     return InkWell(
       onTap: () {
-        Utils.openPage(context, int.parse(item.comic_id), 1);
+        Utils.openPage(context, int.parse(item.comic_id), 1,
+            url: item.cover, title: item.title);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -157,9 +158,11 @@ class _ComicUpdatePageState extends State<ComicRankPage>
               ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: Container(
-                    width: 80,
-                    child: Utils.createCacheImage(item.cover, 270, 360),
-                  )),
+                      width: 80,
+                      child: Hero(
+                        tag: item.comic_id,
+                        child: Utils.createCacheImage(item.cover, 270, 360),
+                      ))),
               SizedBox(
                 width: 12,
               ),

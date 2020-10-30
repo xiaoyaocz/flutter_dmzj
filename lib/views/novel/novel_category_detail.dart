@@ -256,12 +256,15 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
       {String author = ""}) {
     return Card(
       child: InkWell(
-          onTap: () => Utils.openPage(context, id, 2, title: title),
+          onTap: () => Utils.openPage(context, id, 2, url: pic, title: title),
           child: Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Utils.createCacheImage(pic, 270, 360),
+                Hero(
+                  tag: id,
+                  child: Utils.createCacheImage(pic, 270, 360),
+                ),
                 Padding(
                   padding:
                       EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),

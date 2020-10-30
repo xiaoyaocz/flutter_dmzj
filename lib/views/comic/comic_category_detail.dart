@@ -50,7 +50,13 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Hero(
+          tag: widget.title,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Text(widget.title),
+          ),
+        ),
         actions: <Widget>[
           Builder(
             builder: (BuildContext context) => IconButton(
@@ -256,12 +262,15 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
       {String author = "", String status = ""}) {
     return Card(
       child: InkWell(
-          onTap: () => Utils.openPage(context, id, 1, title: title),
+          onTap: () => Utils.openPage(context, id, 1, url: pic, title: title),
           child: Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Utils.createCacheImage(pic, 270, 360),
+                Hero(
+                  tag: id,
+                  child: Utils.createCacheImage(pic, 270, 360),
+                ),
                 Padding(
                   padding: EdgeInsets.only(left: 4, right: 4, top: 4),
                   child: Text(

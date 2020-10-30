@@ -111,7 +111,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
   Widget createItem(ComicUpdateItem item) {
     return InkWell(
       onTap: () {
-        Utils.openPage(context, item.id, 1);
+        Utils.openPage(context, item.id, 1, url: item.cover, title: item.title);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 8, 8, 0),

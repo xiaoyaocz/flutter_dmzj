@@ -66,9 +66,18 @@ class _ComicCategoryPageState extends State<ComicCategoryPage>
                   ClipRRect(
                       borderRadius: BorderRadius.circular(4),
                       child: Utils.createCacheImage(_list[i].cover, 200, 200)),
-                  SizedBox(height: 4),
-                  Flexible(
-                    child: Text(_list[i].title),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Hero(
+                    tag: _list[i].title,
+                    child: Material(
+                      type: MaterialType.transparency,
+                      child: Text(
+                        _list[i].title,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                 ],
               ),

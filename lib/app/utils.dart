@@ -202,20 +202,20 @@ class Utils {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => ComicDetailPage(id)));
+                builder: (BuildContext context) => ComicDetailPage(id, url)));
         break;
       case 2:
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => NovelDetailPage(id)));
+                builder: (BuildContext context) => NovelDetailPage(id, url)));
         print("打开小说" + id.toString());
         break;
       case 5:
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => ComicSpecialDetailPage(id)));
+                builder: (BuildContext context) => ComicSpecialDetailPage(id,title,url)));
         print("打开专题" + id.toString());
         break;
       case 6:

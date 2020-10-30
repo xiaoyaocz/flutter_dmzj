@@ -28,6 +28,7 @@ class _NovelHomePageState extends State<NovelHomePage>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          titleSpacing: 0.0,
           title: TabBar(
             controller: _tabController,
             tabs: <Widget>[
@@ -37,18 +38,18 @@ class _NovelHomePageState extends State<NovelHomePage>
               Tab(child: Text("排行"))
             ],
             indicatorSize: TabBarIndicatorSize.label,
-            //labelPadding: EdgeInsets.all(8),
+            labelStyle:
+                new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            labelPadding: EdgeInsets.only(left: 5, right: 5),
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.search),
-              tooltip: "搜索",
-              onPressed: () {
-                showSearch(
-                    context: context, delegate: NovelSearchBarDelegate());
-              },
-            )
-          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          heroTag: 'novel search',
+          child: Icon(Icons.search),
+          tooltip: "搜索",
+          onPressed: () {
+            showSearch(context: context, delegate: NovelSearchBarDelegate());
+          },
         ),
         body: TabBarView(
           controller: _tabController,

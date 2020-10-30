@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/novel/novel_search_result_item.dart';
@@ -139,7 +140,9 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
           ),
         ),
         onTap: () {
-          Utils.openPage(context, id, type);
+          //Utils.openPage(context, id, type, );
+          query = title;
+          showResults(context);
         },
       ),
     );
@@ -148,7 +151,7 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
   Widget createItem(context, NovelSearchResultItem item) {
     return InkWell(
       onTap: () {
-        Utils.openPage(context, item.id, 2);
+        Utils.openPage(context, item.id, 2, url: item.cover, title: item.title);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -163,9 +166,11 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
               ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: Container(
-                    width: 80,
-                    child: Utils.createCacheImage(item.cover, 270, 360),
-                  )),
+                      width: 80,
+                      child: Hero(
+                        tag: item.id,
+                        child: Utils.createCacheImage(item.cover, 270, 360),
+                      ))),
               SizedBox(
                 width: 12,
               ),
@@ -180,22 +185,9 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
                     SizedBox(
                       height: 2,
                     ),
-                    Text.rich(
-                      TextSpan(children: [
-                        WidgetSpan(
-                            child: Icon(
-                          Icons.account_circle,
-                          color: Colors.grey,
-                          size: 18,
-                        )),
-                        TextSpan(
-                          text: " ",
-                        ),
-                        TextSpan(
-                            text: item.authors,
-                            style: TextStyle(color: Colors.grey, fontSize: 14))
-                      ]),
-                    ),
+                    Text.rich(TextSpan(
+                        text: item.authors,
+                        style: TextStyle(color: Colors.grey, fontSize: 14))),
                     SizedBox(
                       height: 2,
                     ),
@@ -247,6 +239,6 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    return super.appBarTheme(context);
+    return Theme.of(context);
   }
 }

@@ -225,7 +225,7 @@ class NovelRecommendState extends State<NovelRecommend>
       double height = 360}) {
     return RawMaterialButton(
       onPressed: () =>
-          Utils.openPage(context, id, type, url: url, title: title),
+          Utils.openPage(context, id, type, url: pic, title: title),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       padding: EdgeInsets.all(4),
       child: Container(

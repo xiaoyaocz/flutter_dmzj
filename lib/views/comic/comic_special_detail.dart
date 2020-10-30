@@ -5,20 +5,25 @@ import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_specia_datail_model.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
+import 'package:flutter_dmzj/widgets/stickyTabBarDelegate.dart';
 import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
 
 class ComicSpecialDetailPage extends StatefulWidget {
   final int id;
-  ComicSpecialDetailPage(this.id, {Key key}) : super(key: key);
+  final String title;
+  final String coverUrl;
+  ComicSpecialDetailPage(this.id, this.title, this.coverUrl, {Key key})
+      : super(key: key);
 
   @override
   _ComicSpecialDetailPageState createState() => _ComicSpecialDetailPageState();
 }
 
 class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   @override
+  TabController _tabController;
   bool get wantKeepAlive => true;
   ComicSpecia _detail;
   @override
@@ -29,41 +34,57 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
 
   @override
   Widget build(BuildContext context) {
+    _tabController = TabController(length: 2, vsync: this);
     super.build(context);
-    return _detail != null
-        ? DefaultTabController(
-            length: 3, // This is the number of tabs.
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(_detail.title),
-                actions: <Widget>[
-                  IconButton(
-                      icon: Icon(Icons.share),
-                      onPressed: () => Share.share(
-                          "${_detail.title}\r\nhttp://m.dmzj.com/zhuanti/${_detail.page_url}"))
-                ],
-                bottom: TabBar(
-                    tabs: [Tab(text: "介绍"), Tab(text: "漫画"), Tab(text: "评论")]),
+    return Scaffold(
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              elevation: 0,
+              pinned: true,
+              expandedHeight: 180,
+              title: Text(widget.title),
+              flexibleSpace: FlexibleSpaceBar(
+                  background: Hero(
+                tag: widget.id,
+                child: Utils.createCacheImage(
+                    widget.coverUrl, MediaQuery.of(context).size.width, 350,
+                    fit: BoxFit.cover),
+              )),
+              actions: (_detail != null)
+                  ? <Widget>[
+                      IconButton(
+                          icon: Icon(Icons.share),
+                          onPressed: () => Share.share(
+                              "${_detail.title}\r\nhttp://m.dmzj.com/zhuanti/${_detail.page_url}"))
+                    ]
+                  : null,
+            ),
+            SliverToBoxAdapter(
+              child: (_detail != null)
+                  ? Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Text("        " + _detail.description),
+                    )
+                  : Text(""),
+            ),
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: StickyTabBarDelegate(
+                child: TabBar(
+                    controller: _tabController,
+                    indicatorWeight: 4,
+                    indicatorColor: Theme.of(context).indicatorColor,
+                    tabs: [Tab(text: "漫画"), Tab(text: "评论")]),
               ),
-              body: TabBarView(
+            ),
+          ];
+        },
+        body: (_detail != null)
+            ? TabBarView(
+                controller: _tabController,
                 children: [
-                  SingleChildScrollView(
-                    padding: EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Utils.createCacheImage(
-                            _detail.mobile_header_pic, 710, 350),
-                        SizedBox(height: 12),
-                        Text(
-                          _detail.title,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 12),
-                        Text(_detail.description)
-                      ],
-                    ),
-                  ),
                   ListView(
                     children: _detail.comics
                         .map<Widget>((f) => createItem(f))
@@ -71,21 +92,23 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
                   ),
                   CommentWidget(2, widget.id),
                 ],
-              ),
-            ),
-          )
-        : Scaffold(
-            appBar: AppBar(),
-            body: Center(
-              child: _loading ? CircularProgressIndicator() : Container(),
-            ),
-          );
+              )
+            : _loading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Container(
+                    padding: EdgeInsets.all(24),
+                    child: Text("读取专栏失败"),
+                  ),
+      ),
+    );
   }
 
   Widget createItem(ComicSpeciaItem item) {
     return InkWell(
       onTap: () {
-        Utils.openPage(context, item.id, 1);
+        Utils.openPage(context, item.id, 1, url: item.cover, title: item.name);
       },
       child: Container(
         padding: EdgeInsets.all(8),
@@ -93,9 +116,11 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              width: 80,
-              child: Utils.createCacheImage(item.cover, 270, 360),
-            ),
+                width: 80,
+                child: Hero(
+                  tag: item.id,
+                  child: Utils.createCacheImage(item.cover, 270, 360),
+                )),
             SizedBox(
               width: 12,
             ),

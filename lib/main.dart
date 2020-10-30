@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
@@ -37,6 +38,17 @@ void main() async {
     ],
     child: MyApp(),
   ));
+  if (Platform.isAndroid) {
+    //设置Android头部的导航栏透明
+    SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, //全局设置透明
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+      //light:黑色图标 dark：白色图标
+      //在此处设置statusBarIconBrightness为全局设置
+    );
+    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  }
 }
 
 Future initDatabase() async {
@@ -116,23 +128,23 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
-    checkUpdate();
+    //checkUpdate();
   }
 
-  void checkUpdate() async {
-    var newVer = await Utils.checkVersion();
-    if (newVer == null) {
-      return;
-    }
-    if (await Utils.showAlertDialogAsync(
-        context, Text('有新版本可以更新'), Text(newVer.message))) {
-      if (Platform.isAndroid) {
-        launch(newVer.android_url);
-      } else {
-        launch(newVer.ios_url);
-      }
-    }
-  }
+  // void checkUpdate() async {
+  //   var newVer = await Utils.checkVersion();
+  //   if (newVer == null) {
+  //     return;
+  //   }
+  //   if (await Utils.showAlertDialogAsync(
+  //       context, Text('有新版本可以更新'), Text(newVer.message))) {
+  //     if (Platform.isAndroid) {
+  //       launch(newVer.android_url);
+  //     } else {
+  //       launch(newVer.ios_url);
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

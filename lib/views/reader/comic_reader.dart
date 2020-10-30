@@ -180,6 +180,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
       body: Stack(
         children: <Widget>[
@@ -247,51 +248,57 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
 
           //顶部
           AnimatedPositioned(
-            duration: Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 500),
+            curve: Curves.ease,
             width: MediaQuery.of(context).size.width,
             child: Container(
-              padding: EdgeInsets.only(
-                  top: Provider.of<AppSetting>(context).comicReadShowStatusBar
-                      ? 0
-                      : MediaQuery.of(context).padding.top),
-              width: MediaQuery.of(context).size.width,
               child: Material(
-                  color: Color.fromARGB(255, 34, 34, 34),
-                  child: ListTile(
-                    dense: true,
-                    title: Text(
-                      widget.comicTitle,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      _currentItem.chapter_title,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    leading: BackButton(
-                      color: Colors.white,
-                    ),
-                    trailing: IconButton(
-                        icon: Icon(
-                          Icons.share,
-                          color: Colors.white,
+                  color: Color.fromARGB(255, 34, 34, 34).withOpacity(0.75),
+                  child: Column(
+                    children: [
+                      // SizedBox(
+                      //   height: kToolbarHeight,
+                      // ),
+                      AppBar(
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                        title:ListTile(
+                          dense: true,
+                          title: Text(
+                            widget.comicTitle,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            _currentItem.chapter_title,
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
-                        onPressed: () {
-                          Share.share(
-                              '${widget.comicTitle}-${_currentItem.chapter_title}\r\nhttps://m.dmzj.com/view/${widget.comicId}/${_currentItem.chapter_id}.html');
-                        }),
-                  )),
+                        actions: [IconButton(
+                            icon: Icon(
+                              Icons.share,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Share.share(
+                                  '${widget.comicTitle}-${_currentItem.chapter_title}\r\nhttps://m.dmzj.com/view/${widget.comicId}/${_currentItem.chapter_id}.html');
+                            }),],
+                      ),
+                    ],
+                  )
+                  )
             ),
-            top: _showControls ? 0 : -100,
+            top: _showControls ? 0 : -kToolbarHeight*2,
             left: 0,
           ),
           //底部
           AnimatedPositioned(
-            duration: Duration(milliseconds: 200),
+            curve: Curves.ease,
+            duration: Duration(milliseconds: 500),
             width: MediaQuery.of(context).size.width,
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               width: MediaQuery.of(context).size.width,
-              color: Color.fromARGB(255, 34, 34, 34),
+              color: Color.fromARGB(255, 34, 34, 34).withOpacity(0.75),
               child: Column(
                 children: <Widget>[
                   Row(
