@@ -668,7 +668,6 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   bool _isSubscribe = false;
   DefaultCacheManager _cacheManager = DefaultCacheManager();
   Future loadData() async {
-    Stopwatch stopwatch = Stopwatch()..start();
     if (_loading) {
       return;
     }

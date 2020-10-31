@@ -37,6 +37,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
 
   @override
   void initState() {
+    _tabController = TabController(length: 3, vsync: this);
     super.initState();
     loadData().whenComplete(() {
       setState(() {
@@ -63,7 +64,6 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   NovelDetail _detail;
   @override
   Widget build(BuildContext context) {
-    _tabController = TabController(length: 3, vsync: this);
     super.build(context);
     return Scaffold(
       appBar: AppBar(
@@ -242,7 +242,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                   CommentWidget(1, widget.novelId),
                 ],
               )
-            : _loading
+            : !_loadffail || _loading
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
@@ -362,6 +362,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
 
   DefaultCacheManager _cacheManager = DefaultCacheManager();
   bool _loading = false;
+  bool _loadffail = false;
   bool _isSubscribe = false;
   List<NovelVolumeItem> volumes = [];
   Future loadData() async {
@@ -371,7 +372,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
     setState(() {
       _loading = true;
     });
-    loadData();
+    loadDetail();
     loadVolumes();
     checkSubscribe();
   }
@@ -380,26 +381,22 @@ class _NovelDetailPageState extends State<NovelDetailPage>
     try {
       Uint8List responseBody;
       var api = Api.novelDetail(widget.novelId);
-      var file = await _cacheManager.getFileFromCache(api);
-      if (file != null) {
-        responseBody = await file.file.readAsBytes();
-        print('load from cache ${widget.novelId}');
-      } else {
-        try {
-          var response = await http.get(api);
-          responseBody = response.bodyBytes;
-        } catch (e) {
-          return;
+      try {
+        var response = await http.get(api);
+        responseBody = response.bodyBytes;
+      } catch (e) {
+        var file = await _cacheManager.getFileFromCache(api);
+        if (file != null) {
+          responseBody = await file.file.readAsBytes();
         }
       }
-
       var responseStr = utf8.decode(responseBody);
       var jsonMap = jsonDecode(responseStr);
 
       NovelDetail detail = NovelDetail.fromJson(jsonMap);
       if (detail.name == null || detail.name == "") {
         setState(() {
-          _loading = false;
+          _loadffail = true;
         });
         return;
       }
@@ -409,6 +406,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         _detail = detail;
       });
     } catch (e) {
+      _loadffail = true;
       print(e);
     }
   }
@@ -438,6 +436,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         });
       }
     } catch (e) {
+      _loadffail = true;
       print(e);
     }
   }
@@ -454,6 +453,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         _isSubscribe = jsonMap["code"] == 0;
       });
     } catch (e) {
+      _loadffail = true;
       print(e);
     }
   }
