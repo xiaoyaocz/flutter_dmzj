@@ -1,8 +1,7 @@
-# 动漫之家 Flutter
+# 动漫之家 Flutter Extended
 
-使用Flutter编写的动漫之家第三方客户端
+基于flutter dmzj的优化版
 
 ## 截图
 
-![未标题-1.png](https://vip1.loli.net/2020/08/02/UrBtvZGVcEThqIY.png)
 
