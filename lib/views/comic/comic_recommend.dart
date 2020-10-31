@@ -80,6 +80,7 @@ class ComicRecommendState extends State<ComicRecommend>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      //todo: 适配平板页面，使用sliver组件
       floatingActionButton: MediaQuery.of(context).size.width > 600
           ? FloatingActionButton(
               heroTag: 'comic',

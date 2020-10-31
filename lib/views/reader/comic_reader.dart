@@ -30,6 +30,7 @@ import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
 import 'package:share/share.dart';
+//todo: 查看视觉优化，章节切换问题，尝试类似refresh的操作
 
 class ComicReaderPage extends StatefulWidget {
   final int comicId;
@@ -252,42 +253,42 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
             curve: Curves.ease,
             width: MediaQuery.of(context).size.width,
             child: Container(
-              child: Material(
-                  color: Color.fromARGB(255, 34, 34, 34).withOpacity(0.75),
-                  child: Column(
-                    children: [
-                      // SizedBox(
-                      //   height: kToolbarHeight,
-                      // ),
-                      AppBar(
-                        elevation: 0,
-                        backgroundColor: Colors.transparent,
-                        title:ListTile(
-                          dense: true,
-                          title: Text(
-                            widget.comicTitle,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          subtitle: Text(
-                            _currentItem.chapter_title,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        actions: [IconButton(
-                            icon: Icon(
-                              Icons.share,
-                              color: Colors.white,
+                child: Material(
+                    color: Color.fromARGB(255, 34, 34, 34).withOpacity(0.75),
+                    child: Column(
+                      children: [
+                        // SizedBox(
+                        //   height: kToolbarHeight,
+                        // ),
+                        AppBar(
+                          elevation: 0,
+                          backgroundColor: Colors.transparent,
+                          title: ListTile(
+                            dense: true,
+                            title: Text(
+                              widget.comicTitle,
+                              style: TextStyle(color: Colors.white),
                             ),
-                            onPressed: () {
-                              Share.share(
-                                  '${widget.comicTitle}-${_currentItem.chapter_title}\r\nhttps://m.dmzj.com/view/${widget.comicId}/${_currentItem.chapter_id}.html');
-                            }),],
-                      ),
-                    ],
-                  )
-                  )
-            ),
-            top: _showControls ? 0 : -kToolbarHeight*2,
+                            subtitle: Text(
+                              _currentItem.chapter_title,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          actions: [
+                            IconButton(
+                                icon: Icon(
+                                  Icons.share,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  Share.share(
+                                      '${widget.comicTitle}-${_currentItem.chapter_title}\r\nhttps://m.dmzj.com/view/${widget.comicId}/${_currentItem.chapter_id}.html');
+                                }),
+                          ],
+                        ),
+                      ],
+                    ))),
+            top: _showControls ? 0 : -kToolbarHeight * 2,
             left: 0,
           ),
           //底部

@@ -40,11 +40,15 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   void initState() {
     _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
     super.initState();
+    loadData().whenComplete(() {
+      setState(() {
+        _loading = false;
+      });
+    });
     updateHistory();
     Utils.changHistory.on<int>().listen((e) {
       updateHistory();
     });
-    loadData();
   }
 
   void updateHistory() async {
@@ -262,7 +266,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
               ),
             ];
           },
-          body: (_detail != null)
+          body: (_detail != null && _related != null)
               ? TabBarView(
                   controller: _tabController,
                   children: [
@@ -664,38 +668,43 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   bool _isSubscribe = false;
   DefaultCacheManager _cacheManager = DefaultCacheManager();
   Future loadData() async {
+    Stopwatch stopwatch = Stopwatch()..start();
+    if (_loading) {
+      return;
+    }
+    setState(() {
+      _loading = true;
+      _noCopyright = false;
+    });
+    loadDetail();
+    checkSubscribe();
+    loadRelated();
+  }
+
+  Future loadDetail() async {
     try {
-      if (_loading) {
-        return;
-      }
-      setState(() {
-        _loading = true;
-        _noCopyright = false;
-      });
       var api = Api.comicDetail(widget.comicId);
       Uint8List responseBody;
-      //优先从缓存读取信息，加快加载速度
-      var file = await _cacheManager
-          .getFileFromCache('http://comic.cache/${widget.comicId}');
-      if (file == null) {
-        var response = await http.get(api);
-        responseBody = response.bodyBytes;
-        if (response.body == "漫画不存在!!!") {
+      var response = await http.get(Api.comicDetail(widget.comicId));
+      responseBody = response.bodyBytes;
+      if (response.body == "漫画不存在!!!") {
+        var file = await _cacheManager
+            .getFileFromCache('http://comic.cache/${widget.comicId}');
+        if (file == null) {
           setState(() {
             _loading = false;
             _noCopyright = true;
           });
           return;
         }
-      } else {
         responseBody = await file.file.readAsBytes();
-        // print('load from cache ${widget.comicId}');
       }
 
       var responseStr = utf8.decode(responseBody);
       var jsonMap = jsonDecode(responseStr);
 
       ComicDetail detail = ComicDetail.fromJson(jsonMap);
+
       if (detail.title == null || detail.title == "") {
         setState(() {
           _loading = false;
@@ -706,17 +715,11 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       await _cacheManager.putFile(
           'http://comic.cache/${widget.comicId}', responseBody,
           eTag: api, maxAge: Duration(days: 7), fileExtension: 'json');
-      await checkSubscribe();
-      await loadRelated();
       setState(() {
         _detail = detail;
       });
     } catch (e) {
       print(e);
-    } finally {
-      setState(() {
-        _loading = false;
-      });
     }
   }
 

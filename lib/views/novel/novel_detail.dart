@@ -38,8 +38,12 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   @override
   void initState() {
     super.initState();
+    loadData().whenComplete(() {
+      setState(() {
+        _loading = false;
+      });
+    });
     updateHistory();
-    loadData();
   }
 
   void updateHistory() {
@@ -361,16 +365,21 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   bool _isSubscribe = false;
   List<NovelVolumeItem> volumes = [];
   Future loadData() async {
+    if (_loading) {
+      return;
+    }
+    setState(() {
+      _loading = true;
+    });
+    loadData();
+    loadVolumes();
+    checkSubscribe();
+  }
+
+  Future loadDetail() async {
     try {
-      if (_loading) {
-        return;
-      }
-      setState(() {
-        _loading = true;
-      });
       Uint8List responseBody;
       var api = Api.novelDetail(widget.novelId);
-      //优先从缓存读取信息，加快加载速度
       var file = await _cacheManager.getFileFromCache(api);
       if (file != null) {
         responseBody = await file.file.readAsBytes();
@@ -395,17 +404,12 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         return;
       }
       await _cacheManager.putFile(api, responseBody);
-      await loadVolumes();
-      await checkSubscribe();
+
       setState(() {
         _detail = detail;
       });
     } catch (e) {
       print(e);
-    } finally {
-      setState(() {
-        _loading = false;
-      });
     }
   }
 
