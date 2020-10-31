@@ -3,6 +3,10 @@
 基于flutter dmzj的优化版
 
 ## 截图
-
-![](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/comic.jpg)![](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/novel.jpg)![](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/news.jpg)![](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/comic.jpg)![](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/detail.jpg)
+<center>
+<img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/comic.jpg" width = "150" />
+<img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/novel.jpg" width = "150" />
+<img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/news.jpg" width = "150" />
+<img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/detail.jpg" width = "150" />
+</center>
 
