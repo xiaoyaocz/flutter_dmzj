@@ -252,7 +252,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                   ),
       ),
       floatingActionButton: FloatingActionButton(
-          heroTag: "read_novel",
+          heroTag: "novel_float",
           child: Icon(Icons.play_arrow),
           onPressed: openRead),
     );

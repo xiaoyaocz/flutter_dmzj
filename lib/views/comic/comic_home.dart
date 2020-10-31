@@ -49,7 +49,7 @@ class _ComicHomePageState extends State<ComicHomePage>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: 'comic search',
+        heroTag: 'comic_float',
         child: Icon(Icons.search),
         tooltip: "搜索",
         onPressed: () {

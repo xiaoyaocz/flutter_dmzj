@@ -44,7 +44,7 @@ class _NovelHomePageState extends State<NovelHomePage>
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          heroTag: 'novel search',
+          heroTag: 'novel_float',
           child: Icon(Icons.search),
           tooltip: "搜索",
           onPressed: () {

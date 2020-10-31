@@ -4,6 +4,7 @@ import 'package:flutter_dmzj/app/config_helper.dart';
 class AppTheme with ChangeNotifier {
   AppTheme() {
     changeDark(ConfigHelper.getOpenDarkMode());
+    changeSysDark(ConfigHelper.getSysDarkMode());
     changeThemeColor(ConfigHelper.getAppTheme());
   }
 
@@ -49,6 +50,7 @@ class AppTheme with ChangeNotifier {
   }
 
   bool _isDark;
+  bool _sysDark;
   Color _themeColor;
   String _themeColorName;
   void changeDark(bool value) {
@@ -58,7 +60,15 @@ class AppTheme with ChangeNotifier {
     ConfigHelper.setOpenDarkMode(value);
   }
 
+  void changeSysDark(bool value) {
+    _sysDark = value;
+
+    notifyListeners();
+    ConfigHelper.setSysDarkMode(value);
+  }
+
   get isDark => _isDark;
+  get sysDark => _sysDark;
 
   void changeThemeColor(int index) {
     _themeColor = AppTheme.themeColors.values.toList()[index];

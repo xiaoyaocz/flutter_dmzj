@@ -16,6 +16,15 @@ class ConfigHelper {
     prefs.setBool("isDark", value);
   }
 
+  /// APP夜间模式跟随系统
+  static bool getSysDarkMode() {
+    return prefs.getBool("sysDark") ?? false;
+  }
+
+  static void setSysDarkMode(bool value) {
+    prefs.setBool("sysDark", value);
+  }
+
   /// APP夜间模式
   static int getAppTheme() {
     return prefs.getInt("themeColor") ?? 0;

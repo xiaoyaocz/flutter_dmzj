@@ -318,12 +318,10 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                           : ""),
                     ),
         ),
-        floatingActionButton: (_tabController.index == 0)
-            ? FloatingActionButton(
-                heroTag: "read_comic",
-                child: Icon(Icons.play_arrow),
-                onPressed: openRead)
-            : null);
+        floatingActionButton: FloatingActionButton(
+            heroTag: "comic_float",
+            child: Icon(Icons.play_arrow),
+            onPressed: openRead));
   }
 
   Widget createDetail() {

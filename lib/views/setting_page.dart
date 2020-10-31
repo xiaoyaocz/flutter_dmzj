@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_theme.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingPage extends StatefulWidget {
@@ -54,37 +52,6 @@ class _SettingPageState extends State<SettingPage> {
       ),
       body: ListView(
         children: <Widget>[
-          Material(
-            color: Theme.of(context).cardColor,
-            child: SwitchListTile(
-              onChanged: (value) {
-                Provider.of<AppTheme>(context, listen: false).changeDark(value);
-              },
-              secondary: Icon(Icons.brightness_4),
-              title: Text("夜间模式"),
-              value: Provider.of<AppTheme>(context).isDark,
-            ),
-          ),
-          //主题设置
-          Material(
-            color: Theme.of(context).cardColor,
-            child: ListTile(
-              title: Text("主题切换"),
-              leading: Icon(Icons.color_lens),
-              trailing: Padding(
-                padding: EdgeInsets.all(8),
-                child: Text(
-                  Provider.of<AppTheme>(context).themeColorName,
-                  style: TextStyle(
-                      color: Provider.of<AppTheme>(context).themeColor,
-                      fontSize: 14.0),
-                ),
-              ),
-              onTap: () => Provider.of<AppTheme>(context, listen: false)
-                  .showThemeDialog(
-                      context), //Provider.of<AppThemeData>(context).changeThemeColor(3),
-            ),
-          ),
           SizedBox(
             height: 12,
           ),

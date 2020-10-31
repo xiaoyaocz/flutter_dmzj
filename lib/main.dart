@@ -94,7 +94,19 @@ class MyApp extends StatelessWidget {
             ? Brightness.dark
             : Brightness.light,
         primarySwatch: Provider.of<AppTheme>(context).themeColor,
+        accentColor: Provider.of<AppTheme>(context).themeColor,
+        toggleableActiveColor: Provider.of<AppTheme>(context).themeColor,
+        textSelectionColor: Provider.of<AppTheme>(context).themeColor,
       ),
+      darkTheme: (Provider.of<AppTheme>(context).sysDark)
+          ? ThemeData(
+              brightness: Brightness.dark,
+              primarySwatch: Provider.of<AppTheme>(context).themeColor,
+              accentColor: Provider.of<AppTheme>(context).themeColor,
+              toggleableActiveColor: Provider.of<AppTheme>(context).themeColor,
+              textSelectionColor: Provider.of<AppTheme>(context).themeColor,
+            )
+          : null,
       home: MyHomePage(),
       initialRoute: "/",
       routes: {
