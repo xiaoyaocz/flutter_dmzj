@@ -4,4 +4,5 @@
 
 ## 截图
 
+![](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/comic.jpg)![](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/novel.jpg)![](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/news.jpg)![](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/comic.jpg)![](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/detail.jpg)
 
