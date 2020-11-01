@@ -58,7 +58,7 @@ class Utils {
   static Future<VersionInfo> checkVersion() async {
     try {
       var newVersion = await http.get(
-          "https://pic.nsapps.cn/dmzj_flutter/dmzj_ver.json?ts=" +
+          "https://github.com/tom8zds/dmzj_flutter/raw/master/version.json" +
               DateTime.now().millisecondsSinceEpoch.toString());
       var verInfo =
           VersionInfo.fromJson(jsonDecode(utf8.decode(newVersion.bodyBytes)));
@@ -215,7 +215,8 @@ class Utils {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => ComicSpecialDetailPage(id,title,url)));
+                builder: (BuildContext context) =>
+                    ComicSpecialDetailPage(id, title, url)));
         print("打开专题" + id.toString());
         break;
       case 6:
