@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_category_item.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:http/http.dart' as http;
 
 class ComicCategoryPage extends StatefulWidget {
@@ -40,7 +41,9 @@ class _ComicCategoryPageState extends State<ComicCategoryPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return RefreshIndicator(
+    return EasyRefresh(
+      header: MaterialHeader(),
+      footer: MaterialFooter(),
       onRefresh: loadData,
       child: GridView.builder(
         padding: EdgeInsets.all(8),
@@ -64,7 +67,7 @@ class _ComicCategoryPageState extends State<ComicCategoryPage>
               child: Column(
                 children: <Widget>[
                   ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(8),
                       child: Utils.createCacheImage(_list[i].cover, 200, 200)),
                   SizedBox(
                     height: 5,

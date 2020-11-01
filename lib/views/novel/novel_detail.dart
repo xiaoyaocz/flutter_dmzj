@@ -97,6 +97,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
     super.build(context);
     return Scaffold(
       body: NestedScrollView(
+        controller: _scrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           novelExpandHeight = getSafebar() + 200 + kTextTabBarHeight;
           return <Widget>[
@@ -148,6 +149,9 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                     Container(
                       width: MediaQuery.of(context).size.width,
                       height: novelExpandHeight + kToolbarHeight,
+                      foregroundDecoration: BoxDecoration(
+                          color: Theme.of(context).shadowColor.withAlpha(100)
+                      ),
                       child: ImageFiltered(
                         imageFilter:
                             ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
@@ -192,28 +196,36 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                                             children: <Widget>[
                                               Text(
                                                 _detail.name,
-                                                style: TextStyle(
+                                                style: TextStyle(color: Colors.white,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
                                               SizedBox(height: 2),
                                               Text(
                                                 "作者:" + _detail.authors,
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
                                               SizedBox(height: 2),
                                               Text(
                                                 "点击:" +
                                                     _detail.hot_hits.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
                                               SizedBox(height: 2),
                                               Text(
                                                 "订阅:" +
                                                     _detail.subscribe_num
                                                         .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
                                               SizedBox(height: 2),
                                               Text(
                                                 "状态:" + _detail.status,
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
                                               SizedBox(height: 2),
                                               Text(
@@ -223,6 +235,8 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                                                             _detail.last_update_time *
                                                                 1000),
                                                         format: "yyyy-MM-dd"),
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
                                             ],
                                           )

@@ -175,17 +175,22 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                 background: Stack(
                   fit: StackFit.loose,
                   children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: comicExpandHeight + kToolbarHeight,
-                      child: ImageFiltered(
-                        imageFilter:
-                            ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                        child: Utils.createCacheImage(
-                            widget.coverUrl,
-                            MediaQuery.of(context).size.width,
-                            comicExpandHeight,
-                            fit: BoxFit.cover),
+                    ClipRect(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: comicExpandHeight + kToolbarHeight,
+foregroundDecoration: BoxDecoration(
+  color: Theme.of(context).shadowColor.withAlpha(100)
+),
+                        child: ImageFiltered(
+                          imageFilter:
+                          ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                          child: Utils.createCacheImage(
+                              widget.coverUrl,
+                              MediaQuery.of(context).size.width,
+                              comicExpandHeight,
+                              fit: BoxFit.cover),
+                        ),
                       ),
                     ),
                     Positioned(
@@ -197,7 +202,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   SizedBox(
                                     width: 12,
@@ -225,27 +230,35 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                                           children: <Widget>[
                                             Text(
                                               _detail.title,
-                                              style: TextStyle(
+                                              style: TextStyle(color: Colors.white,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
                                               "作者:" +
                                                   tagsToString(
                                                       _detail.authors ?? []),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
                                             Text(
                                               "点击:" +
                                                   _detail.hot_num.toString(),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
                                             Text(
                                               "订阅:" +
                                                   _detail.subscribe_num
                                                       .toString(),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
                                             Text(
                                               "状态:" +
                                                   tagsToString(
                                                       _detail.status ?? []),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
                                             Text(
                                               "最后更新:" +
@@ -254,6 +267,8 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                                                           _detail.last_updatetime *
                                                               1000),
                                                       format: "yyyy-MM-dd"),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
                                           ],
                                         ))

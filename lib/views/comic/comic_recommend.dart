@@ -10,6 +10,7 @@ import 'package:flutter_dmzj/models/comic/comic_home_banner_item.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_comic_item.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_new_item.dart';
 import 'package:flutter_dmzj/widgets/app_banner.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
@@ -80,7 +81,7 @@ class ComicRecommendState extends State<ComicRecommend>
     super.build(context);
     return Scaffold(
       //todo: 适配平板页面，使用sliver组件
-      body: RefreshIndicator(
+      body: EasyRefresh(
         onRefresh: refreshData,
         child: SingleChildScrollView(
           child: Column(
@@ -193,10 +194,7 @@ class ComicRecommendState extends State<ComicRecommend>
       child: Padding(
         padding: EdgeInsets.all(8),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(8)),
+          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
           constraints: BoxConstraints(maxWidth: 584),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,9 +240,7 @@ class ComicRecommendState extends State<ComicRecommend>
           padding: EdgeInsets.all(8),
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
             constraints: BoxConstraints(maxWidth: 584),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,34 +272,33 @@ class ComicRecommendState extends State<ComicRecommend>
   }
 
   Widget _getTitle(String title, {Icon icon, Function ontap}) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Padding(
-              padding: EdgeInsets.fromLTRB(4, 4, 4, 0),
-              child: Text(
-                title,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              )),
-        ),
-        Offstage(
-          offstage: icon == null,
-          child: Material(
-              color: Theme.of(context).cardColor,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(12),
-                onTap: ontap,
-                child: Padding(
-                    padding: EdgeInsets.all(4),
-                    child: icon ??
-                        Icon(
-                          Icons.refresh,
-                          color: Colors.grey,
-                        )),
-              )),
-        )
-      ],
-    );
+    return Material(
+        child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: ontap,
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.fromLTRB(8, 4, 4, 4),
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      )),
+                ),
+                Offstage(
+                  offstage: icon == null,
+                  child: Padding(
+                      padding: EdgeInsets.all(4),
+                      child: icon ??
+                          Icon(
+                            Icons.refresh,
+                            color: Colors.grey,
+                          )),
+                )
+              ],
+            )));
   }
 
   Widget _getComicItemBuilder(int id, int type, String pic, String title,
@@ -311,22 +306,22 @@ class ComicRecommendState extends State<ComicRecommend>
       String url = "",
       double width = 270,
       double height = 360}) {
-    return RawMaterialButton(
-      onPressed: () =>
-          Utils.openPage(context, id, type, url: pic, title: title),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      padding: EdgeInsets.all(4),
+    return InkWell(
+      onTap: () => Utils.openPage(context, id, type, url: pic, title: title),
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      // padding: EdgeInsets.all(4),
       child: Container(
+        padding: EdgeInsets.all(4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             ClipRRect(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
               child:
                   Utils.createCacheImage(pic, width, height, fit: BoxFit.cover),
             ),
             SizedBox(
-              height: 4,
+              height: 6,
             ),
             Flexible(
               child: Text(
@@ -336,7 +331,7 @@ class ComicRecommendState extends State<ComicRecommend>
               ),
             ),
             SizedBox(
-              height: 4,
+              height: 6,
             ),
             author == ""
                 ? Container()

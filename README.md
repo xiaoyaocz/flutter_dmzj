@@ -4,6 +4,6 @@
 
 ## 截图
 <center class="half">
-<img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/comic.jpg" width = "150" /><img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/novel.jpg" width = "150" /><img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/news.jpg" width = "150" /><img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/detail.jpg" width = "150" />
+<img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/comic.png" width = "150" /><img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/novel.png" width = "150" /><img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/news.png" width = "150" /><img src="https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/detail.png" width = "150" />
 </center>
 
