@@ -56,6 +56,8 @@ class _NewsHomePageState extends State<NewsHomePage>
             ? AppBar()
             : AppBar(
                 title: TabBar(
+                  labelStyle: new TextStyle(
+                      fontSize: 16.0, fontWeight: FontWeight.bold),
                   controller: _tabController,
                   tabs: _tabItems
                       .map((x) => Tab(child: Text(x.tag_name)))

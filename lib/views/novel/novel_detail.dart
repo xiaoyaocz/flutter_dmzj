@@ -13,7 +13,6 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/models/novel/novel_volume_item.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
-import 'package:flutter_dmzj/widgets/stickyTabBarDelegate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -30,6 +29,9 @@ class NovelDetailPage extends StatefulWidget {
 
 class _NovelDetailPageState extends State<NovelDetailPage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
+  double novelExpandHeight;
+  ScrollController _scrollController;
+  bool isCollapsed = false;
   @override
   bool get wantKeepAlive => true;
   TabController _tabController;
@@ -45,6 +47,12 @@ class _NovelDetailPageState extends State<NovelDetailPage>
       });
     });
     updateHistory();
+    _scrollController = new ScrollController();
+    _scrollController.addListener(() {
+      setState(() {
+        isCollapsed = _isCollapsed;
+      });
+    });
   }
 
   void updateHistory() {
@@ -55,10 +63,32 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   void setState(fn) {
     if (mounted) {
       super.setState(fn);
     }
+  }
+
+  bool get _isCollapsed {
+    bool flag = _scrollController.hasClients &&
+        _scrollController.offset >= kToolbarHeight + getSafebar();
+    return flag;
+  }
+
+  double getSafebar() {
+    return MediaQuery.of(context).padding.top;
+  }
+
+  void backTop() {
+    _scrollController.animateTo(0,
+        duration: Duration(milliseconds: 200), curve: Curves.ease);
   }
 
   NovelDetail _detail;
@@ -66,152 +96,167 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(
-          elevation: 0,
-          title: (_detail != null) ? Text(_detail.name) : Text(""),
-          actions: (_detail != null)
-              ? <Widget>[
-                  Provider.of<AppUserInfo>(context).isLogin && _isSubscribe
-                      ? IconButton(
-                          icon: Icon(Icons.favorite),
-                          onPressed: () async {
-                            var result = await UserHelper.novelSubscribe(
-                                widget.novelId,
-                                cancel: true);
-                            if (result) {
-                              setState(() {
-                                _isSubscribe = false;
-                              });
-                            }
-                          })
-                      : IconButton(
-                          icon: Icon(Icons.favorite_border),
-                          onPressed: () async {
-                            var result =
-                                await UserHelper.novelSubscribe(widget.novelId);
-                            if (result) {
-                              setState(() {
-                                _isSubscribe = true;
-                              });
-                            }
-                          }),
-                  IconButton(
-                      icon: Icon(Icons.share),
-                      onPressed: () => Share.share(
-                          "${_detail.name}\r\nhttp://q.dmzj.com/${widget.novelId}/index.shtml")),
-                ]
-              : null),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          novelExpandHeight = getSafebar() + 200 + kTextTabBarHeight;
           return <Widget>[
-            SliverToBoxAdapter(
-                child: Stack(
-              fit: StackFit.loose,
-              children: [
-                Positioned(
-                  top: 0,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 300,
-                    child: Hero(
-                      tag: widget.novelId,
-                      child: Utils.createCacheImage(widget.coverUrl,
-                          MediaQuery.of(context).size.width, 200,
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                ),
-                BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                  child: Center(
-                      child: Container(
-                    color: Theme.of(context).cardColor.withAlpha(75),
-                    padding: EdgeInsets.only(top: 12, left: 12, right: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            InkWell(
-                              onTap: () => Utils.showImageViewDialog(
-                                  context, widget.coverUrl),
-                              child: Container(
-                                width: 100,
-                                child: Utils.createCacheImage(
-                                    widget.coverUrl, 270, 360),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            Expanded(
-                              child: (_detail != null)
-                                  ? Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          _detail.name,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(height: 2),
-                                        Text(
-                                          "作者:" + _detail.authors,
-                                        ),
-                                        SizedBox(height: 2),
-                                        Text(
-                                          "点击:" + _detail.hot_hits.toString(),
-                                        ),
-                                        SizedBox(height: 2),
-                                        Text(
-                                          "订阅:" +
-                                              _detail.subscribe_num.toString(),
-                                        ),
-                                        SizedBox(height: 2),
-                                        Text(
-                                          "状态:" + _detail.status,
-                                        ),
-                                        SizedBox(height: 2),
-                                        Text(
-                                          "最后更新:" +
-                                              DateUtil.formatDate(
-                                                  DateTime.fromMillisecondsSinceEpoch(
-                                                      _detail.last_update_time *
-                                                          1000),
-                                                  format: "yyyy-MM-dd"),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox(
-                                      width: 12,
-                                    ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 12,
-                        )
-                      ],
-                    ),
-                  )),
-                ),
-              ],
-            )),
-            SliverPersistentHeader(
+            SliverAppBar(
               pinned: true,
-              delegate: StickyTabBarDelegate(
-                child: TabBar(
-                    controller: _tabController,
-                    indicatorWeight: 4,
-                    indicatorColor: Theme.of(context).indicatorColor,
-                    tabs: [
-                      Tab(text: "详情"),
-                      Tab(text: "章节"),
-                      Tab(text: "评论"),
-                    ]),
+              expandedHeight: novelExpandHeight,
+              automaticallyImplyLeading: true,
+              title: Offstage(
+                offstage: !_isCollapsed,
+                child: (_detail != null) ? Text(_detail.name) : Text(""),
               ),
+              actions: (_detail != null)
+                  ? <Widget>[
+                      Provider.of<AppUserInfo>(context).isLogin && _isSubscribe
+                          ? IconButton(
+                              icon: Icon(Icons.favorite),
+                              onPressed: () async {
+                                var result = await UserHelper.novelSubscribe(
+                                    widget.novelId,
+                                    cancel: true);
+                                if (result) {
+                                  setState(() {
+                                    _isSubscribe = false;
+                                  });
+                                }
+                              })
+                          : IconButton(
+                              icon: Icon(Icons.favorite_border),
+                              onPressed: () async {
+                                var result = await UserHelper.novelSubscribe(
+                                    widget.novelId);
+                                if (result) {
+                                  setState(() {
+                                    _isSubscribe = true;
+                                  });
+                                }
+                              }),
+                      IconButton(
+                          icon: Icon(Icons.share),
+                          onPressed: () => Share.share(
+                              "${_detail.name}\r\nhttp://q.dmzj.com/${widget.novelId}/index.shtml")),
+                    ]
+                  : null,
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.pin,
+                background: Stack(
+                  fit: StackFit.loose,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: novelExpandHeight + kToolbarHeight,
+                      child: ImageFiltered(
+                        imageFilter:
+                            ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                        child: Utils.createCacheImage(
+                            widget.coverUrl,
+                            MediaQuery.of(context).size.width,
+                            novelExpandHeight,
+                            fit: BoxFit.cover),
+                      ),
+                    ),
+                    Positioned(
+                        top: getSafebar() + kToolbarHeight,
+                        child: Container(
+                          height: 200,
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 12,
+                                  ),
+                                  InkWell(
+                                    onTap: () => Utils.showImageViewDialog(
+                                        context, widget.coverUrl),
+                                    child: Container(
+                                      width: 100,
+                                      child: Utils.createCacheImage(
+                                          widget.coverUrl, 270, 360),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 24,
+                                  ),
+                                  Expanded(
+                                    child: (_detail != null)
+                                        ? Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                _detail.name,
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(height: 2),
+                                              Text(
+                                                "作者:" + _detail.authors,
+                                              ),
+                                              SizedBox(height: 2),
+                                              Text(
+                                                "点击:" +
+                                                    _detail.hot_hits.toString(),
+                                              ),
+                                              SizedBox(height: 2),
+                                              Text(
+                                                "订阅:" +
+                                                    _detail.subscribe_num
+                                                        .toString(),
+                                              ),
+                                              SizedBox(height: 2),
+                                              Text(
+                                                "状态:" + _detail.status,
+                                              ),
+                                              SizedBox(height: 2),
+                                              Text(
+                                                "最后更新:" +
+                                                    DateUtil.formatDate(
+                                                        DateTime.fromMillisecondsSinceEpoch(
+                                                            _detail.last_update_time *
+                                                                1000),
+                                                        format: "yyyy-MM-dd"),
+                                              ),
+                                            ],
+                                          )
+                                        : SizedBox(
+                                            width: 12,
+                                          ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 12,
+                              )
+                            ],
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+              bottom: TabBar(
+                  controller: _tabController,
+                  indicatorWeight: 4,
+                  labelStyle: new TextStyle(
+                      fontSize: 16.0, fontWeight: FontWeight.bold),
+                  indicatorColor: Theme.of(context).indicatorColor,
+                  onTap: (index) {
+                    if (index == 2) {
+                      backTop();
+                    }
+                  },
+                  tabs: [
+                    Tab(text: "详情"),
+                    Tab(text: "章节"),
+                    Tab(text: "评论"),
+                  ]),
             ),
           ];
         },

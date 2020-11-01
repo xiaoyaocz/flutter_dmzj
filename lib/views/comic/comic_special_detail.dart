@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_specia_datail_model.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
-import 'package:flutter_dmzj/widgets/stickyTabBarDelegate.dart';
 import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
 
@@ -41,44 +41,65 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              elevation: 0,
-              pinned: true,
-              expandedHeight: 180,
-              title: Text(widget.title),
-              flexibleSpace: FlexibleSpaceBar(
-                  background: Hero(
-                tag: widget.id,
-                child: Utils.createCacheImage(
-                    widget.coverUrl, MediaQuery.of(context).size.width, 350,
-                    fit: BoxFit.cover),
-              )),
-              actions: (_detail != null)
-                  ? <Widget>[
-                      IconButton(
-                          icon: Icon(Icons.share),
-                          onPressed: () => Share.share(
-                              "${_detail.title}\r\nhttp://m.dmzj.com/zhuanti/${_detail.page_url}"))
-                    ]
-                  : null,
-            ),
-            SliverToBoxAdapter(
-              child: (_detail != null)
-                  ? Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Text("        " + _detail.description),
-                    )
-                  : Text(""),
-            ),
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: StickyTabBarDelegate(
-                child: TabBar(
-                    controller: _tabController,
-                    indicatorWeight: 4,
-                    indicatorColor: Theme.of(context).indicatorColor,
-                    tabs: [Tab(text: "漫画"), Tab(text: "评论")]),
-              ),
-            ),
+                elevation: 0,
+                pinned: true,
+                expandedHeight: 400,
+                title: Text(widget.title),
+                flexibleSpace: FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    background: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Hero(
+                          tag: widget.id,
+                          child: Utils.createCacheImage(widget.coverUrl,
+                              MediaQuery.of(context).size.width, 350,
+                              fit: BoxFit.cover),
+                        ),
+                        Positioned(
+                            bottom: 0,
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
+                                child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                    child: Column(
+                                      children: [
+                                        (_detail != null)
+                                            ? Padding(
+                                                padding: EdgeInsets.all(15),
+                                                child: Text("        " +
+                                                    _detail.description),
+                                              )
+                                            : Text(""),
+                                        SizedBox(
+                                          height: kTextTabBarHeight,
+                                        )
+                                      ],
+                                    ))))
+                      ],
+                    )),
+                actions: (_detail != null)
+                    ? <Widget>[
+                        IconButton(
+                            icon: Icon(Icons.share),
+                            onPressed: () => Share.share(
+                                "${_detail.title}\r\nhttp://m.dmzj.com/zhuanti/${_detail.page_url}"))
+                      ]
+                    : null,
+                bottom: PreferredSize(
+                    preferredSize: Size.fromHeight(kTextTabBarHeight),
+                    child: Container(
+                      color: Theme.of(context).accentColor,
+                      child: TabBar(
+                          controller: _tabController,
+                          indicatorWeight: 4,
+                          indicatorColor: Theme.of(context).indicatorColor,
+                          tabs: [Tab(text: "漫画"), Tab(text: "评论")]),
+                    ))),
           ];
         },
         body: (_detail != null)

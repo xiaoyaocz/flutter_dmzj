@@ -60,28 +60,16 @@ class NovelRecommendState extends State<NovelRecommend>
     return (width - 24) / 3 - 32;
   }
 
-  bool _expand = false;
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      floatingActionButton: MediaQuery.of(context).size.width > 600
-          ? FloatingActionButton(
-              heroTag: 'novel',
-              child: Icon(_expand ? Icons.fullscreen_exit : Icons.zoom_out_map),
-              onPressed: () {
-                setState(() {
-                  _expand = !_expand;
-                });
-              })
-          : null,
+      // floatingActionButton: MediaQuery.of(context).size.width > 600
       body: RefreshIndicator(
         onRefresh: refreshData,
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: _expand
-                ? CrossAxisAlignment.stretch
-                : CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               //bannera
               (Platform.isIOS && _hideBanner)
@@ -124,10 +112,11 @@ class NovelRecommendState extends State<NovelRecommend>
               ),
               Container(
                 width: double.infinity,
+                height: kToolbarHeight,
                 //padding: EdgeInsets.all(12),
                 child: Center(
                   child: Text(
-                    '',
+                    '没有下面了',
                     style: TextStyle(color: Colors.grey),
                   ),
                 ),

@@ -37,177 +37,196 @@ class _PersonalPageState extends State<PersonalPage> {
 
   bool get _isCollapsed {
     return _scrollController.hasClients &&
-        _scrollController.offset >= myExpandedHeight - kToolbarHeight;
+        _scrollController.offset >= myExpandedHeight - kToolbarHeight - 3;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          leading: Offstage(
-              offstage: !isCollapsed,
-              child: Padding(
-                padding: EdgeInsets.all(5),
-                child: _getAvatarSmall(),
-              )),
-          expandedHeight: myExpandedHeight,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Stack(
-              children: <Widget>[
-                Image.asset(
-                  "assets/img_ucenter_def_bac.jpg",
-                  fit: BoxFit.cover,
-                  height: myExpandedHeight,
-                  width: MediaQuery.of(context).size.width,
-                ),
-                Positioned(
-                    child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: myExpandedHeight,
-                  padding:
-                      EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        Theme.of(context).accentColor.withOpacity(1),
-                        Theme.of(context).accentColor.withOpacity(0.1)
-                      ],
-                    ),
+      body: NestedScrollView(
+        controller: _scrollController,
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar(
+                pinned: true,
+                leading: Offstage(
+                    offstage: !isCollapsed,
+                    child: Padding(
+                      padding: EdgeInsets.all(5),
+                      child: _getAvatarSmall(),
+                    )),
+                expandedHeight: myExpandedHeight,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
+                    children: <Widget>[
+                      Image.asset(
+                        "assets/img_ucenter_def_bac.jpg",
+                        fit: BoxFit.cover,
+                        height: myExpandedHeight,
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                      Positioned(
+                          child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: myExpandedHeight,
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).padding.top),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                              Theme.of(context).accentColor.withOpacity(1),
+                              Theme.of(context).accentColor.withOpacity(0.1)
+                            ],
+                          ),
+                        ),
+                        child: _getAvatar(),
+                      ))
+                    ],
                   ),
-                  child: _getAvatar(),
-                ))
-              ],
+                ),
+              ),
             ),
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: Column(
-            children: [
-              Material(
-                color: Theme.of(context).cardColor,
+          ];
+        },
+        body: Builder(builder: (context) {
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
+              SliverToBoxAdapter(
                 child: Column(
-                  children: <Widget>[
-                    // ListTile(
-                    //   title: Text("消息中心"),
-                    //   leading: Icon(Icons.email),
-                    //   trailing: Icon(Icons.chevron_right, color: Colors.grey),
-                    //   onTap: () => {},
-                    // ),
-                    ListTile(
-                      title: Text("我的订阅"),
-                      leading: Icon(Icons.favorite),
-                      trailing: Icon(Icons.chevron_right, color: Colors.grey),
-                      onTap: () => Utils.openSubscribePage(context),
+                  children: [
+                    Material(
+                      color: Theme.of(context).cardColor,
+                      child: Column(
+                        children: <Widget>[
+                          // ListTile(
+                          //   title: Text("消息中心"),
+                          //   leading: Icon(Icons.email),
+                          //   trailing: Icon(Icons.chevron_right, color: Colors.grey),
+                          //   onTap: () => {},
+                          // ),
+                          ListTile(
+                            title: Text("我的订阅"),
+                            leading: Icon(Icons.favorite),
+                            trailing:
+                                Icon(Icons.chevron_right, color: Colors.grey),
+                            onTap: () => Utils.openSubscribePage(context),
+                          ),
+                          ListTile(
+                            title: Text("浏览记录"),
+                            leading: Icon(Icons.history),
+                            trailing:
+                                Icon(Icons.chevron_right, color: Colors.grey),
+                            onTap: () => Utils.openHistoryPage(context),
+                          ),
+                          ListTile(
+                            title: Text("我的评论"),
+                            leading: Icon(Icons.comment),
+                            trailing:
+                                Icon(Icons.chevron_right, color: Colors.grey),
+                            onTap: () => Utils.openMyCommentPage(context),
+                          ),
+                          ListTile(
+                            title: Text("我的下载"),
+                            trailing:
+                                Icon(Icons.chevron_right, color: Colors.grey),
+                            leading: Icon(Icons.file_download),
+                            onTap: () => {},
+                          )
+                        ],
+                      ),
                     ),
-                    ListTile(
-                      title: Text("浏览记录"),
-                      leading: Icon(Icons.history),
-                      trailing: Icon(Icons.chevron_right, color: Colors.grey),
-                      onTap: () => Utils.openHistoryPage(context),
+
+                    SizedBox(
+                      height: 12,
                     ),
-                    ListTile(
-                      title: Text("我的评论"),
-                      leading: Icon(Icons.comment),
-                      trailing: Icon(Icons.chevron_right, color: Colors.grey),
-                      onTap: () => Utils.openMyCommentPage(context),
+
+                    Material(
+                      color: Theme.of(context).cardColor,
+                      child: SwitchListTile(
+                        onChanged: (value) {
+                          Provider.of<AppTheme>(context, listen: false)
+                              .changeSysDark(value);
+                          if (!value) {
+                            Provider.of<AppTheme>(context, listen: false)
+                                .changeDark(value);
+                          }
+                        },
+                        secondary: Icon(Icons.brightness_4),
+                        title: Text("夜间模式跟随系统"),
+                        value: Provider.of<AppTheme>(context).sysDark,
+                      ),
                     ),
-                    ListTile(
-                      title: Text("我的下载"),
-                      trailing: Icon(Icons.chevron_right, color: Colors.grey),
-                      leading: Icon(Icons.file_download),
-                      onTap: () => {},
-                    )
+                    Offstage(
+                      offstage: Provider.of<AppTheme>(context).sysDark,
+                      child: Material(
+                        color: Theme.of(context).cardColor,
+                        child: SwitchListTile(
+                          onChanged: (value) {
+                            Provider.of<AppTheme>(context, listen: false)
+                                .changeDark(value);
+                          },
+                          secondary: Icon(Icons.brightness_4),
+                          title: Text("夜间模式"),
+                          value: Provider.of<AppTheme>(context).isDark,
+                        ),
+                      ),
+                    ),
+                    //主题设置
+                    Material(
+                      color: Theme.of(context).cardColor,
+                      child: ListTile(
+                        title: Text("主题切换"),
+                        leading: Icon(Icons.color_lens),
+                        trailing: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            Provider.of<AppTheme>(context).themeColorName,
+                            style: TextStyle(
+                                color:
+                                    Provider.of<AppTheme>(context).themeColor,
+                                fontSize: 14.0),
+                          ),
+                        ),
+                        onTap: () => Provider.of<AppTheme>(context,
+                                listen: false)
+                            .showThemeDialog(
+                                context), //Provider.of<AppThemeData>(context).changeThemeColor(3),
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Material(
+                      color: Theme.of(context).cardColor,
+                      child: Column(children: <Widget>[
+                        ListTile(
+                          title: Text("设置"),
+                          leading: Icon(Icons.settings),
+                          trailing:
+                              Icon(Icons.chevron_right, color: Colors.grey),
+                          onTap: () {
+                            Navigator.pushNamed(context, "/Setting");
+                          },
+                        ),
+                      ]),
+                    ),
                   ],
                 ),
               ),
-
-              SizedBox(
-                height: 12,
-              ),
-
-              Material(
-                color: Theme.of(context).cardColor,
-                child: SwitchListTile(
-                  onChanged: (value) {
-                    Provider.of<AppTheme>(context, listen: false)
-                        .changeSysDark(value);
-                    if (!value) {
-                      Provider.of<AppTheme>(context, listen: false)
-                          .changeDark(value);
-                    }
-                  },
-                  secondary: Icon(Icons.brightness_4),
-                  title: Text("夜间模式跟随系统"),
-                  value: Provider.of<AppTheme>(context).sysDark,
-                ),
-              ),
-              Offstage(
-                offstage: Provider.of<AppTheme>(context).sysDark,
-                child: Material(
-                  color: Theme.of(context).cardColor,
-                  child: SwitchListTile(
-                    onChanged: (value) {
-                      Provider.of<AppTheme>(context, listen: false)
-                          .changeDark(value);
-                    },
-                    secondary: Icon(Icons.brightness_4),
-                    title: Text("夜间模式"),
-                    value: Provider.of<AppTheme>(context).isDark,
-                  ),
-                ),
-              ),
-              //主题设置
-              Material(
-                color: Theme.of(context).cardColor,
-                child: ListTile(
-                  title: Text("主题切换"),
-                  leading: Icon(Icons.color_lens),
-                  trailing: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      Provider.of<AppTheme>(context).themeColorName,
-                      style: TextStyle(
-                          color: Provider.of<AppTheme>(context).themeColor,
-                          fontSize: 14.0),
-                    ),
-                  ),
-                  onTap: () => Provider.of<AppTheme>(context, listen: false)
-                      .showThemeDialog(
-                          context), //Provider.of<AppThemeData>(context).changeThemeColor(3),
-                ),
-              ),
-
-              SizedBox(
-                height: 12,
-              ),
-              Material(
-                color: Theme.of(context).cardColor,
-                child: Column(children: <Widget>[
-                  ListTile(
-                    title: Text("设置"),
-                    leading: Icon(Icons.settings),
-                    trailing: Icon(Icons.chevron_right, color: Colors.grey),
-                    onTap: () {
-                      Navigator.pushNamed(context, "/Setting");
-                    },
-                  ),
-                ]),
-              ),
-
-              SizedBox(
-                height: kToolbarHeight,
-              ),
             ],
-          ),
-        ),
-      ],
-    ));
+          );
+        }),
+      ),
+    );
   }
 
   Widget _getAvatar() {

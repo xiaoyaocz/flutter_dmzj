@@ -75,29 +75,16 @@ class ComicRecommendState extends State<ComicRecommend>
     return (width - 16) / 2 - 32;
   }
 
-  bool _expand = false;
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
       //todo: 适配平板页面，使用sliver组件
-      floatingActionButton: MediaQuery.of(context).size.width > 600
-          ? FloatingActionButton(
-              heroTag: 'comic',
-              child: Icon(_expand ? Icons.fullscreen_exit : Icons.zoom_out_map),
-              onPressed: () {
-                setState(() {
-                  _expand = !_expand;
-                });
-              })
-          : null,
       body: RefreshIndicator(
         onRefresh: refreshData,
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: _expand
-                ? CrossAxisAlignment.stretch
-                : CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               //banner
               (Platform.isIOS && _hideBanner)
@@ -175,6 +162,17 @@ class ComicRecommendState extends State<ComicRecommend>
                   icon: Icon(Icons.chevron_right, color: Colors.grey),
                   ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                   ontap: () => Utils.changeComicHomeTabIndex.fire(1)),
+              Container(
+                width: double.infinity,
+                height: kToolbarHeight,
+                //padding: EdgeInsets.all(12),
+                child: Center(
+                  child: Text(
+                    '没有下面了',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
