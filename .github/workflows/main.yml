@@ -29,13 +29,13 @@ jobs:
       # 下载项目依赖
       - run: flutter pub get
       # 执行测试
-      - run: flutter test
+      # run: flutter test
       # 打包 APK
-      - run: flutter build apk --release
+      - run: flutter build apk
       # 发布到 Release
       - name: Release apk
         uses: ncipollo/release-action@v1.5.0
         with:
           artifacts: "build/app/outputs/apk/release/*"
-          token: ${{ secrets.GITHUB_RElEASE_TOKEN }}
+          token: ${{ secrets.APK_RElEASE_TOKEN }}
 
