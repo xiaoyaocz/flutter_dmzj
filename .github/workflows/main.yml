@@ -20,7 +20,7 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v1.4.3
         with:
-          java-version: "1.8.0"
+          java-version: "12.x"
       # 建立 Flutter 环境
       - name: Flutter action
         uses: subosito/flutter-action@v1.4.0
@@ -31,7 +31,7 @@ jobs:
       # 执行测试
       # run: flutter test
       # 打包 APK
-      - run: flutter build apk --release
+      - run: flutter build apk
       # 发布到 Release
       - name: Release apk
         uses: ncipollo/release-action@v1.5.0
