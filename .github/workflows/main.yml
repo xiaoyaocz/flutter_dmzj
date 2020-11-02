@@ -1,0 +1,44 @@
+# main.yml
+
+# 工作流程的名字
+name: Test, Build and Release apk
+
+# 工作流程触发的时机，这里是当一个版本标签推送到仓库时触发
+on:
+  push:
+    tags:
+      - v*
+
+# 这个工作流程需要执行的任务
+jobs:
+  process:
+    name: all process
+    runs-on: ubuntu-latest
+    # 这个任务的步骤
+    steps:
+      # 拉取项目代码
+      - uses: actions/checkout@v2
+      # 建立 java 环境
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.3.0
+        with:
+          java-version: "12.x"
+      # 建立 Flutter 环境
+      - name: Flutter action
+        uses: subosito/flutter-action@v1.1.1
+        with:
+          channel: "stable"
+          flutter-version: "1.12.x"
+      # 下载项目依赖
+      - run: flutter pub get
+      # 执行测试
+      - run: flutter test
+      # 打包 APK
+      - run: flutter build apk --release
+      # 发布到 Release
+      - name: Release apk
+        uses: ncipollo/release-action@v1.5.0
+        with:
+          artifacts: "build/app/outputs/apk/release/*"
+          token: ${{ secrets.GITHUB_RElEASE_TOKEN }}
+
