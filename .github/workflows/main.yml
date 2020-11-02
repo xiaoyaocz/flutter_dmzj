@@ -28,6 +28,7 @@ jobs:
           channel: "stable"
       # 下载项目依赖
       - run: flutter pub get
+      - run: flutter pub outdate
       # 执行测试
       # run: flutter test
       # 打包 APK
