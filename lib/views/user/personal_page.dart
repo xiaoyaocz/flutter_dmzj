@@ -35,9 +35,14 @@ class _PersonalPageState extends State<PersonalPage> {
     super.dispose();
   }
 
+  double getSafebar() {
+    return MediaQuery.of(context).padding.top;
+  }
+
   bool get _isCollapsed {
     return _scrollController.hasClients &&
-        _scrollController.offset >= myExpandedHeight - kToolbarHeight - 3;
+        _scrollController.offset >=
+            myExpandedHeight - kToolbarHeight - getSafebar();
   }
 
   @override
@@ -57,7 +62,7 @@ class _PersonalPageState extends State<PersonalPage> {
                       padding: EdgeInsets.all(5),
                       child: _getAvatarSmall(),
                     )),
-                expandedHeight: myExpandedHeight,
+                expandedHeight: myExpandedHeight - getSafebar(),
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     children: <Widget>[
@@ -102,16 +107,13 @@ class _PersonalPageState extends State<PersonalPage> {
               SliverToBoxAdapter(
                 child: Column(
                   children: [
+                    SizedBox(
+                      height: 12,
+                    ),
                     Material(
                       color: Theme.of(context).cardColor,
                       child: Column(
                         children: <Widget>[
-                          // ListTile(
-                          //   title: Text("消息中心"),
-                          //   leading: Icon(Icons.email),
-                          //   trailing: Icon(Icons.chevron_right, color: Colors.grey),
-                          //   onTap: () => {},
-                          // ),
                           ListTile(
                             title: Text("我的订阅"),
                             leading: Icon(Icons.favorite),
@@ -313,42 +315,45 @@ class _PersonalPageState extends State<PersonalPage> {
   }
 
   Widget _getAvatarSmall() {
-    return InkWell(
-      onTap: () {
-        Provider.of<AppUserInfo>(context).isLogin
-            ? showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                      title: Text("退出登录"),
-                      content: Text("确定要退出登录吗?"),
-                      actions: <Widget>[
-                        new FlatButton(
-                          child: new Text("取消"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        new FlatButton(
-                          child: new Text("确定"),
-                          onPressed: () {
-                            Provider.of<AppUserInfo>(context, listen: false)
-                                .logout();
-                            Navigator.of(context).pop();
-                          },
-                        )
-                      ],
-                    ))
-            : Navigator.pushNamed(context, "/Login");
-      },
-      child: Provider.of<AppUserInfo>(context).isLogin
-          ? CircleAvatar(
-              radius: 32,
-              backgroundImage: Utils.createCachedImageProvider(
-                  Provider.of<AppUserInfo>(context).loginInfo.photo),
-            )
-          : CircleAvatar(
-              child: Icon(Icons.account_circle),
-            ),
+    return Padding(
+      padding: EdgeInsets.all(4),
+      child: InkWell(
+        onTap: () {
+          Provider.of<AppUserInfo>(context).isLogin
+              ? showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        title: Text("退出登录"),
+                        content: Text("确定要退出登录吗?"),
+                        actions: <Widget>[
+                          new FlatButton(
+                            child: new Text("取消"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          new FlatButton(
+                            child: new Text("确定"),
+                            onPressed: () {
+                              Provider.of<AppUserInfo>(context, listen: false)
+                                  .logout();
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      ))
+              : Navigator.pushNamed(context, "/Login");
+        },
+        child: Provider.of<AppUserInfo>(context).isLogin
+            ? CircleAvatar(
+                radius: 32,
+                backgroundImage: Utils.createCachedImageProvider(
+                    Provider.of<AppUserInfo>(context).loginInfo.photo),
+              )
+            : CircleAvatar(
+                child: Icon(Icons.account_circle),
+              ),
+      ),
     );
   }
 }

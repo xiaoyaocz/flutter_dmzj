@@ -1,7 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
@@ -38,19 +35,12 @@ class ComicRecommendState extends State<ComicRecommend>
   List<ComicHomeComicItem> _anime = [];
   List<ComicHomeNewItem> _mySub = [];
 
-  //如果是IOS，且在审核期间，隐藏Banner
-  bool _hideBanner = false;
-
   @override
   void initState() {
     super.initState();
-    _hideBanner = Utils.hideBanner;
-    Utils.changeHideBanner.on<bool>().listen((event) {
-      setState(() {
-        _hideBanner = event;
-      });
+    loadData().whenComplete(() {
+      _loading = false;
     });
-    loadData();
   }
 
   @override
@@ -82,24 +72,23 @@ class ComicRecommendState extends State<ComicRecommend>
     return Scaffold(
       //todo: 适配平板页面，使用sliver组件
       body: EasyRefresh(
+        header: MaterialHeader(),
+        footer: MaterialFooter(),
         onRefresh: refreshData,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               //banner
-              (Platform.isIOS && _hideBanner)
-                  ? Container()
-                  : AppBanner(
-                      items: _banners
-                          .map<Widget>((i) => BannerImageItem(
-                                pic: i.cover,
-                                title: i.title,
-                                onTaped: () => Utils.openPage(
-                                    context, i.id, i.type,
-                                    url: i.url, title: i.title),
-                              ))
-                          .toList()),
+              AppBanner(
+                  items: _banners
+                      .map<Widget>((i) => BannerImageItem(
+                            pic: i.cover,
+                            title: i.title,
+                            onTaped: () => Utils.openPage(context, i.id, i.type,
+                                url: i.url, title: i.title),
+                          ))
+                      .toList()),
               _getItem2(
                 "我的订阅",
                 _mySub,
@@ -124,24 +113,24 @@ class ComicRecommendState extends State<ComicRecommend>
                   icon: Icon(Icons.refresh, color: Colors.grey),
                   ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                   ontap: () async => await loadLike()),
-              _getItem(
-                "大师级作者怎能不看",
-                _authors,
-                ratio: getWidth() / ((getWidth() * (360 / 270)) + 24),
-              ),
-              _getItem("国漫也精彩", _guoman,
-                  icon: Icon(Icons.refresh, color: Colors.grey),
-                  ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-                  ontap: () => loadGuoman()),
-              _getItem(
-                "美漫大事件",
-                _meiman,
-                needSubTitle: false,
-                imgHeight: 170,
-                imgWidth: 320,
-                count: 2,
-                ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
-              ),
+              // _getItem(
+              //   "大师级作者怎能不看",
+              //   _authors,
+              //   ratio: getWidth() / ((getWidth() * (360 / 270)) + 24),
+              // ),
+              // _getItem("国漫也精彩", _guoman,
+              //     icon: Icon(Icons.refresh, color: Colors.grey),
+              //     ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+              //     ontap: () => loadGuoman()),
+              // _getItem(
+              //   "美漫大事件",
+              //   _meiman,
+              //   needSubTitle: false,
+              //   imgHeight: 170,
+              //   imgWidth: 320,
+              //   count: 2,
+              //   ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
+              // ),
               _getItem("热门连载", _hot,
                   icon: Icon(Icons.refresh, color: Colors.grey),
                   ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
@@ -353,12 +342,22 @@ class ComicRecommendState extends State<ComicRecommend>
   }
 
   bool _loading = false;
+  bool _loadingGuoman = false;
+  bool _loadingLike = false;
+
   Future loadData() async {
+    if (_loading) {
+      return;
+    }
+    _loading = true;
+    loadContent();
+    loadGuoman();
+    loadLike();
+    loadMySub();
+  }
+
+  Future loadContent() async {
     try {
-      if (_loading) {
-        return;
-      }
-      _loading = true;
       var response = await http.get(Api.comicRecommend);
       List jsonMap = jsonDecode(response.body);
       //Banner
@@ -394,39 +393,39 @@ class ComicRecommendState extends State<ComicRecommend>
           });
         }
       }
-      //大师级作者
-      {
-        List authorItem = jsonMap[3]["data"];
-        List<ComicHomeComicItem> authors =
-            authorItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
-        if (authors.length != 0) {
-          setState(() {
-            _authors = authors;
-          });
-        }
-      }
-      //国漫
-      {
-        List guomanItem = jsonMap[4]["data"];
-        List<ComicHomeComicItem> guoman =
-            guomanItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
-        if (guoman.length != 0) {
-          setState(() {
-            _guoman = guoman;
-          });
-        }
-      }
-      //美漫
-      {
-        List meimanItem = jsonMap[5]["data"];
-        List<ComicHomeComicItem> meiman =
-            meimanItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
-        if (meiman.length != 0) {
-          setState(() {
-            _meiman = meiman;
-          });
-        }
-      }
+      // //大师级作者
+      // {
+      //   List authorItem = jsonMap[3]["data"];
+      //   List<ComicHomeComicItem> authors =
+      //       authorItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
+      //   if (authors.length != 0) {
+      //     setState(() {
+      //       _authors = authors;
+      //     });
+      //   }
+      // }
+      // //国漫
+      // {
+      //   List guomanItem = jsonMap[4]["data"];
+      //   List<ComicHomeComicItem> guoman =
+      //       guomanItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
+      //   if (guoman.length != 0) {
+      //     setState(() {
+      //       _guoman = guoman;
+      //     });
+      //   }
+      // }
+      // //美漫
+      // {
+      //   List meimanItem = jsonMap[5]["data"];
+      //   List<ComicHomeComicItem> meiman =
+      //       meimanItem.map((i) => ComicHomeComicItem.fromJson(i)).toList();
+      //   if (meiman.length != 0) {
+      //     setState(() {
+      //       _meiman = meiman;
+      //     });
+      //   }
+      // }
       //热门连载
       {
         List items = jsonMap[6]["data"];
@@ -471,16 +470,11 @@ class ComicRecommendState extends State<ComicRecommend>
           });
         }
       }
-      await loadLike();
-      await loadMySub();
     } catch (e) {
       print(e);
-    } finally {
-      _loading = false;
     }
   }
 
-  bool _loadingLike = false;
   Future loadLike() async {
     try {
       if (_loadingLike) {
@@ -507,7 +501,6 @@ class ComicRecommendState extends State<ComicRecommend>
     }
   }
 
-  bool _loadingGuoman = false;
   Future loadGuoman() async {
     try {
       if (_loadingGuoman) {
@@ -582,11 +575,4 @@ class ComicRecommendState extends State<ComicRecommend>
       print(e);
     }
   }
-}
-
-class TestData {
-  final String pic;
-  final String title;
-  final String desc;
-  TestData(this.pic, this.title, this.desc);
 }

@@ -42,7 +42,6 @@ class _CommentWidgetState extends State<CommentWidget>
   @override
   void initState() {
     super.initState();
-
     loadData();
   }
 
@@ -70,6 +69,8 @@ class _CommentWidgetState extends State<CommentWidget>
       text = "小说";
     }
     return EasyRefresh(
+      //header: MaterialHeader(),
+      footer: MaterialFooter(),
       child: Column(
         children: <Widget>[
           Container(
@@ -121,6 +122,7 @@ class _CommentWidgetState extends State<CommentWidget>
           ),
           _list.length != 0
               ? ListView(
+                  padding: EdgeInsets.all(4),
                   shrinkWrap: true,
                   controller: _controller,
                   children: _list.map<Widget>((f) => createItem(f)).toList(),
@@ -137,10 +139,10 @@ class _CommentWidgetState extends State<CommentWidget>
         ],
       ),
       onLoad: loadData,
-      onRefresh: () async {
-        _page = 1;
-        await loadData();
-      },
+      // onRefresh: () async {
+      //   _page = 1;
+      //   await loadData();
+      // },
     );
   }
 
@@ -212,8 +214,7 @@ class _CommentWidgetState extends State<CommentWidget>
                 height: 48,
                 child: CircleAvatar(
                   radius: 24,
-                  backgroundImage:
-                      Utils.createCachedImageProvider(item.avatar_url),
+                  backgroundImage: NetworkImage(item.avatar_url),
                 ),
               ),
             ),

@@ -121,7 +121,8 @@ class _HistoryTabItemState extends State<HistoryTabItem>
   Widget createItem(ComicHistoryItem item) {
     return InkWell(
       onTap: () {
-        Utils.openPage(context, item.comic_id, 1);
+        Utils.openPage(context, item.comic_id, 1,
+            url: item.cover, title: item.comic_name);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -178,7 +179,8 @@ class _HistoryTabItemState extends State<HistoryTabItem>
     print(item.novel_name);
     return InkWell(
       onTap: () {
-        Utils.openPage(context, int.parse(item.lnovel_id), 2);
+        Utils.openPage(context, int.parse(item.lnovel_id), 2,
+            url: item.cover, title: item.novel_name);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 8, 8, 0),

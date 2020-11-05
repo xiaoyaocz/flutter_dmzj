@@ -154,6 +154,55 @@ class Utils {
         });
   }
 
+  static Widget createComicItem(
+    int id,
+    int type,
+    String pic,
+    String title,
+    BuildContext context, {
+    String author = "",
+    double width = 270,
+    double height = 360,
+  }) {
+    return InkWell(
+      onTap: () => openPage(context, id, type, url: pic, title: title),
+      child: Container(
+        padding: EdgeInsets.all(4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: createCacheImage(pic, width, height, fit: BoxFit.cover),
+            ),
+            SizedBox(
+              height: 6,
+            ),
+            Flexible(
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            SizedBox(
+              height: 6,
+            ),
+            author == ""
+                ? Container()
+                : Flexible(
+                    child: Text(
+                    author,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.grey, fontSize: 12.0),
+                  ))
+          ],
+        ),
+      ),
+    );
+  }
+
   static Widget createCacheImage(String url, double width, double height,
       {BoxFit fit = BoxFit.fitWidth}) {
     return CachedNetworkImage(

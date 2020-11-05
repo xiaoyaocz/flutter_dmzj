@@ -20,6 +20,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart'
+    as extended;
 
 class ComicDetailPage extends StatefulWidget {
   final int comicId;
@@ -34,8 +36,6 @@ class _ComicDetailPageState extends State<ComicDetailPage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   TabController _tabController;
   int historyChapter = 0;
-  ScrollController _scrollController;
-  bool isCollapsed = false;
   double comicExpandHeight;
   @override
   bool get wantKeepAlive => true;
@@ -53,12 +53,6 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       updateHistory();
     });
     _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
-    _scrollController = new ScrollController();
-    _scrollController.addListener(() {
-      setState(() {
-        isCollapsed = _isCollapsed;
-      });
-    });
   }
 
   void updateHistory() async {
@@ -70,22 +64,8 @@ class _ComicDetailPageState extends State<ComicDetailPage>
 
   @override
   void dispose() {
-    _scrollController.dispose();
     _tabController.dispose();
     super.dispose();
-  }
-
-  @override
-  void setState(fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
-  }
-
-  bool get _isCollapsed {
-    bool flag = _scrollController.hasClients &&
-        _scrollController.offset >= kToolbarHeight + getSafebar();
-    return flag;
   }
 
   double getSafebar() {
@@ -103,18 +83,19 @@ class _ComicDetailPageState extends State<ComicDetailPage>
     super.build(context);
     comicExpandHeight = getSafebar() + 200 + kTextTabBarHeight;
     return Scaffold(
-      body: NestedScrollView(
-        controller: _scrollController,
+      body: extended.NestedScrollView(
+        innerScrollPositionKeyBuilder: () {
+          String index = 'tab${_tabController.index}';
+          print(index);
+          return Key(index);
+        },
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
               pinned: true,
               expandedHeight: comicExpandHeight,
               automaticallyImplyLeading: true,
-              title: Offstage(
-                offstage: !_isCollapsed,
-                child: (_detail != null) ? Text(_detail.title) : Text(""),
-              ),
+              title: (_detail != null) ? Text(_detail.title) : Text(""),
               actions: (_detail != null)
                   ? <Widget>[
                       Provider.of<AppUserInfo>(context).isLogin && _isSubscribe
@@ -179,12 +160,12 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         height: comicExpandHeight + kToolbarHeight,
-foregroundDecoration: BoxDecoration(
-  color: Theme.of(context).shadowColor.withAlpha(100)
-),
+                        foregroundDecoration: BoxDecoration(
+                            color:
+                                Theme.of(context).shadowColor.withAlpha(100)),
                         child: ImageFiltered(
                           imageFilter:
-                          ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                              ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                           child: Utils.createCacheImage(
                               widget.coverUrl,
                               MediaQuery.of(context).size.width,
@@ -211,7 +192,7 @@ foregroundDecoration: BoxDecoration(
                                     onTap: () => Utils.showImageViewDialog(
                                         context, widget.coverUrl),
                                     child: Container(
-                                      width: 100,
+                                      width: getWidth(),
                                       child: Hero(
                                         tag: widget.comicId,
                                         child: Utils.createCacheImage(
@@ -230,7 +211,8 @@ foregroundDecoration: BoxDecoration(
                                           children: <Widget>[
                                             Text(
                                               _detail.title,
-                                              style: TextStyle(color: Colors.white,
+                                              style: TextStyle(
+                                                  color: Colors.white,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -305,11 +287,6 @@ foregroundDecoration: BoxDecoration(
                   labelStyle: new TextStyle(
                       fontSize: 16.0, fontWeight: FontWeight.bold),
                   indicatorColor: Theme.of(context).indicatorColor,
-                  onTap: (index) {
-                    if (index == 1) {
-                      backTop();
-                    }
-                  },
                   tabs: [Tab(text: "详情"), Tab(text: "评论"), Tab(text: "相关")]),
             ),
           ];
@@ -319,39 +296,11 @@ foregroundDecoration: BoxDecoration(
                 controller: _tabController,
                 children: <Widget>[
                   createDetail(),
-                  CommentWidget(4, widget.comicId),
-                  SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        Column(
-                          children: _related.author_comics
-                              .map<Widget>((f) => _getItem(
-                                      f.author_name + "的其他作品", f.data,
-                                      icon: Icon(Icons.chevron_right),
-                                      ratio: getWidth() /
-                                          ((getWidth() * (360 / 270)) + 36),
-                                      ontap: () {
-                                    Utils.openPage(context, f.author_id, 8);
-                                  }))
-                              .toList(),
-                        ),
-                        _getItem(
-                          "同类题材作品",
-                          _related.theme_comics,
-                          ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-                        ),
-                        _related.novels != null && _related.novels.length != 0
-                            ? _getItem(
-                                "相关小说",
-                                _related.novels,
-                                type: 2,
-                                ratio: getWidth() /
-                                    ((getWidth() * (360 / 270)) + 36),
-                              )
-                            : Container()
-                      ],
-                    ),
+                  extended.NestedScrollViewInnerScrollPositionKeyWidget(
+                    Key('tab1'),
+                    CommentWidget(4, widget.comicId),
                   ),
+                  createRelate(),
                 ],
               )
             : _loading
@@ -373,90 +322,102 @@ foregroundDecoration: BoxDecoration(
   }
 
   Widget createDetail() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          Container(
-            width: double.infinity,
-            color: Theme.of(context).cardColor,
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("简介", style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 4),
-                Text(
-                  _detail.description,
-                  style: TextStyle(color: Colors.grey),
+    return extended.NestedScrollViewInnerScrollPositionKeyWidget(
+        Key('tab0'),
+        SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                color: Theme.of(context).cardColor,
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("简介", style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 4),
+                    Text(
+                      _detail.description,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              _detail.copyright == 1
+                  ? Column(
+                      children: <Widget>[
+                        SizedBox(height: 12),
+                        Container(
+                          width: double.infinity,
+                          color: Theme.of(context).cardColor,
+                          padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text("作者公告",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                              SizedBox(height: 4),
+                              Text(
+                                _detail.author_notice != null &&
+                                        _detail.author_notice != ""
+                                    ? _detail.author_notice
+                                    : "无",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    )
+                  : Container(),
+              ComicChapterView(
+                widget.comicId,
+                _detail,
+                historyChapter,
+                isSubscribe: _isSubscribe,
+              )
+            ],
           ),
-          _detail.copyright == 1
-              ? Column(
-                  children: <Widget>[
-                    SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      color: Theme.of(context).cardColor,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("作品公告",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(height: 4),
-                          Text(
-                            _detail.comic_notice != null &&
-                                    _detail.comic_notice != ""
-                                ? _detail.comic_notice
-                                : "无",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
+        ));
+  }
+
+  Widget createRelate() {
+    return extended.NestedScrollViewInnerScrollPositionKeyWidget(
+        Key('tab0'),
+        SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Column(
+                children: _related.author_comics
+                    .map<Widget>((f) => _getItem(
+                            f.author_name + "的其他作品", f.data,
+                            icon: Icon(Icons.chevron_right),
+                            //ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                            ontap: () {
+                          Utils.openPage(context, f.author_id, 8);
+                        }))
+                    .toList(),
+              ),
+              _getItem(
+                "同类题材作品",
+                _related.theme_comics,
+                //ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+              ),
+              _related.novels != null && _related.novels.length != 0
+                  ? _getItem(
+                      "相关小说",
+                      _related.novels,
+                      type: 2,
+                      //ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                     )
-                  ],
-                )
-              : Container(),
-          _detail.copyright == 1
-              ? Column(
-                  children: <Widget>[
-                    SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      color: Theme.of(context).cardColor,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("作者公告",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(height: 4),
-                          Text(
-                            _detail.author_notice != null &&
-                                    _detail.author_notice != ""
-                                ? _detail.author_notice
-                                : "无",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                )
-              : Container(),
-          ComicChapterView(
-            widget.comicId,
-            _detail,
-            historyChapter,
-            isSubscribe: _isSubscribe,
-          )
-        ],
-      ),
-    );
+                  : Container()
+            ],
+          ),
+        ));
   }
 
   Widget createChpter() {
@@ -550,11 +511,6 @@ foregroundDecoration: BoxDecoration(
     );
   }
 
-  void backTop() {
-    _scrollController.animateTo(0,
-        duration: Duration(milliseconds: 200), curve: Curves.ease);
-  }
-
   void openRead() async {
     if (_detail == null ||
         _detail.chapters == null ||
@@ -613,6 +569,7 @@ foregroundDecoration: BoxDecoration(
                     height: 4.0,
                   ),
                   GridView.builder(
+                    padding: EdgeInsets.all(4),
                     shrinkWrap: true,
                     physics: ScrollPhysics(),
                     itemCount: items.length,
@@ -621,10 +578,13 @@ foregroundDecoration: BoxDecoration(
                         crossAxisSpacing: 4.0,
                         mainAxisSpacing: 4.0,
                         childAspectRatio: ratio),
-                    itemBuilder: (context, i) => _getComicItemBuilder(
-                        items[i].id, type, items[i].cover, items[i].name,
+                    itemBuilder: (context, i) => Utils.createComicItem(
+                        items[i].id,
+                        type,
+                        items[i].cover,
+                        items[i].name,
+                        context,
                         author: needSubTitle ? items[i].status : "",
-                        url: '',
                         width: imgWidth,
                         height: imgHeight),
                   ),
@@ -639,23 +599,25 @@ foregroundDecoration: BoxDecoration(
   }
 
   Widget _getTitle(String title, {Icon icon, Function ontap}) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Padding(padding: EdgeInsets.only(left: 4), child: Text(title)),
-        ),
-        Offstage(
-          offstage: icon == null,
-          child: Material(
-              color: Theme.of(context).cardColor,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(12),
-                onTap: ontap,
-                child: icon ?? Icon(Icons.refresh),
-              )),
-        )
-      ],
-    );
+    return Padding(
+        padding: EdgeInsets.only(left: 8, right: 8),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Text(title),
+            ),
+            Offstage(
+              offstage: icon == null,
+              child: Material(
+                  color: Theme.of(context).cardColor,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: ontap,
+                    child: icon ?? Icon(Icons.refresh),
+                  )),
+            )
+          ],
+        ));
   }
 
   Widget _getComicItemBuilder(int id, int type, String pic, String title,
@@ -820,13 +782,6 @@ class _ComicChapterViewState extends State<ComicChapterView>
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void setState(fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
   }
 
   @override

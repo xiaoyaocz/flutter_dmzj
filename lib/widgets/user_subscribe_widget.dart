@@ -58,12 +58,16 @@ class _UserSubscribeWidgetState extends State<UserSubscribeWidget> {
       String pic, String title, String lastUpdate, String view) {
     return Card(
       child: InkWell(
-          onTap: () => Utils.openPage(context, id, type, title: title),
+          onTap: () =>
+              Utils.openPage(context, id, type, url: pic, title: title),
           child: Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Utils.createCacheImage(pic, 270, 360),
+                Hero(
+                  tag: id,
+                  child: Utils.createCacheImage(pic, 270, 360),
+                ),
                 Padding(
                   padding: EdgeInsets.all(4),
                   child: Text(

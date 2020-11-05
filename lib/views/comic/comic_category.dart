@@ -72,15 +72,9 @@ class _ComicCategoryPageState extends State<ComicCategoryPage>
                   SizedBox(
                     height: 5,
                   ),
-                  Hero(
-                    tag: _list[i].title,
-                    child: Material(
-                      type: MaterialType.transparency,
-                      child: Text(
-                        _list[i].title,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                  Text(
+                    _list[i].title,
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),

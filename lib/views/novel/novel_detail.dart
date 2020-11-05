@@ -17,6 +17,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart'
+    as extended;
 
 class NovelDetailPage extends StatefulWidget {
   final int novelId;
@@ -31,7 +33,6 @@ class _NovelDetailPageState extends State<NovelDetailPage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   double novelExpandHeight;
   ScrollController _scrollController;
-  bool isCollapsed = false;
   @override
   bool get wantKeepAlive => true;
   TabController _tabController;
@@ -48,11 +49,6 @@ class _NovelDetailPageState extends State<NovelDetailPage>
     });
     updateHistory();
     _scrollController = new ScrollController();
-    _scrollController.addListener(() {
-      setState(() {
-        isCollapsed = _isCollapsed;
-      });
-    });
   }
 
   void updateHistory() {
@@ -69,19 +65,6 @@ class _NovelDetailPageState extends State<NovelDetailPage>
     super.dispose();
   }
 
-  @override
-  void setState(fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
-  }
-
-  bool get _isCollapsed {
-    bool flag = _scrollController.hasClients &&
-        _scrollController.offset >= kToolbarHeight + getSafebar();
-    return flag;
-  }
-
   double getSafebar() {
     return MediaQuery.of(context).padding.top;
   }
@@ -96,7 +79,12 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: NestedScrollView(
+      body: extended.NestedScrollView(
+        innerScrollPositionKeyBuilder: () {
+          String index = 'tab${_tabController.index}';
+          print(index);
+          return Key(index);
+        },
         controller: _scrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           novelExpandHeight = getSafebar() + 200 + kTextTabBarHeight;
@@ -105,10 +93,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
               pinned: true,
               expandedHeight: novelExpandHeight,
               automaticallyImplyLeading: true,
-              title: Offstage(
-                offstage: !_isCollapsed,
-                child: (_detail != null) ? Text(_detail.name) : Text(""),
-              ),
+              title: (_detail != null) ? Text(_detail.name) : Text(""),
               actions: (_detail != null)
                   ? <Widget>[
                       Provider.of<AppUserInfo>(context).isLogin && _isSubscribe
@@ -150,8 +135,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                       width: MediaQuery.of(context).size.width,
                       height: novelExpandHeight + kToolbarHeight,
                       foregroundDecoration: BoxDecoration(
-                          color: Theme.of(context).shadowColor.withAlpha(100)
-                      ),
+                          color: Theme.of(context).shadowColor.withAlpha(100)),
                       child: ImageFiltered(
                         imageFilter:
                             ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
@@ -181,8 +165,11 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                                         context, widget.coverUrl),
                                     child: Container(
                                       width: 100,
-                                      child: Utils.createCacheImage(
-                                          widget.coverUrl, 270, 360),
+                                      child: Hero(
+                                        tag: widget.novelId,
+                                        child: Utils.createCacheImage(
+                                            widget.coverUrl, 270, 360),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
@@ -196,7 +183,8 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                                             children: <Widget>[
                                               Text(
                                                 _detail.name,
-                                                style: TextStyle(color: Colors.white,
+                                                style: TextStyle(
+                                                    color: Colors.white,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
@@ -278,27 +266,36 @@ class _NovelDetailPageState extends State<NovelDetailPage>
             ? TabBarView(
                 controller: _tabController,
                 children: [
-                  SingleChildScrollView(
-                    child: Container(
-                      width: double.infinity,
-                      color: Theme.of(context).cardColor,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("简介",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(height: 4),
-                          Text(
-                            _detail.introduction,
-                          ),
-                        ],
+                  extended.NestedScrollViewInnerScrollPositionKeyWidget(
+                    Key('tab0'),
+                    SingleChildScrollView(
+                      child: Container(
+                        width: double.infinity,
+                        color: Theme.of(context).cardColor,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text("简介",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(height: 4),
+                            Text(
+                              _detail.introduction,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  cerateVolume(),
-                  CommentWidget(1, widget.novelId),
+                  extended.NestedScrollViewInnerScrollPositionKeyWidget(
+                    Key('tab1'),
+                    cerateVolume(),
+                  ),
+                  extended.NestedScrollViewInnerScrollPositionKeyWidget(
+                    Key('tab2'),
+                    CommentWidget(1, widget.novelId),
+                  ),
                 ],
               )
             : !_loadffail || _loading
@@ -320,6 +317,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   Widget cerateVolume() {
     return volumes != null && volumes.length != 0
         ? ListView.builder(
+            padding: EdgeInsets.all(0),
             itemCount: volumes.length,
             itemBuilder: (ctx, i) {
               var f = volumes[i];
