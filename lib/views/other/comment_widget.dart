@@ -335,7 +335,6 @@ class _CommentWidgetState extends State<CommentWidget>
           });
         },
         child: Container(
-          width: double.infinity,
           decoration: BoxDecoration(
               color: Colors.grey.withOpacity(0.1),
               borderRadius: BorderRadius.circular(4)),
@@ -404,7 +403,6 @@ class _CommentWidgetState extends State<CommentWidget>
               });
         },
         child: Container(
-          width: double.infinity,
           decoration: BoxDecoration(
               color: Colors.grey.withOpacity(0.1),
               borderRadius: BorderRadius.circular(4)),

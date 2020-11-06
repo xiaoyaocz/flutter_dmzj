@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_update_item.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -100,100 +98,16 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
             child: ListView.builder(
                 itemCount: _list.length,
                 itemBuilder: (ctx, i) {
-                  return createItem(_list[i]);
+                  return Utils.createDetailWidget(
+                      _list[i].id, 1, _list[i].cover, _list[i].title, context,
+                      category: _list[i].types,
+                      author: _list[i].authors,
+                      latestChapter: _list[i].last_update_chapter_name,
+                      updateTime: _list[i].last_updatetime);
                 }),
           ),
         )
       ],
-    );
-  }
-
-  Widget createItem(ComicUpdateItem item) {
-    return InkWell(
-      onTap: () {
-        Utils.openPage(context, item.id, 1, url: item.cover, title: item.title);
-      },
-      child: Container(
-        padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-        child: Container(
-          padding: EdgeInsets.only(bottom: 8),
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(color: Colors.grey.withOpacity(0.1)))),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: Container(
-                    width: 80,
-                    child: Utils.createCacheImage(item.cover, 270, 360),
-                  )),
-              SizedBox(
-                width: 12,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      item.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Text.rich(
-                      TextSpan(children: [
-                        WidgetSpan(
-                            child: Icon(
-                          Icons.account_circle,
-                          color: Colors.grey,
-                          size: 18,
-                        )),
-                        TextSpan(
-                          text: " ",
-                        ),
-                        TextSpan(
-                            text: item.authors,
-                            style: TextStyle(color: Colors.grey, fontSize: 14))
-                      ]),
-                    ),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Text(item.types,
-                        style: TextStyle(color: Colors.grey, fontSize: 14)),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Text(item.last_update_chapter_name,
-                        style: TextStyle(color: Colors.grey, fontSize: 14)),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Text(
-                        "更新于" +
-                            TimelineUtil.format(
-                              item.last_updatetime * 1000,
-                              locale: 'zh',
-                            ),
-                        style: TextStyle(color: Colors.grey, fontSize: 14)),
-                  ],
-                ),
-              ),
-              Center(
-                child: IconButton(
-                    icon: Icon(Icons.favorite_border),
-                    onPressed: () {
-                      UserHelper.comicSubscribe(item.id);
-                    }),
-              )
-            ],
-          ),
-        ),
-      ),
     );
   }
 

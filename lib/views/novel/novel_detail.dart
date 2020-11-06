@@ -160,18 +160,8 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                                   SizedBox(
                                     width: 12,
                                   ),
-                                  InkWell(
-                                    onTap: () => Utils.showImageViewDialog(
-                                        context, widget.coverUrl),
-                                    child: Container(
-                                      width: 100,
-                                      child: Hero(
-                                        tag: widget.novelId,
-                                        child: Utils.createCacheImage(
-                                            widget.coverUrl, 270, 360),
-                                      ),
-                                    ),
-                                  ),
+                                  Utils.createCover(
+                                      widget.coverUrl, 100, 0.75, context),
                                   SizedBox(
                                     width: 24,
                                   ),
@@ -270,7 +260,6 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                     Key('tab0'),
                     SingleChildScrollView(
                       child: Container(
-                        width: double.infinity,
                         color: Theme.of(context).cardColor,
                         padding:
                             EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -342,7 +331,6 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                           updateHistory();
                         },
                         child: Container(
-                          width: double.infinity,
                           padding: EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(

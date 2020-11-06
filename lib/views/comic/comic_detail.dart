@@ -188,18 +188,8 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                                   SizedBox(
                                     width: 12,
                                   ),
-                                  InkWell(
-                                    onTap: () => Utils.showImageViewDialog(
-                                        context, widget.coverUrl),
-                                    child: Container(
-                                      width: getWidth(),
-                                      child: Hero(
-                                        tag: widget.comicId,
-                                        child: Utils.createCacheImage(
-                                            widget.coverUrl, getWidth(), 360),
-                                      ),
-                                    ),
-                                  ),
+                                  Utils.createCover(
+                                      widget.coverUrl, 100, 0.75, context),
                                   SizedBox(
                                     width: 24,
                                   ),
@@ -578,7 +568,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                         crossAxisSpacing: 4.0,
                         mainAxisSpacing: 4.0,
                         childAspectRatio: ratio),
-                    itemBuilder: (context, i) => Utils.createComicItem(
+                    itemBuilder: (context, i) => Utils.createCoverWidget(
                         items[i].id,
                         type,
                         items[i].cover,
@@ -839,8 +829,7 @@ class _ComicChapterViewState extends State<ComicChapterView>
                     GridView.builder(
                       shrinkWrap: true,
                       physics: ScrollPhysics(),
-                      itemCount:
-                          f.data.length > 14 ? (f.showNum + 1) : f.data.length,
+                      itemCount: f.data.length,
                       padding: EdgeInsets.all(2),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount:
@@ -849,18 +838,6 @@ class _ComicChapterViewState extends State<ComicChapterView>
                           crossAxisSpacing: 8.0,
                           childAspectRatio: 6 / 2),
                       itemBuilder: (context, i) {
-                        if (f.data.length > 14 && f.showNum == 14 && i >= 14) {
-                          return OutlineButton(
-                            onPressed: () {
-                              setState(() {
-                                f.showNum = f.data.length - 1;
-                              });
-                            },
-                            borderSide:
-                                BorderSide(color: Colors.grey.withOpacity(0.4)),
-                            child: Text("· · ·"),
-                          );
-                        }
                         return OutlineButton(
                           borderSide: BorderSide(
                               color:

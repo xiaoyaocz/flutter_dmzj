@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -29,6 +30,8 @@ import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:http/http.dart' as http;
+
+import 'user_helper.dart';
 
 class Utils {
   static EventBus changeComicHomeTabIndex = EventBus();
@@ -154,27 +157,32 @@ class Utils {
         });
   }
 
-  static Widget createComicItem(
+  static Widget createCoverWidget(
     int id,
     int type,
     String pic,
     String title,
     BuildContext context, {
     String author = "",
+    String status = "",
     double width = 270,
     double height = 360,
   }) {
-    return InkWell(
-      onTap: () => openPage(context, id, type, url: pic, title: title),
+    return RawMaterialButton(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      onPressed: () => openPage(context, id, type, url: pic, title: title),
       child: Container(
         padding: EdgeInsets.all(4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: createCacheImage(pic, width, height, fit: BoxFit.cover),
-            ),
+                borderRadius: BorderRadius.circular(8),
+                child: AspectRatio(
+                  aspectRatio: width / height,
+                  child:
+                      createCacheImage(pic, width, height, fit: BoxFit.cover),
+                )),
             SizedBox(
               height: 6,
             ),
@@ -196,8 +204,156 @@ class Utils {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.grey, fontSize: 12.0),
+                  )),
+            status == ""
+                ? Container()
+                : Flexible(
+                    child: Text(
+                    status,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.grey, fontSize: 12.0),
                   ))
           ],
+        ),
+      ),
+    );
+  }
+
+  static Widget getTextLine(String text) {
+    return (text == "")
+        ? Container()
+        : Padding(
+            padding: EdgeInsets.only(bottom: 2),
+            child: Text(text,
+                maxLines: 1,
+                style: TextStyle(color: Colors.grey, fontSize: 14)),
+          );
+  }
+
+  static Widget createDetailWidget(
+    int id,
+    int type,
+    String cover,
+    String title,
+    BuildContext context, {
+    String category = "",
+    String author = "",
+    String latestChapter = "",
+    int updateTime = 0,
+    String status = "",
+    double width = 270,
+    double height = 360,
+  }) {
+    return InkWell(
+      onTap: () {
+        Utils.openPage(context, id, type, url: cover, title: title);
+      },
+      child: Container(
+        padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+        child: Container(
+          padding: EdgeInsets.only(bottom: 8),
+          decoration: BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(color: Colors.grey.withOpacity(0.1)))),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    width: 80,
+                    child: AspectRatio(
+                      aspectRatio: width / height,
+                      child: Utils.createCacheImage(cover, 270, 360),
+                    ),
+                  )),
+              SizedBox(
+                width: 12,
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    (author == "")
+                        ? Container()
+                        : Padding(
+                            padding: EdgeInsets.only(bottom: 2),
+                            child: RichText(
+                              maxLines: 1,
+                              text: TextSpan(children: [
+                                WidgetSpan(
+                                    child: Icon(
+                                  Icons.account_circle,
+                                  color: Colors.grey,
+                                  size: 16,
+                                )),
+                                TextSpan(
+                                  text: " ",
+                                ),
+                                TextSpan(
+                                    text: author,
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 14))
+                              ]),
+                            ),
+                          ),
+                    getTextLine(category),
+                    getTextLine(status),
+                    getTextLine(latestChapter),
+                    (updateTime == 0)
+                        ? Container()
+                        : Padding(
+                            padding: EdgeInsets.only(bottom: 2),
+                            child: Text(
+                                "更新于" +
+                                    TimelineUtil.format(
+                                      updateTime * 1000,
+                                      locale: 'zh',
+                                    ),
+                                maxLines: 1,
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 14)),
+                          ),
+                  ],
+                ),
+              ),
+              Center(
+                child: IconButton(
+                    icon: Icon(Icons.favorite_border),
+                    onPressed: () {
+                      UserHelper.comicSubscribe(id);
+                    }),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static Widget createCover(
+      String coverUrl, double width, double ratio, BuildContext context,
+      {double imgHeight = 360, double imgWidth = 270}) {
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      child: InkWell(
+        onTap: () => showImageViewDialog(context, coverUrl),
+        child: Container(
+          width: width,
+          child: AspectRatio(
+            aspectRatio: ratio,
+            child: Utils.createCacheImage(coverUrl, imgWidth, imgHeight),
+          ),
         ),
       ),
     );

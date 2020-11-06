@@ -36,7 +36,11 @@ class _ComicAuthorPageState extends State<ComicAuthorPage> {
         onRefresh: loadData,
         child: ListView(
           children: _detail != null
-              ? _detail.data.map<Widget>((f) => createItem(f)).toList()
+              ? _detail.data
+                  .map<Widget>((f) => Utils.createDetailWidget(
+                      f.id, 1, f.cover, f.name, context,
+                      status: f.status))
+                  .toList()
               : [],
         ),
       ),

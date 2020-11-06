@@ -36,7 +36,6 @@ class _NovelRankPageState extends State<NovelRankPage>
   @override
   void initState() {
     super.initState();
-
     loadFilter();
   }
 
@@ -71,15 +70,15 @@ class _NovelRankPageState extends State<NovelRankPage>
             onLoad: loadData,
             header: MaterialHeader(),
             footer: MaterialFooter(),
-            child: _loading && _page == 0
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : ListView.builder(
-                    itemCount: _list.length,
-                    itemBuilder: (cxt, i) {
-                      return createItem(_list[i]);
-                    }),
+            child: ListView.builder(
+                itemCount: _list.length,
+                itemBuilder: (cxt, i) {
+                  return Utils.createDetailWidget(
+                      _list[i].id, 2, _list[i].cover, _list[i].name, context,
+                      category: _list[i].type,
+                      author: _list[i].authors,
+                      updateTime: _list[i].last_update_time);
+                }),
           ),
         )
       ],
@@ -125,84 +124,6 @@ class _NovelRankPageState extends State<NovelRankPage>
             ),
           )
           .toList(),
-    );
-  }
-
-  Widget createItem(NovelRankItem item) {
-    return InkWell(
-      onTap: () {
-        Utils.openPage(context, item.id, 2, url: item.cover, title: item.name);
-      },
-      child: Container(
-        padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-        child: Container(
-          padding: EdgeInsets.only(bottom: 8),
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(color: Colors.grey.withOpacity(0.1)))),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: Container(
-                      width: 80,
-                      child: Hero(
-                        tag: item.id,
-                        child: Utils.createCacheImage(item.cover, 270, 360),
-                      ))),
-              SizedBox(
-                width: 12,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      item.name,
-                      maxLines: 1,
-                    ),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Text.rich(
-                      TextSpan(children: [
-                        WidgetSpan(
-                            child: Icon(
-                          Icons.account_circle,
-                          color: Colors.grey,
-                          size: 18,
-                        )),
-                        TextSpan(
-                          text: " ",
-                        ),
-                        TextSpan(
-                            text: item.authors,
-                            style: TextStyle(color: Colors.grey, fontSize: 14))
-                      ]),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(item.type,
-                        style: TextStyle(color: Colors.grey, fontSize: 14)),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                        "更新于" +
-                            TimelineUtil.format(
-                              item.last_update_time * 1000,
-                              locale: 'zh',
-                            ),
-                        style: TextStyle(color: Colors.grey, fontSize: 14)),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
     );
   }
 

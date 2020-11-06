@@ -24,11 +24,11 @@ class ComicRecommendState extends State<ComicRecommend>
 
   List<ComicHomeBannerItem> _banners = [];
   List<ComicHomeComicItem> _recommend = [];
-  List<ComicHomeComicItem> _authors = [];
+  // List<ComicHomeComicItem> _authors = [];
   List<ComicHomeComicItem> _special = [];
   List<ComicHomeNewItem> _like = [];
-  List<ComicHomeComicItem> _guoman = [];
-  List<ComicHomeComicItem> _meiman = [];
+  // List<ComicHomeComicItem> _guoman = [];
+  // List<ComicHomeComicItem> _meiman = [];
   List<ComicHomeComicItem> _hot = [];
   List<ComicHomeNewItem> _new = [];
   List<ComicHomeComicItem> _tiaoman = [];
@@ -201,10 +201,9 @@ class ComicRecommendState extends State<ComicRecommend>
                     crossAxisSpacing: 4.0,
                     mainAxisSpacing: 4.0,
                     childAspectRatio: ratio),
-                itemBuilder: (context, i) => _getComicItemBuilder(
-                    items[i].id, items[i].type, items[i].cover, items[i].title,
+                itemBuilder: (context, i) => Utils.createCoverWidget(items[i].id,
+                    items[i].type, items[i].cover, items[i].title, context,
                     author: needSubTitle ? items[i].sub_title : "",
-                    url: items[i].url,
                     width: imgWidth,
                     height: imgHeight),
               ),
@@ -247,10 +246,13 @@ class ComicRecommendState extends State<ComicRecommend>
                       crossAxisSpacing: 4.0,
                       mainAxisSpacing: 4.0,
                       childAspectRatio: ratio),
-                  itemBuilder: (context, i) => _getComicItemBuilder(items[i].id,
-                      items[i].type, items[i].cover, items[i].title,
+                  itemBuilder: (context, i) => Utils.createCoverWidget(
+                      items[i].id,
+                      items[i].type,
+                      items[i].cover,
+                      items[i].title,
+                      context,
                       author: needSubTitle ? items[i].authors : "",
-                      url: items[i].url,
                       width: imgWidth,
                       height: imgHeight),
                 ),
@@ -290,53 +292,6 @@ class ComicRecommendState extends State<ComicRecommend>
             )));
   }
 
-  Widget _getComicItemBuilder(int id, int type, String pic, String title,
-      {String author = "",
-      String url = "",
-      double width = 270,
-      double height = 360}) {
-    return InkWell(
-      onTap: () => Utils.openPage(context, id, type, url: pic, title: title),
-      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      // padding: EdgeInsets.all(4),
-      child: Container(
-        padding: EdgeInsets.all(4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child:
-                  Utils.createCacheImage(pic, width, height, fit: BoxFit.cover),
-            ),
-            SizedBox(
-              height: 6,
-            ),
-            Flexible(
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            SizedBox(
-              height: 6,
-            ),
-            author == ""
-                ? Container()
-                : Flexible(
-                    child: Text(
-                    author,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.grey, fontSize: 12.0),
-                  ))
-          ],
-        ),
-      ),
-    );
-  }
-
   Future refreshData() async {
     await loadData();
   }
@@ -351,7 +306,7 @@ class ComicRecommendState extends State<ComicRecommend>
     }
     _loading = true;
     loadContent();
-    loadGuoman();
+    // loadGuoman();
     loadLike();
     loadMySub();
   }
@@ -501,31 +456,31 @@ class ComicRecommendState extends State<ComicRecommend>
     }
   }
 
-  Future loadGuoman() async {
-    try {
-      if (_loadingGuoman) {
-        return;
-      }
-      _loadingGuoman = true;
-      var response = await http.get(Api.comicGuoman);
-      var jsonMap = jsonDecode(response.body);
-      //最新
-      {
-        List items = jsonMap["data"]["data"];
-        List<ComicHomeComicItem> _items =
-            items.map((i) => ComicHomeComicItem.fromJson(i)).toList();
-        if (_items.length != 0) {
-          setState(() {
-            _guoman = _items;
-          });
-        }
-      }
-    } catch (e) {
-      print(e);
-    } finally {
-      _loadingGuoman = false;
-    }
-  }
+  // Future loadGuoman() async {
+  //   try {
+  //     if (_loadingGuoman) {
+  //       return;
+  //     }
+  //     _loadingGuoman = true;
+  //     var response = await http.get(Api.comicGuoman);
+  //     var jsonMap = jsonDecode(response.body);
+  //     //最新
+  //     {
+  //       List items = jsonMap["data"]["data"];
+  //       List<ComicHomeComicItem> _items =
+  //           items.map((i) => ComicHomeComicItem.fromJson(i)).toList();
+  //       if (_items.length != 0) {
+  //         setState(() {
+  //           _guoman = _items;
+  //         });
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   } finally {
+  //     _loadingGuoman = false;
+  //   }
+  // }
 
   bool _loadingHot = false;
   Future loadHot() async {

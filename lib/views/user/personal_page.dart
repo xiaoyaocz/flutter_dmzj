@@ -107,9 +107,6 @@ class _PersonalPageState extends State<PersonalPage> {
               SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 12,
-                    ),
                     Material(
                       color: Theme.of(context).cardColor,
                       child: Column(

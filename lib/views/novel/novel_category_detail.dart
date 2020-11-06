@@ -68,39 +68,22 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
       body: EasyRefresh(
         header: MaterialHeader(),
         footer: MaterialFooter(),
-        child: _list.length != 0
-            ? GridView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                physics: ScrollPhysics(),
-                itemCount: _list.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: MediaQuery.of(context).size.width ~/ 160 < 3
-                        ? 3
-                        : MediaQuery.of(context).size.width ~/ 160,
-                    crossAxisSpacing: 2.0,
-                    mainAxisSpacing: 4.0,
-                    childAspectRatio:
-                        getWidth() / ((getWidth() * (360 / 270)) + 48)),
-                itemBuilder: (context, i) => _getComicItemBuilder(
-                    _list[i].id, _list[i].cover, _list[i].name,
-                    author: _list[i].authors ?? ""),
-              )
-            : _loading
-                ? _page == 0
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Container()
-                : Center(
-                    child: Container(
-                      padding: EdgeInsets.all(24),
-                      child: Text(
-                        "什么都没有呢~",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                  ),
+        child: GridView.builder(
+          shrinkWrap: true,
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          physics: ScrollPhysics(),
+          itemCount: _list.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: MediaQuery.of(context).size.width ~/ 160 < 3
+                  ? 3
+                  : MediaQuery.of(context).size.width ~/ 160,
+              crossAxisSpacing: 2.0,
+              mainAxisSpacing: 4.0,
+              childAspectRatio: getWidth() / ((getWidth() * (360 / 270)) + 48)),
+          itemBuilder: (context, i) => Utils.createCoverWidget(
+              _list[i].id, 2, _list[i].cover, _list[i].name, context,
+              author: _list[i].authors ?? ""),
+        ),
         onRefresh: () async {
           _page = 0;
 
@@ -249,44 +232,6 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
     return Container(
       padding: EdgeInsets.all(8),
       child: ListView(children: list),
-    );
-  }
-
-  Widget _getComicItemBuilder(int id, String pic, String title,
-      {String author = ""}) {
-    return Card(
-      child: InkWell(
-          onTap: () => Utils.openPage(context, id, 2, url: pic, title: title),
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Hero(
-                  tag: id,
-                  child: Utils.createCacheImage(pic, 270, 360),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 4),
-                  child: Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Flexible(
-                    child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: Text(
-                    author,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.grey, fontSize: 12.0),
-                  ),
-                )),
-              ],
-            ),
-          )),
     );
   }
 

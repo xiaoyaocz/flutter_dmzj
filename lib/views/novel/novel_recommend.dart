@@ -1,18 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/user_info.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_banner_item.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_comic_item.dart';
-import 'package:flutter_dmzj/models/comic/comic_home_new_item.dart';
 import 'package:flutter_dmzj/widgets/app_banner.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class NovelRecommend extends StatefulWidget {
   NovelRecommend({Key key}) : super(key: key);
@@ -31,18 +26,9 @@ class NovelRecommendState extends State<NovelRecommend>
   List<ComicHomeComicItem> _anime = [];
   List<ComicHomeComicItem> _hot = [];
 
-  //如果是IOS，且在审核期间，隐藏Banner
-  bool _hideBanner = false;
-
   @override
   void initState() {
     super.initState();
-    _hideBanner = Utils.hideBanner;
-    Utils.changeHideBanner.on<bool>().listen((event) {
-      setState(() {
-        _hideBanner = event;
-      });
-    });
     loadData();
   }
 
@@ -74,30 +60,20 @@ class NovelRecommendState extends State<NovelRecommend>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              //bannera
-              (Platform.isIOS && _hideBanner)
-                  ? Container()
-                  : AppBanner(
-                      items: _banners
-                          .map<Widget>((i) => BannerImageItem(
-                                pic: i.cover,
-                                title: i.title,
-                                onTaped: () => Utils.openPage(
-                                    context, i.id, i.type,
-                                    url: i.url, title: i.title),
-                              ))
-                          .toList()),
-              // _getItem2("我的订阅", _my_sub,
-              //     icon: Icon(Icons.chevron_right, color: Colors.grey),
-              //     ontap: () => Utils.openSubscribePage(context),
-              //     ratio: 3 / 4.7),
-
+              AppBanner(
+                  items: _banners
+                      .map<Widget>((i) => BannerImageItem(
+                            pic: i.cover,
+                            title: i.title,
+                            onTaped: () => Utils.openPage(context, i.id, i.type,
+                                url: i.url, title: i.title),
+                          ))
+                      .toList()),
               _getItem("最近更新", _new,
                   icon: Icon(Icons.chevron_right, color: Colors.grey),
                   needSubTitle: false,
                   ratio: getWidth() / ((getWidth() * (360 / 270)) + 28),
                   ontap: () => Utils.changeNovelHomeTabIndex.fire(1)),
-
               _getItem(
                 "动画进行时",
                 _animeIng,
@@ -145,8 +121,7 @@ class NovelRecommendState extends State<NovelRecommend>
         padding: EdgeInsets.all(8),
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
           constraints: BoxConstraints(maxWidth: 584),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,10 +139,9 @@ class NovelRecommendState extends State<NovelRecommend>
                     crossAxisSpacing: 4.0,
                     mainAxisSpacing: 4.0,
                     childAspectRatio: ratio),
-                itemBuilder: (context, i) => _getComicItemBuilder(
-                    items[i].id, items[i].type, items[i].cover, items[i].title,
+                itemBuilder: (context, i) => Utils.createCoverWidget(items[i].id,
+                    items[i].type, items[i].cover, items[i].title, context,
                     author: needSubTitle ? items[i].sub_title : "",
-                    url: items[i].url,
                     width: imgWidth,
                     height: imgHeight),
               ),
@@ -193,81 +167,18 @@ class NovelRecommendState extends State<NovelRecommend>
           offstage: icon == null,
           child: Material(
               child: InkWell(
-                borderRadius: BorderRadius.circular(12),
-                onTap: ontap,
-                child: Padding(
-                    padding: EdgeInsets.all(4),
-                    child: icon ??
-                        Icon(
-                          Icons.refresh,
-                          color: Colors.grey,
-                        )),
-              )),
+            borderRadius: BorderRadius.circular(12),
+            onTap: ontap,
+            child: Padding(
+                padding: EdgeInsets.all(4),
+                child: icon ??
+                    Icon(
+                      Icons.refresh,
+                      color: Colors.grey,
+                    )),
+          )),
         )
       ],
-    );
-  }
-
-  Widget _getComicItemBuilder(int id, int type, String pic, String title,
-      {String author = "",
-      String url = "",
-      double width = 270,
-      double height = 360}) {
-    return RawMaterialButton(
-      onPressed: () =>
-          Utils.openPage(context, id, type, url: pic, title: title),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      padding: EdgeInsets.all(4),
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            AspectRatio(
-              aspectRatio: width / height,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: CachedNetworkImage(
-                    imageUrl: pic,
-                    fit: BoxFit.cover,
-                    httpHeaders: {"Referer": "http://www.dmzj.com/"},
-                    placeholder: (context, url) => AspectRatio(
-                      aspectRatio: width / height,
-                      child: Container(
-                        width: width,
-                        height: height,
-                        child: Icon(Icons.photo),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => AspectRatio(
-                      aspectRatio: width / height,
-                      child: Container(
-                        width: width,
-                        height: height,
-                        child: Icon(Icons.error),
-                      ),
-                    ),
-                  )),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 4, bottom: 4),
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            author == ""
-                ? Container()
-                : Flexible(
-                    child: Text(
-                    author,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.grey, fontSize: 12.0),
-                  ))
-          ],
-        ),
-      ),
     );
   }
 
@@ -347,21 +258,21 @@ class NovelRecommendState extends State<NovelRecommend>
     }
   }
 
-  Future loadMySub() async {
-    try {
-      if (!Provider.of<AppUserInfo>(context, listen: false).isLogin) {
-        return;
-      }
-      var response = await http.get(Api.comicMySub(
-          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid));
-      var jsonMap = jsonDecode(response.body);
+  // Future loadMySub() async {
+  //   try {
+  //     if (!Provider.of<AppUserInfo>(context, listen: false).isLogin) {
+  //       return;
+  //     }
+  //     var response = await http.get(Api.comicMySub(
+  //         Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid));
+  //     var jsonMap = jsonDecode(response.body);
 
-      List items = jsonMap["data"]["data"];
-      List<ComicHomeNewItem> _items =
-          items.map((i) => ComicHomeNewItem.fromJson(i)).toList();
-      if (_items.length != 0) {}
-    } catch (e) {
-      print(e);
-    }
-  }
+  //     List items = jsonMap["data"]["data"];
+  //     List<ComicHomeNewItem> _items =
+  //         items.map((i) => ComicHomeNewItem.fromJson(i)).toList();
+  //     if (_items.length != 0) {}
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 }

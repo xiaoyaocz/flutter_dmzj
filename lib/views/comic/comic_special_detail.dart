@@ -107,6 +107,7 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
                 controller: _tabController,
                 children: [
                   ListView(
+                    padding: EdgeInsets.zero,
                     children: _detail.comics
                         .map<Widget>((f) => createItem(f))
                         .toList(),
@@ -127,59 +128,25 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
   }
 
   Widget createItem(ComicSpeciaItem item) {
-    return InkWell(
-      onTap: () {
-        Utils.openPage(context, item.id, 1, url: item.cover, title: item.name);
-      },
-      child: Container(
-        padding: EdgeInsets.all(8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-                width: 80,
-                child: Hero(
-                  tag: item.id,
-                  child: Utils.createCacheImage(item.cover, 270, 360),
-                )),
-            SizedBox(
-              width: 12,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    item.name,
-                    maxLines: 1,
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(item.recommend_brief,
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
-                      maxLines: 1),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    item.recommend_reason,
-                    style: TextStyle(color: Colors.grey, fontSize: 14),
-                    maxLines: 3,
-                  )
-                ],
-              ),
-            ),
-            Center(
-              child: IconButton(
-                  icon: Icon(Icons.favorite_border),
-                  onPressed: () {
-                    UserHelper.comicSubscribe(item.id);
-                  }),
-            )
-          ],
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(8, 8, 8, 4),
+          child: Text(
+            item.recommend_reason,
+            style: TextStyle(color: Colors.grey, fontSize: 14),
+            maxLines: 3,
+          ),
         ),
-      ),
+        Utils.createDetailWidget(
+          item.id,
+          1,
+          item.cover,
+          item.name,
+          context,
+          category: item.recommend_brief,
+        ),
+      ],
     );
   }
 
