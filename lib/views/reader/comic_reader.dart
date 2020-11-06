@@ -436,7 +436,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                     )),
                 Expanded(
                   child: ListView(
-                    itemExtent: kToolbarHeight,
+                    itemExtent: 80,
                     padding: EdgeInsets.zero,
                     controller: _chapterScroll,
                     children: widget.chapters
@@ -454,6 +454,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                               title: Text(
                                 f.chapter_title,
                                 style: TextStyle(
+                                    fontSize: 18,
                                     color: f == _currentItem
                                         ? Theme.of(context).accentColor
                                         : Colors.white),
@@ -477,7 +478,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   }
 
   double getOffset() {
-    return _currentItem.chapter_order / 10 * kToolbarHeight -
+    return _currentItem.chapter_order / 10 * 80 -
         MediaQuery.of(context).size.height / 2;
   }
 
