@@ -778,6 +778,7 @@ class _ComicChapterViewState extends State<ComicChapterView>
                                       : Colors.grey.withOpacity(0.4)),
                           child: Text(
                             f.data[i].chapter_title,
+                            maxLines: 1,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: f.data[i].chapter_id ==
