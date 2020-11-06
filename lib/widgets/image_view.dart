@@ -15,7 +15,7 @@ class _ImageViewState extends State<ImageView> {
         title: Text("2333"),
       ),
       bottomNavigationBar: FlatButton(
-        onPressed: ()=>print("object"),
+        onPressed: () => print("object"),
         textColor: Colors.white,
         child: Text("下载"),
       ),

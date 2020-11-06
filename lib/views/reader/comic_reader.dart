@@ -25,11 +25,12 @@ import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:photo_view/photo_view.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
 import 'package:share/share.dart';
-//todo: 查看视觉优化，章节切换问题，尝试类似refresh的操作
+//todo: 查看视觉优化,放大缩小，等官方解决
 
 class ComicReaderPage extends StatefulWidget {
   final int comicId;
@@ -600,84 +601,18 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                       style: TextStyle(color: Colors.grey)),
                 );
               }
-              // child: ExtendedImageGesturePageView.builder(
-              //     reverse: Provider.of<AppSetting>(context).comicReadReverse,
-              //     controller: _pageController,
-              //     itemCount: _detail.page_url.length + 3,
-              //     onPageChanged: (i) {
-              //       if (i == _detail.page_url.length + 2) {
-              //         nextChapter();
-              //         return;
-              //       }
-              //       if (i == 0 && !_loading) {
-              //         previousChapter();
-              //         return;
-              //       }
-              //       if (i < _detail.page_url.length + 1) {
-              //         setState(() {
-              //           _selectIndex = i;
-              //         });
-              //       }
-              //     },
-              //     itemBuilder: (ctx, index) {
-              //       if (index == 0) {
-              //         return Center(
-              //           child: Text(
-              //               widget.chapters.indexOf(_currentItem) == 0
-              //                   ? "前面没有了"
-              //                   : "上一章",
-              //               style: TextStyle(color: Colors.grey)),
-              //         );
-              //       }
-              //       if (index == _detail.page_url.length + 1) {
-              //         return createTucao(24);
-              //       }
-              //       if (index == _detail.page_url.length + 2) {
-              //         return Center(
-              //           child: Text(
-              //               widget.chapters.indexOf(_currentItem) ==
-              //                       widget.chapters.length - 1
-              //                   ? "后面没有了"
-              //                   : "下一章",
-              //               style: TextStyle(color: Colors.grey)),
-              //         );
-              //       }
 
-              //       return ExtendedImage.network(
-              //         _detail.page_url[index - 1],
-              //         mode: ExtendedImageMode.gesture,
-              //         filterQuality: FilterQuality.high,
-              //         loadStateChanged: (e) {
-              //           if (e.extendedImageLoadState == LoadState.loading) {
-              //             return Center(
-              //               child: CircularProgressIndicator(),
-              //             );
-              //           }
-              //           if (e.extendedImageLoadState == LoadState.failed) {
-              //             return Center(
-              //               child: IconButton(icon: Icon(
-              //                 Icons.error,
-              //                 color: Colors.grey,
-              //               ), onPressed: (){
-              //                 e.reLoadImage();
-              //               }),
-              //             );
-              //           }
-              //           if (e.extendedImageLoadState == LoadState.completed) {
-              //             return null;
-              //           }
-
-              //         },
-              //         headers: {"Referer": "http://www.dmzj.com/"},
-              //         initGestureConfigHandler: (e) {
-              //           return GestureConfig(initialScale: 1.0, inPageView: true);
-              //         },
-              //       );
-              return InteractiveViewer(
-                  child: Image(
-                      image: Utils.createCachedImageProvider(
-                _detail.page_url[index - 1],
-              )));
+              return PhotoView(
+                filterQuality: FilterQuality.high,
+                loadingBuilder: (context, event) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                imageProvider: Utils.createCachedImageProvider(
+                  _detail.page_url[index - 1],
+                ),
+              );
             }),
       ),
     );
