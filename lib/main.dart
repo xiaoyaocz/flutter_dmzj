@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/sql/comic_down.dart';
 import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_dmzj/views/comic/comic_home.dart';
@@ -19,7 +18,6 @@ import 'package:flutter_dmzj/views/user/user_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'app/app_theme.dart';
 import 'app/user_info.dart';
@@ -119,6 +117,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();

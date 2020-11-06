@@ -25,7 +25,6 @@ import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:photo_view/photo_view.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
@@ -51,9 +50,9 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   ComicDetailChapterItem _currentItem;
   Battery _battery = Battery();
   Connectivity _connectivity = Connectivity();
+  ScrollController _chapterScroll = ScrollController();
   String _batteryStr = "-%";
   String _networkState = "";
-
   double _verSliderMax = 0;
   double _verSliderValue = 0;
 
@@ -180,299 +179,309 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
 
   @override
   Widget build(BuildContext context) {
+    _chapterScroll = getChapterScroll();
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
-      body: Stack(
-        children: <Widget>[
-          !_loading
-              ? Provider.of<AppSetting>(context).comicVerticalMode
-                  ? createVerticalReader()
-                  : createHorizontalReader()
-              : Center(
-                  child: CircularProgressIndicator(),
-                ),
-          Positioned(
-            child: Provider.of<AppSetting>(context).comicReadShowstate
-                ? Container(
-                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-                    color: Color.fromARGB(255, 34, 34, 34),
-                    child: Text(
-                      _loading
-                          ? "${_currentItem.chapter_title}  加载中 WIFI  100%电量"
-                          : Provider.of<AppSetting>(context).comicVerticalMode
-                              ? "${_currentItem.chapter_title}  $_verticalValue  $_networkState  $_batteryStr电量"
-                              : "${_currentItem.chapter_title}  $_selectIndex/${_detail.page_url.length}  $_networkState  $_batteryStr 电量",
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  )
-                : Container(),
-            bottom: 0,
-            right: 0,
-          ),
-          Provider.of<AppSetting>(context).comicVerticalMode
-              ? Positioned(child: Container())
-              : Positioned(
-                  left: 0,
-                  width: 40,
-                  height: MediaQuery.of(context).size.height,
-                  child: InkWell(
-                    onTap: () {
-                      if (Provider.of<AppSetting>(context, listen: false)
-                          .comicReadReverse) {
-                        previousPage();
-                      } else {
-                        nextPage();
-                      }
-                    },
-                    child: Container(),
-                  ),
-                ),
-          Provider.of<AppSetting>(context).comicVerticalMode
-              ? Positioned(child: Container())
-              : Positioned(
-                  right: 0,
-                  width: 40,
-                  height: MediaQuery.of(context).size.height,
-                  child: InkWell(
-                    onTap: () {
-                      if (Provider.of<AppSetting>(context, listen: false)
-                          .comicReadReverse) {
-                        nextPage();
-                      } else {
-                        previousPage();
-                      }
-                    },
-                    child: Container(),
-                  ),
-                ),
-
-          //顶部
-          AnimatedPositioned(
-            duration: Duration(milliseconds: 500),
-            curve: Curves.ease,
-            width: MediaQuery.of(context).size.width,
-            child: Container(
-                child: Material(
-                    color: Color.fromARGB(255, 34, 34, 34).withOpacity(0.75),
-                    child: Column(
-                      children: [
-                        // SizedBox(
-                        //   height: kToolbarHeight,
-                        // ),
-                        AppBar(
-                          elevation: 0,
-                          backgroundColor: Colors.transparent,
-                          title: ListTile(
-                            dense: true,
-                            title: Text(
-                              widget.comicTitle,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              _currentItem.chapter_title,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          actions: [
-                            IconButton(
-                                icon: Icon(
-                                  Icons.share,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  Share.share(
-                                      '${widget.comicTitle}-${_currentItem.chapter_title}\r\nhttps://m.dmzj.com/view/${widget.comicId}/${_currentItem.chapter_id}.html');
-                                }),
-                          ],
-                        ),
-                      ],
-                    ))),
-            top: _showControls ? 0 : -kToolbarHeight * 2,
-            left: 0,
-          ),
-          //底部
-          AnimatedPositioned(
-            curve: Curves.ease,
-            duration: Duration(milliseconds: 500),
-            width: MediaQuery.of(context).size.width,
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-              width: MediaQuery.of(context).size.width,
-              color: Color.fromARGB(255, 34, 34, 34).withOpacity(0.75),
-              child: Column(
+      body: Builder(
+          builder: (context) => Stack(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      ButtonTheme(
-                        minWidth: 10,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                        child: FlatButton(
-                          onPressed: previousChapter,
-                          child: Text(
-                            "上一话",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                  !_loading
+                      ? Provider.of<AppSetting>(context).comicVerticalMode
+                          ? createVerticalReader()
+                          : createHorizontalReader()
+                      : Center(
+                          child: CircularProgressIndicator(),
                         ),
-                      ),
-                      Expanded(
-                        child: !_loading
-                            ? Provider.of<AppSetting>(context).comicVerticalMode
-                                ? Slider(
-                                    value: _verSliderValue,
-                                    max: _verSliderMax,
-                                    onChanged: (e) {
-                                      _scrollController.jumpTo(e);
-                                    },
-                                  )
-                                : Slider(
-                                    value: _selectIndex >= 1
-                                        ? _selectIndex.toDouble()
-                                        : 0,
-                                    max: _detail.picnum.toDouble(),
-                                    onChanged: (e) {
-                                      setState(() {
-                                        _selectIndex = e.toInt();
-                                        _pageController
-                                            .jumpToPage(e.toInt() + 1);
-                                      });
-                                    },
-                                  )
-                            : Text(
-                                "加载中",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                      ),
-                      ButtonTheme(
-                        minWidth: 10,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                        child: FlatButton(
-                          onPressed: nextChapter,
-                          child: Text(
-                            "下一话",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Provider.of<AppUserInfo>(context).isLogin &&
-                              widget.subscribe
-                          ? createButton(
-                              "已订阅",
-                              Icons.favorite,
-                              onTap: () async {
-                                if (await UserHelper.comicSubscribe(
-                                    widget.comicId,
-                                    cancel: true)) {
-                                  setState(() {
-                                    widget.subscribe = false;
-                                  });
-                                }
-                              },
-                            )
-                          : createButton(
-                              "订阅",
-                              Icons.favorite_border,
-                              onTap: () async {
-                                if (await UserHelper.comicSubscribe(
-                                    widget.comicId)) {
-                                  setState(() {
-                                    widget.subscribe = true;
-                                  });
-                                }
-                              },
+                  Positioned(
+                    child: Provider.of<AppSetting>(context).comicReadShowstate
+                        ? Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 2, horizontal: 8),
+                            color: Color.fromARGB(255, 34, 34, 34),
+                            child: Text(
+                              _loading
+                                  ? "${_currentItem.chapter_title}  加载中 WIFI  100%电量"
+                                  : Provider.of<AppSetting>(context)
+                                          .comicVerticalMode
+                                      ? "${_currentItem.chapter_title}  $_verticalValue  $_networkState  $_batteryStr电量"
+                                      : "${_currentItem.chapter_title}  $_selectIndex/${_detail.page_url.length}  $_networkState  $_batteryStr 电量",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
                             ),
-                      createButton("设置", Icons.settings, onTap: openSetting),
-                      createButton(
-                          _detail != null ? "吐槽(${_viewPoints.length})" : "吐槽",
-                          Icons.chat_bubble_outline,
-                          onTap: openTCPage),
-                      createButton("章节", Icons.format_list_bulleted, onTap: () {
-                        setState(() {
-                          _showChapters = true;
-                        });
-                      }),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            bottom: _showControls ? 0 : -140,
-            left: 0,
-          ),
+                          )
+                        : Container(),
+                    bottom: 0,
+                    right: 0,
+                  ),
+                  Provider.of<AppSetting>(context).comicVerticalMode
+                      ? Positioned(child: Container())
+                      : Positioned(
+                          left: 0,
+                          width: 40,
+                          height: MediaQuery.of(context).size.height,
+                          child: InkWell(
+                            onTap: () {
+                              if (Provider.of<AppSetting>(context,
+                                      listen: false)
+                                  .comicReadReverse) {
+                                previousPage();
+                              } else {
+                                nextPage();
+                              }
+                            },
+                            child: Container(),
+                          ),
+                        ),
+                  Provider.of<AppSetting>(context).comicVerticalMode
+                      ? Positioned(child: Container())
+                      : Positioned(
+                          right: 0,
+                          width: 40,
+                          height: MediaQuery.of(context).size.height,
+                          child: InkWell(
+                            onTap: () {
+                              if (Provider.of<AppSetting>(context,
+                                      listen: false)
+                                  .comicReadReverse) {
+                                nextPage();
+                              } else {
+                                previousPage();
+                              }
+                            },
+                            child: Container(),
+                          ),
+                        ),
 
-          //右侧章节选择
-          AnimatedPositioned(
-            duration: Duration(milliseconds: 200),
-            width: 200,
-            child: Container(
-                height: MediaQuery.of(context).size.height,
-                color: Color.fromARGB(255, 24, 24, 24),
-                padding: EdgeInsets.only(
-                    top: Provider.of<AppSetting>(context).comicReadShowStatusBar
-                        ? 0
-                        : MediaQuery.of(context).padding.top),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          "目录(${widget.chapters.length})",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        )),
-                    Expanded(
-                      child: ListView(
-                        children: widget.chapters
-                            .map((f) => ListTile(
-                                  dense: true,
-                                  onTap: () async {
-                                    if (f != _currentItem) {
-                                      setState(() {
-                                        _currentItem = f;
-                                        _showChapters = false;
-                                        _showControls = false;
-                                      });
-
-                                      await loadData();
-                                    }
-                                  },
-                                  title: Text(
-                                    f.chapter_title,
-                                    style: TextStyle(
-                                        color: f == _currentItem
-                                            ? Theme.of(context).accentColor
-                                            : Colors.white),
+                  //顶部
+                  AnimatedPositioned(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.ease,
+                    width: MediaQuery.of(context).size.width,
+                    child: Container(
+                        child: Material(
+                            color: Color.fromARGB(255, 34, 34, 34)
+                                .withOpacity(0.75),
+                            child: Column(
+                              children: [
+                                // SizedBox(
+                                //   height: kToolbarHeight,
+                                // ),
+                                AppBar(
+                                  elevation: 0,
+                                  backgroundColor: Colors.transparent,
+                                  title: ListTile(
+                                    dense: true,
+                                    title: Text(
+                                      widget.comicTitle,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    subtitle: Text(
+                                      _currentItem.chapter_title,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
-                                  subtitle: Text(
-                                    "更新于" +
-                                        TimelineUtil.format(
-                                          f.updatetime * 1000,
-                                          locale: 'zh',
+                                  actions: [
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.share,
+                                          color: Colors.white,
                                         ),
-                                    style: TextStyle(color: Colors.grey),
+                                        onPressed: () {
+                                          Share.share(
+                                              '${widget.comicTitle}-${_currentItem.chapter_title}\r\nhttps://m.dmzj.com/view/${widget.comicId}/${_currentItem.chapter_id}.html');
+                                        }),
+                                  ],
+                                ),
+                              ],
+                            ))),
+                    top: _showControls ? 0 : -kToolbarHeight * 2,
+                    left: 0,
+                  ),
+                  //底部
+                  AnimatedPositioned(
+                    curve: Curves.ease,
+                    duration: Duration(milliseconds: 500),
+                    width: MediaQuery.of(context).size.width,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                      width: MediaQuery.of(context).size.width,
+                      color: Color.fromARGB(255, 34, 34, 34).withOpacity(0.75),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              ButtonTheme(
+                                minWidth: 10,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 4),
+                                child: FlatButton(
+                                  onPressed: previousChapter,
+                                  child: Text(
+                                    "上一话",
+                                    style: TextStyle(color: Colors.white),
                                   ),
-                                ))
-                            .toList(),
+                                ),
+                              ),
+                              Expanded(
+                                child: !_loading
+                                    ? Provider.of<AppSetting>(context)
+                                            .comicVerticalMode
+                                        ? Slider(
+                                            value: _verSliderValue,
+                                            max: _verSliderMax,
+                                            onChanged: (e) {
+                                              _scrollController.jumpTo(e);
+                                            },
+                                          )
+                                        : Slider(
+                                            value: _selectIndex >= 1
+                                                ? _selectIndex.toDouble()
+                                                : 0,
+                                            max: _detail.picnum.toDouble(),
+                                            onChanged: (e) {
+                                              setState(() {
+                                                _selectIndex = e.toInt();
+                                                _pageController
+                                                    .jumpToPage(e.toInt() + 1);
+                                              });
+                                            },
+                                          )
+                                    : Text(
+                                        "加载中",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                              ),
+                              ButtonTheme(
+                                minWidth: 10,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 4),
+                                child: FlatButton(
+                                  onPressed: nextChapter,
+                                  child: Text(
+                                    "下一话",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Provider.of<AppUserInfo>(context).isLogin &&
+                                      widget.subscribe
+                                  ? createButton(
+                                      "已订阅",
+                                      Icons.favorite,
+                                      onTap: () async {
+                                        if (await UserHelper.comicSubscribe(
+                                            widget.comicId,
+                                            cancel: true)) {
+                                          setState(() {
+                                            widget.subscribe = false;
+                                          });
+                                        }
+                                      },
+                                    )
+                                  : createButton(
+                                      "订阅",
+                                      Icons.favorite_border,
+                                      onTap: () async {
+                                        if (await UserHelper.comicSubscribe(
+                                            widget.comicId)) {
+                                          setState(() {
+                                            widget.subscribe = true;
+                                          });
+                                        }
+                                      },
+                                    ),
+                              createButton("设置", Icons.settings,
+                                  onTap: openSetting),
+                              createButton(
+                                  _detail != null
+                                      ? "吐槽(${_viewPoints.length})"
+                                      : "吐槽",
+                                  Icons.chat_bubble_outline,
+                                  onTap: openTCPage),
+                              createButton("章节", Icons.format_list_bulleted,
+                                  onTap: () {
+                                Scaffold.of(context).openEndDrawer();
+                              }),
+                            ],
+                          )
+                        ],
                       ),
                     ),
-                  ],
-                )),
-            top: 0,
-            right: _showChapters ? 0 : -200,
-          ),
-        ],
+                    bottom: _showControls ? 0 : -140,
+                    left: 0,
+                  ),
+                ],
+              )),
+      endDrawer: Drawer(
+        child: Container(
+            height: MediaQuery.of(context).size.height,
+            color: Color.fromARGB(255, 24, 24, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "目录(${widget.chapters.length})",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )),
+                Expanded(
+                  child: ListView(
+                    itemExtent: kToolbarHeight,
+                    padding: EdgeInsets.zero,
+                    controller: _chapterScroll,
+                    children: widget.chapters
+                        .map((f) => ListTile(
+                              dense: true,
+                              onTap: () async {
+                                if (f != _currentItem) {
+                                  _currentItem = f;
+                                  _chapterScroll.animateTo(getOffset(),
+                                      duration: Duration(milliseconds: 200),
+                                      curve: Curves.ease);
+                                  await loadData();
+                                }
+                              },
+                              title: Text(
+                                f.chapter_title,
+                                style: TextStyle(
+                                    color: f == _currentItem
+                                        ? Theme.of(context).accentColor
+                                        : Colors.white),
+                              ),
+                              subtitle: Text(
+                                "更新于" +
+                                    TimelineUtil.format(
+                                      f.updatetime * 1000,
+                                      locale: 'zh',
+                                    ),
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                ),
+              ],
+            )),
       ),
     );
+  }
+
+  double getOffset() {
+    return _currentItem.chapter_order / 10 * kToolbarHeight -
+        MediaQuery.of(context).size.height / 2;
+  }
+
+  ScrollController getChapterScroll() {
+    return ScrollController(initialScrollOffset: getOffset());
   }
 
   void nextPage() {
@@ -664,17 +673,11 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
               //           return GestureConfig(initialScale: 1.0, inPageView: true);
               //         },
               //       );
-              return PhotoView(
-                filterQuality: FilterQuality.high,
-                loadingBuilder: (context, event) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-                imageProvider: Utils.createCachedImageProvider(
-                  _detail.page_url[index - 1],
-                ),
-              );
+              return InteractiveViewer(
+                  child: Image(
+                      image: Utils.createCachedImageProvider(
+                _detail.page_url[index - 1],
+              )));
             }),
       ),
     );
@@ -684,10 +687,6 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     return InkWell(
       onTap: () {
         setState(() {
-          if (_showChapters) {
-            _showChapters = false;
-            return;
-          }
           _showControls = !_showControls;
         });
       },
@@ -956,7 +955,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   bool _loading = false;
   ComicWebChapterDetail _detail;
   DefaultCacheManager _cacheManager = DefaultCacheManager();
-  Future loadData() async {
+  Future loadData({int direction = 0}) async {
     try {
       if (_loading) {
         return;
@@ -998,9 +997,13 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         });
         // _pageController.=;
       } else {
-        _pageController = new PreloadPageController(initialPage: 1);
+        int i = 1;
+        if (direction == 1) {
+          i = detail.page_url.length + 1;
+        }
+        _pageController = new PreloadPageController(initialPage: i);
         setState(() {
-          _selectIndex = 1;
+          _selectIndex = i - direction;
         });
       }
 
@@ -1054,7 +1057,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     await loadData();
   }
 
-  void previousChapter() async {
+  Future previousChapter() async {
     if (widget.chapters.indexOf(_currentItem) == 0) {
       Fluttertoast.showToast(msg: '已经是最前面一章了');
       return;
@@ -1062,6 +1065,6 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     setState(() {
       _currentItem = widget.chapters[widget.chapters.indexOf(_currentItem) - 1];
     });
-    await loadData();
+    await loadData(direction: 1);
   }
 }

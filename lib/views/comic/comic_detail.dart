@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:common_utils/common_utils.dart';
@@ -408,73 +407,6 @@ class _ComicDetailPageState extends State<ComicDetailPage>
             ],
           ),
         ));
-  }
-
-  Widget createChpter() {
-    return _detail.chapters != null && _detail.chapters.length != 0
-        ? ListView.builder(
-            itemCount: _detail.chapters.length,
-            itemBuilder: (ctx, i) {
-              var f = _detail.chapters[i];
-              return Container(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                width: double.infinity,
-                color: Theme.of(context).cardColor,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        f.title,
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: null,
-                      itemCount: f.data.length,
-                      padding: EdgeInsets.all(2),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 8.0,
-                          crossAxisSpacing: 8.0,
-                          childAspectRatio: 6 / 2),
-                      itemBuilder: (context, i) {
-                        return OutlineButton(
-                          borderSide: BorderSide(
-                              color: f.data[i].chapter_id == historyChapter
-                                  ? Theme.of(context).accentColor
-                                  : Colors.grey.withOpacity(0.6)),
-                          child: Text(
-                            f.data[i].chapter_title,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: f.data[i].chapter_id == historyChapter
-                                    ? Theme.of(context).accentColor
-                                    : Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .color),
-                          ),
-                          onPressed: () async {
-                            await Utils.openComicReader(context, widget.comicId,
-                                _detail.title, _isSubscribe, f.data, f.data[i]);
-                            updateHistory();
-                          },
-                        );
-                      },
-                    ),
-                    SizedBox(height: 8)
-                  ],
-                ),
-              );
-            })
-        : Center(
-            child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Text("岂可修！竟然没有章节！"),
-            ),
-          );
   }
 
   Widget createTagItem(String text, int id) {
