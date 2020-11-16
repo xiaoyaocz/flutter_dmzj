@@ -54,17 +54,23 @@ class _NewsHomePageState extends State<NewsHomePage>
     return Scaffold(
         appBar: _tabItems.length == 0
             ? AppBar()
-            : AppBar(
-                title: TabBar(
-                  labelStyle: new TextStyle(
-                      fontSize: 16.0, fontWeight: FontWeight.bold),
-                  controller: _tabController,
-                  tabs: _tabItems
-                      .map((x) => Tab(child: Text(x.tag_name)))
-                      .toList(),
-                  isScrollable: true,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  //labelPadding: EdgeInsets.fromLTRB(12, 8, 12, 8),
+            : PreferredSize(
+                preferredSize: Size.fromHeight(kTextTabBarHeight),
+                child: Container(
+                  color: Theme.of(context).primaryColor,
+                  child: SafeArea(
+                    child: TabBar(
+                      controller: _tabController,
+                      tabs: _tabItems
+                          .map((x) => Tab(child: Text(x.tag_name)))
+                          .toList(),
+                      isScrollable: true,
+                      labelStyle:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      labelColor: Theme.of(context).indicatorColor,
+                      indicatorSize: TabBarIndicatorSize.label,
+                    ),
+                  ),
                 ),
               ),
         body: TabBarView(
