@@ -251,19 +251,6 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                                   ),
                                 ],
                               ),
-                              (_detail != null)
-                                  ? Container(
-                                      child: Wrap(
-                                        alignment: WrapAlignment.center,
-                                        children: _detail.types
-                                            .map<Widget>((f) => createTagItem(
-                                                f.tag_name, f.tag_id))
-                                            .toList(),
-                                      ),
-                                    )
-                                  : SizedBox(
-                                      height: kTextTabBarHeight,
-                                    ),
                             ],
                           ),
                         )),
@@ -329,6 +316,15 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                     Text(
                       _detail.description,
                       style: TextStyle(color: Colors.grey),
+                    ),
+                    Container(
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        children: _detail.types
+                            .map<Widget>(
+                                (f) => createTagItem(f.tag_name, f.tag_id))
+                            .toList(),
+                      ),
                     ),
                   ],
                 ),

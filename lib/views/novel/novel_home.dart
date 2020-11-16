@@ -27,20 +27,25 @@ class _NovelHomePageState extends State<NovelHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          titleSpacing: 0.0,
-          title: TabBar(
-            controller: _tabController,
-            tabs: <Widget>[
-              Tab(child: Text("推荐")),
-              Tab(child: Text("更新")),
-              Tab(child: Text("分类")),
-              Tab(child: Text("排行"))
-            ],
-            indicatorSize: TabBarIndicatorSize.label,
-            labelStyle:
-                new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            labelPadding: EdgeInsets.only(left: 5, right: 5),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kTextTabBarHeight),
+          child: Container(
+            color: Theme.of(context).primaryColor,
+            child: SafeArea(
+              child: TabBar(
+                controller: _tabController,
+                tabs: <Widget>[
+                  Tab(child: Text("推荐")),
+                  Tab(child: Text("更新")),
+                  Tab(child: Text("分类")),
+                  Tab(child: Text("排行"))
+                ],
+                labelStyle:
+                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                labelColor: Theme.of(context).indicatorColor,
+                indicatorSize: TabBarIndicatorSize.label,
+              ),
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
