@@ -160,7 +160,8 @@ class _MyHomePageState extends State<MyHomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+        type: BottomNavigationBarType.shifting,
+        selectedItemColor: Theme.of(context).accentColor,
         currentIndex: _index,
         onTap: (index) {
           setState(() {
@@ -178,11 +179,11 @@ class _MyHomePageState extends State<MyHomePage>
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             label: "漫画",
-            icon: Icon(Icons.library_books),
+            icon: Icon(Icons.photo_album),
           ),
           BottomNavigationBarItem(
             label: "新闻",
-            icon: Icon(Icons.whatshot),
+            icon: Icon(Icons.article),
           ),
           BottomNavigationBarItem(
             label: "轻小说",
