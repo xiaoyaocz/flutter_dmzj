@@ -161,8 +161,9 @@ class _MyHomePageState extends State<MyHomePage>
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
-        selectedItemColor: Theme.of(context).accentColor,
         currentIndex: _index,
+        unselectedItemColor: Theme.of(context).disabledColor,
+        selectedItemColor: Theme.of(context).accentColor,
         onTap: (index) {
           setState(() {
             if (index == 1 && newsPage == null) {
