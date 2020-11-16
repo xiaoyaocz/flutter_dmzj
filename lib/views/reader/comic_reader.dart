@@ -478,11 +478,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   }
 
   double getOffset() {
-<<<<<<< HEAD
     return (widget.chapters.indexOf(_currentItem) + 1) * 80 -
-=======
-    return _currentItem.chapter_order / 10 * 80 -
->>>>>>> 073f9e09c75a29f6d24e8b546bf9de72233a6422
         MediaQuery.of(context).size.height / 2;
   }
 

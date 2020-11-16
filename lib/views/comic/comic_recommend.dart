@@ -73,7 +73,6 @@ class ComicRecommendState extends State<ComicRecommend>
       //todo: 适配平板页面，使用sliver组件
       body: EasyRefresh(
         header: MaterialHeader(),
-        footer: MaterialFooter(),
         onRefresh: refreshData,
         child: SingleChildScrollView(
           child: Column(
@@ -201,8 +200,12 @@ class ComicRecommendState extends State<ComicRecommend>
                     crossAxisSpacing: 4.0,
                     mainAxisSpacing: 4.0,
                     childAspectRatio: ratio),
-                itemBuilder: (context, i) => Utils.createCoverWidget(items[i].id,
-                    items[i].type, items[i].cover, items[i].title, context,
+                itemBuilder: (context, i) => Utils.createCoverWidget(
+                    items[i].id,
+                    items[i].type,
+                    items[i].cover,
+                    items[i].title,
+                    context,
                     author: needSubTitle ? items[i].sub_title : "",
                     width: imgWidth,
                     height: imgHeight),
