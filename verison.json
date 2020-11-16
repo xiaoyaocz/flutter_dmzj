@@ -1,7 +1,7 @@
 {
-    "version":"1.0.9",
-    "version_code":"201106",
-    "message":"优化APP",
+    "version":"1.0.10",
+    "version_code":"201116",
+    "message":"修复使用tag进入分类界面问题，ui优化",
     "android_url":"https://github.com/tom8zds/dmzj_flutter/releases/latest",
     "ios_url":"",
     "hide_banner":true
