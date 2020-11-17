@@ -15,6 +15,7 @@ import 'package:flutter_dmzj/models/comic/comic_related_model.dart';
 import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_dmzj/views/download/comic_download.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
+import 'package:flutter_dmzj/widgets/comic_chapter_widget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -80,7 +81,8 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    comicExpandHeight = getSafebar() + 200 + kTextTabBarHeight;
+    comicExpandHeight = 150 + kToolbarHeight + kTextTabBarHeight;
+    print(getSafebar());
     return Scaffold(
       body: extended.NestedScrollView(
         innerScrollPositionKeyBuilder: () {
@@ -176,84 +178,9 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                     Positioned(
                         top: getSafebar() + kToolbarHeight,
                         child: Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Utils.createCover(
-                                      widget.coverUrl, 100, 0.75, context),
-                                  SizedBox(
-                                    width: 24,
-                                  ),
-                                  (_detail != null)
-                                      ? Expanded(
-                                          child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              _detail.title,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              "作者:" +
-                                                  tagsToString(
-                                                      _detail.authors ?? []),
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              "点击:" +
-                                                  _detail.hot_num.toString(),
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              "订阅:" +
-                                                  _detail.subscribe_num
-                                                      .toString(),
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              "状态:" +
-                                                  tagsToString(
-                                                      _detail.status ?? []),
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              "最后更新:" +
-                                                  DateUtil.formatDate(
-                                                      DateTime.fromMillisecondsSinceEpoch(
-                                                          _detail.last_updatetime *
-                                                              1000),
-                                                      format: "yyyy-MM-dd"),
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ],
-                                        ))
-                                      : SizedBox(
-                                          width: 12,
-                                        ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        )),
+                            height: 150,
+                            width: MediaQuery.of(context).size.width,
+                            child: createHeader())),
                   ],
                 ),
               ),
@@ -297,6 +224,60 @@ class _ComicDetailPageState extends State<ComicDetailPage>
     );
   }
 
+  Widget createHeader() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        SizedBox(
+          width: 12,
+        ),
+        Utils.createCover(widget.coverUrl, 100, 0.75, context),
+        SizedBox(
+          width: 24,
+        ),
+        (_detail != null)
+            ? Expanded(
+                child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    _detail.title,
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "作者:" + tagsToString(_detail.authors ?? []),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    "点击:" + _detail.hot_num.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    "订阅:" + _detail.subscribe_num.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    "状态:" + tagsToString(_detail.status ?? []),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    "最后更新:" +
+                        DateUtil.formatDate(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                _detail.last_updatetime * 1000),
+                            format: "yyyy-MM-dd"),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ))
+            : SizedBox(
+                width: 12,
+              ),
+      ],
+    );
+  }
+
   Widget createDetail() {
     return extended.NestedScrollViewInnerScrollPositionKeyWidget(
         Key('tab0'),
@@ -319,7 +300,6 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                     ),
                     Container(
                       child: Wrap(
-                        alignment: WrapAlignment.center,
                         children: _detail.types
                             .map<Widget>(
                                 (f) => createTagItem(f.tag_name, f.tag_id))
@@ -411,7 +391,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       child: ButtonTheme(
         minWidth: 20,
         height: 24,
-        child: FlatButton(
+        child: RaisedButton(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           color: Theme.of(context).accentColor,
@@ -675,173 +655,5 @@ class _ComicDetailPageState extends State<ComicDetailPage>
     } catch (e) {
       print(e);
     }
-  }
-}
-
-class ComicChapterView extends StatefulWidget {
-  final ComicDetail detail;
-  final int comicId;
-  final bool isSubscribe;
-  final int historyChapter;
-  final Function openReader;
-  ComicChapterView(this.comicId, this.detail, this.historyChapter,
-      {Key key, this.isSubscribe = false, this.openReader})
-      : super(key: key);
-
-  @override
-  _ComicChapterViewState createState() => _ComicChapterViewState();
-}
-
-class _ComicChapterViewState extends State<ComicChapterView>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return widget.detail.chapters != null && widget.detail.chapters.length != 0
-        ? ListView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.only(top: 12),
-            physics: ScrollPhysics(),
-            itemCount: widget.detail.chapters.length,
-            itemBuilder: (ctx, i) {
-              var f = widget.detail.chapters[i];
-              return Container(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                width: double.infinity,
-                color: Theme.of(context).cardColor,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8),
-                            child: Text(
-                                f.title +
-                                    "(共" +
-                                    f.data.length.toString() +
-                                    "话)",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              if (f.desc) {
-                                f.data.sort((x, y) =>
-                                    x.chapter_order.compareTo(y.chapter_order));
-                              } else {
-                                f.data.sort((x, y) =>
-                                    y.chapter_order.compareTo(x.chapter_order));
-                              }
-                              f.desc = !f.desc;
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 8),
-                            child: Text(f.desc ? "排序 ↓" : "排序 ↑"),
-                          ),
-                        ),
-                      ],
-                    ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: ScrollPhysics(),
-                      itemCount: f.data.length,
-                      padding: EdgeInsets.all(2),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount:
-                              MediaQuery.of(context).size.width ~/ 120,
-                          mainAxisSpacing: 8.0,
-                          crossAxisSpacing: 8.0,
-                          childAspectRatio: 6 / 2),
-                      itemBuilder: (context, i) {
-                        return OutlineButton(
-                          borderSide: BorderSide(
-                              color:
-                                  f.data[i].chapter_id == widget.historyChapter
-                                      ? Theme.of(context).accentColor
-                                      : Colors.grey.withOpacity(0.4)),
-                          child: Text(
-                            f.data[i].chapter_title,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: f.data[i].chapter_id ==
-                                        widget.historyChapter
-                                    ? Theme.of(context).accentColor
-                                    : Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .color),
-                          ),
-                          onPressed: () {
-                            Utils.openComicReader(
-                                context,
-                                widget.comicId,
-                                widget.detail.title,
-                                widget.isSubscribe,
-                                f.data,
-                                f.data[i]);
-                          },
-                        );
-                      },
-                    ),
-                    SizedBox(height: 8)
-                  ],
-                ),
-              );
-            })
-        : Container(
-            padding: EdgeInsets.all(12),
-            child: Center(
-              child: Text("岂可修！竟然没有可以看的章节！"),
-            ),
-          );
-  }
-
-  void openRead() async {
-    if (widget.detail == null ||
-        widget.detail.chapters == null ||
-        widget.detail.chapters.length == 0 ||
-        widget.detail.chapters[0].data.length == 0) {
-      Fluttertoast.showToast(msg: '没有可读的章节');
-      return;
-    }
-    if (widget.historyChapter != 0) {
-      ComicDetailChapterItem _item;
-      ComicDetailChapter chpters;
-      for (var item in widget.detail.chapters) {
-        var first = item.data.firstWhere(
-            (f) => f.chapter_id == widget.historyChapter,
-            orElse: () => null);
-        if (first != null) {
-          chpters = item;
-          _item = first;
-        }
-      }
-      if (_item != null) {
-        Utils.openComicReader(context, widget.comicId, widget.detail.title,
-            widget.isSubscribe, chpters.data, _item);
-        return;
-      }
-    }
-    Utils.openComicReader(
-        context,
-        widget.comicId,
-        widget.detail.title,
-        widget.isSubscribe,
-        widget.detail.chapters[0].data,
-        widget.detail.chapters[0].data.last);
   }
 }
