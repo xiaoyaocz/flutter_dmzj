@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:common_utils/common_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/api.dart';
@@ -68,6 +69,7 @@ class _CommentWidgetState extends State<CommentWidget>
       text = "小说";
     }
     return EasyRefresh(
+      topBouncing: false,
       //header: MaterialHeader(),
       footer: MaterialFooter(),
       child: Column(

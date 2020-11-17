@@ -104,9 +104,10 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
               onTap: () {
                 if (widget.type == 2) {
                   Utils.openPage(context, item.obj_id, 7,
-                      title: item.obj_name, url: item.page_url);
+                      title: item.obj_name, url: item.obj_cover);
                 } else {
-                  Utils.openPage(context, item.obj_id, widget.type + 1);
+                  Utils.openPage(context, item.obj_id, widget.type + 1,
+                      url: item.obj_cover);
                 }
               },
               child: ClipRRect(
