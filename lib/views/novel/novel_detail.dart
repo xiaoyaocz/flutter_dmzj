@@ -87,7 +87,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         },
         controller: _scrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          novelExpandHeight = getSafebar() + 200 + kTextTabBarHeight;
+          novelExpandHeight = 150 + kToolbarHeight + kTextTabBarHeight;
           return <Widget>[
             SliverAppBar(
               pinned: true,
@@ -149,87 +149,9 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                     Positioned(
                         top: getSafebar() + kToolbarHeight,
                         child: Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Utils.createCover(
-                                      widget.coverUrl, 100, 0.75, context),
-                                  SizedBox(
-                                    width: 24,
-                                  ),
-                                  Expanded(
-                                    child: (_detail != null)
-                                        ? Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                _detail.name,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              SizedBox(height: 2),
-                                              Text(
-                                                "作者:" + _detail.authors,
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              SizedBox(height: 2),
-                                              Text(
-                                                "点击:" +
-                                                    _detail.hot_hits.toString(),
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              SizedBox(height: 2),
-                                              Text(
-                                                "订阅:" +
-                                                    _detail.subscribe_num
-                                                        .toString(),
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              SizedBox(height: 2),
-                                              Text(
-                                                "状态:" + _detail.status,
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              SizedBox(height: 2),
-                                              Text(
-                                                "最后更新:" +
-                                                    DateUtil.formatDate(
-                                                        DateTime.fromMillisecondsSinceEpoch(
-                                                            _detail.last_update_time *
-                                                                1000),
-                                                        format: "yyyy-MM-dd"),
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ],
-                                          )
-                                        : SizedBox(
-                                            width: 12,
-                                          ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 12,
-                              )
-                            ],
-                          ),
-                        )),
+                            height: 150,
+                            width: MediaQuery.of(context).size.width,
+                            child: createHeader())),
                   ],
                 ),
               ),
@@ -279,7 +201,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                   ),
                   extended.NestedScrollViewInnerScrollPositionKeyWidget(
                     Key('tab1'),
-                    cerateVolume(),
+                    createVolume(),
                   ),
                   extended.NestedScrollViewInnerScrollPositionKeyWidget(
                     Key('tab2'),
@@ -303,7 +225,67 @@ class _NovelDetailPageState extends State<NovelDetailPage>
     );
   }
 
-  Widget cerateVolume() {
+  Widget createHeader() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        SizedBox(
+          width: 12,
+        ),
+        Utils.createCover(widget.coverUrl, 100, 0.75, context),
+        SizedBox(
+          width: 24,
+        ),
+        Expanded(
+          child: (_detail != null)
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      _detail.name,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      "作者:" + _detail.authors,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      "点击:" + _detail.hot_hits.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      "订阅:" + _detail.subscribe_num.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      "状态:" + _detail.status,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      "最后更新:" +
+                          DateUtil.formatDate(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  _detail.last_update_time * 1000),
+                              format: "yyyy-MM-dd"),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                )
+              : SizedBox(
+                  width: 12,
+                ),
+        )
+      ],
+    );
+  }
+
+  Widget createVolume() {
     return volumes != null && volumes.length != 0
         ? ListView.builder(
             padding: EdgeInsets.all(0),
