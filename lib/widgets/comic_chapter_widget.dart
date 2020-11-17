@@ -41,7 +41,6 @@ class _ComicChapterViewState extends State<ComicChapterView>
               return Container(
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
                 width: double.infinity,
-                color: Theme.of(context).cardColor,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

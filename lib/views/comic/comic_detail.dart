@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
@@ -20,8 +21,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart'
-    as extended;
 
 class ComicDetailPage extends StatefulWidget {
   final int comicId;
@@ -36,7 +35,8 @@ class _ComicDetailPageState extends State<ComicDetailPage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   TabController _tabController;
   int historyChapter = 0;
-  double comicExpandHeight = 150 + kToolbarHeight + kTextTabBarHeight;
+  int _index = 0;
+  double detailExpandHeight = 150 + kToolbarHeight + 24;
   @override
   bool get wantKeepAlive => true;
 
@@ -82,143 +82,187 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: extended.NestedScrollView(
-        innerScrollPositionKeyBuilder: () {
-          String index = 'tab${_tabController.index}';
-          print(index);
-          return Key(index);
-        },
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              pinned: true,
-              expandedHeight: comicExpandHeight,
-              automaticallyImplyLeading: true,
-              title: (_detail != null) ? Text(_detail.title) : Text(""),
-              actions: (_detail != null)
-                  ? <Widget>[
-                      Provider.of<AppUserInfo>(context).isLogin && _isSubscribe
-                          ? IconButton(
-                              icon: Icon(Icons.favorite),
-                              onPressed: () async {
-                                var result = await UserHelper.comicSubscribe(
-                                    widget.comicId,
-                                    cancel: true);
-                                if (result) {
-                                  setState(() {
-                                    _isSubscribe = false;
-                                  });
+      body: IndexedStack(
+        index: _index,
+        children: [
+          NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverOverlapAbsorber(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  sliver: SliverAppBar(
+                    pinned: true,
+                    expandedHeight: detailExpandHeight,
+                    automaticallyImplyLeading: true,
+                    title: (_detail != null) ? Text(_detail.title) : Text(""),
+                    actions: (_detail != null)
+                        ? <Widget>[
+                            Provider.of<AppUserInfo>(context).isLogin &&
+                                    _isSubscribe
+                                ? IconButton(
+                                    icon: Icon(Icons.favorite),
+                                    onPressed: () async {
+                                      var result =
+                                          await UserHelper.comicSubscribe(
+                                              widget.comicId,
+                                              cancel: true);
+                                      if (result) {
+                                        setState(() {
+                                          _isSubscribe = false;
+                                        });
+                                      }
+                                    })
+                                : IconButton(
+                                    icon: Icon(Icons.favorite_border),
+                                    onPressed: () async {
+                                      var result =
+                                          await UserHelper.comicSubscribe(
+                                              widget.comicId);
+                                      if (result) {
+                                        setState(() {
+                                          _isSubscribe = true;
+                                        });
+                                      }
+                                    }),
+                            PopupMenuButton<String>(
+                              itemBuilder: (e) => [
+                                PopupMenuItem<String>(
+                                    value: 'download', child: new Text('下载')),
+                                PopupMenuItem<String>(
+                                    value: 'share', child: new Text('分享漫画')),
+                              ],
+                              icon: Icon(Icons.more_vert),
+                              onSelected: (e) {
+                                if (e == "share") {
+                                  Share.share(
+                                      "${_detail.title}\r\nhttp://m.dmzj.com/info/${_detail.comic_py}.html");
+                                } else {
+                                  if (_detail == null ||
+                                      _detail.chapters == null ||
+                                      _detail.chapters.length == 0) {
+                                    Fluttertoast.showToast(msg: '没有可以下载的章节');
+                                    return;
+                                  }
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              ComicDownloadPage(_detail)));
                                 }
-                              })
-                          : IconButton(
-                              icon: Icon(Icons.favorite_border),
-                              onPressed: () async {
-                                var result = await UserHelper.comicSubscribe(
-                                    widget.comicId);
-                                if (result) {
-                                  setState(() {
-                                    _isSubscribe = true;
-                                  });
-                                }
-                              }),
-                      PopupMenuButton<String>(
-                        itemBuilder: (e) => [
-                          PopupMenuItem<String>(
-                              value: 'download', child: new Text('下载')),
-                          PopupMenuItem<String>(
-                              value: 'share', child: new Text('分享漫画')),
+                              },
+                            )
+                          ]
+                        : null,
+                    flexibleSpace: FlexibleSpaceBar(
+                      collapseMode: CollapseMode.pin,
+                      background: Stack(
+                        fit: StackFit.loose,
+                        children: [
+                          ClipRect(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: detailExpandHeight + getSafebar(),
+                              foregroundDecoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .shadowColor
+                                      .withAlpha(100)),
+                              child: ImageFiltered(
+                                imageFilter: ImageFilter.blur(
+                                    sigmaX: 10.0, sigmaY: 10.0),
+                                child: Utils.createCacheImage(
+                                    widget.coverUrl,
+                                    MediaQuery.of(context).size.width,
+                                    detailExpandHeight,
+                                    fit: BoxFit.cover),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                              top: getSafebar() + kToolbarHeight,
+                              child: Container(
+                                  height: 150,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: createHeader())),
                         ],
-                        icon: Icon(Icons.more_vert),
-                        onSelected: (e) {
-                          if (e == "share") {
-                            Share.share(
-                                "${_detail.title}\r\nhttp://m.dmzj.com/info/${_detail.comic_py}.html");
-                          } else {
-                            if (_detail == null ||
-                                _detail.chapters == null ||
-                                _detail.chapters.length == 0) {
-                              Fluttertoast.showToast(msg: '没有可以下载的章节');
-                              return;
-                            }
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        ComicDownloadPage(_detail)));
-                          }
-                        },
-                      )
-                    ]
-                  : null,
-              flexibleSpace: FlexibleSpaceBar(
-                collapseMode: CollapseMode.pin,
-                background: Stack(
-                  fit: StackFit.loose,
-                  children: [
-                    ClipRect(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: comicExpandHeight + kToolbarHeight,
-                        foregroundDecoration: BoxDecoration(
-                            color:
-                                Theme.of(context).shadowColor.withAlpha(100)),
-                        child: ImageFiltered(
-                          imageFilter:
-                              ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                          child: Utils.createCacheImage(
-                              widget.coverUrl,
-                              MediaQuery.of(context).size.width,
-                              comicExpandHeight,
-                              fit: BoxFit.cover),
-                        ),
                       ),
                     ),
-                    Positioned(
-                        top: getSafebar() + kToolbarHeight,
-                        child: Container(
-                            height: 150,
-                            width: MediaQuery.of(context).size.width,
-                            child: createHeader())),
-                  ],
+                  ),
                 ),
-              ),
-              bottom: TabBar(
-                  controller: _tabController,
-                  indicatorWeight: 4,
-                  labelStyle: new TextStyle(
-                      fontSize: 16.0, fontWeight: FontWeight.bold),
-                  indicatorColor: Theme.of(context).indicatorColor,
-                  tabs: [Tab(text: "详情"), Tab(text: "评论"), Tab(text: "相关")]),
-            ),
-          ];
-        },
-        body: (_detail != null && _related != null)
-            ? TabBarView(
-                controller: _tabController,
-                children: <Widget>[
-                  createDetail(),
-                  extended.NestedScrollViewInnerScrollPositionKeyWidget(
-                    Key('tab1'),
-                    CommentWidget(4, widget.comicId),
+              ];
+            },
+            body: Builder(builder: (context) {
+              return CustomScrollView(
+                slivers: <Widget>[
+                  SliverOverlapInjector(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context),
                   ),
-                  createRelate(),
+                  SliverToBoxAdapter(
+                      child: (_detail != null && _related != null)
+                          ? createDetail()
+                          : Container()),
                 ],
-              )
-            : _loading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Container(
-                    padding: EdgeInsets.all(24),
-                    child: Text(_noCopyright
-                        ? "漫画ID:${widget.comicId}\r\n因版权、国家法规等原因，该漫画暂时无法观看。"
-                        : ""),
-                  ),
+              );
+            }),
+          ),
+          Scaffold(
+            appBar: AppBar(
+              title: Text("评论"),
+            ),
+            body: SafeArea(
+                child: (_detail != null && _related != null)
+                    ? CommentWidget(4, widget.comicId)
+                    : Container()),
+          ),
+          Scaffold(
+            appBar: AppBar(
+              title: Text("相关"),
+            ),
+            body: SafeArea(
+                child: (_detail != null && _related != null)
+                    ? createRelate()
+                    : Container()),
+          ),
+        ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
           heroTag: "comic_float",
           child: Icon(Icons.play_arrow),
           onPressed: openRead),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          children: [
+            TextButton(
+              child: Text("详情"),
+              onPressed: () {
+                setState(() {
+                  _index = 0;
+                });
+              },
+            ),
+            TextButton(
+              child: Text("评论"),
+              onPressed: () {
+                setState(() {
+                  _index = 1;
+                });
+              },
+            ),
+            TextButton(
+              child: Text("相关"),
+              onPressed: () {
+                setState(() {
+                  _index = 2;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -277,110 +321,102 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   }
 
   Widget createDetail() {
-    return extended.NestedScrollViewInnerScrollPositionKeyWidget(
-        Key('tab0'),
-        SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                width: double.infinity,
-                color: Theme.of(context).cardColor,
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("简介", style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 4),
-                    Text(
-                      _detail.description,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    Container(
-                      child: Wrap(
-                        children: _detail.types
-                            .map<Widget>(
-                                (f) => createTagItem(f.tag_name, f.tag_id))
-                            .toList(),
-                      ),
-                    ),
-                  ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("简介", style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 4),
+                Text(
+                  _detail.description,
+                  style: TextStyle(color: Colors.grey),
                 ),
-              ),
-              _detail.copyright == 1
-                  ? Column(
-                      children: <Widget>[
-                        SizedBox(height: 12),
-                        Container(
-                          width: double.infinity,
-                          color: Theme.of(context).cardColor,
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text("作者公告",
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              SizedBox(height: 4),
-                              Text(
-                                _detail.author_notice != null &&
-                                        _detail.author_notice != ""
-                                    ? _detail.author_notice
-                                    : "无",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                  : Container(),
-              ComicChapterView(
-                widget.comicId,
-                _detail,
-                historyChapter,
-                isSubscribe: _isSubscribe,
-              )
-            ],
+                Container(
+                  child: Wrap(
+                    children: _detail.types
+                        .map<Widget>((f) => createTagItem(f.tag_name, f.tag_id))
+                        .toList(),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ));
+          _detail.copyright == 1
+              ? Column(
+                  children: <Widget>[
+                    SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      color: Theme.of(context).cardColor,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text("作者公告",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          SizedBox(height: 4),
+                          Text(
+                            _detail.author_notice != null &&
+                                    _detail.author_notice != ""
+                                ? _detail.author_notice
+                                : "无",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              : Container(),
+          ComicChapterView(
+            widget.comicId,
+            _detail,
+            historyChapter,
+            isSubscribe: _isSubscribe,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget createRelate() {
-    return extended.NestedScrollViewInnerScrollPositionKeyWidget(
-        Key('tab0'),
-        SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Column(
-                children: _related.author_comics
-                    .map<Widget>((f) => _getItem(
-                            f.author_name + "的其他作品", f.data,
-                            icon: Icon(Icons.chevron_right),
-                            //ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-                            ontap: () {
-                          Utils.openPage(context, f.author_id, 8);
-                        }))
-                    .toList(),
-              ),
-              _getItem(
-                "同类题材作品",
-                _related.theme_comics,
-                //ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-              ),
-              _related.novels != null && _related.novels.length != 0
-                  ? _getItem(
-                      "相关小说",
-                      _related.novels,
-                      type: 2,
-                      //ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-                    )
-                  : Container()
-            ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Column(
+            children: _related.author_comics
+                .map<Widget>((f) => _getItem(f.author_name + "的其他作品", f.data,
+                        icon: Icon(Icons.chevron_right),
+                        //ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                        ontap: () {
+                      Utils.openPage(context, f.author_id, 8);
+                    }))
+                .toList(),
           ),
-        ));
+          _getItem(
+            "同类题材作品",
+            _related.theme_comics,
+            //ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+          ),
+          _related.novels != null && _related.novels.length != 0
+              ? _getItem(
+                  "相关小说",
+                  _related.novels,
+                  type: 2,
+                  //ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                )
+              : Container()
+        ],
+      ),
+    );
   }
 
   Widget createTagItem(String text, int id) {

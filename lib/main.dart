@@ -34,7 +34,9 @@ void main() async {
       ChangeNotifierProvider<AppSetting>(
           create: (_) => AppSetting(), lazy: false),
     ],
-    child: MyApp(),
+    child: ExcludeSemantics(
+      child: MyApp(),
+    ),
   ));
   if (Platform.isAndroid) {
     //设置Android头部的导航栏透明

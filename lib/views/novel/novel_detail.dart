@@ -17,8 +17,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart'
-    as extended;
 
 class NovelDetailPage extends StatefulWidget {
   final int novelId;
@@ -31,8 +29,10 @@ class NovelDetailPage extends StatefulWidget {
 
 class _NovelDetailPageState extends State<NovelDetailPage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
-  double novelExpandHeight;
+  double detailExpandHeight = 150 + kToolbarHeight + 24;
+
   ScrollController _scrollController;
+  int _index = 0;
   @override
   bool get wantKeepAlive => true;
   TabController _tabController;
@@ -79,149 +79,160 @@ class _NovelDetailPageState extends State<NovelDetailPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: extended.NestedScrollView(
-        innerScrollPositionKeyBuilder: () {
-          String index = 'tab${_tabController.index}';
-          print(index);
-          return Key(index);
-        },
-        controller: _scrollController,
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          novelExpandHeight = 150 + kToolbarHeight + kTextTabBarHeight;
-          return <Widget>[
-            SliverAppBar(
-              pinned: true,
-              expandedHeight: novelExpandHeight,
-              automaticallyImplyLeading: true,
-              title: (_detail != null) ? Text(_detail.name) : Text(""),
-              actions: (_detail != null)
-                  ? <Widget>[
-                      Provider.of<AppUserInfo>(context).isLogin && _isSubscribe
-                          ? IconButton(
-                              icon: Icon(Icons.favorite),
-                              onPressed: () async {
-                                var result = await UserHelper.novelSubscribe(
-                                    widget.novelId,
-                                    cancel: true);
-                                if (result) {
-                                  setState(() {
-                                    _isSubscribe = false;
-                                  });
-                                }
-                              })
-                          : IconButton(
-                              icon: Icon(Icons.favorite_border),
-                              onPressed: () async {
-                                var result = await UserHelper.novelSubscribe(
-                                    widget.novelId);
-                                if (result) {
-                                  setState(() {
-                                    _isSubscribe = true;
-                                  });
-                                }
-                              }),
-                      IconButton(
-                          icon: Icon(Icons.share),
-                          onPressed: () => Share.share(
-                              "${_detail.name}\r\nhttp://q.dmzj.com/${widget.novelId}/index.shtml")),
-                    ]
-                  : null,
-              flexibleSpace: FlexibleSpaceBar(
-                collapseMode: CollapseMode.pin,
-                background: Stack(
-                  fit: StackFit.loose,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: novelExpandHeight + kToolbarHeight,
-                      foregroundDecoration: BoxDecoration(
-                          color: Theme.of(context).shadowColor.withAlpha(100)),
-                      child: ImageFiltered(
-                        imageFilter:
-                            ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                        child: Utils.createCacheImage(
-                            widget.coverUrl,
-                            MediaQuery.of(context).size.width,
-                            novelExpandHeight,
-                            fit: BoxFit.cover),
-                      ),
-                    ),
-                    Positioned(
-                        top: getSafebar() + kToolbarHeight,
-                        child: Container(
-                            height: 150,
-                            width: MediaQuery.of(context).size.width,
-                            child: createHeader())),
-                  ],
-                ),
-              ),
-              bottom: TabBar(
-                  controller: _tabController,
-                  indicatorWeight: 4,
-                  labelStyle: new TextStyle(
-                      fontSize: 16.0, fontWeight: FontWeight.bold),
-                  indicatorColor: Theme.of(context).indicatorColor,
-                  onTap: (index) {
-                    if (index == 2) {
-                      backTop();
-                    }
-                  },
-                  tabs: [
-                    Tab(text: "详情"),
-                    Tab(text: "章节"),
-                    Tab(text: "评论"),
-                  ]),
-            ),
-          ];
-        },
-        body: (_detail != null)
-            ? TabBarView(
-                controller: _tabController,
-                children: [
-                  extended.NestedScrollViewInnerScrollPositionKeyWidget(
-                    Key('tab0'),
-                    SingleChildScrollView(
-                      child: Container(
-                        color: Theme.of(context).cardColor,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text("简介",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            SizedBox(height: 4),
-                            Text(
-                              _detail.introduction,
+      body: IndexedStack(
+        index: _index,
+        children: [
+          NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverOverlapAbsorber(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  sliver: SliverAppBar(
+                    pinned: true,
+                    expandedHeight: detailExpandHeight,
+                    automaticallyImplyLeading: true,
+                    title: (_detail != null) ? Text(_detail.name) : Text(""),
+                    actions: (_detail != null)
+                        ? <Widget>[
+                            Provider.of<AppUserInfo>(context).isLogin &&
+                                    _isSubscribe
+                                ? IconButton(
+                                    icon: Icon(Icons.favorite),
+                                    onPressed: () async {
+                                      var result =
+                                          await UserHelper.novelSubscribe(
+                                              widget.novelId,
+                                              cancel: true);
+                                      if (result) {
+                                        setState(() {
+                                          _isSubscribe = false;
+                                        });
+                                      }
+                                    })
+                                : IconButton(
+                                    icon: Icon(Icons.favorite_border),
+                                    onPressed: () async {
+                                      var result =
+                                          await UserHelper.novelSubscribe(
+                                              widget.novelId);
+                                      if (result) {
+                                        setState(() {
+                                          _isSubscribe = true;
+                                        });
+                                      }
+                                    }),
+                            IconButton(
+                                icon: Icon(Icons.share),
+                                onPressed: () => Share.share(
+                                    "${_detail.name}\r\nhttp://q.dmzj.com/${widget.novelId}/index.shtml")),
+                          ]
+                        : null,
+                    flexibleSpace: FlexibleSpaceBar(
+                      collapseMode: CollapseMode.pin,
+                      background: Stack(
+                        fit: StackFit.loose,
+                        children: [
+                          ClipRect(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: detailExpandHeight + getSafebar(),
+                              foregroundDecoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .shadowColor
+                                      .withAlpha(100)),
+                              child: ImageFiltered(
+                                imageFilter: ImageFilter.blur(
+                                    sigmaX: 10.0, sigmaY: 10.0),
+                                child: Utils.createCacheImage(
+                                    widget.coverUrl,
+                                    MediaQuery.of(context).size.width,
+                                    detailExpandHeight,
+                                    fit: BoxFit.cover),
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Positioned(
+                              top: getSafebar() + kToolbarHeight,
+                              child: Container(
+                                  height: 150,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: createHeader())),
+                        ],
                       ),
                     ),
                   ),
-                  extended.NestedScrollViewInnerScrollPositionKeyWidget(
-                    Key('tab1'),
-                    createVolume(),
+                ),
+              ];
+            },
+            body: Builder(builder: (context) {
+              return CustomScrollView(
+                slivers: <Widget>[
+                  SliverOverlapInjector(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context),
                   ),
-                  extended.NestedScrollViewInnerScrollPositionKeyWidget(
-                    Key('tab2'),
-                    CommentWidget(1, widget.novelId),
-                  ),
+                  SliverToBoxAdapter(
+                      child: (_detail != null) ? createDetail() : Container()),
                 ],
-              )
-            : !_loadffail || _loading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Container(
-                    padding: EdgeInsets.all(24),
-                    child: Text("读取轻小说失败"),
-                  ),
+              );
+            }),
+          ),
+          Scaffold(
+            appBar: AppBar(
+              title: Text("章节"),
+            ),
+            body: SafeArea(
+                child: (_detail != null) ? createVolume() : Container()),
+          ),
+          Scaffold(
+            appBar: AppBar(
+              title: Text("评论"),
+            ),
+            body: SafeArea(
+                child: (_detail != null)
+                    ? CommentWidget(1, widget.novelId)
+                    : Container()),
+          ),
+        ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-          heroTag: "novel_float",
+          heroTag: "comic_float",
           child: Icon(Icons.play_arrow),
           onPressed: openRead),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          children: [
+            TextButton(
+              child: Text("详情"),
+              onPressed: () {
+                setState(() {
+                  _index = 0;
+                });
+              },
+            ),
+            TextButton(
+              child: Text("章节"),
+              onPressed: () {
+                setState(() {
+                  _index = 1;
+                });
+              },
+            ),
+            TextButton(
+              child: Text("评论"),
+              onPressed: () {
+                setState(() {
+                  _index = 2;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -282,6 +293,30 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                 ),
         )
       ],
+    );
+  }
+
+  Widget createDetail() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            color: Theme.of(context).cardColor,
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("简介", style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 4),
+                Text(
+                  _detail.introduction,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

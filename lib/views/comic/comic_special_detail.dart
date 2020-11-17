@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_specia_datail_model.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
@@ -26,6 +25,7 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
   TabController _tabController;
   bool get wantKeepAlive => true;
   ComicSpecia _detail;
+  int _index = 0;
   @override
   void initState() {
     super.initState();
@@ -37,51 +37,23 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
     _tabController = TabController(length: 2, vsync: this);
     super.build(context);
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-                elevation: 0,
+      body: IndexedStack(
+        index: _index,
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
                 pinned: true,
-                expandedHeight: 400,
+                expandedHeight: 200,
                 title: Text(widget.title),
                 flexibleSpace: FlexibleSpaceBar(
-                    collapseMode: CollapseMode.pin,
-                    background: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Hero(
-                          tag: widget.id,
-                          child: Utils.createCacheImage(widget.coverUrl,
-                              MediaQuery.of(context).size.width, 350,
-                              fit: BoxFit.cover),
-                        ),
-                        Positioned(
-                            bottom: 0,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10)),
-                                child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor,
-                                    child: Column(
-                                      children: [
-                                        (_detail != null)
-                                            ? Padding(
-                                                padding: EdgeInsets.all(15),
-                                                child: Text("        " +
-                                                    _detail.description),
-                                              )
-                                            : Text(""),
-                                        SizedBox(
-                                          height: kTextTabBarHeight,
-                                        )
-                                      ],
-                                    ))))
-                      ],
-                    )),
+                  background: Hero(
+                    tag: widget.id,
+                    child: Utils.createCacheImage(
+                        widget.coverUrl, MediaQuery.of(context).size.width, 350,
+                        fit: BoxFit.cover),
+                  ),
+                ),
                 actions: (_detail != null)
                     ? <Widget>[
                         IconButton(
@@ -90,39 +62,83 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
                                 "${_detail.title}\r\nhttp://m.dmzj.com/zhuanti/${_detail.page_url}"))
                       ]
                     : null,
-                bottom: PreferredSize(
-                    preferredSize: Size.fromHeight(kTextTabBarHeight),
-                    child: Container(
-                      color: Theme.of(context).accentColor,
-                      child: TabBar(
-                          controller: _tabController,
-                          indicatorWeight: 4,
-                          indicatorColor: Theme.of(context).indicatorColor,
-                          tabs: [Tab(text: "漫画"), Tab(text: "评论")]),
-                    ))),
-          ];
-        },
-        body: (_detail != null)
-            ? TabBarView(
-                controller: _tabController,
-                children: [
-                  ListView(
-                    padding: EdgeInsets.zero,
-                    children: _detail.comics
-                        .map<Widget>((f) => createItem(f))
-                        .toList(),
-                  ),
-                  CommentWidget(2, widget.id),
-                ],
+              ),
+              SliverToBoxAdapter(
+                child: (_detail != null)
+                    ? Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Text("        " + _detail.description),
+                      )
+                    : Text(""),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return createItem(_detail.comics[index]);
+                  },
+                  childCount: _detail.comics.length,
+                ),
               )
-            : _loading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Container(
-                    padding: EdgeInsets.all(24),
-                    child: Text("读取专栏失败"),
-                  ),
+            ],
+          ),
+          Scaffold(
+            appBar: AppBar(
+              title: Text("评论"),
+            ),
+            body: SafeArea(
+                child: (_detail != null)
+                    ? CommentWidget(2, widget.id)
+                    : Container()),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: FloatingActionButton(
+          heroTag: "comic_float",
+          child: AnimatedCrossFade(
+            crossFadeState: _index == 0
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: Duration(milliseconds: 200),
+            firstChild: Icon(Icons.arrow_forward),
+            secondChild: Icon(Icons.arrow_back),
+          ),
+          onPressed: () {
+            setState(() {
+              switch (_index) {
+                case 0:
+                  _index = 1;
+                  break;
+                case 1:
+                  _index = 0;
+                  break;
+                default:
+                  _index = 0;
+              }
+            });
+          }),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          children: [
+            TextButton(
+              child: Text("详情"),
+              onPressed: () {
+                setState(() {
+                  _index = 0;
+                });
+              },
+            ),
+            TextButton(
+              child: Text("评论"),
+              onPressed: () {
+                setState(() {
+                  _index = 1;
+                });
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

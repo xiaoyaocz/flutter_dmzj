@@ -240,6 +240,22 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    return Theme.of(context);
+    assert(context != null);
+    final ThemeData theme = Theme.of(context).copyWith(
+      textTheme: TextTheme(
+        headline6: TextStyle(
+          color: Colors.white,
+          fontSize: 18.0,
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TextStyle(
+          color: Theme.of(context).secondaryHeaderColor,
+          fontSize: 18,
+        ),
+      ),
+    );
+    assert(theme != null);
+    return theme;
   }
 }

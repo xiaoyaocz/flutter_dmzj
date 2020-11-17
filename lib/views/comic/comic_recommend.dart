@@ -79,15 +79,15 @@ class ComicRecommendState extends State<ComicRecommend>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               //banner
-              AppBanner(
-                  items: _banners
-                      .map<Widget>((i) => BannerImageItem(
-                            pic: i.cover,
-                            title: i.title,
-                            onTaped: () => Utils.openPage(context, i.id, i.type,
-                                url: i.url, title: i.title),
-                          ))
-                      .toList()),
+              // AppBanner(
+              //     items: _banners
+              //         .map<Widget>((i) => BannerImageItem(
+              //               pic: i.cover,
+              //               title: i.title,
+              //               onTaped: () => Utils.openPage(context, i.id, i.type,
+              //                   url: i.url, title: i.title),
+              //             ))
+              //         .toList()),
               _getItem2(
                 "我的订阅",
                 _mySub,
@@ -112,24 +112,6 @@ class ComicRecommendState extends State<ComicRecommend>
                   icon: Icon(Icons.refresh, color: Colors.grey),
                   ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                   ontap: () async => await loadLike()),
-              // _getItem(
-              //   "大师级作者怎能不看",
-              //   _authors,
-              //   ratio: getWidth() / ((getWidth() * (360 / 270)) + 24),
-              // ),
-              // _getItem("国漫也精彩", _guoman,
-              //     icon: Icon(Icons.refresh, color: Colors.grey),
-              //     ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
-              //     ontap: () => loadGuoman()),
-              // _getItem(
-              //   "美漫大事件",
-              //   _meiman,
-              //   needSubTitle: false,
-              //   imgHeight: 170,
-              //   imgWidth: 320,
-              //   count: 2,
-              //   ratio: getWidth2() / ((getWidth2() * (170 / 320)) + 32),
-              // ),
               _getItem("热门连载", _hot,
                   icon: Icon(Icons.refresh, color: Colors.grey),
                   ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
