@@ -81,6 +81,11 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+<<<<<<< HEAD
+=======
+    comicExpandHeight = 150 + kToolbarHeight + kTextTabBarHeight;
+    print(getSafebar());
+>>>>>>> de456a42d3d88bf30268d1da4dfa4a9a47ce761b
     return Scaffold(
       body: extended.NestedScrollView(
         innerScrollPositionKeyBuilder: () {
