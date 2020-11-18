@@ -69,7 +69,6 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
         header: MaterialHeader(),
         footer: MaterialFooter(),
         child: GridView.builder(
-          shrinkWrap: true,
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
           physics: ScrollPhysics(),
           itemCount: _list.length,
@@ -89,6 +88,7 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
 
           await loadData();
         },
+        onLoad: loadData,
       ),
     );
   }
@@ -246,7 +246,6 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
       setState(() {
         _loading = true;
       });
-      print(_fiters[0].item.tag_name + "loading ");
       var response = await http.get(Api.comicCategoryDetail(
           _fiters.map((f) => f.item.tag_id).toList(),
           sort: _sort,
@@ -300,7 +299,6 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
         setState(() {
           _fiters = detail;
         });
-        print(_fiters[0].item.tag_name);
         loadData();
       }
     } catch (e) {

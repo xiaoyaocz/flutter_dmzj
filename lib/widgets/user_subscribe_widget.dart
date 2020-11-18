@@ -21,11 +21,17 @@ class _UserSubscribeWidgetState extends State<UserSubscribeWidget> {
   @override
   Widget build(BuildContext context) {
     return widget.list.length != 0
-        ? GridView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-            physics: ScrollPhysics(),
-            itemCount: widget.list.length,
+        ? SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+                (context, i) => _getComicItemBuilder(
+                    context,
+                    widget.list[i].id,
+                    widget.type + 1,
+                    widget.list[i].sub_img,
+                    widget.list[i].name,
+                    '更新:' + widget.list[i].sub_update,
+                    widget.list[i].status),
+                childCount: widget.list.length),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: MediaQuery.of(context).size.width ~/ 160 < 3
                     ? 3
@@ -34,21 +40,15 @@ class _UserSubscribeWidgetState extends State<UserSubscribeWidget> {
                 mainAxisSpacing: 4.0,
                 childAspectRatio:
                     getWidth() / ((getWidth() * (360 / 270)) + 64)),
-            itemBuilder: (context, i) => _getComicItemBuilder(
-                context,
-                widget.list[i].id,
-                widget.type + 1,
-                widget.list[i].sub_img,
-                widget.list[i].name,
-                '更新:' + widget.list[i].sub_update,
-                widget.list[i].status),
           )
-        : Center(
-            child: Container(
-              padding: EdgeInsets.all(24),
-              child: Text(
-                "什么都没有呢~",
-                style: TextStyle(color: Colors.grey),
+        : SliverFillRemaining(
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(24),
+                child: Text(
+                  "什么都没有呢~",
+                  style: TextStyle(color: Colors.grey),
+                ),
               ),
             ),
           );

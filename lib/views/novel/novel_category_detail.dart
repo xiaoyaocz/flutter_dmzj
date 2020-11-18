@@ -69,7 +69,6 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
         header: MaterialHeader(),
         footer: MaterialFooter(),
         child: GridView.builder(
-          shrinkWrap: true,
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
           physics: ScrollPhysics(),
           itemCount: _list.length,

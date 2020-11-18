@@ -56,25 +56,31 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
   Widget build(BuildContext context) {
     super.build(context);
     return EasyRefresh(
-      child: _list.length != 0
-          ? ListView.builder(
-              itemCount: _list.length,
-              itemBuilder: (ctx, i) {
-                return createItem(_list[i]);
-              })
-          : _loading
-              ? Center(
-                  child: CircularProgressIndicator(),
+      child: CustomScrollView(
+        slivers: [
+          _list.length != 0
+              ? ListView.builder(
+                  itemCount: _list.length,
+                  itemBuilder: (ctx, i) {
+                    return createItem(_list[i]);
+                  })
+              : SliverFillRemaining(
+                  child: _loading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Center(
+                          child: Container(
+                            padding: EdgeInsets.all(24),
+                            child: Text(
+                              "什么都没有呢~",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
                 )
-              : Center(
-                  child: Container(
-                    padding: EdgeInsets.all(24),
-                    child: Text(
-                      "什么都没有呢~",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                ),
+        ],
+      ),
       onLoad: loadData,
       onRefresh: () async {
         _page = 0;

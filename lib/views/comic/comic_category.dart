@@ -47,7 +47,6 @@ class _ComicCategoryPageState extends State<ComicCategoryPage>
       onRefresh: loadData,
       child: GridView.builder(
         padding: EdgeInsets.all(8),
-        shrinkWrap: true,
         physics: ScrollPhysics(),
         itemCount: _list.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
