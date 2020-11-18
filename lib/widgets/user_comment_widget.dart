@@ -59,11 +59,11 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
       child: CustomScrollView(
         slivers: [
           _list.length != 0
-              ? ListView.builder(
-                  itemCount: _list.length,
-                  itemBuilder: (ctx, i) {
+              ? SliverList(
+                  delegate: SliverChildBuilderDelegate((ctx, i) {
                     return createItem(_list[i]);
-                  })
+                  }, childCount: _list.length),
+                )
               : SliverFillRemaining(
                   child: _loading
                       ? Center(
