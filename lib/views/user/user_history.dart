@@ -176,7 +176,6 @@ class _HistoryTabItemState extends State<HistoryTabItem>
   }
 
   Widget createNovelItem(NovelHistoryItem item) {
-    print(item.novel_name);
     return InkWell(
       onTap: () {
         Utils.openPage(context, int.parse(item.lnovel_id), 2,
@@ -214,9 +213,9 @@ class _HistoryTabItemState extends State<HistoryTabItem>
                     ),
                     Text(
                         "看到" +
-                            item.volume_name +
+                            item.volume_name.toString() +
                             " · " +
-                            (item.chapter_name ?? ""),
+                            (item.chapter_name.toString() ?? ""),
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                     SizedBox(
                       height: 2,
@@ -253,8 +252,10 @@ class _HistoryTabItemState extends State<HistoryTabItem>
       var response =
           await http.get(Api.userNovelHistory(ConfigHelper.getUserInfo().uid));
       List jsonMap = jsonDecode(response.body);
+      // print(jsonMap[1].toString());
       List<NovelHistoryItem> detail =
           jsonMap.map((i) => NovelHistoryItem.fromJson(i)).toList();
+      // print(detail[1].chapter_name);
       if (detail != null) {
         for (var item in detail) {
           ConfigHelper.setNovelHistory(
@@ -290,7 +291,6 @@ class _HistoryTabItemState extends State<HistoryTabItem>
       if (detail != null && detail.length != 0) {
         for (var item in detail) {
           var historyItem = await ComicHistoryProvider.getItem(item.comic_id);
-          print(item.comic_name);
           if (historyItem != null) {
             historyItem.chapter_id = item.chapter_id;
             historyItem.page = item.progress?.toDouble() ?? 1;

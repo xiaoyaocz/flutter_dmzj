@@ -1,7 +1,7 @@
 {
-    "version":"1.1.0",
-    "version_code":"201117",
-    "message":"更改ui，放弃不稳定的控件",
+    "version":"1.1.1",
+    "version_code":"201118",
+    "message":"优化界面效率",
     "android_url":"https://github.com/tom8zds/dmzj_flutter/releases/latest",
     "ios_url":"",
     "hide_banner":true
