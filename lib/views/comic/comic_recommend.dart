@@ -79,15 +79,15 @@ class ComicRecommendState extends State<ComicRecommend>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               //banner
-              AppBanner(
-                  items: _banners
-                      .map<Widget>((i) => BannerImageItem(
-                            pic: i.cover,
-                            title: i.title,
-                            onTaped: () => Utils.openPage(context, i.id, i.type,
-                                url: i.url, title: i.title),
-                          ))
-                      .toList()),
+              // AppBanner(
+              //     items: _banners
+              //         .map<Widget>((i) => BannerImageItem(
+              //               pic: i.cover,
+              //               title: i.title,
+              //               onTaped: () => Utils.openPage(context, i.id, i.type,
+              //                   url: i.url, title: i.title),
+              //             ))
+              //         .toList()),
               _getItem2(
                 "我的订阅",
                 _mySub,

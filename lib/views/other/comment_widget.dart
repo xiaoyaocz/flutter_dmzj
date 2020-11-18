@@ -45,13 +45,6 @@ class _CommentWidgetState extends State<CommentWidget>
     loadData();
   }
 
-  @override
-  void setState(fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
-  }
-
   HtmlUnescape _htmlUnescape = new HtmlUnescape();
   ScrollController _controller = ScrollController();
 
@@ -70,81 +63,164 @@ class _CommentWidgetState extends State<CommentWidget>
     }
     return EasyRefresh(
       topBouncing: false,
-      //header: MaterialHeader(),
+      header: MaterialHeader(),
       footer: MaterialFooter(),
-      child: Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    text + "评论" + "($_commentCount)",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
-                PopupMenuButton<bool>(
-                  child: Container(
-                      height: 36,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(_isHot ? "热门评论" : "最新评论"),
-                          Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.grey,
-                          )
-                        ],
-                      )),
-                  onSelected: (v) async {
-                    setState(() {
-                      _isHot = v;
-                    });
-                    _page = 1;
-                    await loadData();
-                  },
-                  itemBuilder: (c) => [
-                    CheckedPopupMenuItem<bool>(
-                      child: Text("最新评论"),
-                      value: false,
-                      checked: !_isHot,
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      text + "评论" + "($_commentCount)",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                    CheckedPopupMenuItem<bool>(
-                      child: Text("最热评论"),
-                      value: true,
-                      checked: _isHot,
-                    )
-                  ],
-                )
-              ],
+                  ),
+                  PopupMenuButton<bool>(
+                    child: Container(
+                        height: 36,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(_isHot ? "热门评论" : "最新评论"),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.grey,
+                            )
+                          ],
+                        )),
+                    onSelected: (v) async {
+                      setState(() {
+                        _isHot = v;
+                      });
+                      _page = 1;
+                      await loadData();
+                    },
+                    itemBuilder: (c) => [
+                      CheckedPopupMenuItem<bool>(
+                        child: Text("最新评论"),
+                        value: false,
+                        checked: !_isHot,
+                      ),
+                      CheckedPopupMenuItem<bool>(
+                        child: Text("最热评论"),
+                        value: true,
+                        checked: _isHot,
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
           _list.length != 0
-              ? ListView(
-                  padding: EdgeInsets.all(4),
-                  shrinkWrap: true,
-                  controller: _controller,
-                  children: _list.map<Widget>((f) => createItem(f)).toList(),
+              ? SliverList(
+                  delegate: SliverChildListDelegate(
+                    _list.map<Widget>((f) => createItem(f)).toList(),
+                  ),
                 )
-              : Center(
-                  child: Container(
-                    padding: EdgeInsets.all(24),
-                    child: Text(
-                      "什么都没有呢~",
-                      style: TextStyle(color: Colors.grey),
+              : SliverToBoxAdapter(
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.all(24),
+                      child: Text(
+                        "什么都没有呢~",
+                        style: TextStyle(color: Colors.grey),
+                      ),
                     ),
                   ),
                 )
         ],
       ),
+      onRefresh: () async {
+        _page = 1;
+        await loadData();
+      },
       onLoad: loadData,
-      // onRefresh: () async {
-      //   _page = 1;
-      //   await loadData();
-      // },
     );
+    // return Column(
+    //   children: <Widget>[
+    //     Container(
+    //       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+    //       child: Row(
+    //         crossAxisAlignment: CrossAxisAlignment.center,
+    //         children: <Widget>[
+    //           Expanded(
+    //             child: Text(
+    //               text + "评论" + "($_commentCount)",
+    //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+    //             ),
+    //           ),
+    //           PopupMenuButton<bool>(
+    //             child: Container(
+    //                 height: 36,
+    //                 child: Row(
+    //                   mainAxisAlignment: MainAxisAlignment.center,
+    //                   children: <Widget>[
+    //                     Text(_isHot ? "热门评论" : "最新评论"),
+    //                     Icon(
+    //                       Icons.arrow_drop_down,
+    //                       color: Colors.grey,
+    //                     )
+    //                   ],
+    //                 )),
+    //             onSelected: (v) async {
+    //               setState(() {
+    //                 _isHot = v;
+    //               });
+    //               _page = 1;
+    //               await loadData();
+    //             },
+    //             itemBuilder: (c) => [
+    //               CheckedPopupMenuItem<bool>(
+    //                 child: Text("最新评论"),
+    //                 value: false,
+    //                 checked: !_isHot,
+    //               ),
+    //               CheckedPopupMenuItem<bool>(
+    //                 child: Text("最热评论"),
+    //                 value: true,
+    //                 checked: _isHot,
+    //               )
+    //             ],
+    //           )
+    //         ],
+    //       ),
+    //     ),
+    //     _list.length != 0
+    //         ? EasyRefresh(
+    //             topBouncing: false,
+    //             //header: MaterialHeader(),
+    //             footer: MaterialFooter(),
+    //             child: ListView.builder(
+    //               padding: EdgeInsets.all(4),
+    //               controller: _controller,
+    //               itemCount: _list.length,
+    //               itemBuilder: (BuildContext context, int index) {
+    //                 return createItem(_list[index]);
+    //               },
+    //             ),
+    //             onRefresh: () async {
+    //               _page = 1;
+    //               await loadData();
+    //             },
+    //             onLoad: loadData,
+    //           )
+    //         : Center(
+    //             child: Container(
+    //               padding: EdgeInsets.all(24),
+    //               child: Text(
+    //                 "什么都没有呢~",
+    //                 style: TextStyle(color: Colors.grey),
+    //               ),
+    //             ),
+    //           )
+    //   ],
+    // );
   }
 
   Widget createItem(CommentItem item) {
