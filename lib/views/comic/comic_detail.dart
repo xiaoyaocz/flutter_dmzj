@@ -289,19 +289,19 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                   ),
                   Text(
                     "作者:" + tagsToString(_detail.authors ?? []),
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(fontSize: 12, color: Colors.white),
                   ),
                   Text(
                     "点击:" + _detail.hot_num.toString(),
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(fontSize: 12, color: Colors.white),
                   ),
                   Text(
                     "订阅:" + _detail.subscribe_num.toString(),
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(fontSize: 12, color: Colors.white),
                   ),
                   Text(
                     "状态:" + tagsToString(_detail.status ?? []),
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(fontSize: 12, color: Colors.white),
                   ),
                   Text(
                     "最后更新:" +
@@ -309,13 +309,16 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                             DateTime.fromMillisecondsSinceEpoch(
                                 _detail.last_updatetime * 1000),
                             format: "yyyy-MM-dd"),
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(fontSize: 12, color: Colors.white),
                   ),
                 ],
               ))
             : SizedBox(
                 width: 12,
               ),
+        SizedBox(
+          width: 12,
+        ),
       ],
     );
   }

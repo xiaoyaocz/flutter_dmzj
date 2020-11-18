@@ -20,27 +20,23 @@ class _AppBannerState extends State<AppBanner> {
       child: Stack(
         alignment: AlignmentDirectional.bottomEnd,
         children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: CarouselSlider(
-              options: CarouselOptions(
-                onPageChanged: (i, e) {
-                  setState(() {
-                    currentBannerIndex = i;
-                  });
-                },
-                aspectRatio: 7.5 / 4,
-                viewportFraction: 1.0,
-                autoPlay: true,
-              ),
-              items: widget.items.length != 0
-                  ? widget.items
-                  : [
-                      Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    ],
+          CarouselSlider(
+            options: CarouselOptions(
+              onPageChanged: (i, e) {
+                setState(() {
+                  currentBannerIndex = i;
+                });
+              },
+              aspectRatio: 7.5 / 4,
+              viewportFraction: 1.0,
             ),
+            items: widget.items.length != 0
+                ? widget.items
+                : [
+                    Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  ],
           ),
           Positioned(
               right: 8.0,
@@ -82,15 +78,18 @@ class BannerImageItem extends StatelessWidget {
         alignment: AlignmentDirectional.bottomStart,
         fit: StackFit.expand,
         children: <Widget>[
-          CachedNetworkImage(
-            imageUrl: pic,
-            fit: BoxFit.cover,
-            httpHeaders: {"Referer": "http://www.dmzj.com/"},
-            placeholder: (context, url) => Center(
-              child: Center(child: Icon(Icons.photo)),
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            child: CachedNetworkImage(
+              imageUrl: pic,
+              fit: BoxFit.cover,
+              httpHeaders: {"Referer": "http://www.dmzj.com/"},
+              placeholder: (context, url) => Center(
+                child: Center(child: Icon(Icons.photo)),
+              ),
+              errorWidget: (context, url, error) =>
+                  Center(child: Icon(Icons.error)),
             ),
-            errorWidget: (context, url, error) =>
-                Center(child: Icon(Icons.error)),
           ),
           Positioned(
               bottom: 4,

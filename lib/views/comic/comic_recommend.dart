@@ -88,6 +88,7 @@ class ComicRecommendState extends State<ComicRecommend>
                                 url: i.url, title: i.title),
                           ))
                       .toList()),
+
               _getItem2(
                 "我的订阅",
                 _mySub,
