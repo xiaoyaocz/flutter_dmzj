@@ -74,12 +74,10 @@ class ComicRecommendState extends State<ComicRecommend>
       body: EasyRefresh(
         header: MaterialHeader(),
         onRefresh: refreshData,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              //banner
-              AppBanner(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: AppBanner(
                   items: _banners
                       .map<Widget>((i) => BannerImageItem(
                             pic: i.cover,
@@ -88,7 +86,9 @@ class ComicRecommendState extends State<ComicRecommend>
                                 url: i.url, title: i.title),
                           ))
                       .toList()),
-
+            ),
+            SliverList(
+                delegate: SliverChildListDelegate([
               _getItem2(
                 "我的订阅",
                 _mySub,
@@ -134,8 +134,9 @@ class ComicRecommendState extends State<ComicRecommend>
                   icon: Icon(Icons.chevron_right, color: Colors.grey),
                   ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                   ontap: () => Utils.changeComicHomeTabIndex.fire(1)),
-              Container(
-                width: double.infinity,
+            ])),
+            SliverToBoxAdapter(
+              child: Container(
                 height: kToolbarHeight,
                 //padding: EdgeInsets.all(12),
                 child: Center(
@@ -145,8 +146,8 @@ class ComicRecommendState extends State<ComicRecommend>
                   ),
                 ),
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
@@ -176,7 +177,7 @@ class ComicRecommendState extends State<ComicRecommend>
               ),
               GridView.builder(
                 shrinkWrap: true,
-                physics: ScrollPhysics(),
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: items.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: count,
@@ -225,7 +226,7 @@ class ComicRecommendState extends State<ComicRecommend>
                 ),
                 GridView.builder(
                   shrinkWrap: true,
-                  physics: ScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: items.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: count,
