@@ -1,4 +1,5 @@
 import 'dart:convert';
+// import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:battery/battery.dart';
@@ -20,12 +21,14 @@ import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_web_chapter_detail.dart';
 import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_dmzj/views/reader/comic_tc.dart';
+import 'package:flutter_dmzj/widgets/comic_view.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
@@ -545,6 +548,24 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   PreloadPageController _pageController = PreloadPageController(initialPage: 1);
   //PageController _pageController = PageController(initialPage: 1);
   ScrollController _scrollController = ScrollController();
+  int preload_end = 1;
+
+  // void preload(int i) {
+  //   if (i > preload_end) preload_end = i;
+  //   int preload_len = 0;
+  //   if (i >= _detail.page_url.length - 2)
+  //     preload_len = _detail.page_url.length - 1;
+  //   else
+  //     preload_len = i + 3;
+  //   for (var t = preload_end; t < preload_len; t++) {
+  //     print(t);
+  //     NetworkImage(
+  //       _detail.page_url[t],
+  //       headers: {"Referer": "http://www.dmzj.com/"},
+  //     );
+  //   }
+  //   preload_end = preload_len;
+  // }
 
   Widget createHorizontalReader() {
     return InkWell(
@@ -559,63 +580,80 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       },
       child: Container(
         color: Colors.black,
-        child: PreloadPageView.builder(
-            reverse: Provider.of<AppSetting>(context).comicReadReverse,
-            controller: _pageController,
-            itemCount: _detail.page_url.length + 3,
-            preloadPagesCount: 3,
-            onPageChanged: (i) {
-              if (i == _detail.page_url.length + 2) {
-                nextChapter();
-                return;
-              }
-              if (i == 0 && !_loading) {
-                previousChapter();
-                return;
-              }
-              if (i < _detail.page_url.length + 1) {
-                setState(() {
-                  _selectIndex = i;
-                });
-              }
-            },
-            itemBuilder: (ctx, index) {
-              if (index == 0) {
-                return Center(
-                  child: Text(
-                      widget.chapters.indexOf(_currentItem) == 0
-                          ? "前面没有了"
-                          : "上一章",
-                      style: TextStyle(color: Colors.grey)),
-                );
-              }
-              if (index == _detail.page_url.length + 1) {
-                return createTucao(24);
-              }
-              if (index == _detail.page_url.length + 2) {
-                return Center(
-                  child: Text(
-                      widget.chapters.indexOf(_currentItem) ==
-                              widget.chapters.length - 1
-                          ? "后面没有了"
-                          : "下一章",
-                      style: TextStyle(color: Colors.grey)),
-                );
-              }
-
-              return PhotoView(
-                filterQuality: FilterQuality.high,
-                loadingBuilder: (context, event) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-                imageProvider: Utils.createCachedImageProvider(
-                  _detail.page_url[index - 1],
-                ),
-              );
-            }),
+        child: ComicView.builder(
+          builder: _buildItem,
+          gaplessPlayback: true,
+          reverse: Provider.of<AppSetting>(context).comicReadReverse,
+          itemCount: _detail.page_url.length + 3,
+          loadingBuilder: (context, event) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+          loadFailedChild: Center(
+            child: Text("出错啦"),
+          ),
+          pageController: _pageController,
+          onPageChanged: (i) {
+            if (i == _detail.page_url.length + 2) {
+              nextChapter();
+              return;
+            }
+            if (i == 0 && !_loading) {
+              previousChapter();
+              return;
+            }
+            if (i < _detail.page_url.length + 1) {
+              //preload(i);
+              setState(() {
+                _selectIndex = i;
+              });
+            }
+          },
+        ),
       ),
+    );
+  }
+
+  PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
+    if (index > 0 && index <= _detail.page_url.length) {
+      return PhotoViewGalleryPageOptions(
+        imageProvider: CachedNetworkImageProvider(
+          _detail.page_url[index - 1],
+          headers: {"Referer": "http://www.dmzj.com/"},
+        ),
+        initialScale: PhotoViewComputedScale.contained,
+        minScale: PhotoViewComputedScale.contained,
+        maxScale: PhotoViewComputedScale.covered * 4.1,
+      );
+    } else {
+      return PhotoViewGalleryPageOptions.customChild(
+          child: getExtraPage(index));
+    }
+  }
+
+  Widget getExtraPage(int index) {
+    if (index == 0) {
+      return Center(
+        child: Text(
+            widget.chapters.indexOf(_currentItem) == 0 ? "前面没有了" : "上一章",
+            style: TextStyle(color: Colors.grey)),
+      );
+    }
+    if (index == _detail.page_url.length + 1) {
+      return createTucao(24);
+    }
+    if (index == _detail.page_url.length + 2) {
+      return Center(
+        child: Text(
+            widget.chapters.indexOf(_currentItem) == widget.chapters.length - 1
+                ? "后面没有了"
+                : "下一章",
+            style: TextStyle(color: Colors.grey)),
+      );
+    }
+    return Center(
+      child: Text("出错啦"),
     );
   }
 
@@ -983,6 +1021,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   }
 
   void nextChapter() async {
+    preload_end = 1;
     if (widget.chapters.indexOf(_currentItem) == widget.chapters.length - 1) {
       Fluttertoast.showToast(msg: '已经是最后一章了');
       return;
@@ -994,6 +1033,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   }
 
   Future previousChapter() async {
+    preload_end = 1;
     if (widget.chapters.indexOf(_currentItem) == 0) {
       Fluttertoast.showToast(msg: '已经是最前面一章了');
       return;

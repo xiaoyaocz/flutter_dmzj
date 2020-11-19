@@ -1,7 +1,7 @@
 {
-    "version":"1.1.1",
-    "version_code":"201118",
-    "message":"优化界面效率",
+    "version":"1.2.0",
+    "version_code":"201119",
+    "message":"优化漫画阅读",
     "android_url":"https://github.com/tom8zds/dmzj_flutter/releases/latest",
     "ios_url":"",
     "hide_banner":true

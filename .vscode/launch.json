@@ -4,24 +4,19 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {
-            "name": "Flutter Release",
-            "type": "dart",
-            "request": "launch",
-            "program": "lib/main.dart",
-            "flutterMode": "release"
-        },
-
+        
     {
-        "name": "Flutter_profile",
+        "name": "debug",
+        "type": "dart",
+        "request": "launch",
+        "flutterMode": "debug",
+    },
+    {
+        "name": "profile",
         "type": "dart",
         "request": "launch",
         "flutterMode": "profile",
     },
-        {
-            "name": "Flutter",
-            "request": "launch",
-            "type": "dart"
-        }
+        
     ]
 }
