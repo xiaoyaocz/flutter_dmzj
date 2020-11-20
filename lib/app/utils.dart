@@ -58,11 +58,9 @@ class Utils {
 
   static Future<VersionInfo> checkVersion() async {
     try {
-      var newVersion = await http.get(
-          "https://github.com/tom8zds/dmzj_flutter/raw/master/version.json" +
-              DateTime.now().millisecondsSinceEpoch.toString());
-      var verInfo =
-          VersionInfo.fromJson(jsonDecode(utf8.decode(newVersion.bodyBytes)));
+      var newVersion = await http.read(
+          "https://raw.githubusercontent.com/tom8zds/dmzj_flutter/master/verison.json");
+      var verInfo = VersionInfo.fromJson(jsonDecode(newVersion));
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       if (packageInfo.buildNumber != verInfo.version_code) {
         return verInfo;
@@ -70,6 +68,7 @@ class Utils {
         return null;
       }
     } catch (e) {
+      print(e);
       return null;
     }
   }

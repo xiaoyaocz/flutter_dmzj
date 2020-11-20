@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
+import 'package:update_app/update_app.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingPage extends StatefulWidget {
@@ -147,7 +148,13 @@ class _SettingPageState extends State<SettingPage> {
                 if (await Utils.showAlertDialogAsync(
                     context, Text('有新版本可以更新'), Text(newVer.message))) {
                   if (Platform.isAndroid) {
-                    launch(newVer.android_url);
+                    String dl_url =
+                        "https://github.com/tom8zds/dmzj_flutter/releases/download/${newVer.version}(${newVer.version_code})/app-release.apk";
+                    UpdateApp.updateApp(
+                        title: "动漫之家 flutter 更新",
+                        description: "正在下载",
+                        url: dl_url,
+                        appleId: null);
                   } else {
                     launch(newVer.ios_url);
                   }

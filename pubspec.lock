@@ -553,6 +553,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.3.0-nullsafety.3"
+  update_app:
+    dependency: "direct main"
+    description:
+      name: update_app
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.5"
   url_launcher:
     dependency: "direct main"
     description:
