@@ -142,23 +142,21 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return EasyRefresh(
+    return EasyRefresh.custom(
       header: MaterialHeader(),
       footer: MaterialFooter(),
-      child: CustomScrollView(
-        slivers: [
-          _loading && _page == 0
-              ? SliverFillRemaining(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              : UserSubscribeWidget(
-                  _list,
-                  type: widget.type,
+      slivers: [
+        _loading && _page == 0
+            ? SliverFillRemaining(
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
-        ],
-      ),
+              )
+            : UserSubscribeWidget(
+                _list,
+                type: widget.type,
+              ),
+      ],
       onRefresh: () async {
         _page = 0;
 

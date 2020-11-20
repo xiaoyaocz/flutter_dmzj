@@ -171,7 +171,8 @@ class _SettingPageState extends State<SettingPage> {
                       width: 48,
                     ),
                     context: context,
-                    applicationVersion: "${_version}\n@tom8zds fork from @xiaoyaocz",
+                    applicationVersion:
+                        "$_version\n@tom8zds fork from @xiaoyaocz",
                     applicationLegalese:
                         "此程序仅供学习交流编程技术使用,禁止用于任何商业用途。如侵犯你的合法权益，请联系本人以第一时间删除");
               }, //Provider.of<AppThemeData>(context).changeThemeColor(3),

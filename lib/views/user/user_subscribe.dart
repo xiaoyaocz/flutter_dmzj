@@ -107,93 +107,91 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return EasyRefresh(
+    return EasyRefresh.custom(
       header: MaterialHeader(),
       footer: MaterialFooter(),
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: PopupMenuButton<String>(
-                    child: Container(
-                      height: 36,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(_selectLetters == 0
-                              ? "字母筛选"
-                              : _letters.keys.toList()[_selectLetters]),
-                          Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.grey,
-                          )
-                        ],
-                      ),
-                    ),
-                    onSelected: (v) async {
-                      setState(() {
-                        _selectLetters = _letters.values.toList().indexOf(v);
-                      });
-                      _page = 0;
-                      await loadData();
-                    },
-                    itemBuilder: (c) => _letters.keys
-                        .map((f) => CheckedPopupMenuItem<String>(
-                              child: Text(f),
-                              value: _letters[f],
-                              checked: _selectLetters ==
-                                  _letters.keys.toList().indexOf(f),
-                            ))
-                        .toList(),
-                  ),
-                ),
-                Expanded(
-                    child: PopupMenuButton<int>(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: PopupMenuButton<String>(
                   child: Container(
-                      height: 36,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(_subTypes[_subType - 1]),
-                          Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.grey,
-                          )
-                        ],
-                      )),
+                    height: 36,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(_selectLetters == 0
+                            ? "字母筛选"
+                            : _letters.keys.toList()[_selectLetters]),
+                        Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.grey,
+                        )
+                      ],
+                    ),
+                  ),
                   onSelected: (v) async {
                     setState(() {
-                      _subType = v;
+                      _selectLetters = _letters.values.toList().indexOf(v);
                     });
                     _page = 0;
                     await loadData();
                   },
-                  itemBuilder: (c) => _subTypes
-                      .map((f) => CheckedPopupMenuItem<int>(
+                  itemBuilder: (c) => _letters.keys
+                      .map((f) => CheckedPopupMenuItem<String>(
                             child: Text(f),
-                            value: _subTypes.indexOf(f) + 1,
-                            checked: _subTypes.indexOf(f) + 1 == _subType,
+                            value: _letters[f],
+                            checked: _selectLetters ==
+                                _letters.keys.toList().indexOf(f),
                           ))
                       .toList(),
-                ))
-              ],
-            ),
-          ),
-          _loading && _page == 0
-              ? SliverFillRemaining(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              : UserSubscribeWidget(
-                  _list,
-                  type: widget.type,
                 ),
-        ],
-      ),
+              ),
+              Expanded(
+                  child: PopupMenuButton<int>(
+                child: Container(
+                    height: 36,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(_subTypes[_subType - 1]),
+                        Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.grey,
+                        )
+                      ],
+                    )),
+                onSelected: (v) async {
+                  setState(() {
+                    _subType = v;
+                  });
+                  _page = 0;
+                  await loadData();
+                },
+                itemBuilder: (c) => _subTypes
+                    .map((f) => CheckedPopupMenuItem<int>(
+                          child: Text(f),
+                          value: _subTypes.indexOf(f) + 1,
+                          checked: _subTypes.indexOf(f) + 1 == _subType,
+                        ))
+                    .toList(),
+              ))
+            ],
+          ),
+        ),
+        _loading && _page == 0
+            ? SliverFillRemaining(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            : UserSubscribeWidget(
+                _list,
+                type: widget.type,
+              ),
+      ],
       onRefresh: () async {
         _page = 0;
 

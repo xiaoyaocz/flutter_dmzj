@@ -64,6 +64,7 @@ class _PersonalPageState extends State<PersonalPage> {
                     )),
                 expandedHeight: myExpandedHeight - getSafebar(),
                 flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
                   background: Stack(
                     children: <Widget>[
                       Image.asset(
@@ -83,8 +84,8 @@ class _PersonalPageState extends State<PersonalPage> {
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
                             colors: [
-                              Theme.of(context).accentColor.withOpacity(1),
-                              Theme.of(context).accentColor.withOpacity(0.1)
+                              Theme.of(context).cardColor.withOpacity(1),
+                              Theme.of(context).cardColor.withOpacity(0.3)
                             ],
                           ),
                         ),

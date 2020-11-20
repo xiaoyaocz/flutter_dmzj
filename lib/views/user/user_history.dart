@@ -83,39 +83,24 @@ class _HistoryTabItemState extends State<HistoryTabItem>
               child: CircularProgressIndicator(),
             ),
           )
-        : widget.type == 0
-            ? EasyRefresh(
-                onRefresh: () async {
-                  if (widget.type == 0) {
-                    await loadDataComic();
-                  } else {
-                    await loadDataNovel();
-                  }
-                },
-                header: MaterialHeader(),
-                child: ListView(
-                    children: _list.map(
-                  (f) {
-                    return createItem(f);
-                  },
-                ).toList()),
-              )
-            : EasyRefresh(
-                onRefresh: () async {
-                  if (widget.type == 0) {
-                    await loadDataComic();
-                  } else {
-                    await loadDataNovel();
-                  }
-                },
-                header: MaterialHeader(),
-                child: ListView(
-                    children: _novelList.map(
-                  (f) {
-                    return createNovelItem(f);
-                  },
-                ).toList()),
-              );
+        : EasyRefresh(
+            onRefresh: () async {
+              if (widget.type == 0) {
+                await loadDataComic();
+              } else {
+                await loadDataNovel();
+              }
+            },
+            header: MaterialHeader(),
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                if (widget.type == 0)
+                  return createItem(_list[index]);
+                else
+                  return createNovelItem(_novelList[index]);
+              },
+              itemCount: widget.type == 0 ? _list.length : _novelList.length,
+            ));
   }
 
   Widget createItem(ComicHistoryItem item) {

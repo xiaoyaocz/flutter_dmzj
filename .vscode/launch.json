@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         
     {
         "name": "debug",
@@ -17,6 +18,11 @@
         "request": "launch",
         "flutterMode": "profile",
     },
-        
+        {
+        "name": "release",
+        "type": "dart",
+        "request": "launch",
+       "flutterMode": "release"
+    },    
     ]
 }

@@ -65,24 +65,27 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
       endDrawer: Drawer(
         child: createFilter(),
       ),
-      body: EasyRefresh(
+      body: EasyRefresh.custom(
         header: MaterialHeader(),
         footer: MaterialFooter(),
-        child: GridView.builder(
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-          physics: ScrollPhysics(),
-          itemCount: _list.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: MediaQuery.of(context).size.width ~/ 160 < 3
-                  ? 3
-                  : MediaQuery.of(context).size.width ~/ 160,
-              crossAxisSpacing: 2.0,
-              mainAxisSpacing: 4.0,
-              childAspectRatio: getWidth() / ((getWidth() * (360 / 270)) + 64)),
-          itemBuilder: (context, i) => Utils.createCoverWidget(
-              _list[i].id, 1, _list[i].cover, _list[i].title, context,
-              author: _list[i].authors, status: _list[i].status),
-        ),
+        slivers: [
+          SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, i) => Utils.createCoverWidget(
+                  _list[i].id, 1, _list[i].cover, _list[i].title, context,
+                  author: _list[i].authors, status: _list[i].status),
+              childCount: _list.length,
+            ),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: MediaQuery.of(context).size.width ~/ 160 < 3
+                    ? 3
+                    : MediaQuery.of(context).size.width ~/ 160,
+                crossAxisSpacing: 2.0,
+                mainAxisSpacing: 4.0,
+                childAspectRatio:
+                    getWidth() / ((getWidth() * (360 / 270)) + 64)),
+          )
+        ],
         onRefresh: () async {
           _page = 0;
 

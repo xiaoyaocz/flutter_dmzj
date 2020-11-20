@@ -581,6 +581,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       child: Container(
         color: Colors.black,
         child: ComicView.builder(
+          scrollPhysics: ScrollPhysics(),
           builder: _buildItem,
           gaplessPlayback: true,
           reverse: Provider.of<AppSetting>(context).comicReadReverse,

@@ -30,19 +30,22 @@ class _ComicAuthorPageState extends State<ComicAuthorPage> {
       appBar: AppBar(
         title: Text(_detail == null ? "作者" : _detail.nickname + "的作品"),
       ),
-      body: EasyRefresh(
+      body: EasyRefresh.custom(
         enableControlFinishLoad: false,
         header: MaterialHeader(),
         onRefresh: loadData,
-        child: ListView(
-          children: _detail != null
-              ? _detail.data
-                  .map<Widget>((f) => Utils.createDetailWidget(
-                      f.id, 1, f.cover, f.name, context,
-                      status: f.status))
-                  .toList()
-              : [],
-        ),
+        slivers: [
+          SliverList(
+              delegate: SliverChildListDelegate(
+            _detail != null
+                ? _detail.data
+                    .map<Widget>((f) => Utils.createDetailWidget(
+                        f.id, 1, f.cover, f.name, context,
+                        status: f.status))
+                    .toList()
+                : [],
+          ))
+        ],
       ),
     );
   }

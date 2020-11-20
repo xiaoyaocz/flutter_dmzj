@@ -200,9 +200,13 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                         context),
                   ),
                   SliverToBoxAdapter(
-                      child: (_detail != null && _related != null)
+                      child: (_detail != null)
                           ? createDetail()
-                          : Container()),
+                          : (_noCopyright)
+                              ? Center(
+                                  child: Text("漫画走丢了 w(ﾟДﾟ)w ！"),
+                                )
+                              : Container()),
                 ],
               );
             }),
@@ -553,45 +557,6 @@ class _ComicDetailPageState extends State<ComicDetailPage>
             )
           ],
         ));
-  }
-
-  Widget _getComicItemBuilder(int id, int type, String pic, String title,
-      {String author = "",
-      String url = "",
-      double width = 270,
-      double height = 360}) {
-    return RawMaterialButton(
-      onPressed: () =>
-          Utils.openPage(context, id, type, url: pic, title: title),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      padding: EdgeInsets.all(4),
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Utils.createCacheImage(pic, width, height),
-            Padding(
-              padding: EdgeInsets.only(top: 4, bottom: 4),
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            author == ""
-                ? Container()
-                : Flexible(
-                    child: Text(
-                      author,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.grey, fontSize: 12.0),
-                    ),
-                  ),
-          ],
-        ),
-      ),
-    );
   }
 
   String tagsToString(List<ComicDetailTagItem> items) {

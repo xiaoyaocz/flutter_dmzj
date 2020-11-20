@@ -22,7 +22,6 @@ class ComicSpecialDetailPage extends StatefulWidget {
 class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   @override
-  TabController _tabController;
   bool get wantKeepAlive => true;
   ComicSpecia _detail;
   int _index = 0;
@@ -34,7 +33,6 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    _tabController = TabController(length: 2, vsync: this);
     super.build(context);
     return Scaffold(
       body: IndexedStack(

@@ -174,7 +174,13 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                         context),
                   ),
                   SliverToBoxAdapter(
-                      child: (_detail != null) ? createDetail() : Container()),
+                      child: (_detail != null)
+                          ? createDetail()
+                          : _loadfail
+                              ? Center(
+                                  child: Text("漫画走丢了 w(ﾟДﾟ)w ！"),
+                                )
+                              : Container()),
                 ],
               );
             }),
@@ -424,7 +430,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
 
   DefaultCacheManager _cacheManager = DefaultCacheManager();
   bool _loading = false;
-  bool _loadffail = false;
+  bool _loadfail = false;
   bool _isSubscribe = false;
   List<NovelVolumeItem> volumes = [];
   Future loadData() async {
@@ -458,7 +464,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
       NovelDetail detail = NovelDetail.fromJson(jsonMap);
       if (detail.name == null || detail.name == "") {
         setState(() {
-          _loadffail = true;
+          _loadfail = true;
         });
         return;
       }
@@ -468,7 +474,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         _detail = detail;
       });
     } catch (e) {
-      _loadffail = true;
+      _loadfail = true;
       print(e);
     }
   }
@@ -498,7 +504,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         });
       }
     } catch (e) {
-      _loadffail = true;
+      _loadfail = true;
       print(e);
     }
   }
@@ -515,7 +521,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         _isSubscribe = jsonMap["code"] == 0;
       });
     } catch (e) {
-      _loadffail = true;
+      _loadfail = true;
       print(e);
     }
   }
