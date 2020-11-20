@@ -155,6 +155,7 @@ class _SettingPageState extends State<SettingPage> {
                         description: "正在下载",
                         url: dl_url,
                         appleId: null);
+                    Fluttertoast.showToast(msg: "正在下载");
                   } else {
                     launch(newVer.ios_url);
                   }
