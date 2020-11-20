@@ -15,12 +15,15 @@ import 'package:flutter_dmzj/views/novel/novel_home.dart';
 import 'package:flutter_dmzj/views/setting_page.dart';
 import 'package:flutter_dmzj/views/user/personal_page.dart';
 import 'package:flutter_dmzj/views/user/user_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'app/app_theme.dart';
 import 'app/user_info.dart';
+import 'app/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -140,6 +143,36 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
+    final QuickActions quickActions = QuickActions();
+    quickActions.initialize((String shortcutType) {
+      int type = int.parse(shortcutType);
+      if (!Provider.of<AppUserInfo>(context, listen: false).isLogin) type = 0;
+      print(type);
+      switch (type) {
+        case 1:
+          Utils.openSubscribePage(context);
+          break;
+        case 2:
+          Utils.openHistoryPage(context);
+          break;
+        default:
+          Fluttertoast.showToast(msg: "没有登陆");
+          Navigator.pushNamed(context, "/Login");
+      }
+    });
+
+    quickActions.setShortcutItems(<ShortcutItem>[
+      // NOTE: This first action icon will only work on iOS.
+      // In a real world project keep the same file name for both platforms.
+      const ShortcutItem(
+        type: '1',
+        localizedTitle: '我的订阅',
+        icon: 'ic_fav',
+      ),
+      // NOTE: This second action icon will only work on Android.
+      // In a real world project keep the same file name for both platforms.
+      const ShortcutItem(type: '2', localizedTitle: '浏览记录', icon: 'ic_history'),
+    ]);
     //checkUpdate();
   }
 
