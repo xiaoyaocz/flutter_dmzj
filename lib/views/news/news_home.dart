@@ -109,18 +109,9 @@ class NewsNewTabViewState extends State<NewsNewTabView>
   @override
   bool get wantKeepAlive => true;
 
-  //如果是IOS，且在审核期间，隐藏Banner
-  bool _hideBanner = false;
-
   @override
   void initState() {
     super.initState();
-    _hideBanner = Utils.hideBanner;
-    Utils.changeHideBanner.on<bool>().listen((event) {
-      setState(() {
-        _hideBanner = event;
-      });
-    });
     loadData();
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
@@ -140,22 +131,20 @@ class NewsNewTabViewState extends State<NewsNewTabView>
               controller: scrollController,
               child: Column(
                 children: <Widget>[
-                  (Platform.isIOS && _hideBanner)
-                      ? Container()
-                      : AppBanner(
-                          items: _banners
-                              .map<Widget>((i) => BannerImageItem(
-                                    pic: i.pic_url,
-                                    title: i.title,
-                                    onTaped: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) => NewsDetailPage(
-                                                i.object_id,
-                                                i.object_url,
-                                                i.title))),
-                                  ))
-                              .toList()),
+                  AppBanner(
+                      items: _banners
+                          .map<Widget>((i) => BannerImageItem(
+                                pic: i.pic_url,
+                                title: i.title,
+                                onTaped: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => NewsDetailPage(
+                                            i.object_id,
+                                            i.object_url,
+                                            i.title))),
+                              ))
+                          .toList()),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: ScrollPhysics(),
