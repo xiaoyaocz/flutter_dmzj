@@ -10,5 +10,5 @@
 - [ ] 评论功能
 
 ## 截图
-![截图](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/screenshorts.png)
+![截图](https://github.com/tom8zds/dmzj_flutter/raw/master/ScreenShots/screenshots.png)
 
