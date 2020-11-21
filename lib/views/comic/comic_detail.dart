@@ -48,18 +48,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         _loading = false;
       });
     });
-    updateHistory();
-    Utils.changHistory.on<int>().listen((e) {
-      updateHistory();
-    });
     _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
-  }
-
-  void updateHistory() async {
-    var his = await ComicHistoryHelper.getItem(widget.comicId);
-    setState(() {
-      historyChapter = his?.chapter_id ?? 0;
-    });
   }
 
   @override
@@ -481,7 +470,6 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       if (_item != null) {
         await Utils.openComicReader(context, widget.comicId, _detail.title,
             _isSubscribe, chpters.data, _item);
-        updateHistory();
         return;
       }
     }
@@ -489,7 +477,6 @@ class _ComicDetailPageState extends State<ComicDetailPage>
     _chapters.sort((x, y) => x.chapter_order.compareTo(y.chapter_order));
     await Utils.openComicReader(context, widget.comicId, _detail.title,
         _isSubscribe, _chapters, _chapters.first);
-    updateHistory();
   }
 
   Widget _getItem(String title, List items,

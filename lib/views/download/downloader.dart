@@ -8,6 +8,7 @@ import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_web_chapter_detail.dart';
+import 'package:flutter_dmzj/models/download/comic_download_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
@@ -16,10 +17,12 @@ class ComicDownloader {
   static ComicWebChapterDetail currentData;
   static ComicDetailChapterItem currentDownload;
   static bool downloading;
-  static String appDocPath;
+  static String downloadPath;
   static final Options options =
       Options(headers: {"Referer": "http://www.dmzj.com/"});
   int comicId;
+  String coverUrl;
+  String comicTitle;
   static int poolCount = 3;
   ComicDownloader(this.comicId);
   static double progress = 0.0;
@@ -35,15 +38,29 @@ class ComicDownloader {
     currentDownload = chapter;
     progress = 0.0;
     Directory appDocDir = await getApplicationDocumentsDirectory();
-    appDocPath = appDocDir.absolute.path;
-    print(appDocPath);
+    downloadPath = appDocDir.absolute.path + '/downloads';
+    print(downloadPath);
     var directory =
-        await new Directory("$appDocPath/$comicId").create(recursive: true);
+        await new Directory("$downloadPath/$comicId").create(recursive: true);
     assert(await directory.exists() == true);
     //输出绝对路径
     print("Path: ${directory.absolute.path}");
+
+    // File downloadRecort = new File(downloadPath + '/info.json');
+    // if (!await downloadRecort.exists()) {
+    //   //创建文件
+    //   downloadRecort = await downloadRecort.create();
+    // }
+    // var jsonMap = jsonDecode(await downloadRecort.readAsString());
+    // ComicDownloadModel model = ComicDownloadModel.fromJson(jsonMap);
+    // if (!model.id.contains(comicId)) {
+    //   model.id.add(comicId);
+    //   model.coverUrl.add(coverUrl);
+    //   model.title.add(comicTitle);
+    // }
+
     directory = await new Directory(
-            "$appDocPath/$comicId/${currentDownload.chapter_id}")
+            "$downloadPath/$comicId/${currentDownload.chapter_id}")
         .create(recursive: true);
     assert(await directory.exists() == true);
     print("Path: ${directory.absolute.path}");
@@ -52,8 +69,8 @@ class ComicDownloader {
   }
 
   Future<int> delete(ComicDetailChapterItem chapter) async {
-    print(appDocPath);
-    var directory = Directory("$appDocPath/$comicId/${chapter.chapter_id}");
+    print(downloadPath);
+    var directory = Directory("$downloadPath/$comicId/${chapter.chapter_id}");
     if (await directory.exists()) {
       await directory.delete(recursive: true);
       return 0;
@@ -94,7 +111,7 @@ class ComicDownloader {
       for (int j = 0; j < poolCount; j++, index++) {
         await Dio()
             .download(currentData.page_url[index],
-                "$appDocPath/$comicId/${currentDownload.chapter_id}/$index.jpg",
+                "$downloadPath/$comicId/${currentDownload.chapter_id}/$index.jpg",
                 options: options)
             .whenComplete(() {
           print(currentData.page_url[index]);
@@ -106,7 +123,7 @@ class ComicDownloader {
     for (; index < currentData.page_url.length; index++) {
       await Dio()
           .download(currentData.page_url[index],
-              "$appDocPath/$comicId/${currentDownload.chapter_id}/$index.jpg",
+              "$downloadPath/$comicId/${currentDownload.chapter_id}/$index.jpg",
               options: options)
           .whenComplete(() {
         progress = index / currentData.page_url.length;

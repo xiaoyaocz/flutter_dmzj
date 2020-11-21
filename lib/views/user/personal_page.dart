@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_theme.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
 import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/views/download/local_comic.dart';
 import 'package:provider/provider.dart';
 
 class PersonalPage extends StatefulWidget {
@@ -138,7 +139,15 @@ class _PersonalPageState extends State<PersonalPage> {
                             trailing:
                                 Icon(Icons.chevron_right, color: Colors.grey),
                             leading: Icon(Icons.file_download),
-                            onTap: () => {},
+                            onTap: () => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      LocalComicPage(),
+                                ),
+                              )
+                            },
                           )
                         ],
                       ),
