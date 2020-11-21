@@ -1,7 +1,6 @@
 import 'dart:convert' show json;
 
 class NovelSearchResultItem {
-
   int _addtime;
   int get addtime => _addtime;
   String _authors;
@@ -23,31 +22,41 @@ class NovelSearchResultItem {
   int _id;
   int get id => _id;
 
-    NovelSearchResultItem({
-
-int addtime,
-String authors,
-int copyright,
-String cover,
-int hot_hits,
-String last_name,
-int status,
-String title,
-String types,
-int id,
-}):_addtime=addtime,_authors=authors,_copyright=copyright,_cover=cover,_hot_hits=hot_hits,_last_name=last_name,_status=status,_title=title,_types=types,_id=id;
-  factory NovelSearchResultItem.fromJson(jsonRes)=>jsonRes == null? null:NovelSearchResultItem( 
-    addtime : jsonRes['addtime'],
-    authors : jsonRes['authors'],
-    copyright : jsonRes['copyright'],
-    cover : jsonRes['cover'],
-    hot_hits : jsonRes['hot_hits'],
-    last_name : jsonRes['last_name'],
-    status : jsonRes['status'],
-    title : jsonRes['title'],
-    types : jsonRes['types'],
-    id : jsonRes['id'],
-);
+  NovelSearchResultItem({
+    int addtime,
+    String authors,
+    int copyright,
+    String cover,
+    int hot_hits,
+    String last_name,
+    int status,
+    String title,
+    String types,
+    int id,
+  })  : _addtime = addtime,
+        _authors = authors,
+        _copyright = copyright,
+        _cover = cover,
+        _hot_hits = hot_hits,
+        _last_name = last_name,
+        _status = status,
+        _title = title,
+        _types = types,
+        _id = id;
+  factory NovelSearchResultItem.fromJson(jsonRes) => jsonRes == null
+      ? null
+      : NovelSearchResultItem(
+          addtime: jsonRes['addtime'],
+          authors: jsonRes['authors'],
+          copyright: jsonRes['copyright'],
+          cover: jsonRes['cover'],
+          hot_hits: jsonRes['hot_hits'],
+          last_name: jsonRes['last_name'],
+          status: jsonRes['status'],
+          title: jsonRes['title'],
+          types: jsonRes['types'],
+          id: jsonRes['id'],
+        );
   Map<String, dynamic> toJson() => {
         'addtime': _addtime,
         'authors': _authors,
@@ -59,11 +68,10 @@ int id,
         'title': _title,
         'types': _types,
         'id': _id,
-};
+      };
 
   @override
-String  toString() {
+  String toString() {
     return json.encode(this);
   }
 }
-

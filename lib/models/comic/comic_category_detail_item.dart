@@ -18,25 +18,35 @@ class ComicCategoryDetailItem {
   int _num;
   int get num => _num;
 
-    ComicCategoryDetailItem({
-int id,
-String title,
-String authors,
-String status,
-String cover,
-String types,
-int last_updatetime,
-int num,
-}):_id=id,_title=title,_authors=authors,_status=status,_cover=cover,_types=types,_last_updatetime=last_updatetime,_num=num;
-  factory ComicCategoryDetailItem.fromJson(jsonRes)=>jsonRes == null? null:ComicCategoryDetailItem(    id : jsonRes['id'],
-    title : jsonRes['title'],
-    authors : jsonRes['authors'],
-    status : jsonRes['status'],
-    cover : jsonRes['cover'],
-    types : jsonRes['types'],
-    last_updatetime : jsonRes['last_updatetime'],
-    num : jsonRes['num'],
-);
+  ComicCategoryDetailItem({
+    int id,
+    String title,
+    String authors,
+    String status,
+    String cover,
+    String types,
+    int last_updatetime,
+    int num,
+  })  : _id = id,
+        _title = title,
+        _authors = authors,
+        _status = status,
+        _cover = cover,
+        _types = types,
+        _last_updatetime = last_updatetime,
+        _num = num;
+  factory ComicCategoryDetailItem.fromJson(jsonRes) => jsonRes == null
+      ? null
+      : ComicCategoryDetailItem(
+          id: jsonRes['id'],
+          title: jsonRes['title'],
+          authors: jsonRes['authors'],
+          status: jsonRes['status'],
+          cover: jsonRes['cover'],
+          types: jsonRes['types'],
+          last_updatetime: jsonRes['last_updatetime'],
+          num: jsonRes['num'],
+        );
   Map<String, dynamic> toJson() => {
         'id': _id,
         'title': _title,
@@ -46,11 +56,10 @@ int num,
         'types': _types,
         'last_updatetime': _last_updatetime,
         'num': _num,
-};
+      };
 
   @override
-String  toString() {
+  String toString() {
     return json.encode(this);
   }
 }
-

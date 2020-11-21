@@ -8,32 +8,33 @@ class ComicHomeNewItem {
   String cover;
   int get type => 1;
   String get url => "";
-    ComicHomeNewItem({
-this.id,
-this.title,
-this.authors,
-this.status,
-this.cover,
-    });
+  ComicHomeNewItem({
+    this.id,
+    this.title,
+    this.authors,
+    this.status,
+    this.cover,
+  });
 
-
-  factory ComicHomeNewItem.fromJson(jsonRes)=>jsonRes == null? null:ComicHomeNewItem(    id : jsonRes['id'],
-    title : jsonRes['title'],
-    authors : jsonRes['authors'],
-    status : jsonRes['status'],
-    cover : jsonRes['cover'],
-);
+  factory ComicHomeNewItem.fromJson(jsonRes) => jsonRes == null
+      ? null
+      : ComicHomeNewItem(
+          id: jsonRes['id'],
+          title: jsonRes['title'],
+          authors: jsonRes['authors'],
+          status: jsonRes['status'],
+          cover: jsonRes['cover'],
+        );
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
         'authors': authors,
         'status': status,
         'cover': cover,
-};
+      };
 
   @override
-String  toString() {
+  String toString() {
     return json.encode(this);
   }
 }
-

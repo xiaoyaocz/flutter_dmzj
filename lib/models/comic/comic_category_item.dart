@@ -8,24 +8,28 @@ class ComicCategoryItem {
   String _cover;
   String get cover => _cover;
 
-    ComicCategoryItem({
-int tag_id,
-String title,
-String cover,
-}):_tag_id=tag_id,_title=title,_cover=cover;
-  factory ComicCategoryItem.fromJson(jsonRes)=>jsonRes == null? null:ComicCategoryItem(    tag_id : jsonRes['tag_id'],
-    title : jsonRes['title'],
-    cover : jsonRes['cover'],
-);
+  ComicCategoryItem({
+    int tag_id,
+    String title,
+    String cover,
+  })  : _tag_id = tag_id,
+        _title = title,
+        _cover = cover;
+  factory ComicCategoryItem.fromJson(jsonRes) => jsonRes == null
+      ? null
+      : ComicCategoryItem(
+          tag_id: jsonRes['tag_id'],
+          title: jsonRes['title'],
+          cover: jsonRes['cover'],
+        );
   Map<String, dynamic> toJson() => {
         'tag_id': _tag_id,
         'title': _title,
         'cover': _cover,
-};
+      };
 
   @override
-String  toString() {
+  String toString() {
     return json.encode(this);
   }
 }
-

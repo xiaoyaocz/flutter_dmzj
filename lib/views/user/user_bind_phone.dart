@@ -11,9 +11,7 @@ class _UserBindPhoneWidgetState extends State<UserBindPhoneWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget>[
-        
-      ],
+      children: <Widget>[],
     );
   }
 }

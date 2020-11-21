@@ -22,29 +22,41 @@ class ComicNSSearchItem {
   String _uwp;
   String get uwp => _uwp;
 
-    ComicNSSearchItem({
-int id,
-String title,
-String desc,
-String author,
-String cover,
-String status,
-String web,
-String ios,
-String android,
-String uwp,
-}):_id=id,_title=title,_desc=desc,_author=author,_cover=cover,_status=status,_web=web,_ios=ios,_android=android,_uwp=uwp;
-  factory ComicNSSearchItem.fromJson(jsonRes)=>jsonRes == null? null:ComicNSSearchItem(    id : jsonRes['id'],
-    title : jsonRes['title'],
-    desc : jsonRes['desc'],
-    author : jsonRes['author'],
-    cover : jsonRes['cover'],
-    status : jsonRes['status'],
-    web : jsonRes['web'],
-    ios : jsonRes['ios'],
-    android : jsonRes['android'],
-    uwp : jsonRes['uwp'],
-);
+  ComicNSSearchItem({
+    int id,
+    String title,
+    String desc,
+    String author,
+    String cover,
+    String status,
+    String web,
+    String ios,
+    String android,
+    String uwp,
+  })  : _id = id,
+        _title = title,
+        _desc = desc,
+        _author = author,
+        _cover = cover,
+        _status = status,
+        _web = web,
+        _ios = ios,
+        _android = android,
+        _uwp = uwp;
+  factory ComicNSSearchItem.fromJson(jsonRes) => jsonRes == null
+      ? null
+      : ComicNSSearchItem(
+          id: jsonRes['id'],
+          title: jsonRes['title'],
+          desc: jsonRes['desc'],
+          author: jsonRes['author'],
+          cover: jsonRes['cover'],
+          status: jsonRes['status'],
+          web: jsonRes['web'],
+          ios: jsonRes['ios'],
+          android: jsonRes['android'],
+          uwp: jsonRes['uwp'],
+        );
   Map<String, dynamic> toJson() => {
         'id': _id,
         'title': _title,
@@ -56,11 +68,10 @@ String uwp,
         'ios': _ios,
         'android': _android,
         'uwp': _uwp,
-};
+      };
 
   @override
-String  toString() {
+  String toString() {
     return json.encode(this);
   }
 }
-
