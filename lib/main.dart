@@ -16,6 +16,7 @@ import 'package:flutter_dmzj/views/setting_page.dart';
 import 'package:flutter_dmzj/views/user/personal_page.dart';
 import 'package:flutter_dmzj/views/user/user_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +30,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ConfigHelper.prefs = await SharedPreferences.getInstance();
   await initDatabase();
+  Directory appDocDir = await getApplicationDocumentsDirectory();
+  String appDocPath = appDocDir.absolute.path;
+  print(appDocPath);
+  var directory =
+      await new Directory("$appDocPath/downloads").create(recursive: true);
+
+  assert(await directory.exists() == true);
+  //输出绝对路径
+  print("Path: ${directory.absolute.path}");
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<AppTheme>(create: (_) => AppTheme(), lazy: false),

@@ -99,6 +99,15 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                     title: (_detail != null) ? Text(_detail.title) : Text(""),
                     actions: (_detail != null)
                         ? <Widget>[
+                            IconButton(
+                                icon: Icon(Icons.cloud_download),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              ComicDownloadPage(_detail)));
+                                }),
                             Provider.of<AppUserInfo>(context).isLogin &&
                                     _isSubscribe
                                 ? IconButton(

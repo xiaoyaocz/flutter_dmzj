@@ -134,6 +134,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.3.5"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.0.10"
   event_bus:
     dependency: "direct main"
     description:

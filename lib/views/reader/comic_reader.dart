@@ -982,6 +982,8 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         });
       }
 
+      print(detail.page_url[1]);
+
       setState(() {
         _detail = detail;
       });

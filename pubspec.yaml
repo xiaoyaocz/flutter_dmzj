@@ -48,11 +48,12 @@ dependencies:
   connectivity: ^2.0.0
   flutter_cache_manager: ^2.0.0
   screen: ^0.0.5
-  path_provider: ^1.6.21
+  path_provider: ^1.6.24
   preload_page_view: ^0.1.4
   package_info: ^0.4.3
   quick_actions: ^0.4.0+10
   update_app: ^0.1.5
+  dio: ^3.0.10
 
 
 

@@ -1,3 +1,4 @@
+import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 final String comicDownloadTableName = 'ComicDownload';
@@ -12,76 +13,87 @@ final String comicDownloadColumnCount = 'Count';
 final String comicDownloadColumnSavePath = 'SavePath';
 final String comicDownloadColumnUrls = 'Urls';
 
-
 class ComicDownloadSqlItem {
-	int chapterID;
-String chapterName;
-int comicID;
-String comicName;
-int status;
-String volume;
-int page;
-int count;
-String savePath;
-String urls;
+  int chapterID;
+  String chapterName;
+  int comicID;
+  String comicName;
+  int status;
+  String volume;
+  int page;
+  int count;
+  String savePath;
+  String urls;
 
-  ComicDownloadSqlItem(this.chapterID,this.chapterName,this.comicID,this.comicName,this.status,this.volume,{this.page,this.count,this.savePath,this.urls});
+  ComicDownloadSqlItem(this.chapterID, this.chapterName, this.comicID,
+      this.comicName, this.status, this.volume,
+      {this.page, this.count, this.savePath, this.urls});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       comicDownloadColumnChapterID: chapterID,
-comicDownloadColumnChapterName: chapterName,
-comicDownloadColumnComicID: comicID,
-comicDownloadColumnComicName: comicName,
-comicDownloadColumnStatus: status,
-comicDownloadColumnVolume: volume,
-comicDownloadColumnPage: page,
-comicDownloadColumnCount: count,
-comicDownloadColumnSavePath: savePath,
-comicDownloadColumnUrls: urls,
-
+      comicDownloadColumnChapterName: chapterName,
+      comicDownloadColumnComicID: comicID,
+      comicDownloadColumnComicName: comicName,
+      comicDownloadColumnStatus: status,
+      comicDownloadColumnVolume: volume,
+      comicDownloadColumnPage: page,
+      comicDownloadColumnCount: count,
+      comicDownloadColumnSavePath: savePath,
+      comicDownloadColumnUrls: urls,
     };
     return map;
   }
 
   ComicDownloadSqlItem.fromMap(Map<String, dynamic> map) {
     chapterID = map[comicDownloadColumnChapterID];
-chapterName = map[comicDownloadColumnChapterName];
-comicID = map[comicDownloadColumnComicID];
-comicName = map[comicDownloadColumnComicName];
-status = map[comicDownloadColumnStatus];
-volume = map[comicDownloadColumnVolume];
-page = map[comicDownloadColumnPage];
-count = map[comicDownloadColumnCount];
-savePath = map[comicDownloadColumnSavePath];
-urls = map[comicDownloadColumnUrls];
-
+    chapterName = map[comicDownloadColumnChapterName];
+    comicID = map[comicDownloadColumnComicID];
+    comicName = map[comicDownloadColumnComicName];
+    status = map[comicDownloadColumnStatus];
+    volume = map[comicDownloadColumnVolume];
+    page = map[comicDownloadColumnPage];
+    count = map[comicDownloadColumnCount];
+    savePath = map[comicDownloadColumnSavePath];
+    urls = map[comicDownloadColumnUrls];
   }
 
-
+  // ComicDownloadSqlItem.fromComicItem(
+  //      ComicDetail comicDetail, int v,int c) {
+  //        ComicDetailChapterItem item = comicDetail.chapters[v].data[c];
+  //   chapterID = item.chapter_id;
+  //   chapterName = item.chapter_title;
+  //   comicID = comicDetail.id;
+  //   comicName = comicDetail.title;
+  //   volume = comicDetail.chapters[v].title;
+  //   page = item.;
+  //   count = map[comicDownloadColumnCount];
+  //   savePath = map[comicDownloadColumnSavePath];
+  //   urls = map[comicDownloadColumnUrls];
+  // }
 }
 
 class ComicDownloadProvider {
- static Database db;
- static Future<ComicDownloadSqlItem> insert(ComicDownloadSqlItem item) async {
+  static Database db;
+  static Future<ComicDownloadSqlItem> insert(ComicDownloadSqlItem item) async {
     await db.insert(comicDownloadTableName, item.toMap());
     return item;
   }
 
   static Future<ComicDownloadSqlItem> getItem(int id) async {
-    
     List<Map> maps = await db.query(comicDownloadTableName,
-        columns: [comicDownloadColumnChapterID,
-comicDownloadColumnChapterName,
-comicDownloadColumnComicID,
-comicDownloadColumnComicName,
-comicDownloadColumnStatus,
-comicDownloadColumnVolume,
-comicDownloadColumnPage,
-comicDownloadColumnCount,
-comicDownloadColumnSavePath,
-comicDownloadColumnUrls,
-],
+        columns: [
+          comicDownloadColumnChapterID,
+          comicDownloadColumnChapterName,
+          comicDownloadColumnComicID,
+          comicDownloadColumnComicName,
+          comicDownloadColumnStatus,
+          comicDownloadColumnVolume,
+          comicDownloadColumnPage,
+          comicDownloadColumnCount,
+          comicDownloadColumnSavePath,
+          comicDownloadColumnUrls,
+        ],
         where: '$comicDownloadColumnChapterID = ?',
         whereArgs: [id]);
 
@@ -95,30 +107,34 @@ comicDownloadColumnUrls,
     return await db.delete(comicDownloadTableName);
   }
 
-  static Future<ComicDownloadSqlItem> updateOrInsert(ComicDownloadSqlItem item) async{
-    var data=await getItem(item.chapterID);
-    if(data!=null){
+  static Future<ComicDownloadSqlItem> updateOrInsert(
+      ComicDownloadSqlItem item) async {
+    var data = await getItem(item.chapterID);
+    if (data != null) {
       await update(item);
       return item;
-    }else{
+    } else {
       return await insert(item);
     }
   }
 
   static Future<List<ComicDownloadSqlItem>> getItems() async {
-    List<ComicDownloadSqlItem> maps = (await db.query(comicDownloadTableName)).map<ComicDownloadSqlItem>((x)=>ComicDownloadSqlItem.fromMap(x)).toList();
+    List<ComicDownloadSqlItem> maps = (await db.query(comicDownloadTableName))
+        .map<ComicDownloadSqlItem>((x) => ComicDownloadSqlItem.fromMap(x))
+        .toList();
     return maps;
   }
 
   static Future<int> delete(int id) async {
-    return await db.delete(comicDownloadTableName, where: '$comicDownloadColumnChapterID = ?', whereArgs: [id]);
+    return await db.delete(comicDownloadTableName,
+        where: '$comicDownloadColumnChapterID = ?', whereArgs: [id]);
   }
 
   static Future<int> update(ComicDownloadSqlItem item) async {
     return await db.update(comicDownloadTableName, item.toMap(),
-        where: '$comicDownloadColumnChapterID = ?', whereArgs: [item.chapterID]);
+        where: '$comicDownloadColumnChapterID = ?',
+        whereArgs: [item.chapterID]);
   }
 
   static Future close() async => db.close();
-
 }
