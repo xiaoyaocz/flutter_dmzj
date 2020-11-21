@@ -47,12 +47,10 @@ void main() async {
           create: (_) => AppUserInfo(), lazy: false),
       ChangeNotifierProvider<AppSetting>(
           create: (_) => AppSetting(), lazy: false),
-
       ChangeNotifierProvider(
         create: (_) => ComicHistoryProvider(),
         lazy: false,
       ),
-
     ],
     child: ExcludeSemantics(
       child: MyApp(),
