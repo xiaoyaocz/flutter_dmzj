@@ -159,13 +159,13 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       }
     }
 
-    ComicHistoryProvider.getItem(widget.comicId).then((historyItem) async {
+    ComicHistoryHelper.getItem(widget.comicId).then((historyItem) async {
       if (historyItem != null) {
         historyItem.chapter_id = _currentItem.chapter_id;
         historyItem.page = page.toDouble();
-        await ComicHistoryProvider.update(historyItem);
+        await ComicHistoryHelper.update(historyItem);
       } else {
-        await ComicHistoryProvider.insert(ComicHistory(
+        await ComicHistoryHelper.insert(ComicHistory(
             widget.comicId, _currentItem.chapter_id, page.toDouble(), 1));
       }
       Utils.changHistory.fire(widget.comicId);
@@ -959,7 +959,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       var jsonMap = jsonDecode(responseStr);
 
       ComicWebChapterDetail detail = ComicWebChapterDetail.fromJson(jsonMap);
-      var historyItem = await ComicHistoryProvider.getItem(widget.comicId);
+      var historyItem = await ComicHistoryHelper.getItem(widget.comicId);
       if (historyItem != null &&
           historyItem.chapter_id == _currentItem.chapter_id) {
         var page = historyItem.page.toInt();
@@ -993,6 +993,8 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       //ConfigHelper.setComicHistory(widget.comicId, _currentItem.chapter_id);
       await UserHelper.comicAddComicHistory(
           widget.comicId, _currentItem.chapter_id);
+      Provider.of<ComicHistoryProvider>(context, listen: false)
+          .setHistory(_currentItem.chapter_id);
     } catch (e) {
       print(e);
     } finally {

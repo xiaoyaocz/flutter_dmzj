@@ -35,7 +35,7 @@ class ComicHistory {
   }
 }
 
-class ComicHistoryProvider extends ChangeNotifier {
+class ComicHistoryHelper extends ChangeNotifier {
   static Database db;
 
   static Future<ComicHistory> insert(ComicHistory item) async {
@@ -82,4 +82,18 @@ class ComicHistoryProvider extends ChangeNotifier {
   }
 
   static Future close() async => db.close();
+}
+
+class ComicHistoryProvider extends ChangeNotifier {
+  int history;
+
+  Future updateHistory(int id) async {
+    var his = await ComicHistoryHelper.getItem(id);
+    history = his?.chapter_id ?? 0;
+  }
+
+  int setHistory(int his) {
+    history = his;
+    notifyListeners();
+  }
 }

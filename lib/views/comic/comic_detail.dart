@@ -56,7 +56,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   }
 
   void updateHistory() async {
-    var his = await ComicHistoryProvider.getItem(widget.comicId);
+    var his = await ComicHistoryHelper.getItem(widget.comicId);
     setState(() {
       historyChapter = his?.chapter_id ?? 0;
     });

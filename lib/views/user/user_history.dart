@@ -275,13 +275,13 @@ class _HistoryTabItemState extends State<HistoryTabItem>
           jsonMap.map((i) => ComicHistoryItem.fromJson(i)).toList();
       if (detail != null && detail.length != 0) {
         for (var item in detail) {
-          var historyItem = await ComicHistoryProvider.getItem(item.comic_id);
+          var historyItem = await ComicHistoryHelper.getItem(item.comic_id);
           if (historyItem != null) {
             historyItem.chapter_id = item.chapter_id;
             historyItem.page = item.progress?.toDouble() ?? 1;
-            await ComicHistoryProvider.update(historyItem);
+            await ComicHistoryHelper.update(historyItem);
           } else {
-            await ComicHistoryProvider.insert(ComicHistory(item.comic_id,
+            await ComicHistoryHelper.insert(ComicHistory(item.comic_id,
                 item.chapter_id, item.progress?.toDouble() ?? 1, 1));
           }
 
