@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/app_setting.dart';
-import 'package:flutter_dmzj/app/config_helper.dart';
-import 'package:flutter_dmzj/app/user_helper.dart';
-import 'package:flutter_dmzj/app/user_info.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/helper/api.dart';
+import 'package:flutter_dmzj/provider/reader_config_provider.dart';
+import 'package:flutter_dmzj/helper/config_helper.dart';
+import 'package:flutter_dmzj/helper/user_helper.dart';
+import 'package:flutter_dmzj/provider/user_info_provider.dart';
+import 'package:flutter_dmzj/helper/utils.dart';
 import 'package:flutter_dmzj/models/novel/novel_volume_item.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_footer.dart';
@@ -118,8 +118,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          AppSetting.bgColors[Provider.of<AppSetting>(context).novelReadTheme],
+      backgroundColor: ReaderConfigProvider
+          .bgColors[Provider.of<ReaderConfigProvider>(context).novelReadTheme],
       body: Stack(
         children: <Widget>[
           InkWell(
@@ -135,17 +135,19 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                 _showControls = !_showControls;
               });
             },
-            child: Provider.of<AppSetting>(context).novelReadDirection != 2
+            child: Provider.of<ReaderConfigProvider>(context)
+                        .novelReadDirection !=
+                    2
                 ? PageView.builder(
                     scrollDirection: Axis.horizontal,
-                    pageSnapping:
-                        Provider.of<AppSetting>(context).novelReadDirection !=
-                            2,
+                    pageSnapping: Provider.of<ReaderConfigProvider>(context)
+                            .novelReadDirection !=
+                        2,
                     controller: _controller,
                     itemCount: _pageContents.length + 2,
-                    reverse:
-                        Provider.of<AppSetting>(context).novelReadDirection ==
-                            1,
+                    reverse: Provider.of<ReaderConfigProvider>(context)
+                            .novelReadDirection ==
+                        1,
                     onPageChanged: (i) {
                       if (i == _pageContents.length + 1 && !_loading) {
                         nextChapter();
@@ -183,8 +185,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
 
                       var _widget = _isPicture
                           ? Container(
-                              color: AppSetting.bgColors[
-                                  Provider.of<AppSetting>(context)
+                              color: ReaderConfigProvider.bgColors[
+                                  Provider.of<ReaderConfigProvider>(context)
                                       .novelReadTheme],
                               child: InkWell(
                                 onDoubleTap: () {
@@ -209,8 +211,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                               ),
                             )
                           : Container(
-                              color: AppSetting.bgColors[
-                                  Provider.of<AppSetting>(context)
+                              color: ReaderConfigProvider.bgColors[
+                                  Provider.of<ReaderConfigProvider>(context)
                                       .novelReadTheme],
                               padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
                               alignment: Alignment.topCenter,
@@ -221,8 +223,9 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                                 style: TextStyle(
                                     fontSize: _fontSize,
                                     height: _lineHeight,
-                                    color: AppSetting.fontColors[
-                                        Provider.of<AppSetting>(context)
+                                    color: ReaderConfigProvider.fontColors[
+                                        Provider.of<ReaderConfigProvider>(
+                                                context)
                                             .novelReadTheme]),
                               ),
                             );
@@ -266,22 +269,23 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                               constraints: BoxConstraints(
                                 minHeight: MediaQuery.of(context).size.height,
                               ),
-                              color: AppSetting.bgColors[
-                                  Provider.of<AppSetting>(context)
+                              color: ReaderConfigProvider.bgColors[
+                                  Provider.of<ReaderConfigProvider>(context)
                                       .novelReadTheme],
                               padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
                               child: Text(_pageContents.join(),
                                   style: TextStyle(
                                       fontSize: _fontSize,
                                       height: _lineHeight,
-                                      color: AppSetting.fontColors[
-                                          Provider.of<AppSetting>(context)
+                                      color: ReaderConfigProvider.fontColors[
+                                          Provider.of<ReaderConfigProvider>(
+                                                  context)
                                               .novelReadTheme])),
                             ),
                     ),
                   ),
           ),
-          Provider.of<AppSetting>(context).novelReadDirection == 2
+          Provider.of<ReaderConfigProvider>(context).novelReadDirection == 2
               ? Positioned(child: Container())
               : Positioned(
                   left: 0,
@@ -289,7 +293,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   height: MediaQuery.of(context).size.height,
                   child: InkWell(
                     onTap: () {
-                      if (Provider.of<AppSetting>(context, listen: false)
+                      if (Provider.of<ReaderConfigProvider>(context,
+                                  listen: false)
                               .novelReadDirection ==
                           1) {
                         previousPage();
@@ -300,7 +305,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     child: Container(),
                   ),
                 ),
-          Provider.of<AppSetting>(context).novelReadDirection == 2
+          Provider.of<ReaderConfigProvider>(context).novelReadDirection == 2
               ? Positioned(child: Container())
               : Positioned(
                   right: 0,
@@ -308,7 +313,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   height: MediaQuery.of(context).size.height,
                   child: InkWell(
                     onTap: () {
-                      if (Provider.of<AppSetting>(context, listen: false)
+                      if (Provider.of<ReaderConfigProvider>(context,
+                                  listen: false)
                               .novelReadDirection ==
                           1) {
                         nextPage();
@@ -324,7 +330,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
             bottom: 8,
             right: 12,
             child: Text(
-              Provider.of<AppSetting>(context).novelReadDirection == 2
+              Provider.of<ReaderConfigProvider>(context).novelReadDirection == 2
                   ? ""
                   : "$_indexPage/${_pageContents.length} $_batteryStr电量",
               style: TextStyle(color: Colors.grey, fontSize: 12),
@@ -350,7 +356,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
             width: MediaQuery.of(context).size.width,
             child: Container(
               padding: EdgeInsets.only(
-                  top: Provider.of<AppSetting>(context).comicReadShowStatusBar
+                  top: Provider.of<ReaderConfigProvider>(context)
+                          .comicReadShowStatusBar
                       ? 0
                       : MediaQuery.of(context).padding.top),
               width: MediaQuery.of(context).size.width,
@@ -408,7 +415,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                       ),
                       Expanded(
                         child: !_loading
-                            ? Provider.of<AppSetting>(context)
+                            ? Provider.of<ReaderConfigProvider>(context)
                                         .novelReadDirection ==
                                     2
                                 ? Slider(
@@ -451,7 +458,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   ),
                   Row(
                     children: <Widget>[
-                      Provider.of<AppUserInfo>(context).isLogin &&
+                      Provider.of<AppUserInfoProvider>(context).isLogin &&
                               widget.subscribe
                           ? createButton(
                               "已订阅",
@@ -502,7 +509,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                 height: MediaQuery.of(context).size.height,
                 color: Color.fromARGB(255, 24, 24, 24),
                 padding: EdgeInsets.only(
-                    top: Provider.of<AppSetting>(context).comicReadShowStatusBar
+                    top: Provider.of<ReaderConfigProvider>(context)
+                            .comicReadShowStatusBar
                         ? 0
                         : MediaQuery.of(context).padding.top),
                 width: MediaQuery.of(context).size.width,
@@ -628,13 +636,14 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   ),
                   Expanded(
                     child: createOutlineButton("小", onPressed: () async {
-                      var size = Provider.of<AppSetting>(context, listen: false)
+                      var size = Provider.of<ReaderConfigProvider>(context,
+                              listen: false)
                           .novelFontSize;
                       if (size == 10) {
                         Fluttertoast.showToast(msg: '不能再小了');
                         return;
                       }
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelFontSize(size - 1);
                       await handelContent();
                     }),
@@ -644,13 +653,14 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   ),
                   Expanded(
                     child: createOutlineButton("大", onPressed: () async {
-                      var size = Provider.of<AppSetting>(context, listen: false)
+                      var size = Provider.of<ReaderConfigProvider>(context,
+                              listen: false)
                           .novelFontSize;
                       if (size == 30) {
                         Fluttertoast.showToast(msg: '不能再大了');
                         return;
                       }
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelFontSize(size + 1);
                       await handelContent();
                     }),
@@ -668,14 +678,14 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   ),
                   Expanded(
                     child: createOutlineButton("减少", onPressed: () async {
-                      var height =
-                          Provider.of<AppSetting>(context, listen: false)
-                              .novelLineHeight;
+                      var height = Provider.of<ReaderConfigProvider>(context,
+                              listen: false)
+                          .novelLineHeight;
                       if (height == 0.8) {
                         Fluttertoast.showToast(msg: '不能再减少了');
                         return;
                       }
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelLineHeight(height - 0.1);
                       await handelContent();
                     }),
@@ -685,14 +695,14 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   ),
                   Expanded(
                     child: createOutlineButton("增加", onPressed: () async {
-                      var height =
-                          Provider.of<AppSetting>(context, listen: false)
-                              .novelLineHeight;
+                      var height = Provider.of<ReaderConfigProvider>(context,
+                              listen: false)
+                          .novelLineHeight;
                       if (height == 2.0) {
                         Fluttertoast.showToast(msg: '不能再增加了');
                         return;
                       }
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelLineHeight(height + 0.1);
                       await handelContent();
                     }),
@@ -710,12 +720,12 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   ),
                   Expanded(
                     child: createOutlineButton("左右",
-                        borderColor: Provider.of<AppSetting>(context)
+                        borderColor: Provider.of<ReaderConfigProvider>(context)
                                     .novelReadDirection ==
                                 0
                             ? Colors.blue
                             : null, onPressed: () {
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelReadDirection(0);
                     }),
                   ),
@@ -724,12 +734,12 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   ),
                   Expanded(
                     child: createOutlineButton("右左",
-                        borderColor: Provider.of<AppSetting>(context)
+                        borderColor: Provider.of<ReaderConfigProvider>(context)
                                     .novelReadDirection ==
                                 1
                             ? Colors.blue
                             : null, onPressed: () {
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelReadDirection(1);
                     }),
                   ),
@@ -738,12 +748,12 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                   ),
                   Expanded(
                     child: createOutlineButton("上下",
-                        borderColor: Provider.of<AppSetting>(context)
+                        borderColor: Provider.of<ReaderConfigProvider>(context)
                                     .novelReadDirection ==
                                 2
                             ? Colors.blue
                             : null, onPressed: () {
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelReadDirection(2);
                     }),
                   )
@@ -762,12 +772,14 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     ),
                   ),
                   Expanded(
-                    child: createOutlineButtonColor(AppSetting.bgColors[0],
-                        borderColor:
-                            Provider.of<AppSetting>(context).novelReadTheme == 0
-                                ? Colors.blue
-                                : null, onPressed: () {
-                      Provider.of<AppSetting>(context, listen: false)
+                    child: createOutlineButtonColor(
+                        ReaderConfigProvider.bgColors[0],
+                        borderColor: Provider.of<ReaderConfigProvider>(context)
+                                    .novelReadTheme ==
+                                0
+                            ? Colors.blue
+                            : null, onPressed: () {
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelReadTheme(0);
                     }),
                   ),
@@ -775,12 +787,14 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     width: 8,
                   ),
                   Expanded(
-                    child: createOutlineButtonColor(AppSetting.bgColors[1],
-                        borderColor:
-                            Provider.of<AppSetting>(context).novelReadTheme == 1
-                                ? Colors.blue
-                                : null, onPressed: () {
-                      Provider.of<AppSetting>(context, listen: false)
+                    child: createOutlineButtonColor(
+                        ReaderConfigProvider.bgColors[1],
+                        borderColor: Provider.of<ReaderConfigProvider>(context)
+                                    .novelReadTheme ==
+                                1
+                            ? Colors.blue
+                            : null, onPressed: () {
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelReadTheme(1);
                     }),
                   ),
@@ -788,12 +802,14 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     width: 8,
                   ),
                   Expanded(
-                    child: createOutlineButtonColor(AppSetting.bgColors[2],
-                        borderColor:
-                            Provider.of<AppSetting>(context).novelReadTheme == 2
-                                ? Colors.blue
-                                : null, onPressed: () {
-                      Provider.of<AppSetting>(context, listen: false)
+                    child: createOutlineButtonColor(
+                        ReaderConfigProvider.bgColors[2],
+                        borderColor: Provider.of<ReaderConfigProvider>(context)
+                                    .novelReadTheme ==
+                                2
+                            ? Colors.blue
+                            : null, onPressed: () {
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelReadTheme(2);
                     }),
                   ),
@@ -801,12 +817,14 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                     width: 8,
                   ),
                   Expanded(
-                    child: createOutlineButtonColor(AppSetting.bgColors[3],
-                        borderColor:
-                            Provider.of<AppSetting>(context).novelReadTheme == 3
-                                ? Colors.blue
-                                : null, onPressed: () {
-                      Provider.of<AppSetting>(context, listen: false)
+                    child: createOutlineButtonColor(
+                        ReaderConfigProvider.bgColors[3],
+                        borderColor: Provider.of<ReaderConfigProvider>(context)
+                                    .novelReadTheme ==
+                                3
+                            ? Colors.blue
+                            : null, onPressed: () {
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeNovelReadTheme(3);
                     }),
                   )
@@ -1023,10 +1041,14 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
       Fluttertoast.showToast(msg: '已经是最前面一章了');
       return;
     }
-    setState(() {
-      _currentItem = widget.chapters[widget.chapters.indexOf(_currentItem) - 1];
-    });
+
+    _currentItem = widget.chapters[widget.chapters.indexOf(_currentItem) - 1];
+
     await loadData();
+    setState(() {
+      _controller.jumpToPage(_pageContents.length);
+      _indexPage = _pageContents.length;
+    });
   }
 }
 
