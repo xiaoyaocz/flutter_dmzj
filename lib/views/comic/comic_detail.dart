@@ -22,6 +22,8 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
+import '../../sql/comic_history.dart';
+
 class ComicDetailPage extends StatefulWidget {
   final int comicId;
   final String coverUrl;
@@ -34,7 +36,6 @@ class ComicDetailPage extends StatefulWidget {
 class _ComicDetailPageState extends State<ComicDetailPage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   TabController _tabController;
-  int historyChapter = 0;
   int _index = 0;
   double detailExpandHeight = 150 + kToolbarHeight + 24;
   @override
@@ -233,7 +234,12 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       floatingActionButton: FloatingActionButton(
           heroTag: "comic_float",
           child: Icon(Icons.play_arrow),
-          onPressed: openRead),
+          onPressed: () {
+            setState(() {
+              openRead(Provider.of<ComicHistoryProvider>(context, listen: false)
+                  .history);
+            });
+          }),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         child: Row(
@@ -383,7 +389,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
           ComicChapterView(
             widget.comicId,
             _detail,
-            historyChapter,
+            Provider.of<ComicHistoryProvider>(context).history,
             isSubscribe: _isSubscribe,
           ),
         ],
@@ -448,7 +454,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
     );
   }
 
-  void openRead() async {
+  void openRead(historyChapter) async {
     if (_detail == null ||
         _detail.chapters == null ||
         _detail.chapters.length == 0 ||
