@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/user_helper.dart';
+import 'package:flutter_dmzj/helper/user_helper.dart';
 import 'package:flutter_dmzj/models/comic/comic_chapter_view_point.dart';
 
 class ComicTCPage extends StatefulWidget {

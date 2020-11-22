@@ -6,14 +6,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/config_helper.dart';
-import 'package:flutter_dmzj/app/user_helper.dart';
-import 'package:flutter_dmzj/app/user_info.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/helper/api.dart';
+import 'package:flutter_dmzj/helper/config_helper.dart';
+import 'package:flutter_dmzj/helper/user_helper.dart';
+import 'package:flutter_dmzj/provider/user_info_provider.dart';
+import 'package:flutter_dmzj/helper/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_related_model.dart';
-import 'package:flutter_dmzj/sql/comic_history.dart';
+import 'package:flutter_dmzj/database/comic_history.dart';
 import 'package:flutter_dmzj/views/download/comic_download.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
 import 'package:flutter_dmzj/widgets/comic_chapter_widget.dart';
@@ -21,8 +21,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-
-import '../../sql/comic_history.dart';
 
 class ComicDetailPage extends StatefulWidget {
   final int comicId;
@@ -98,7 +96,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                                           builder: (BuildContext context) =>
                                               ComicDownloadPage(_detail)));
                                 }),
-                            Provider.of<AppUserInfo>(context).isLogin &&
+                            Provider.of<AppUserInfoProvider>(context).isLogin &&
                                     _isSubscribe
                                 ? IconButton(
                                     icon: Icon(Icons.favorite),
@@ -651,7 +649,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         return;
       }
       var response = await http.get(Api.comicCheckSubscribe(widget.comicId,
-          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid));
+          Provider.of<AppUserInfoProvider>(context, listen: false).loginInfo.uid));
       var jsonMap = jsonDecode(response.body);
       setState(() {
         _isSubscribe = jsonMap["code"] == 0;

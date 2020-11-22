@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/config_helper.dart';
+import 'package:flutter_dmzj/helper/config_helper.dart';
 
-class AppTheme with ChangeNotifier {
-  AppTheme() {
+class AppThemeProvider with ChangeNotifier {
+  AppThemeProvider() {
     changeDark(ConfigHelper.getOpenDarkMode());
     changeSysDark(ConfigHelper.getSysDarkMode());
     changeThemeColor(ConfigHelper.getAppTheme());
@@ -32,16 +32,16 @@ class AppTheme with ChangeNotifier {
 
   List<Widget> _createThemeWidget(BuildContext context) {
     List<Widget> widgets = List<Widget>();
-    for (var item in AppTheme.themeColors.keys) {
+    for (var item in AppThemeProvider.themeColors.keys) {
       widgets.add(RadioListTile(
         groupValue: item,
         value: _themeColorName,
         title: new Text(
           item,
-          style: TextStyle(color: AppTheme.themeColors[item]),
+          style: TextStyle(color: AppThemeProvider.themeColors[item]),
         ),
         onChanged: (value) {
-          changeThemeColor(AppTheme.themeColors.keys.toList().indexOf(item));
+          changeThemeColor(AppThemeProvider.themeColors.keys.toList().indexOf(item));
           Navigator.of(context).pop();
         },
       ));
@@ -71,8 +71,8 @@ class AppTheme with ChangeNotifier {
   get sysDark => _sysDark;
 
   void changeThemeColor(int index) {
-    _themeColor = AppTheme.themeColors.values.toList()[index];
-    _themeColorName = AppTheme.themeColors.keys.toList()[index];
+    _themeColor = AppThemeProvider.themeColors.values.toList()[index];
+    _themeColorName = AppThemeProvider.themeColors.keys.toList()[index];
     notifyListeners();
     ConfigHelper.setAppTheme(index);
   }

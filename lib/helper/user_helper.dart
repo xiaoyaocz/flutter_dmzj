@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/config_helper.dart';
+import 'package:flutter_dmzj/helper/api.dart';
+import 'package:flutter_dmzj/helper/config_helper.dart';
 import 'package:flutter_dmzj/models/comic/comic_history_item.dart';
-import 'package:flutter_dmzj/sql/comic_history.dart';
+import 'package:flutter_dmzj/database/comic_history.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 

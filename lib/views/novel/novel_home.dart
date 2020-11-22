@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/helper/utils.dart';
 import 'package:flutter_dmzj/views/novel/novel_category.dart';
 import 'package:flutter_dmzj/views/novel/novel_rank.dart';
 import 'package:flutter_dmzj/views/novel/novel_recommend.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/user_info.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/provider/user_info_provider.dart';
+import 'package:flutter_dmzj/helper/utils.dart';
 
 import 'package:provider/provider.dart';
 
@@ -22,11 +22,11 @@ class _UserPageState extends State<UserPage> {
               width: 36,
               child: CircleAvatar(
                 backgroundImage: Utils.createCachedImageProvider(
-                    Provider.of<AppUserInfo>(context).userProfile?.cover),
+                    Provider.of<AppUserInfoProvider>(context).userProfile?.cover),
               ),
             ),
             SizedBox(width: 12),
-            Text(Provider.of<AppUserInfo>(context).loginInfo?.nickname),
+            Text(Provider.of<AppUserInfoProvider>(context).loginInfo?.nickname),
           ],
         ),
         actions: <Widget>[
@@ -49,7 +49,7 @@ class _UserPageState extends State<UserPage> {
                           new FlatButton(
                             child: new Text("确定"),
                             onPressed: () {
-                              Provider.of<AppUserInfo>(context).logout();
+                              Provider.of<AppUserInfoProvider>(context).logout();
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
                             },
@@ -60,7 +60,7 @@ class _UserPageState extends State<UserPage> {
           )
         ],
       ),
-      body: Text(Provider.of<AppUserInfo>(context).loginInfo?.nickname ?? ""),
+      body: Text(Provider.of<AppUserInfoProvider>(context).loginInfo?.nickname ?? ""),
     );
   }
 }

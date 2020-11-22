@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/user_info.dart';
+import 'package:flutter_dmzj/provider/user_info_provider.dart';
 import 'package:flutter_dmzj/widgets/user_comment_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -26,15 +26,15 @@ class _MyCommentPageState extends State<MyCommentPage> {
         ),
         body: TabBarView(children: [
           UserCommentWidget(
-            int.parse(Provider.of<AppUserInfo>(context).loginInfo.uid ?? 0),
+            int.parse(Provider.of<AppUserInfoProvider>(context).loginInfo.uid ?? 0),
             type: 0,
           ),
           UserCommentWidget(
-            int.parse(Provider.of<AppUserInfo>(context).loginInfo.uid ?? 0),
+            int.parse(Provider.of<AppUserInfoProvider>(context).loginInfo.uid ?? 0),
             type: 1,
           ),
           UserCommentWidget(
-            int.parse(Provider.of<AppUserInfo>(context).loginInfo.uid ?? 0),
+            int.parse(Provider.of<AppUserInfoProvider>(context).loginInfo.uid ?? 0),
             type: 2,
           )
         ]),

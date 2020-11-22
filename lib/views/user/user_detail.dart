@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/helper/api.dart';
+import 'package:flutter_dmzj/helper/utils.dart';
 import 'package:flutter_dmzj/models/user/user_profile.dart';
 import 'package:flutter_dmzj/models/user/user_subscribe_item.dart';
 import 'package:flutter_dmzj/widgets/user_comment_widget.dart';

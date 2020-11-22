@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/helper/utils.dart';
 import 'package:flutter_dmzj/views/comic/comic_category.dart';
 import 'package:flutter_dmzj/views/comic/comic_rank.dart';
 import 'package:flutter_dmzj/views/comic/comic_recommend.dart';

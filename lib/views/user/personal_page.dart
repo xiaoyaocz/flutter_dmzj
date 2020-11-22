@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_theme.dart';
-import 'package:flutter_dmzj/app/user_info.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/database/app_theme_provider.dart';
+import 'package:flutter_dmzj/provider/user_info_provider.dart';
+import 'package:flutter_dmzj/helper/utils.dart';
 import 'package:flutter_dmzj/views/download/local_comic.dart';
 import 'package:provider/provider.dart';
 
@@ -161,30 +161,30 @@ class _PersonalPageState extends State<PersonalPage> {
                       color: Theme.of(context).cardColor,
                       child: SwitchListTile(
                         onChanged: (value) {
-                          Provider.of<AppTheme>(context, listen: false)
+                          Provider.of<AppThemeProvider>(context, listen: false)
                               .changeSysDark(value);
                           if (!value) {
-                            Provider.of<AppTheme>(context, listen: false)
+                            Provider.of<AppThemeProvider>(context, listen: false)
                                 .changeDark(value);
                           }
                         },
                         secondary: Icon(Icons.brightness_4),
                         title: Text("夜间模式跟随系统"),
-                        value: Provider.of<AppTheme>(context).sysDark,
+                        value: Provider.of<AppThemeProvider>(context).sysDark,
                       ),
                     ),
                     Offstage(
-                      offstage: Provider.of<AppTheme>(context).sysDark,
+                      offstage: Provider.of<AppThemeProvider>(context).sysDark,
                       child: Material(
                         color: Theme.of(context).cardColor,
                         child: SwitchListTile(
                           onChanged: (value) {
-                            Provider.of<AppTheme>(context, listen: false)
+                            Provider.of<AppThemeProvider>(context, listen: false)
                                 .changeDark(value);
                           },
                           secondary: Icon(Icons.brightness_4),
                           title: Text("夜间模式"),
-                          value: Provider.of<AppTheme>(context).isDark,
+                          value: Provider.of<AppThemeProvider>(context).isDark,
                         ),
                       ),
                     ),
@@ -197,14 +197,14 @@ class _PersonalPageState extends State<PersonalPage> {
                         trailing: Padding(
                           padding: EdgeInsets.all(8),
                           child: Text(
-                            Provider.of<AppTheme>(context).themeColorName,
+                            Provider.of<AppThemeProvider>(context).themeColorName,
                             style: TextStyle(
                                 color:
-                                    Provider.of<AppTheme>(context).themeColor,
+                                    Provider.of<AppThemeProvider>(context).themeColor,
                                 fontSize: 14.0),
                           ),
                         ),
-                        onTap: () => Provider.of<AppTheme>(context,
+                        onTap: () => Provider.of<AppThemeProvider>(context,
                                 listen: false)
                             .showThemeDialog(
                                 context), //Provider.of<AppThemeData>(context).changeThemeColor(3),
@@ -239,7 +239,7 @@ class _PersonalPageState extends State<PersonalPage> {
   }
 
   Widget _getAvatar() {
-    return Provider.of<AppUserInfo>(context).isLogin
+    return Provider.of<AppUserInfoProvider>(context).isLogin
         ? InkWell(
             onTap: () {
               showDialog(
@@ -257,7 +257,7 @@ class _PersonalPageState extends State<PersonalPage> {
                           new FlatButton(
                             child: new Text("确定"),
                             onPressed: () {
-                              Provider.of<AppUserInfo>(context, listen: false)
+                              Provider.of<AppUserInfoProvider>(context, listen: false)
                                   .logout();
                               Navigator.of(context).pop();
                             },
@@ -274,14 +274,14 @@ class _PersonalPageState extends State<PersonalPage> {
                   child: CircleAvatar(
                     radius: 32,
                     backgroundImage: Utils.createCachedImageProvider(
-                        Provider.of<AppUserInfo>(context).loginInfo.photo),
+                        Provider.of<AppUserInfoProvider>(context).loginInfo.photo),
                   ),
                 ),
                 SizedBox(
                   height: 8,
                 ),
                 Text(
-                  Provider.of<AppUserInfo>(context).loginInfo.nickname,
+                  Provider.of<AppUserInfoProvider>(context).loginInfo.nickname,
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
@@ -289,7 +289,7 @@ class _PersonalPageState extends State<PersonalPage> {
                   height: 8,
                 ),
                 Text(
-                  Provider.of<AppUserInfo>(context).userProfile?.description ??
+                  Provider.of<AppUserInfoProvider>(context).userProfile?.description ??
                       "",
                   style: TextStyle(color: Colors.white, fontSize: 12),
                 ),
@@ -326,7 +326,7 @@ class _PersonalPageState extends State<PersonalPage> {
       padding: EdgeInsets.all(4),
       child: InkWell(
         onTap: () {
-          Provider.of<AppUserInfo>(context).isLogin
+          Provider.of<AppUserInfoProvider>(context).isLogin
               ? showDialog(
                   context: context,
                   builder: (_) => AlertDialog(
@@ -342,7 +342,7 @@ class _PersonalPageState extends State<PersonalPage> {
                           new FlatButton(
                             child: new Text("确定"),
                             onPressed: () {
-                              Provider.of<AppUserInfo>(context, listen: false)
+                              Provider.of<AppUserInfoProvider>(context, listen: false)
                                   .logout();
                               Navigator.of(context).pop();
                             },
@@ -351,11 +351,11 @@ class _PersonalPageState extends State<PersonalPage> {
                       ))
               : Navigator.pushNamed(context, "/Login");
         },
-        child: Provider.of<AppUserInfo>(context).isLogin
+        child: Provider.of<AppUserInfoProvider>(context).isLogin
             ? CircleAvatar(
                 radius: 32,
                 backgroundImage: Utils.createCachedImageProvider(
-                    Provider.of<AppUserInfo>(context).loginInfo.photo),
+                    Provider.of<AppUserInfoProvider>(context).loginInfo.photo),
               )
             : CircleAvatar(
                 child: Icon(Icons.account_circle),

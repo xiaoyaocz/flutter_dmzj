@@ -10,16 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/app_setting.dart';
-import 'package:flutter_dmzj/app/config_helper.dart';
-import 'package:flutter_dmzj/app/user_helper.dart';
-import 'package:flutter_dmzj/app/user_info.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/helper/api.dart';
+import 'package:flutter_dmzj/provider/reader_config_provider.dart';
+import 'package:flutter_dmzj/helper/config_helper.dart';
+import 'package:flutter_dmzj/helper/user_helper.dart';
+import 'package:flutter_dmzj/provider/user_info_provider.dart';
+import 'package:flutter_dmzj/helper/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_chapter_view_point.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_web_chapter_detail.dart';
-import 'package:flutter_dmzj/sql/comic_history.dart';
+import 'package:flutter_dmzj/database/comic_history.dart';
 import 'package:flutter_dmzj/views/reader/comic_tc.dart';
 import 'package:flutter_dmzj/widgets/comic_view.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -33,7 +33,7 @@ import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
 import 'package:share/share.dart';
-//todo: 查看视觉优化,放大缩小，等官方解决
+//todo: 双页视图
 
 class ComicReaderPage extends StatefulWidget {
   final int comicId;
@@ -168,7 +168,6 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         await ComicHistoryHelper.insert(ComicHistory(
             widget.comicId, _currentItem.chapter_id, page.toDouble(), 1));
       }
-      Utils.changHistory.fire(widget.comicId);
     });
 
     UserHelper.comicAddComicHistory(widget.comicId, _currentItem.chapter_id,
@@ -191,14 +190,14 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
           builder: (context) => Stack(
                 children: <Widget>[
                   !_loading
-                      ? Provider.of<AppSetting>(context).comicVerticalMode
+                      ? Provider.of<ReaderConfigProvider>(context).comicVerticalMode
                           ? createVerticalReader()
                           : createHorizontalReader()
                       : Center(
                           child: CircularProgressIndicator(),
                         ),
                   Positioned(
-                    child: Provider.of<AppSetting>(context).comicReadShowstate
+                    child: Provider.of<ReaderConfigProvider>(context).comicReadShowstate
                         ? Container(
                             padding: EdgeInsets.symmetric(
                                 vertical: 2, horizontal: 8),
@@ -206,7 +205,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                             child: Text(
                               _loading
                                   ? "${_currentItem.chapter_title}  加载中 WIFI  100%电量"
-                                  : Provider.of<AppSetting>(context)
+                                  : Provider.of<ReaderConfigProvider>(context)
                                           .comicVerticalMode
                                       ? "${_currentItem.chapter_title}  $_verticalValue  $_networkState  $_batteryStr电量"
                                       : "${_currentItem.chapter_title}  $_selectIndex/${_detail.page_url.length}  $_networkState  $_batteryStr 电量",
@@ -218,7 +217,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                     bottom: 0,
                     right: 0,
                   ),
-                  Provider.of<AppSetting>(context).comicVerticalMode
+                  Provider.of<ReaderConfigProvider>(context).comicVerticalMode
                       ? Positioned(child: Container())
                       : Positioned(
                           left: 0,
@@ -226,7 +225,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                           height: MediaQuery.of(context).size.height,
                           child: InkWell(
                             onTap: () {
-                              if (Provider.of<AppSetting>(context,
+                              if (Provider.of<ReaderConfigProvider>(context,
                                       listen: false)
                                   .comicReadReverse) {
                                 previousPage();
@@ -237,7 +236,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                             child: Container(),
                           ),
                         ),
-                  Provider.of<AppSetting>(context).comicVerticalMode
+                  Provider.of<ReaderConfigProvider>(context).comicVerticalMode
                       ? Positioned(child: Container())
                       : Positioned(
                           right: 0,
@@ -245,7 +244,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                           height: MediaQuery.of(context).size.height,
                           child: InkWell(
                             onTap: () {
-                              if (Provider.of<AppSetting>(context,
+                              if (Provider.of<ReaderConfigProvider>(context,
                                       listen: false)
                                   .comicReadReverse) {
                                 nextPage();
@@ -329,7 +328,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                               ),
                               Expanded(
                                 child: !_loading
-                                    ? Provider.of<AppSetting>(context)
+                                    ? Provider.of<ReaderConfigProvider>(context)
                                             .comicVerticalMode
                                         ? Slider(
                                             value: _verSliderValue,
@@ -372,7 +371,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                           ),
                           Row(
                             children: <Widget>[
-                              Provider.of<AppUserInfo>(context).isLogin &&
+                              Provider.of<AppUserInfoProvider>(context).isLogin &&
                                       widget.subscribe
                                   ? createButton(
                                       "已订阅",
@@ -584,7 +583,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
           scrollPhysics: ScrollPhysics(),
           builder: _buildItem,
           gaplessPlayback: true,
-          reverse: Provider.of<AppSetting>(context).comicReadReverse,
+          reverse: Provider.of<ReaderConfigProvider>(context).comicReadReverse,
           itemCount: _detail.page_url.length + 3,
           loadingBuilder: (context, event) {
             return Center(
@@ -807,12 +806,12 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                       style: TextStyle(color: Colors.white),
                     ),
                     value:
-                        Provider.of<AppSetting>(context).comicSystemBrightness,
+                        Provider.of<ReaderConfigProvider>(context).comicSystemBrightness,
                     onChanged: (e) {
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeComicSystemBrightness(e);
                     }),
-                !Provider.of<AppSetting>(context).comicSystemBrightness
+                !Provider.of<ReaderConfigProvider>(context).comicSystemBrightness
                     ? Row(
                         children: <Widget>[
                           SizedBox(width: 12),
@@ -823,13 +822,13 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                           ),
                           Expanded(
                               child: Slider(
-                                  value: Provider.of<AppSetting>(context)
+                                  value: Provider.of<ReaderConfigProvider>(context)
                                       .comicBrightness,
                                   max: 1,
                                   min: 0.01,
                                   onChanged: (e) {
                                     Screen.setBrightness(e);
-                                    Provider.of<AppSetting>(context,
+                                    Provider.of<ReaderConfigProvider>(context,
                                             listen: false)
                                         .changeBrightness(e);
                                   })),
@@ -848,9 +847,9 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                       "网页部分单行本不分页",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    value: Provider.of<AppSetting>(context).comicWebApi,
+                    value: Provider.of<ReaderConfigProvider>(context).comicWebApi,
                     onChanged: (e) {
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeComicWebApi(e);
                       loadData();
                     }),
@@ -859,22 +858,22 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                       "竖向阅读",
                       style: TextStyle(color: Colors.white),
                     ),
-                    value: Provider.of<AppSetting>(context).comicVerticalMode,
+                    value: Provider.of<ReaderConfigProvider>(context).comicVerticalMode,
                     onChanged: (e) {
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeComicVertical(e);
                       //Navigator.pop(context);
                     }),
-                !Provider.of<AppSetting>(context).comicVerticalMode
+                !Provider.of<ReaderConfigProvider>(context).comicVerticalMode
                     ? SwitchListTile(
                         title: Text(
                           "日漫模式",
                           style: TextStyle(color: Colors.white),
                         ),
                         value:
-                            Provider.of<AppSetting>(context).comicReadReverse,
+                            Provider.of<ReaderConfigProvider>(context).comicReadReverse,
                         onChanged: (e) {
-                          Provider.of<AppSetting>(context, listen: false)
+                          Provider.of<ReaderConfigProvider>(context, listen: false)
                               .changeReadReverse(e);
                         })
                     : Container(),
@@ -883,10 +882,10 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                       "屏幕常亮",
                       style: TextStyle(color: Colors.white),
                     ),
-                    value: Provider.of<AppSetting>(context).comicWakelock,
+                    value: Provider.of<ReaderConfigProvider>(context).comicWakelock,
                     onChanged: (e) {
                       Screen.keepOn(e);
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeComicWakelock(e);
                     }),
                 SwitchListTile(
@@ -895,9 +894,9 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                       style: TextStyle(color: Colors.white),
                     ),
                     value:
-                        Provider.of<AppSetting>(context).comicReadShowStatusBar,
+                        Provider.of<ReaderConfigProvider>(context).comicReadShowStatusBar,
                     onChanged: (e) {
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeComicReadShowStatusBar(e);
                       SystemChrome.setEnabledSystemUIOverlays(
                           e ? [] : SystemUiOverlay.values);
@@ -907,9 +906,9 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                       "显示状态信息",
                       style: TextStyle(color: Colors.white),
                     ),
-                    value: Provider.of<AppSetting>(context).comicReadShowstate,
+                    value: Provider.of<ReaderConfigProvider>(context).comicReadShowstate,
                     onChanged: (e) {
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .changeComicReadShowState(e);
                     }),
                 // SwitchListTile(

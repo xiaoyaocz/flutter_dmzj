@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_setting.dart';
+import 'package:flutter_dmzj/provider/reader_config_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
@@ -26,20 +26,20 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                 width: 80,
                 child: Text(
                   "字号  " +
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .novelFontSize
                           .toStringAsFixed(0),
                 ),
               ),
               Expanded(
                 child: createOutlineButton("减小", onPressed: () async {
-                  var size = Provider.of<AppSetting>(context, listen: false)
+                  var size = Provider.of<ReaderConfigProvider>(context, listen: false)
                       .novelFontSize;
                   if (size == 10) {
                     Fluttertoast.showToast(msg: '不能再小了');
                     return;
                   }
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelFontSize(size - 1);
                 }),
               ),
@@ -48,13 +48,13 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
               ),
               Expanded(
                 child: createOutlineButton("增大", onPressed: () async {
-                  var size = Provider.of<AppSetting>(context, listen: false)
+                  var size = Provider.of<ReaderConfigProvider>(context, listen: false)
                       .novelFontSize;
                   if (size == 30) {
                     Fluttertoast.showToast(msg: '不能再大了');
                     return;
                   }
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelFontSize(size + 1);
                 }),
               )
@@ -66,20 +66,20 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                 width: 80,
                 child: Text(
                   "行距  " +
-                      Provider.of<AppSetting>(context, listen: false)
+                      Provider.of<ReaderConfigProvider>(context, listen: false)
                           .novelLineHeight
                           .toStringAsFixed(0),
                 ),
               ),
               Expanded(
                 child: createOutlineButton("减少", onPressed: () async {
-                  var height = Provider.of<AppSetting>(context, listen: false)
+                  var height = Provider.of<ReaderConfigProvider>(context, listen: false)
                       .novelLineHeight;
                   if (height == 0.8) {
                     Fluttertoast.showToast(msg: '不能再减少了');
                     return;
                   }
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelLineHeight(height - 0.1);
                 }),
               ),
@@ -88,13 +88,13 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
               ),
               Expanded(
                 child: createOutlineButton("增加", onPressed: () async {
-                  var height = Provider.of<AppSetting>(context, listen: false)
+                  var height = Provider.of<ReaderConfigProvider>(context, listen: false)
                       .novelLineHeight;
                   if (height == 2.0) {
                     Fluttertoast.showToast(msg: '不能再增加了');
                     return;
                   }
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelLineHeight(height + 0.1);
                 }),
               )
@@ -111,10 +111,10 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
               Expanded(
                 child: createOutlineButton("左右",
                     borderColor:
-                        Provider.of<AppSetting>(context).novelReadDirection == 0
+                        Provider.of<ReaderConfigProvider>(context).novelReadDirection == 0
                             ? Colors.blue
                             : null, onPressed: () {
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelReadDirection(0);
                 }),
               ),
@@ -124,10 +124,10 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
               Expanded(
                 child: createOutlineButton("右左",
                     borderColor:
-                        Provider.of<AppSetting>(context).novelReadDirection == 1
+                        Provider.of<ReaderConfigProvider>(context).novelReadDirection == 1
                             ? Colors.blue
                             : null, onPressed: () {
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelReadDirection(1);
                 }),
               ),
@@ -137,10 +137,10 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
               Expanded(
                 child: createOutlineButton("上下",
                     borderColor:
-                        Provider.of<AppSetting>(context).novelReadDirection == 2
+                        Provider.of<ReaderConfigProvider>(context).novelReadDirection == 2
                             ? Colors.blue
                             : null, onPressed: () {
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelReadDirection(2);
                 }),
               )
@@ -158,12 +158,12 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                 ),
               ),
               Expanded(
-                child: createOutlineButtonColor(AppSetting.bgColors[0],
+                child: createOutlineButtonColor(ReaderConfigProvider.bgColors[0],
                     borderColor:
-                        Provider.of<AppSetting>(context).novelReadTheme == 0
+                        Provider.of<ReaderConfigProvider>(context).novelReadTheme == 0
                             ? Colors.blue
                             : null, onPressed: () {
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelReadTheme(0);
                 }),
               ),
@@ -171,12 +171,12 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                 width: 8,
               ),
               Expanded(
-                child: createOutlineButtonColor(AppSetting.bgColors[1],
+                child: createOutlineButtonColor(ReaderConfigProvider.bgColors[1],
                     borderColor:
-                        Provider.of<AppSetting>(context).novelReadTheme == 1
+                        Provider.of<ReaderConfigProvider>(context).novelReadTheme == 1
                             ? Colors.blue
                             : null, onPressed: () {
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelReadTheme(1);
                 }),
               ),
@@ -184,12 +184,12 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                 width: 8,
               ),
               Expanded(
-                child: createOutlineButtonColor(AppSetting.bgColors[2],
+                child: createOutlineButtonColor(ReaderConfigProvider.bgColors[2],
                     borderColor:
-                        Provider.of<AppSetting>(context).novelReadTheme == 2
+                        Provider.of<ReaderConfigProvider>(context).novelReadTheme == 2
                             ? Colors.blue
                             : null, onPressed: () {
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelReadTheme(2);
                 }),
               ),
@@ -197,12 +197,12 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                 width: 8,
               ),
               Expanded(
-                child: createOutlineButtonColor(AppSetting.bgColors[3],
+                child: createOutlineButtonColor(ReaderConfigProvider.bgColors[3],
                     borderColor:
-                        Provider.of<AppSetting>(context).novelReadTheme == 3
+                        Provider.of<ReaderConfigProvider>(context).novelReadTheme == 3
                             ? Colors.blue
                             : null, onPressed: () {
-                  Provider.of<AppSetting>(context, listen: false)
+                  Provider.of<ReaderConfigProvider>(context, listen: false)
                       .changeNovelReadTheme(3);
                 }),
               )

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/user_info.dart';
-import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/helper/api.dart';
+import 'package:flutter_dmzj/provider/user_info_provider.dart';
+import 'package:flutter_dmzj/helper/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_banner_item.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_comic_item.dart';
 import 'package:flutter_dmzj/models/comic/comic_home_new_item.dart';
@@ -496,11 +496,11 @@ class ComicRecommendState extends State<ComicRecommend>
 
   Future loadMySub() async {
     try {
-      if (!Provider.of<AppUserInfo>(context, listen: false).isLogin) {
+      if (!Provider.of<AppUserInfoProvider>(context, listen: false).isLogin) {
         return;
       }
       var response = await http.get(Api.comicMySub(
-          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid));
+          Provider.of<AppUserInfoProvider>(context, listen: false).loginInfo.uid));
       var jsonMap = jsonDecode(response.body);
 
       List items = jsonMap["data"]["data"];

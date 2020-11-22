@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/user_info.dart';
+import 'package:flutter_dmzj/helper/api.dart';
+import 'package:flutter_dmzj/provider/user_info_provider.dart';
 import 'package:flutter_dmzj/models/user/user_subscribe_item.dart';
 import 'package:flutter_dmzj/widgets/user_subscribe_widget.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -215,8 +215,8 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
       var response = await http.get(Api.userSubscribe(
           widget.type,
           _subType,
-          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid,
-          Provider.of<AppUserInfo>(context, listen: false).loginInfo.dmzj_token,
+          Provider.of<AppUserInfoProvider>(context, listen: false).loginInfo.uid,
+          Provider.of<AppUserInfoProvider>(context, listen: false).loginInfo.dmzj_token,
           letter: _letters.values.toList()[_selectLetters],
           page: _page));
 

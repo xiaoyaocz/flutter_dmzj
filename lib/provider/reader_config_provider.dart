@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/config_helper.dart';
+import 'package:flutter_dmzj/helper/config_helper.dart';
 
-class AppSetting with ChangeNotifier {
-  AppSetting() {
+class ReaderConfigProvider with ChangeNotifier {
+  ReaderConfigProvider() {
     changeComicWebApi(ConfigHelper.getComicWebApi());
     changeComicVertical(ConfigHelper.getComicVertical());
     changeComicWakelock(ConfigHelper.getComicWakelock());

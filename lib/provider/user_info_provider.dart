@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/config_helper.dart';
+import 'package:flutter_dmzj/helper/api.dart';
+import 'package:flutter_dmzj/helper/config_helper.dart';
 import 'package:flutter_dmzj/models/user/user_model.dart';
 import 'package:flutter_dmzj/models/user/user_profile.dart';
 import 'package:http/http.dart' as http;
 
-class AppUserInfo with ChangeNotifier {
-  AppUserInfo() {
+class AppUserInfoProvider with ChangeNotifier {
+  AppUserInfoProvider() {
     changeIsLogin(ConfigHelper.getUserIsLogined());
     changeBindTel(ConfigHelper.getUserIsBindTel());
     changeLoginInfo(ConfigHelper.getUserInfo());

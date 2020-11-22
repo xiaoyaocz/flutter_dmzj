@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/api.dart';
-import 'package:flutter_dmzj/app/user_helper.dart';
-import 'package:flutter_dmzj/app/user_info.dart';
+import 'package:flutter_dmzj/helper/api.dart';
+import 'package:flutter_dmzj/helper/user_helper.dart';
+import 'package:flutter_dmzj/provider/user_info_provider.dart';
 import 'package:flutter_dmzj/models/user/user_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -152,12 +152,12 @@ class _LoginPageState extends State<LoginPage> {
       var body = result.body;
       var data = UserLgoinModel.fromJson(jsonDecode(body));
       if (data.result == 1) {
-        Provider.of<AppUserInfo>(context, listen: false).changeIsLogin(true);
-        Provider.of<AppUserInfo>(context, listen: false)
+        Provider.of<AppUserInfoProvider>(context, listen: false).changeIsLogin(true);
+        Provider.of<AppUserInfoProvider>(context, listen: false)
             .changeBindTel(data.data.bind_phone.length != 0);
-        Provider.of<AppUserInfo>(context, listen: false)
+        Provider.of<AppUserInfoProvider>(context, listen: false)
             .changeLoginInfo(data.data);
-        Provider.of<AppUserInfo>(context, listen: false)
+        Provider.of<AppUserInfoProvider>(context, listen: false)
             .getUserProfile(data.data.uid, data.data.dmzj_token);
         Fluttertoast.showToast(msg: "登录成功", toastLength: Toast.LENGTH_SHORT);
         UserHelper.loadComicHistory();
