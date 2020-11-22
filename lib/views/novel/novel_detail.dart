@@ -47,16 +47,9 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         _loading = false;
       });
     });
-    updateHistory();
     _scrollController = new ScrollController();
   }
 
-  void updateHistory() {
-    var his = ConfigHelper.getNovelHistory(widget.novelId);
-    setState(() {
-      historyChapter = his;
-    });
-  }
 
   @override
   void dispose() {
@@ -351,7 +344,6 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                               context, widget.novelId, volumes, item,
                               novelTitle: _detail.name,
                               isSubscribe: _isSubscribe);
-                          updateHistory();
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(
@@ -409,14 +401,12 @@ class _NovelDetailPageState extends State<NovelDetailPage>
         await Utils.openNovelReader(
             context, widget.novelId, volumes, chapterItem,
             novelTitle: _detail.name, isSubscribe: _isSubscribe);
-        updateHistory();
         return;
       }
     } else {
       await Utils.openNovelReader(
           context, widget.novelId, volumes, volumes[0].chapters[0],
           novelTitle: _detail.name, isSubscribe: _isSubscribe);
-      updateHistory();
     }
   }
 

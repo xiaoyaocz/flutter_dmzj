@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
-import 'package:flutter_dmzj/sql/comic_down.dart';
-import 'package:flutter_dmzj/sql/comic_history.dart';
+import 'package:flutter_dmzj/provider/comic_history.dart';
 import 'package:flutter_dmzj/views/comic/comic_home.dart';
 import 'package:flutter_dmzj/views/settings/comic_reader_settings.dart';
 import 'package:flutter_dmzj/views/settings/novel_reader_settings.dart';
@@ -72,33 +71,12 @@ void main() async {
 Future initDatabase() async {
   var databasesPath = await getDatabasesPath();
   // File(databasesPath+"/nsplayer.db").deleteSync();
-  var db = await openDatabase(databasesPath + "/comic_history.db", version: 1,
-      onCreate: (Database _db, int version) async {
-    await _db.execute('''
-create table $comicHistoryTable ( 
-  $comicHistoryColumnComicID integer primary key not null, 
-  $comicHistoryColumnChapterID integer not null,
-  $comicHistoryColumnPage double not null,
-  $comicHistoryMode integer not null)
-''');
-
-    await _db.execute('''
-create table $comicDownloadTableName (
-$comicDownloadColumnChapterID integer primary key not null,
-$comicDownloadColumnChapterName text not null,
-$comicDownloadColumnComicID integer not null,
-$comicDownloadColumnComicName text not null,
-$comicDownloadColumnStatus integer not null,
-$comicDownloadColumnVolume text not null,
-$comicDownloadColumnPage integer ,
-$comicDownloadColumnCount integer ,
-$comicDownloadColumnSavePath text ,
-$comicDownloadColumnUrls text )
-''');
-  });
+  var db = await openDatabase(databasesPath + "/comic_history.db", version: 1,onCreate:(db,ver) async {
+    await ComicHistoryHelper.initTable(db);
+  } );
 
   ComicHistoryHelper.db = db;
-  ComicDownloadProvider.db = db;
+  // ComicDownloadProvider.db = db;
 }
 
 class MyApp extends StatelessWidget {

@@ -4,10 +4,11 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
+import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_history_item.dart';
 import 'package:flutter_dmzj/models/novel/novel_history_item.dart';
-import 'package:flutter_dmzj/sql/comic_history.dart';
+import 'package:flutter_dmzj/provider/comic_history.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:http/http.dart' as http;
@@ -275,16 +276,16 @@ class _HistoryTabItemState extends State<HistoryTabItem>
           jsonMap.map((i) => ComicHistoryItem.fromJson(i)).toList();
       if (detail != null && detail.length != 0) {
         for (var item in detail) {
+          print(item.toString());
           var historyItem = await ComicHistoryHelper.getItem(item.comic_id);
           if (historyItem != null) {
-            historyItem.chapter_id = item.chapter_id;
-            historyItem.page = item.progress?.toDouble() ?? 1;
-            await ComicHistoryHelper.update(historyItem);
+            if(historyItem.viewing_time < item.viewing_time)
+              await ComicHistoryHelper.update(item);
+            else
+              UserHelper.comicAddHistory(historyItem.comic_id, historyItem.chapter_id, page: historyItem.record);
           } else {
-            await ComicHistoryHelper.insert(ComicHistory(item.comic_id,
-                item.chapter_id, item.progress?.toDouble() ?? 1, 1));
+            await ComicHistoryHelper.insert(item);
           }
-
           //ConfigHelper.setComicHistory(item.comic_id, item.chapter_id);
         }
         //_comicPage++;

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/models/comic/comic_history_item.dart';
-import 'package:flutter_dmzj/sql/comic_history.dart';
+import 'package:flutter_dmzj/provider/comic_history.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -131,7 +131,7 @@ class UserHelper {
     }
   }
 
-  static Future<bool> comicAddComicHistory(int comicId, int chapterId,
+  static Future<bool> comicAddHistory(int comicId, int chapterId,
       {int page = 1}) async {
     try {
       //TODO 跳转登录
@@ -153,7 +153,7 @@ class UserHelper {
     }
   }
 
-  static Future<bool> comicAddNovelHistory(
+  static Future<bool> novelAddHistory(
       int novelId, int volumeId, int chapterId,
       {int page = 1}) async {
     try {
@@ -237,21 +237,24 @@ class UserHelper {
         return false;
       }
       var response =
-          await http.get(Api.userComicHistory(ConfigHelper.getUserInfo().uid));
+      await http.get(Api.userComicHistory(ConfigHelper.getUserInfo().uid));
       List jsonMap = jsonDecode(response.body);
       List<ComicHistoryItem> detail =
-          jsonMap.map((i) => ComicHistoryItem.fromJson(i)).toList();
-      if (detail != null) {
+      jsonMap.map((i) => ComicHistoryItem.fromJson(i)).toList();
+      if (detail != null && detail.length != 0) {
         for (var item in detail) {
+          print(item.toString());
           var historyItem = await ComicHistoryHelper.getItem(item.comic_id);
           if (historyItem != null) {
-            historyItem.chapter_id = item.chapter_id;
-            historyItem.page = item.progress?.toDouble() ?? 1;
-            await ComicHistoryHelper.update(historyItem);
+            if(historyItem.viewing_time < item.viewing_time)
+              await ComicHistoryHelper.update(item);
+            else
+              UserHelper.comicAddHistory(historyItem.comic_id, historyItem.chapter_id, page: historyItem.record);
           } else {
-            await ComicHistoryHelper.insert(ComicHistory(item.comic_id,
-                item.chapter_id, item.progress?.toDouble() ?? 1, 1));
+            await ComicHistoryHelper.insert(item);
           }
+          //ConfigHelper.setComicHistory(item.comic_id, item.chapter_id);
+
         }
       }
       return true;

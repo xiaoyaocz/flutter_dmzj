@@ -15,11 +15,11 @@ import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_chapter_view_point.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
+import 'package:flutter_dmzj/models/comic/comic_history_item.dart';
 import 'package:flutter_dmzj/models/comic/comic_web_chapter_detail.dart';
-import 'package:flutter_dmzj/sql/comic_history.dart';
+import 'package:flutter_dmzj/provider/comic_history.dart';
 import 'package:flutter_dmzj/views/reader/comic_tc.dart';
 import 'package:flutter_dmzj/widgets/comic_view.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -40,9 +40,10 @@ class ComicReaderPage extends StatefulWidget {
   final List<ComicDetailChapterItem> chapters;
   final ComicDetailChapterItem item;
   final String comicTitle;
+  ComicHistoryItem historyItem;
   bool subscribe;
-  ComicReaderPage(
-      this.comicId, this.comicTitle, this.chapters, this.item, this.subscribe,
+  ComicReaderPage(this.comicId, this.comicTitle, this.chapters, this.item,
+      this.subscribe, this.historyItem,
       {Key key})
       : super(key: key);
 
@@ -59,7 +60,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   String _networkState = "";
   double _verSliderMax = 0;
   double _verSliderValue = 0;
-
+  ComicHistoryItem _historyItem;
   @override
   void initState() {
     super.initState();
@@ -73,6 +74,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     Screen.keepOn(ConfigHelper.getComicWakelock());
 
     _currentItem = widget.item;
+    _historyItem = widget.historyItem;
 
     _connectivity.checkConnectivity().then((e) {
       var str = "";
@@ -135,7 +137,6 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
             "%";
       });
     });
-
     loadData();
   }
 
@@ -150,29 +151,34 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     Screen.keepOn(false);
-    int page = 1;
+    int record = 1;
     if (!ConfigHelper.getComicVertical() ?? false) {
       print(_selectIndex);
-      page = _selectIndex;
-      if (page > _detail.picnum) {
-        page = _detail.picnum;
+      record = _selectIndex;
+      if (record > _detail.picnum) {
+        record = _detail.picnum;
       }
+      print(_historyItem.chapter_name);
+      _historyItem.record = record;
+      _historyItem.viewing_time = Api.timeStamp;
     }
 
     ComicHistoryHelper.getItem(widget.comicId).then((historyItem) async {
       if (historyItem != null) {
         historyItem.chapter_id = _currentItem.chapter_id;
-        historyItem.page = page.toDouble();
+        historyItem.chapter_name = _currentItem.chapter_title;
+        historyItem.record = record;
         await ComicHistoryHelper.update(historyItem);
       } else {
-        await ComicHistoryHelper.insert(ComicHistory(
-            widget.comicId, _currentItem.chapter_id, page.toDouble(), 1));
+        // _historyItem.chapter_id = _currentItem.chapter_id;
+        // _historyItem.chapter_name = _currentItem.chapter_title;
+        // _historyItem.viewing_time = Api.timeStamp;
+        await ComicHistoryHelper.insert(_historyItem);
       }
-      Utils.changHistory.fire(widget.comicId);
     });
 
-    UserHelper.comicAddComicHistory(widget.comicId, _currentItem.chapter_id,
-        page: page);
+    UserHelper.comicAddHistory(widget.comicId, _currentItem.chapter_id,
+        page: record);
     super.dispose();
   }
 
@@ -619,6 +625,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
     if (index > 0 && index <= _detail.page_url.length) {
       return PhotoViewGalleryPageOptions(
+        filterQuality: FilterQuality.high,
         imageProvider: CachedNetworkImageProvider(
           _detail.page_url[index - 1],
           headers: {"Referer": "http://www.dmzj.com/"},
@@ -962,13 +969,13 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       var historyItem = await ComicHistoryHelper.getItem(widget.comicId);
       if (historyItem != null &&
           historyItem.chapter_id == _currentItem.chapter_id) {
-        var page = historyItem.page.toInt();
-        if (page > detail.page_url.length) {
-          page = detail.page_url.length;
+        var record = historyItem.record;
+        if (record > detail.page_url.length) {
+          record = detail.page_url.length;
         }
-        _pageController = new PreloadPageController(initialPage: page);
+        _pageController = new PreloadPageController(initialPage: record);
         setState(() {
-          _selectIndex = page;
+          _selectIndex = record;
         });
         // _pageController.=;
       } else {
@@ -991,8 +998,9 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       await loadViewPoint();
 
       //ConfigHelper.setComicHistory(widget.comicId, _currentItem.chapter_id);
-      await UserHelper.comicAddComicHistory(
-          widget.comicId, _currentItem.chapter_id);
+      await UserHelper.comicAddHistory(widget.comicId, _currentItem.chapter_id);
+      _historyItem.chapter_id = _currentItem.chapter_id;
+      _historyItem.chapter_name = _currentItem.chapter_title;
       Provider.of<ComicHistoryProvider>(context, listen: false)
           .setHistory(_currentItem.chapter_id);
     } catch (e) {
