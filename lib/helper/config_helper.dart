@@ -157,6 +157,15 @@ class ConfigHelper {
     prefs.setBool("ComicSystemBrightness", value);
   }
 
+  ///阅读音量键翻页
+  static bool getVolumeKeyListen() {
+    return prefs.getBool("VolumeKeyListen") ?? false;
+  }
+
+  static void setVolumeKeyListen(bool value) {
+    prefs.setBool("VolumeKeyListen", value);
+  }
+
   /// 小说阅读记录
   static int getNovelHistory(int novelId) {
     return prefs.getInt("novel$novelId") ?? 0;
