@@ -96,7 +96,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    UserHelper.comicAddNovelHistory(
+    UserHelper.novelAddHistory(
         widget.novelId, _currentItem.volume_id, _currentItem.chapter_id);
     super.dispose();
   }
@@ -922,8 +922,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
         await handelContent();
       }
 
-      ConfigHelper.setNovelHistory(widget.novelId, _currentItem.chapter_id);
-      UserHelper.comicAddNovelHistory(
+      UserHelper.novelAddHistory(
           widget.novelId, _currentItem.volume_id, _currentItem.chapter_id);
     } catch (e) {
       print(e);

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/provider/reader_config_provider.dart';
 import 'package:flutter_dmzj/helper/config_helper.dart';
-import 'package:flutter_dmzj/database/comic_down.dart';
 import 'package:flutter_dmzj/database/comic_history.dart';
 import 'package:flutter_dmzj/views/comic/comic_home.dart';
 import 'package:flutter_dmzj/views/settings/comic_reader_settings.dart';
@@ -42,7 +41,8 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider<AppThemeProvider>(create: (_) => AppThemeProvider(), lazy: false),
+      ChangeNotifierProvider<AppThemeProvider>(
+          create: (_) => AppThemeProvider(), lazy: false),
       ChangeNotifierProvider<AppUserInfoProvider>(
           create: (_) => AppUserInfoProvider(), lazy: false),
       ChangeNotifierProvider<ReaderConfigProvider>(
@@ -73,32 +73,12 @@ Future initDatabase() async {
   var databasesPath = await getDatabasesPath();
   // File(databasesPath+"/nsplayer.db").deleteSync();
   var db = await openDatabase(databasesPath + "/comic_history.db", version: 1,
-      onCreate: (Database _db, int version) async {
-    await _db.execute('''
-create table $comicHistoryTable ( 
-  $comicHistoryColumnComicID integer primary key not null, 
-  $comicHistoryColumnChapterID integer not null,
-  $comicHistoryColumnPage double not null,
-  $comicHistoryMode integer not null)
-''');
-
-    await _db.execute('''
-create table $comicDownloadTableName (
-$comicDownloadColumnChapterID integer primary key not null,
-$comicDownloadColumnChapterName text not null,
-$comicDownloadColumnComicID integer not null,
-$comicDownloadColumnComicName text not null,
-$comicDownloadColumnStatus integer not null,
-$comicDownloadColumnVolume text not null,
-$comicDownloadColumnPage integer ,
-$comicDownloadColumnCount integer ,
-$comicDownloadColumnSavePath text ,
-$comicDownloadColumnUrls text )
-''');
+      onCreate: (db, ver) async {
+    await ComicHistoryHelper.initTable(db);
   });
 
   ComicHistoryHelper.db = db;
-  ComicDownloadProvider.db = db;
+  // ComicDownloadProvider.db = db;
 }
 
 class MyApp extends StatelessWidget {
@@ -113,7 +93,8 @@ class MyApp extends StatelessWidget {
             : Brightness.light,
         primarySwatch: Provider.of<AppThemeProvider>(context).themeColor,
         accentColor: Provider.of<AppThemeProvider>(context).themeColor,
-        toggleableActiveColor: Provider.of<AppThemeProvider>(context).themeColor,
+        toggleableActiveColor:
+            Provider.of<AppThemeProvider>(context).themeColor,
         textSelectionColor: Provider.of<AppThemeProvider>(context).themeColor,
       ),
       darkTheme: (Provider.of<AppThemeProvider>(context).sysDark)
@@ -121,8 +102,10 @@ class MyApp extends StatelessWidget {
               brightness: Brightness.dark,
               primarySwatch: Provider.of<AppThemeProvider>(context).themeColor,
               accentColor: Provider.of<AppThemeProvider>(context).themeColor,
-              toggleableActiveColor: Provider.of<AppThemeProvider>(context).themeColor,
-              textSelectionColor: Provider.of<AppThemeProvider>(context).themeColor,
+              toggleableActiveColor:
+                  Provider.of<AppThemeProvider>(context).themeColor,
+              textSelectionColor:
+                  Provider.of<AppThemeProvider>(context).themeColor,
             )
           : null,
       home: MyHomePage(),
@@ -161,7 +144,8 @@ class _MyHomePageState extends State<MyHomePage>
     final QuickActions quickActions = QuickActions();
     quickActions.initialize((String shortcutType) {
       int type = int.parse(shortcutType);
-      if (!Provider.of<AppUserInfoProvider>(context, listen: false).isLogin) type = 0;
+      if (!Provider.of<AppUserInfoProvider>(context, listen: false).isLogin)
+        type = 0;
       print(type);
       switch (type) {
         case 1:

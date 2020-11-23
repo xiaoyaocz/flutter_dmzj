@@ -85,14 +85,6 @@ class ConfigHelper {
     prefs.setBool("ComicWebAPI", value);
   }
 
-  /// 漫画阅读记录
-  static int getComicHistory(int comicId) {
-    return prefs.getInt("comic$comicId") ?? 0;
-  }
-
-  static void setComicHistory(int comicId, int value) {
-    prefs.setInt("comic$comicId", value);
-  }
 
   /// 漫画阅读方向
   static bool getComicVertical() {

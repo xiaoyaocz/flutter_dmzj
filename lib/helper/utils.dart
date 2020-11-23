@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/helper/config_helper.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
+import 'package:flutter_dmzj/models/comic/comic_history_item.dart';
 import 'package:flutter_dmzj/models/novel/novel_volume_item.dart';
 import 'package:flutter_dmzj/models/version_info.dart';
 import 'package:flutter_dmzj/views/comic/comic_author.dart';
@@ -508,14 +509,15 @@ class Utils {
       String comicTitle,
       bool isSubscribe,
       List<ComicDetailChapterItem> chapters,
-      ComicDetailChapterItem item) async {
+      ComicDetailChapterItem item,
+      ComicHistoryItem historyItem) async {
     var ls = chapters.toList();
     ls.sort((a, b) => a.chapter_order.compareTo(b.chapter_order));
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) =>
-            ComicReaderPage(comicId, comicTitle, ls, item, isSubscribe),
+            ComicReaderPage(comicId, comicTitle, ls, item, isSubscribe,historyItem),
       ),
     );
   }
