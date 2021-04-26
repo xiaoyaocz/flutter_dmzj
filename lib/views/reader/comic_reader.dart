@@ -37,6 +37,7 @@ class ComicReaderPage extends StatefulWidget {
   final ComicDetailChapterItem item;
   final String comicTitle;
   bool subscribe;
+
   ComicReaderPage(
       this.comicId, this.comicTitle, this.chapters, this.item, this.subscribe,
       {Key key})
@@ -467,12 +468,24 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     );
   }
 
-  void nextPage() {
+  void nextPage() async {
     if (_pageController.page == 1) {
-      previousChapter();
+      await previousChapter();
+      setState(() {
+        _selectIndex = _detail.page_url.length;
+        _pageController = PreloadPageController(initialPage: _selectIndex + 1);
+        print('_selectIndex:' + _selectIndex.toString());
+        print('page:${_selectIndex + 1}');
+      });
     } else {
       setState(() {
-        _pageController.jumpToPage(_selectIndex - 1);
+        int newPage;
+        if (_pageController.page.toInt()>_selectIndex) {
+          newPage = _pageController.page.toInt() - 1;
+        } else {
+          newPage = _selectIndex - 1;
+        }
+        _pageController.jumpToPage(newPage);
       });
     }
   }
@@ -559,6 +572,8 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                   _selectIndex = i;
                 });
               }
+              print('_selectIndex:' + _selectIndex.toString());
+              print('page:$i');
             },
             itemBuilder: (ctx, index) {
               if (index == 0) {

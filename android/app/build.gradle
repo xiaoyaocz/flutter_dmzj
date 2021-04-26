@@ -50,9 +50,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        ndk {
-            abiFilters 'armeabi-v7a','arm64-v8a'
-        }
+
     }
 
    signingConfigs {
@@ -66,6 +64,14 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
+            ndk {
+                abiFilters 'armeabi-v7a','arm64-v8a'
+            }
+        }
+        debug {
+            ndk {
+                abiFilters 'armeabi-v7a','arm64-v8a','x86'
+            }
         }
     }
 

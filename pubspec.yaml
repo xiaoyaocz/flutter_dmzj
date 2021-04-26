@@ -50,7 +50,7 @@ dependencies:
   flutter_cache_manager: ^2.0.0
   screen: ^0.0.5
   path_provider: ^1.6.21
-  preload_page_view: ^0.1.4
+  preload_page_view: 0.1.5
   package_info: ^0.4.3
 dev_dependencies:
   flutter_test:
