@@ -208,7 +208,8 @@ class _PersonalPageState extends State<PersonalPage> {
                   trailing: Icon(Icons.chevron_right, color: Colors.grey),
                   leading: Icon(Icons.file_download),
                   onTap: () => {},
-                )
+                ),
+
               ],
             ),
           ),

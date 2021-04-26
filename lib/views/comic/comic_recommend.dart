@@ -371,7 +371,7 @@ class ComicRecommendState extends State<ComicRecommend>
                 ? Container()
                 : Flexible(
                     child: Text(
-                    author,
+                    author??"",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.grey, fontSize: 12.0),
