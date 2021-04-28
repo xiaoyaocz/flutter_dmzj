@@ -40,7 +40,7 @@ dependencies:
   sqflite: ^1.3.1+2
   url_launcher: ^5.7.5
   share: ^0.6.5+3
-  flutter_easyrefresh: ^2.1.6
+  flutter_easyrefresh: ^2.2.1
   html_unescape: ^1.0.2
   # 阅读界面电量监听
   battery: ^1.0.7

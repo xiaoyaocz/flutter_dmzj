@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:crypton/crypton.dart';
+import 'package:flutter_dmzj/app/config_helper.dart';
 
 import '../http_util.dart';
 
@@ -20,12 +21,16 @@ class ApiUtil {
     }
   }
 
-  static Map<String, dynamic> defaultParameter() {
-    return {
+  static Map<String, dynamic> defaultParameter({bool logined = false}) {
+    Map<String, dynamic> map = {
       "channel": Platform.operatingSystem,
       "version": "2.0.0",
       "timestamp":
           (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0)
     };
+    if (logined && ConfigHelper.getUserIsLogined()) {
+      map.addAll({'uid': ConfigHelper.getUserInfo()?.uid ?? ""});
+    }
+    return map;
   }
 }

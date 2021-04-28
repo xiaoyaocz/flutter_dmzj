@@ -237,7 +237,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                       nextChapter();
                     },
                     header: MaterialHeader(),
-                    footer: MaterialFooter(displacement: 80),
+                    footer: MaterialFooter(),
                     child: SingleChildScrollView(
                       controller: _controllerVer,
                       child: _isPicture

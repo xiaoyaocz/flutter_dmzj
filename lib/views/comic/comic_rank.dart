@@ -4,10 +4,12 @@ import 'dart:ui';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
+import 'package:flutter_dmzj/app/api/comic.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_rank_item.dart';
+import 'package:flutter_dmzj/protobuf/comic/rank_list_response.pb.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
@@ -25,23 +27,23 @@ class _ComicUpdatePageState extends State<ComicRankPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  Map _types = {"全部分类": "0"};
-  String _type = "全部分类";
+  Map<String, int> _tags = {"全部分类": 0};
+  String _tag = "全部分类";
 
-  Map _ranks = {
-    "日排行": "0",
-    "周排行": "1",
-    "月排行": "2",
-    "总排行": "3",
+  Map<String, int> _byTimes = {
+    "日排行": 0,
+    "周排行": 1,
+    "月排行": 2,
+    "总排行": 3,
   };
-  String _rank = "日排行";
+  String _byTime = "日排行";
 
-  Map _sorts = {
-    "人气排行": "0",
-    "吐槽排行": "1",
-    "订阅排行": "2",
+  Map<String, int> _types = {
+    "人气排行": 0,
+    "吐槽排行": 1,
+    "订阅排行": 2,
   };
-  String _sort = "人气排行";
+  String _type = "人气排行";
 
   @override
   void initState() {
@@ -67,9 +69,9 @@ class _ComicUpdatePageState extends State<ComicRankPage>
           padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
           child: Row(
             children: <Widget>[
-              Expanded(child: createFilter(_types)),
-              Expanded(child: createFilter(_ranks, type: 1)),
-              Expanded(child: createFilter(_sorts, type: 2))
+              Expanded(child: createFilter(_tags)),
+              Expanded(child: createFilter(_types, type: 1)),
+              Expanded(child: createFilter(_byTimes, type: 2))
             ],
           ),
         ),
@@ -94,11 +96,11 @@ class _ComicUpdatePageState extends State<ComicRankPage>
   }
 
   Widget createFilter(Map _subTypes, {int type = 0}) {
-    String select = _type;
+    String select = _tag;
     if (type == 1) {
-      select = _rank;
+      select = _type;
     } else if (type == 2) {
-      select = _sort;
+      select = _byTime;
     }
     return PopupMenuButton<String>(
       child: Container(
@@ -116,11 +118,11 @@ class _ComicUpdatePageState extends State<ComicRankPage>
       onSelected: (v) async {
         setState(() {
           if (type == 1) {
-            _rank = v;
-          } else if (type == 2) {
-            _sort = v;
-          } else {
             _type = v;
+          } else if (type == 2) {
+            _byTime = v;
+          } else {
+            _tag = v;
           }
         });
         print(v);
@@ -139,10 +141,10 @@ class _ComicUpdatePageState extends State<ComicRankPage>
     );
   }
 
-  Widget createItem(ComicRankItem item) {
+  Widget createItem(ComicRankListItemResponse item) {
     return InkWell(
       onTap: () {
-        Utils.openPage(context, int.parse(item.comic_id), 1);
+        Utils.openPage(context, item.comicId, 1);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -202,7 +204,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
                     Text(
                         "更新于" +
                             TimelineUtil.format(
-                              int.parse(item.last_updatetime) * 1000,
+                              int.parse(item.lastUpdatetime.toString()) * 1000,
                               locale: 'zh',
                             ),
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
@@ -213,7 +215,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
                 child: IconButton(
                     icon: Icon(Icons.favorite_border),
                     onPressed: () {
-                      UserHelper.comicSubscribe(int.parse(item.comic_id));
+                      UserHelper.comicSubscribe(item.comicId);
                     }),
               )
             ],
@@ -223,7 +225,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
     );
   }
 
-  List<ComicRankItem> _list = [];
+  List<ComicRankListItemResponse> _list = [];
   bool _loading = false;
   int _page = 0;
 
@@ -235,14 +237,22 @@ class _ComicUpdatePageState extends State<ComicRankPage>
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Uri.parse(Api.comicRank(
-          tagId: _types[_type],
-          rank: _ranks[_rank],
-          sort: _sorts[_sort],
-          page: _page)));
-      List jsonMap = jsonDecode(response.body);
-      List<ComicRankItem> detail =
-          jsonMap.map((i) => ComicRankItem.fromJson(i)).toList();
+      var detail = await ComicApi.instance.getRankList(
+          tagId: _tags[_tag],
+          rankType: _types[_type],
+          byTime: _byTimes[_byTime],
+          page: _page);
+      // var response = await http.get(
+      //   Uri.parse(
+      //     Api.comicRank(
+      //         tagId: _types[_type],
+      //         rank: _ranks[_rank],
+      //         sort: _sorts[_sort],
+      //         page: _page),
+      //   ),
+      // );
+      //List jsonMap = jsonDecode(response.body);
+
       if (detail != null) {
         setState(() {
           if (_page == 0) {
@@ -259,6 +269,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
       }
     } catch (e) {
       print(e);
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       setState(() {
         _loading = false;
@@ -273,14 +284,13 @@ class _ComicUpdatePageState extends State<ComicRankPage>
       List<ComicDetailTagItem> detail =
           jsonMap.map((i) => ComicDetailTagItem.fromJson(i)).toList();
       if (detail != null) {
-        Map list = {};
+        Map<String, int> list = {};
         for (var item in detail) {
-          list.addAll({
-            (item.tag_id == 0 ? "全部分类" : item.tag_name): item.tag_id.toString()
-          });
+          list.addAll(
+              {(item.tag_id == 0 ? "全部分类" : item.tag_name): item.tag_id});
         }
         setState(() {
-          _types = list;
+          _tags = list;
         });
         await loadData();
       }

@@ -706,8 +706,8 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         onLoad: () async {
           nextChapter();
         },
-        footer: MaterialFooter(displacement: 100, enableInfiniteLoad: false),
-        header: MaterialHeader(displacement: 100),
+        footer: MaterialFooter(enableInfiniteLoad: false),
+        header: MaterialHeader(),
         child: ListView.builder(
             itemCount: _detail.page_url.length + 1,
             controller: _scrollController,

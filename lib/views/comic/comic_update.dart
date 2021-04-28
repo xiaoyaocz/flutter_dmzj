@@ -228,6 +228,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
       }
     } catch (e) {
       print(e);
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       setState(() {
         _loading = false;
