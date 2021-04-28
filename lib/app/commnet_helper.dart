@@ -9,7 +9,8 @@ class CommentHelper {
   static Future<bool> likeComment(int objId, String commentId, int type) async {
     try {
       var result = "";
-      var response = await http.get(Api.likeCommentV3(objId, commentId, type));
+      var response =
+          await http.get(Uri.parse(Api.likeCommentV3(objId, commentId, type)));
       result = response.body;
       var jsonMap = jsonDecode(result);
       if (jsonMap["code"] == 0) {
@@ -32,7 +33,7 @@ class CommentHelper {
       var uid = ConfigHelper.getUserInfo()?.uid ?? "";
 
       var result = "";
-      var response = await http.get(Api.checkCommentV3(uid));
+      var response = await http.get(Uri.parse(Api.checkCommentV3(uid)));
       result = response.body;
       var jsonMap = jsonDecode(result);
       if (jsonMap["msg"] == "") {
@@ -55,7 +56,7 @@ class CommentHelper {
         return CommnetResult(false, "没有登录");
       }
       var token = ConfigHelper.getUserInfo()?.dmzj_token ?? "";
-      var response = await http.post(Api.addCommentV3(type), body: {
+      var response = await http.post(Uri.parse(Api.addCommentV3(type)), body: {
         "obj_id": objId,
         "to_comment_id": toCommentId,
         "origin_comment_id": originCommentId,

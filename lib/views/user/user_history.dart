@@ -248,8 +248,8 @@ class _HistoryTabItemState extends State<HistoryTabItem>
         _loading = true;
       });
 
-      var response =
-          await http.get(Api.userNovelHistory(ConfigHelper.getUserInfo().uid));
+      var response = await http
+          .get(Uri.parse(Api.userNovelHistory(ConfigHelper.getUserInfo().uid)));
       List jsonMap = jsonDecode(response.body);
       List<NovelHistoryItem> detail =
           jsonMap.map((i) => NovelHistoryItem.fromJson(i)).toList();
@@ -280,8 +280,8 @@ class _HistoryTabItemState extends State<HistoryTabItem>
         _loading = true;
       });
 
-      var response =
-          await http.get(Api.userComicHistory(ConfigHelper.getUserInfo().uid));
+      var response = await http
+          .get(Uri.parse(Api.userComicHistory(ConfigHelper.getUserInfo().uid)));
       List jsonMap = jsonDecode(response.body);
       List<ComicHistoryItem> detail =
           jsonMap.map((i) => ComicHistoryItem.fromJson(i)).toList();

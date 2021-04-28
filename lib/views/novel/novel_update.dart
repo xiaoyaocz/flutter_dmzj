@@ -148,7 +148,7 @@ class _NovelUpdatePageState extends State<NovelUpdatePage>
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Api.novelUpdate(page: _page));
+      var response = await http.get(Uri.parse(Api.novelUpdate(page: _page)));
       List jsonMap = jsonDecode(response.body);
       List<NovelUpdateItem> detail =
           jsonMap.map((i) => NovelUpdateItem.fromJson(i)).toList();

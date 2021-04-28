@@ -487,8 +487,9 @@ class _CommentWidgetState extends State<CommentWidget>
       if (_page == 1) {
         await loadCount();
       }
-      var response = await http.get(
-          Api.commentV2(widget.objId, widget.type, page: _page, ishot: _isHot));
+      var response = await http.get(Uri.parse(Api.commentV2(
+          widget.objId, widget.type,
+          page: _page, ishot: _isHot)));
 
       List jsonMap = jsonDecode(response.body);
 
@@ -519,8 +520,8 @@ class _CommentWidgetState extends State<CommentWidget>
 
   Future loadCount() async {
     try {
-      var response =
-          await http.get(Api.commentCountV2(widget.objId, widget.type));
+      var response = await http
+          .get(Uri.parse(Api.commentCountV2(widget.objId, widget.type)));
       var jsonMap = jsonDecode(response.body);
       int num = jsonMap["data"];
       setState(() {

@@ -334,7 +334,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
       Uint8List responseBody;
       var api = Api.novelDetail(widget.novelId);
       try {
-        var response = await http.get(api);
+        var response = await http.get(Uri.parse(api));
         responseBody = response.bodyBytes;
       } catch (e) {
         var file = await _cacheManager.getFileFromCache(api);
@@ -372,7 +372,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
       Uint8List responseBody;
       var api = Api.novelVolumeDetail(widget.novelId);
       try {
-        var response = await http.get(api);
+        var response = await http.get(Uri.parse(api));
         responseBody = response.bodyBytes;
       } catch (e) {
         var file = await _cacheManager.getFileFromCache(api);
@@ -401,8 +401,9 @@ class _NovelDetailPageState extends State<NovelDetailPage>
       if (!ConfigHelper.getUserIsLogined() ?? false) {
         return;
       }
-      var response = await http.get(Api.novelCheckSubscribe(widget.novelId,
-          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid));
+      var response = await http.get(Uri.parse(Api.novelCheckSubscribe(
+          widget.novelId,
+          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid)));
       var jsonMap = jsonDecode(response.body);
       setState(() {
         _isSubscribe = jsonMap["code"] == 0;

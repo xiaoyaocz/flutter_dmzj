@@ -371,7 +371,7 @@ class ComicRecommendState extends State<ComicRecommend>
                 ? Container()
                 : Flexible(
                     child: Text(
-                    author??"",
+                    author ?? "",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.grey, fontSize: 12.0),
@@ -393,7 +393,7 @@ class ComicRecommendState extends State<ComicRecommend>
         return;
       }
       _loading = true;
-      var response = await http.get(Api.comicRecommend);
+      var response = await http.get(Uri.parse(Api.comicRecommend));
       List jsonMap = jsonDecode(response.body);
       //Banner
       {
@@ -521,7 +521,7 @@ class ComicRecommendState extends State<ComicRecommend>
         return;
       }
       _loadingLike = true;
-      var response = await http.get(Api.comicLike);
+      var response = await http.get(Uri.parse(Api.comicLike));
       var jsonMap = jsonDecode(response.body);
       //最新
       {
@@ -548,7 +548,7 @@ class ComicRecommendState extends State<ComicRecommend>
         return;
       }
       _loadingGuoman = true;
-      var response = await http.get(Api.comicGuoman);
+      var response = await http.get(Uri.parse(Api.comicGuoman));
       var jsonMap = jsonDecode(response.body);
       //最新
       {
@@ -575,7 +575,7 @@ class ComicRecommendState extends State<ComicRecommend>
         return;
       }
       _loadingHot = true;
-      var response = await http.get(Api.comicHot);
+      var response = await http.get(Uri.parse(Api.comicHot));
       var jsonMap = jsonDecode(response.body);
       //最新
       {
@@ -600,8 +600,8 @@ class ComicRecommendState extends State<ComicRecommend>
       if (!Provider.of<AppUserInfo>(context, listen: false).isLogin) {
         return;
       }
-      var response = await http.get(Api.comicMySub(
-          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid));
+      var response = await http.get(Uri.parse(Api.comicMySub(
+          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid)));
       var jsonMap = jsonDecode(response.body);
 
       List items = jsonMap["data"]["data"];

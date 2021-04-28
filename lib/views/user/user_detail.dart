@@ -95,8 +95,8 @@ class _UserDetailPageState extends State<UserDetailPage> {
   UserProfileModel _profile;
   Future loadProfile() async {
     try {
-      var result =
-          await http.get(Api.userProfile(widget.userId.toString(), ""));
+      var result = await http
+          .get(Uri.parse(Api.userProfile(widget.userId.toString(), "")));
       var body = result.body;
       var data = UserProfileModel.fromJson(jsonDecode(body));
       if (data != null) {
@@ -175,9 +175,9 @@ class _SubscribeTabViewState extends State<SubscribeTabView>
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Api.userSubscribe(
+      var response = await http.get(Uri.parse(Api.userSubscribe(
           widget.type, _subType, widget.uid.toString(), "",
-          letter: "all", page: _page));
+          letter: "all", page: _page)));
 
       List jsonMap = jsonDecode(response.body);
 

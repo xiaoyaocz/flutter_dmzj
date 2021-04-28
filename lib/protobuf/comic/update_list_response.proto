@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package dmzj.comic;
+
+
+message ComicUpdateListResponse {
+    int32 Errno = 1;
+    string Errmsg = 2;
+    repeated ComicUpdateListItemResponse Data= 3;
+}
+
+message ComicUpdateListItemResponse {
+    int32 ComicId = 1;
+    string Title = 2;
+    bool Islong = 3;
+    string Authors=4;
+    string Types=5;
+    string Cover=6;
+    string Status=7;
+    string LastUpdateChapterName=8;
+    int32 LastUpdateChapterId=9;
+    int64 LastUpdatetime=10;
+}

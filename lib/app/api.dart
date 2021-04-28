@@ -6,12 +6,12 @@ import 'package:convert/convert.dart';
 class Api {
   static final String apiHost = "https://v3api.dmzj1.com";
   static final String version = "2.7.017";
-  static get timeStamp =>
+  static String get timeStamp =>
       (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0);
 
-  static get newsCategory =>
+  static String get newsCategory =>
       "$apiHost/article/category.json?${defaultParameter()}";
-  static get newsBanner =>
+  static String get newsBanner =>
       "$apiHost/v3/article/recommend/header.json?${defaultParameter()}";
   static String newsList(int id, {int page = 0}) {
     return "$apiHost/v3/article/list/$id/${id == 0 ? 2 : 3}/$page.json";
@@ -43,26 +43,26 @@ class Api {
   }
 
   //用户相关
-  static get loginV2 => "https://user.dmzj1.com/loginV2/m_confirm";
+  static String get loginV2 => "https://user.dmzj1.com/loginV2/m_confirm";
   static String userProfile(String uid, String token) {
     return "$apiHost/UCenter/comicsv2/$uid.json?dmzj_token=$token&${defaultParameter()}";
   }
 
   //漫画
-  static get comicRecommend =>
+  static String get comicRecommend =>
       "$apiHost/recommend_new.json?${defaultParameter()}";
 
   /// 轻小说首页
-  static get novelRecommend =>
+  static String get novelRecommend =>
       "$apiHost/novel/recommend.json?${defaultParameter()}";
   //猜你喜欢
-  static get comicLike =>
+  static String get comicLike =>
       "$apiHost/recommend/batchUpdate?category_id=50&${defaultParameter()}";
   //刷新国漫
-  static get comicGuoman =>
+  static String get comicGuoman =>
       "$apiHost/recommend/batchUpdate?category_id=52&${defaultParameter()}";
   //刷新热门
-  static get comicHot =>
+  static String get comicHot =>
       "$apiHost/recommend/batchUpdate?category_id=54&${defaultParameter()}";
   //首页我的订阅
   static String comicMySub(String uid) {
@@ -100,7 +100,8 @@ class Api {
   }
 
   /// 轻小说排行榜筛选
-  static get novelRankFilter => "$apiHost/novel/tag.json?${defaultParameter()}";
+  static String get novelRankFilter =>
+      "$apiHost/novel/tag.json?${defaultParameter()}";
 
   /// 漫画排行榜详情
   static String comicRank(
@@ -138,7 +139,8 @@ class Api {
   }
 
   /// 轻小说分类
-  static get novelCategory => "$apiHost/1/category.json?${defaultParameter()}";
+  static String get novelCategory =>
+      "$apiHost/1/category.json?${defaultParameter()}";
 
   /// 漫画作者
   static String comicAuthorDetail(int authorId) {
@@ -186,7 +188,7 @@ class Api {
   }
 
   /// 轻小说筛选条件
-  static get novelCategoryFilter =>
+  static String get novelCategoryFilter =>
       "$apiHost/novel/filter.json?${defaultParameter()}";
 
   //漫画类目详情
@@ -218,7 +220,7 @@ class Api {
   }
 
   //添加漫画订阅
-  static get addComicSubscribe => "http://v3api.dmzj1.com/subscribe/add";
+  static String get addComicSubscribe => "http://v3api.dmzj1.com/subscribe/add";
 
   //取消漫画订阅
   static String cancelComicSubscribe(int comicId, String uid) {
@@ -226,7 +228,7 @@ class Api {
   }
 
   //添加小说订阅
-  static get addNovelSubscribe => "http://v3api.dmzj1.com/subscribe/add";
+  static String get addNovelSubscribe => "http://v3api.dmzj1.com/subscribe/add";
 
   //取消小说订阅
   static String cancelNovelSubscribe(int novelId, String uid) {
@@ -317,11 +319,11 @@ class Api {
   }
 
   /// 漫画搜索热词
-  static get comicSearchHotWord =>
+  static String get comicSearchHotWord =>
       "$apiHost/search/hot/0.json?${defaultParameter()}";
 
   /// 轻小说搜索热词
-  static get novelSearchHotWord =>
+  static String get novelSearchHotWord =>
       "$apiHost/search/hot/1.json?${defaultParameter()}";
 
   static String cmoicNSSearch(String keyword) {

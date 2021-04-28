@@ -18,10 +18,11 @@ class UserHelper {
       var uid = ConfigHelper.getUserInfo()?.uid ?? "";
       var result = "";
       if (cancel) {
-        var response = await http.get(Api.cancelComicSubscribe(comicId, uid));
+        var response =
+            await http.get(Uri.parse(Api.cancelComicSubscribe(comicId, uid)));
         result = response.body;
       } else {
-        var response = await http.post(Api.addComicSubscribe,
+        var response = await http.post(Uri.parse(Api.addComicSubscribe),
             body: {"obj_ids": comicId.toString(), "uid": uid, "type": "mh"});
         result = response.body;
       }
@@ -50,10 +51,11 @@ class UserHelper {
       var uid = ConfigHelper.getUserInfo()?.uid ?? "";
       var result = "";
       if (cancel) {
-        var response = await http.get(Api.cancelNovelSubscribe(novelId, uid));
+        var response =
+            await http.get(Uri.parse(Api.cancelNovelSubscribe(novelId, uid)));
         result = response.body;
       } else {
-        var response = await http.post(Api.addNovelSubscribe,
+        var response = await http.post(Uri.parse(Api.addNovelSubscribe),
             body: {"obj_ids": novelId.toString(), "uid": uid, "type": "xs"});
         result = response.body;
       }
@@ -82,7 +84,7 @@ class UserHelper {
         return false;
       }
       var uid = ConfigHelper.getUserInfo()?.uid ?? "";
-      var response = await http.post(Api.comicAddViewPoint(), body: {
+      var response = await http.post(Uri.parse(Api.comicAddViewPoint()), body: {
         "uid": uid.toString(),
         "sub_type": comicId.toString(),
         "page": page.toString(),
@@ -113,7 +115,7 @@ class UserHelper {
       //   return false;
       // }
 
-      var response = await http.post(Api.comicLikeViewPoint(),
+      var response = await http.post(Uri.parse(Api.comicLikeViewPoint()),
           body: {"sub_type": "100", "vote_id": id.toString()});
       var jsonMap = jsonDecode(response.body);
 
@@ -139,8 +141,8 @@ class UserHelper {
         return false;
       }
       var uid = ConfigHelper.getUserInfo()?.uid ?? "";
-      var response = await http
-          .get(Api.addUserComicHistory(comicId, chapterId, uid, page: page));
+      var response = await http.get(Uri.parse(
+          Api.addUserComicHistory(comicId, chapterId, uid, page: page)));
       var jsonMap = jsonDecode(response.body);
       if (jsonMap["code"] == 0) {
         return true;
@@ -162,9 +164,9 @@ class UserHelper {
         return false;
       }
       var uid = ConfigHelper.getUserInfo()?.uid ?? "";
-      var response = await http.get(Api.addUserNovelHistory(
+      var response = await http.get(Uri.parse(Api.addUserNovelHistory(
           novelId, volumeId, chapterId, uid,
-          page: page));
+          page: page)));
       var jsonMap = jsonDecode(response.body);
       if (jsonMap["code"] == 0) {
         return true;
@@ -187,8 +189,8 @@ class UserHelper {
       var par = {"uid": int.parse(uid), "sub_id": newsId};
       var parJson = jsonEncode(par);
       var sign = Api.sign(parJson, 'app_news_sub');
-      var response = await http
-          .post(Api.checkNewsSub(), body: {"parm": parJson, "sign": sign});
+      var response = await http.post(Uri.parse(Api.checkNewsSub()),
+          body: {"parm": parJson, "sign": sign});
       var jsonMap = jsonDecode(response.body);
 
       if (jsonMap["msg"] == "您已订阅过") {
@@ -214,7 +216,7 @@ class UserHelper {
       var parJson = jsonEncode(par);
       var sign = Api.sign(parJson, 'app_news_sub');
       var response = await http.post(
-          cancel ? Api.cancelNewsSub() : Api.addNewsSub(),
+          Uri.parse(cancel ? Api.cancelNewsSub() : Api.addNewsSub()),
           body: {"parm": parJson, "sign": sign});
       var jsonMap = jsonDecode(response.body);
 
@@ -236,8 +238,8 @@ class UserHelper {
       if (!ConfigHelper.getUserIsLogined() ?? false) {
         return false;
       }
-      var response =
-          await http.get(Api.userComicHistory(ConfigHelper.getUserInfo().uid));
+      var response = await http
+          .get(Uri.parse(Api.userComicHistory(ConfigHelper.getUserInfo().uid)));
       List jsonMap = jsonDecode(response.body);
       List<ComicHistoryItem> detail =
           jsonMap.map((i) => ComicHistoryItem.fromJson(i)).toList();

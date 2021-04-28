@@ -217,7 +217,7 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
 
   Future<List<NovelSearchResultItem>> loadData() async {
     try {
-      var response = await http.get(Api.novelSearch(this.query));
+      var response = await http.get(Uri.parse(Api.novelSearch(this.query)));
       List ls = jsonDecode(response.body);
       List<NovelSearchResultItem> detail =
           ls.map((i) => NovelSearchResultItem.fromJson(i)).toList();
@@ -232,7 +232,7 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
 
   Future<List<SearchHotWord>> loadHotWord() async {
     try {
-      var response = await http.get(Api.novelSearchHotWord);
+      var response = await http.get(Uri.parse(Api.novelSearchHotWord));
       List ls = jsonDecode(response.body);
       List<SearchHotWord> detail =
           ls.map((i) => SearchHotWord.fromJson(i)).toList();

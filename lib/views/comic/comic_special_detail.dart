@@ -147,7 +147,8 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Api.comicSpeciaDetail(widget.id));
+      var response =
+          await http.get(Uri.parse(Api.comicSpeciaDetail(widget.id)));
 
       var jsonMap = jsonDecode(response.body);
 

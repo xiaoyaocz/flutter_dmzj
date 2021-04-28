@@ -264,8 +264,8 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
         _loading = true;
       });
 
-      var response = await http
-          .get(Api.userComment(widget.userId, type: widget.type, page: _page));
+      var response = await http.get(Uri.parse(
+          Api.userComment(widget.userId, type: widget.type, page: _page)));
 
       List jsonMap = jsonDecode(response.body);
 

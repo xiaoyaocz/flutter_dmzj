@@ -117,7 +117,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
   Future loadStat() async {
     try {
       var api = Api.newsStat(widget.articleId);
-      var response = await http.get(api);
+      var response = await http.get(Uri.parse(api));
       var jsonMap = jsonDecode(response.body);
       var detail = NewsStatDetail.fromJson(jsonMap["data"]);
       setState(() {
@@ -138,7 +138,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
         return;
       }
       var api = Api.addNewsLike(widget.articleId);
-      var response = await http.get(api);
+      var response = await http.get(Uri.parse(api));
       var jsonMap = jsonDecode(response.body);
       if (jsonMap["code"] == 0) {
         setState(() {

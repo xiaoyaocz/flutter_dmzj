@@ -147,8 +147,8 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      var result = await http
-          .post(Api.loginV2, body: {"passwd": password, "nickname": username});
+      var result = await http.post(Uri.parse(Api.loginV2),
+          body: {"passwd": password, "nickname": username});
       var body = result.body;
       var data = UserLgoinModel.fromJson(jsonDecode(body));
       if (data.result == 1) {

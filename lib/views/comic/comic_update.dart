@@ -1,17 +1,15 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/api.dart';
+import 'package:flutter_dmzj/app/api/comic.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/comic/comic_update_item.dart';
+import 'package:flutter_dmzj/protobuf/comic/update_list_response.pb.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_footer.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 
 class ComicUpdatePage extends StatefulWidget {
   ComicUpdatePage({Key key}) : super(key: key);
@@ -108,10 +106,10 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
     );
   }
 
-  Widget createItem(ComicUpdateItem item) {
+  Widget createItem(ComicUpdateListItemResponse item) {
     return InkWell(
       onTap: () {
-        Utils.openPage(context, item.id, 1);
+        Utils.openPage(context, item.comicId, 1);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -168,7 +166,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
                     SizedBox(
                       height: 2,
                     ),
-                    Text(item.last_update_chapter_name,
+                    Text(item.lastUpdateChapterName,
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                     SizedBox(
                       height: 2,
@@ -176,7 +174,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
                     Text(
                         "更新于" +
                             TimelineUtil.format(
-                              item.last_updatetime * 1000,
+                              int.parse(item.lastUpdatetime.toString()) * 1000,
                               locale: 'zh',
                             ),
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
@@ -187,7 +185,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
                 child: IconButton(
                     icon: Icon(Icons.favorite_border),
                     onPressed: () {
-                      UserHelper.comicSubscribe(item.id);
+                      UserHelper.comicSubscribe(item.comicId);
                     }),
               )
             ],
@@ -197,7 +195,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
     );
   }
 
-  List<ComicUpdateItem> _list = [];
+  List<ComicUpdateListItemResponse> _list = [];
   bool _loading = false;
   int _page = 0;
   Future loadData() async {
@@ -208,10 +206,12 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Api.comicUpdate(_mode, page: _page));
-      List jsonMap = jsonDecode(response.body);
-      List<ComicUpdateItem> detail =
-          jsonMap.map((i) => ComicUpdateItem.fromJson(i)).toList();
+      var detail = await ComicApi.instance.getUpdateList(_mode, page: _page);
+      //var response =
+      //    await http.get(Uri.parse(Api.comicUpdate(_mode, page: _page)));
+      // List jsonMap = jsonDecode(response.body);
+      // List<ComicUpdateItem> detail =
+      //     jsonMap.map((i) => ComicUpdateItem.fromJson(i)).toList();
       if (detail != null) {
         setState(() {
           if (_page == 0) {

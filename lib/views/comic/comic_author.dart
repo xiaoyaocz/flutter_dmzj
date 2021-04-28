@@ -102,7 +102,8 @@ class _ComicAuthorPageState extends State<ComicAuthorPage> {
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Api.comicAuthorDetail(widget.auhtoId));
+      var response =
+          await http.get(Uri.parse(Api.comicAuthorDetail(widget.auhtoId)));
 
       var jsonMap = jsonDecode(response.body);
 

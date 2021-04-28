@@ -299,11 +299,11 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Api.novelCategoryDetail(
+      var response = await http.get(Uri.parse(Api.novelCategoryDetail(
           cateId: _fiters[0].item.tag_id,
           status: _fiters[1].item.tag_id,
           sort: _sort,
-          page: _page));
+          page: _page)));
 
       List jsonMap = jsonDecode(response.body);
 
@@ -336,7 +336,7 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
   int _sort = 0;
   Future loadFiters() async {
     try {
-      var response = await http.get(Api.novelCategoryFilter);
+      var response = await http.get(Uri.parse(Api.novelCategoryFilter));
       List jsonMap = jsonDecode(response.body);
       List<ComicCategoryDetailFilter> detail =
           jsonMap.map((f) => ComicCategoryDetailFilter.fromJson(f)).toList();

@@ -216,8 +216,8 @@ class _NovelRankPageState extends State<NovelRankPage>
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Api.novelRank(
-          tagId: _types[_type], sort: _sorts[_sort], page: _page));
+      var response = await http.get(Uri.parse(Api.novelRank(
+          tagId: _types[_type], sort: _sorts[_sort], page: _page)));
       List jsonMap = jsonDecode(response.body);
       List<NovelRankItem> detail =
           jsonMap.map((i) => NovelRankItem.fromJson(i)).toList();
@@ -246,7 +246,7 @@ class _NovelRankPageState extends State<NovelRankPage>
 
   Future loadFilter() async {
     try {
-      var response = await http.get(Api.novelRankFilter);
+      var response = await http.get(Uri.parse(Api.novelRankFilter));
       List jsonMap = jsonDecode(response.body);
       List<ComicDetailTagItem> detail =
           jsonMap.map((i) => ComicDetailTagItem.fromJson(i)).toList();

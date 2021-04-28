@@ -57,9 +57,10 @@ class Utils {
   static bool hideBanner = true;
   static Future<VersionInfo> checkVersion() async {
     try {
-      var newVersion = await http.get(
+      //TODO 替换为GITHUB下载
+      var newVersion = await http.get(Uri.parse(
           "https://pic.nsapps.cn/dmzj_flutter/dmzj_ver.json?ts=" +
-              DateTime.now().millisecondsSinceEpoch.toString());
+              DateTime.now().millisecondsSinceEpoch.toString()));
       var verInfo =
           VersionInfo.fromJson(jsonDecode(utf8.decode(newVersion.bodyBytes)));
       hideBanner = verInfo.hide_banner;

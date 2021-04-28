@@ -480,7 +480,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     } else {
       setState(() {
         int newPage;
-        if (_pageController.page.toInt()>_selectIndex) {
+        if (_pageController.page.toInt() > _selectIndex) {
           newPage = _pageController.page.toInt() - 1;
         } else {
           newPage = _selectIndex - 1;
@@ -979,7 +979,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       }
       Uint8List responseBody;
       try {
-        var response = await http.get(api);
+        var response = await http.get(Uri.parse(api));
         responseBody = response.bodyBytes;
       } catch (e) {
         var file = await _cacheManager.getFileFromCache(api);
@@ -1035,8 +1035,8 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       setState(() {
         _viewPoints = [];
       });
-      var response = await http.get(
-          Api.comicChapterViewPoint(widget.comicId, _currentItem.chapter_id));
+      var response = await http.get(Uri.parse(
+          Api.comicChapterViewPoint(widget.comicId, _currentItem.chapter_id)));
 
       List jsonMap = jsonDecode(response.body);
       List<ComicChapterViewPoint> ls =

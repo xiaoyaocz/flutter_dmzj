@@ -309,10 +309,10 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Api.comicCategoryDetail(
+      var response = await http.get(Uri.parse(Api.comicCategoryDetail(
           _fiters.map((f) => f.item.tag_id).toList(),
           sort: _sort,
-          page: _page));
+          page: _page)));
 
       List jsonMap = jsonDecode(response.body);
 
@@ -345,7 +345,7 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
   int _sort = 0;
   Future loadFiters() async {
     try {
-      var response = await http.get(Api.comicCategoryFilter());
+      var response = await http.get(Uri.parse(Api.comicCategoryFilter()));
       List jsonMap = jsonDecode(response.body);
       List<ComicCategoryDetailFilter> detail =
           jsonMap.map((f) => ComicCategoryDetailFilter.fromJson(f)).toList();

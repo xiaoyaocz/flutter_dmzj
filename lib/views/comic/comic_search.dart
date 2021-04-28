@@ -218,7 +218,7 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
 
   Future<List<ComicNSSearchItem>> loadData() async {
     try {
-      var response = await http.get(Api.cmoicNSSearch(this.query));
+      var response = await http.get(Uri.parse(Api.cmoicNSSearch(this.query)));
       var jsonMap = jsonDecode(response.body);
       List ls = jsonMap["data"];
       List<ComicNSSearchItem> detail =
@@ -234,7 +234,7 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
 
   Future<List<SearchHotWord>> loadHotWord() async {
     try {
-      var response = await http.get(Api.comicSearchHotWord);
+      var response = await http.get(Uri.parse(Api.comicSearchHotWord));
       List ls = jsonDecode(response.body);
       List<SearchHotWord> detail =
           ls.map((i) => SearchHotWord.fromJson(i)).toList();

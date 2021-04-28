@@ -235,11 +235,11 @@ class _ComicUpdatePageState extends State<ComicRankPage>
       setState(() {
         _loading = true;
       });
-      var response = await http.get(Api.comicRank(
+      var response = await http.get(Uri.parse(Api.comicRank(
           tagId: _types[_type],
           rank: _ranks[_rank],
           sort: _sorts[_sort],
-          page: _page));
+          page: _page)));
       List jsonMap = jsonDecode(response.body);
       List<ComicRankItem> detail =
           jsonMap.map((i) => ComicRankItem.fromJson(i)).toList();
@@ -268,7 +268,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
 
   Future loadFilter() async {
     try {
-      var response = await http.get(Api.comicRankFilter());
+      var response = await http.get(Uri.parse(Api.comicRankFilter()));
       List jsonMap = jsonDecode(response.body);
       List<ComicDetailTagItem> detail =
           jsonMap.map((i) => ComicDetailTagItem.fromJson(i)).toList();

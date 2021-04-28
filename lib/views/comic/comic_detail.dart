@@ -623,7 +623,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       });
       var api = Api.comicDetail(widget.comicId);
       Uint8List responseBody;
-      var response = await http.get(api);
+      var response = await http.get(Uri.parse(api));
       responseBody = response.bodyBytes;
       if (response.body == "漫画不存在!!!") {
         var file = await _cacheManager
@@ -667,7 +667,8 @@ class _ComicDetailPageState extends State<ComicDetailPage>
 
   Future loadRelated() async {
     try {
-      var response = await http.get(Api.comicRelated(widget.comicId));
+      var response =
+          await http.get(Uri.parse(Api.comicRelated(widget.comicId)));
 
       var jsonMap = jsonDecode(response.body);
 
@@ -686,8 +687,9 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       if (!ConfigHelper.getUserIsLogined() ?? false) {
         return;
       }
-      var response = await http.get(Api.comicCheckSubscribe(widget.comicId,
-          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid));
+      var response = await http.get(Uri.parse(Api.comicCheckSubscribe(
+          widget.comicId,
+          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid)));
       var jsonMap = jsonDecode(response.body);
       setState(() {
         _isSubscribe = jsonMap["code"] == 0;

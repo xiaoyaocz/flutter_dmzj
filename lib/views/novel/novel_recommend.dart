@@ -292,7 +292,7 @@ class NovelRecommendState extends State<NovelRecommend>
         return;
       }
       _loading = true;
-      var response = await http.get(Api.novelRecommend);
+      var response = await http.get(Uri.parse(Api.novelRecommend));
       List jsonMap = jsonDecode(response.body);
       //Banner
       {
@@ -362,8 +362,8 @@ class NovelRecommendState extends State<NovelRecommend>
       if (!Provider.of<AppUserInfo>(context, listen: false).isLogin) {
         return;
       }
-      var response = await http.get(Api.comicMySub(
-          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid));
+      var response = await http.get(Uri.parse(Api.comicMySub(
+          Provider.of<AppUserInfo>(context, listen: false).loginInfo.uid)));
       var jsonMap = jsonDecode(response.body);
 
       List items = jsonMap["data"]["data"];

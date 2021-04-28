@@ -32,7 +32,7 @@ class _NewsHomePageState extends State<NewsHomePage>
 
   Future loadCate() async {
     try {
-      var response = await http.get(Api.newsCategory);
+      var response = await http.get(Uri.parse(Api.newsCategory));
       List jsonMap = jsonDecode(response.body);
       List<NewsTagItemModel> data =
           jsonMap.map((i) => NewsTagItemModel.fromJson(i)).toList();
@@ -280,7 +280,8 @@ class NewsNewTabViewState extends State<NewsNewTabView>
       if (_page == 0 && widget.hasBanner) {
         await loadBanner();
       }
-      var response = await http.get(Api.newsList(widget.id, page: _page));
+      var response =
+          await http.get(Uri.parse(Api.newsList(widget.id, page: _page)));
       List jsonMap = jsonDecode(response.body);
       List<NewsListItemModel> data =
           jsonMap.map((i) => NewsListItemModel.fromJson(i)).toList();
@@ -299,7 +300,7 @@ class NewsNewTabViewState extends State<NewsNewTabView>
 
   Future loadBanner() async {
     try {
-      var response = await http.get(Api.newsBanner);
+      var response = await http.get(Uri.parse(Api.newsBanner));
 
       NewsBannerModel data =
           NewsBannerModel.fromJson(jsonDecode(response.body));

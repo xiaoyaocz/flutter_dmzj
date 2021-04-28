@@ -54,7 +54,7 @@ class AppUserInfo with ChangeNotifier {
 
   Future getUserProfile(String uid, String token) async {
     try {
-      var result = await http.get(Api.userProfile(uid, token));
+      var result = await http.get(Uri.parse(Api.userProfile(uid, token)));
       var body = result.body;
       var data = UserProfileModel.fromJson(jsonDecode(body));
       if (data != null) {
