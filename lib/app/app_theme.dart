@@ -3,9 +3,15 @@ import 'package:flutter_dmzj/app/config_helper.dart';
 
 class AppTheme with ChangeNotifier {
   AppTheme() {
-    changeDark(ConfigHelper.getOpenDarkMode());
+    changeThemeMode(ConfigHelper.getThemeMode());
     changeThemeColor(ConfigHelper.getAppTheme());
   }
+
+  static Map<String, ThemeMode> themeModes = {
+    "跟随系统": ThemeMode.system,
+    "开启": ThemeMode.dark,
+    "关闭": ThemeMode.light,
+  };
 
   static Map<String, Color> themeColors = {
     "胖次蓝": Colors.blue,
@@ -16,6 +22,58 @@ class AppTheme with ChangeNotifier {
     "基佬紫": Colors.purple,
     "朴素灰": Colors.blueGrey
   };
+
+  ThemeMode _themeMode;
+  String _themeModeName;
+  get themeMode => _themeMode;
+  get themeModeName => _themeModeName;
+  void changeThemeMode(int index) {
+    _themeMode = AppTheme.themeModes.values.toList()[index];
+    _themeModeName = AppTheme.themeModes.keys.toList()[index];
+    notifyListeners();
+    ConfigHelper.setAppTheme(index);
+  }
+
+  void showThemeModeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return new SimpleDialog(
+          title: new Text('夜间模式'),
+          children: _createThemeModeWidget(context),
+        );
+      },
+    );
+  }
+
+  List<Widget> _createThemeModeWidget(BuildContext context) {
+    List<Widget> widgets = [];
+    for (var item in AppTheme.themeModes.keys) {
+      widgets.add(RadioListTile(
+        groupValue: item,
+        value: _themeModeName,
+        title: new Text(
+          item,
+        ),
+        onChanged: (value) {
+          changeThemeMode(AppTheme.themeModes.keys.toList().indexOf(item));
+          Navigator.of(context).pop();
+        },
+      ));
+    }
+    return widgets;
+  }
+
+  Color _themeColor;
+  String _themeColorName;
+  get themeColor => _themeColor;
+  get themeColorName => _themeColorName;
+  void changeThemeColor(int index) {
+    _themeColor = AppTheme.themeColors.values.toList()[index];
+    _themeColorName = AppTheme.themeColors.keys.toList()[index];
+    notifyListeners();
+    ConfigHelper.setAppTheme(index);
+  }
 
   void showThemeDialog(BuildContext context) {
     showDialog(
@@ -30,7 +88,7 @@ class AppTheme with ChangeNotifier {
   }
 
   List<Widget> _createThemeWidget(BuildContext context) {
-    List<Widget> widgets = List<Widget>();
+    List<Widget> widgets = [];
     for (var item in AppTheme.themeColors.keys) {
       widgets.add(RadioListTile(
         groupValue: item,
@@ -47,26 +105,4 @@ class AppTheme with ChangeNotifier {
     }
     return widgets;
   }
-
-  bool _isDark;
-  Color _themeColor;
-  String _themeColorName;
-  void changeDark(bool value) {
-    _isDark = value;
-
-    notifyListeners();
-    ConfigHelper.setOpenDarkMode(value);
-  }
-
-  get isDark => _isDark;
-
-  void changeThemeColor(int index) {
-    _themeColor = AppTheme.themeColors.values.toList()[index];
-    _themeColorName = AppTheme.themeColors.keys.toList()[index];
-    notifyListeners();
-    ConfigHelper.setAppTheme(index);
-  }
-
-  get themeColor => _themeColor;
-  get themeColorName => _themeColorName;
 }

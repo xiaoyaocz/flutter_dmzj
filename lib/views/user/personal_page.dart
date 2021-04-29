@@ -87,29 +87,31 @@ class _PersonalPageState extends State<PersonalPage> {
                 ),
                 child: Provider.of<AppUserInfo>(context).isLogin
                     ? InkWell(
-                       onTap: (){
-                         showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                      title: Text("退出登录"),
-                      content: Text("确定要退出登录吗?"),
-                        actions: <Widget>[
-                          new FlatButton(
-                            child: new Text("取消"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          new FlatButton(
-                            child: new Text("确定"),
-                            onPressed: () {
-                              Provider.of<AppUserInfo>(context,listen: false).logout();
-                              Navigator.of(context).pop();
-                            },
-                          )
-                        ],
-                      ));
-                       },
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                    title: Text("退出登录"),
+                                    content: Text("确定要退出登录吗?"),
+                                    actions: <Widget>[
+                                      new FlatButton(
+                                        child: new Text("取消"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      new FlatButton(
+                                        child: new Text("确定"),
+                                        onPressed: () {
+                                          Provider.of<AppUserInfo>(context,
+                                                  listen: false)
+                                              .logout();
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  ));
+                        },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -141,7 +143,9 @@ class _PersonalPageState extends State<PersonalPage> {
                             ),
                             Text(
                               Provider.of<AppUserInfo>(context)
-                                  .userProfile?.description??"",
+                                      .userProfile
+                                      ?.description ??
+                                  "",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 12),
                             ),
@@ -149,7 +153,7 @@ class _PersonalPageState extends State<PersonalPage> {
                         ),
                       )
                     : InkWell(
-                        onTap: ()=>Navigator.pushNamed(context, "/Login"),
+                        onTap: () => Navigator.pushNamed(context, "/Login"),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -209,7 +213,6 @@ class _PersonalPageState extends State<PersonalPage> {
                   leading: Icon(Icons.file_download),
                   onTap: () => {},
                 ),
-
               ],
             ),
           ),
@@ -220,14 +223,20 @@ class _PersonalPageState extends State<PersonalPage> {
           Material(
             color: Theme.of(context).cardColor,
             child: Column(children: <Widget>[
-              SwitchListTile(
-                onChanged: (value) {
-                  Provider.of<AppTheme>(context, listen: false)
-                      .changeDark(value);
-                },
-                secondary: Icon(Icons.brightness_4),
+              ListTile(
                 title: Text("夜间模式"),
-                value: Provider.of<AppTheme>(context).isDark,
+                leading: Icon(Icons.brightness_4),
+                trailing: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text(
+                    Provider.of<AppTheme>(context).themeModeName,
+                    style: TextStyle(fontSize: 14.0, color: Colors.grey),
+                  ),
+                ),
+                onTap: () => Provider.of<AppTheme>(context, listen: false)
+                    .showThemeModeDialog(
+                  context,
+                ),
               ),
               ListTile(
                 title: Text("设置"),

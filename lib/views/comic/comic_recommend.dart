@@ -484,19 +484,19 @@ class ComicRecommendState extends State<ComicRecommend>
         }
       }
       //动画专区
-      {
-        List items = jsonMap[8]["data"];
-        List<ComicHomeComicItem> _items =
-            items.map((i) => ComicHomeComicItem.fromJson(i)).toList();
-        if (_items.length != 0) {
-          setState(() {
-            _anime = _items;
-          });
-        }
-      }
+      // {
+      //   List items = jsonMap[8]["data"];
+      //   List<ComicHomeComicItem> _items =
+      //       items.map((i) => ComicHomeComicItem.fromJson(i)).toList();
+      //   if (_items.length != 0) {
+      //     setState(() {
+      //       _anime = _items;
+      //     });
+      //   }
+      // }
       //最新
       {
-        List items = jsonMap[9]["data"];
+        List items = jsonMap[8]["data"];
         List<ComicHomeNewItem> _items =
             items.map((i) => ComicHomeNewItem.fromJson(i)).toList();
         if (_items.length != 0) {

@@ -56,13 +56,20 @@ class _SettingPageState extends State<SettingPage> {
         children: <Widget>[
           Material(
             color: Theme.of(context).cardColor,
-            child: SwitchListTile(
-              onChanged: (value) {
-                Provider.of<AppTheme>(context, listen: false).changeDark(value);
-              },
-              secondary: Icon(Icons.brightness_4),
+            child: ListTile(
               title: Text("夜间模式"),
-              value: Provider.of<AppTheme>(context).isDark,
+              leading: Icon(Icons.brightness_4),
+              trailing: Padding(
+                padding: EdgeInsets.all(8),
+                child: Text(
+                  Provider.of<AppTheme>(context).themeModeName,
+                  style: TextStyle(fontSize: 14.0, color: Colors.grey),
+                ),
+              ),
+              onTap: () => Provider.of<AppTheme>(context, listen: false)
+                  .showThemeModeDialog(
+                context,
+              ),
             ),
           ),
           //主题设置

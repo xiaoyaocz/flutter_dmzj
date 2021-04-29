@@ -8,15 +8,15 @@ class ConfigHelper {
   static SharedPreferences prefs;
 
   /// APP夜间模式
-  static bool getOpenDarkMode() {
-    return prefs.getBool("isDark") ?? false;
+  static int getThemeMode() {
+    return prefs.getInt("themeMode") ?? 0;
   }
 
-  static void setOpenDarkMode(bool value) {
-    prefs.setBool("isDark", value);
+  static void setThemeMode(int value) {
+    prefs.setInt("themeMode", 0);
   }
 
-  /// APP夜间模式
+  /// APP主题颜色
   static int getAppTheme() {
     return prefs.getInt("themeColor") ?? 0;
   }

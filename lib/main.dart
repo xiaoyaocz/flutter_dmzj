@@ -78,10 +78,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '动漫之家Flutter',
       theme: ThemeData(
-        brightness: Provider.of<AppTheme>(context).isDark
-            ? Brightness.dark
-            : Brightness.light,
         primarySwatch: Provider.of<AppTheme>(context).themeColor,
+      ),
+      themeMode: Provider.of<AppTheme>(context).themeMode,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Provider.of<AppTheme>(context).themeColor,
+        accentColor: Provider.of<AppTheme>(context).themeColor,
       ),
       home: MyHomePage(),
       initialRoute: "/",
