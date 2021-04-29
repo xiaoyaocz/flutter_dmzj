@@ -10,6 +10,7 @@ import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/novel/novel_volume_item.dart';
 import 'package:flutter_dmzj/models/version_info.dart';
 import 'package:flutter_dmzj/protobuf/comic/detail_response.pb.dart';
+import 'package:flutter_dmzj/protobuf/novel/novel_chapter_response.pb.dart';
 import 'package:flutter_dmzj/views/comic/comic_author.dart';
 import 'package:flutter_dmzj/views/comic/comic_category_detail.dart';
 import 'package:flutter_dmzj/views/comic/comic_detail.dart';
@@ -322,23 +323,35 @@ class Utils {
     );
   }
 
-  static Future openNovelReader(BuildContext context, int novelId,
-      List<NovelVolumeItem> chapters, NovelVolumeChapterItem currentItem,
-      {String novelTitle, bool isSubscribe}) async {
+  static Future openNovelReader(
+      BuildContext context,
+      int novelId,
+      List<NovelChapterVolumeResponse> chapters,
+      NovelChapterItemResponse chapterItem,
+      {String novelTitle,
+      bool isSubscribe}) async {
     // var ls = chapters.toList();
-
+    NovelVolumeChapterItem currentItem = NovelVolumeChapterItem(
+      chapter_id: chapterItem.chapterId,
+      chapter_name: chapterItem.chapterName,
+      chapter_order: chapterItem.chapterOrder,
+    );
     List<NovelVolumeChapterItem> items = [];
 
     for (var item in chapters) {
       for (var item2 in item.chapters) {
-        if (item2.chapter_id == currentItem.chapter_id) {
-          currentItem.volume_id = item.volume_id;
-          currentItem.volume_name = item.volume_name;
+        if (item2.chapterId == currentItem.chapter_id) {
+          currentItem.volume_id = item.volumeId;
+          currentItem.volume_name = item.volumeName;
           items.add(currentItem);
         } else {
-          item2.volume_id = item.volume_id;
-          item2.volume_name = item.volume_name;
-          items.add(item2);
+          var chapter = NovelVolumeChapterItem(
+              chapter_id: item2.chapterId,
+              chapter_name: item2.chapterName,
+              chapter_order: item2.chapterOrder);
+          chapter.volume_id = item.volumeId;
+          chapter.volume_name = item.volumeName;
+          items.add(chapter);
         }
       }
     }

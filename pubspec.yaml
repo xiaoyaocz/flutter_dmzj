@@ -52,6 +52,7 @@ dependencies:
   preload_page_view: 0.1.5
   package_info: ^0.4.3
   crypton: ^2.0.1
+  crypto: ^3.0.1
   protobuf: ^2.0.0
   dio: ^4.0.0
   

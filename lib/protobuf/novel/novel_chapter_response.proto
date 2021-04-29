@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package dmzj.novel;
+
+
+message NovelChapterResponse {
+    int32 Errno = 1;
+    string Errmsg = 2;
+    repeated NovelChapterVolumeResponse Data= 3;
+}
+
+message NovelChapterVolumeResponse {
+    int32 VolumeId = 1;
+    string VolumeName = 2;
+    int32 VolumeOrder=3;
+   repeated NovelChapterItemResponse Chapters=4;
+}
+
+message NovelChapterItemResponse {
+    int32 ChapterId = 1;
+    string ChapterName=2;
+    int32 ChapterOrder = 3;
+}

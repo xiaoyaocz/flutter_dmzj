@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package dmzj.novel;
+
+
+message NovelDetailResponse {
+    int32 Errno = 1;
+    string Errmsg = 2;
+    NovelDetailInfoResponse Data= 3;
+}
+
+message NovelDetailInfoResponse {
+    int32 NovelId = 1;
+    string Name = 2;
+    string Zone=3;
+    string Status=4;
+    string LastUpdateVolumeName=5;
+    string LastUpdateChapterName=6;
+   int32 LastUpdateVolumeId=7;
+   int32 LastUpdateChapterId=8;
+   int64 LastUpdateTime=9;
+   string Cover=10;
+   int32 HotHits=11;
+   string Introduction=12;
+   repeated string Types=13;
+   string Authors=14;
+   string FirstLetter=15;
+   int32 SubscribeNum=16;
+   int64 RedisUpdateTime=17;
+   repeated NovelDetailInfoVolumeResponse Volume=18;
+}
+
+message NovelDetailInfoVolumeResponse {
+    int32 VolumeId = 1;
+    int32 LnovelId = 2;
+    string VolumeName=3;
+    int32 VolumeOrder=4;
+    int64 Addtime=5;
+    int32 SumChapters=6;
+}

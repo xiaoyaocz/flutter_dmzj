@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
+import 'package:flutter_dmzj/app/api/novel.dart';
 import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
@@ -872,8 +873,9 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
       });
 
       //检查缓存
-      var url = Api.novelRead(
-          widget.novelId, _currentItem.volume_id, _currentItem.chapter_id);
+
+      var url = NovelApi.instance
+          .getNovelContentUrl(_currentItem.volume_id, _currentItem.chapter_id);
       var file = await _cacheManager.getFileFromCache(url);
       if (file == null) {
         file = await _cacheManager.downloadFile(url);
