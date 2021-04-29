@@ -20,7 +20,7 @@ class ComicApi {
     var path = "${ApiUtil.BASE_URL_V4}/comic/update/list/$type/$page";
     var result = await HttpUtil.instance.httpGet(
       path,
-      queryParameters: ApiUtil.defaultParameter(),
+      queryParameters: ApiUtil.defaultParameter(needLogined: true),
     );
     var resultBytes = ApiUtil.decrypt(result);
 

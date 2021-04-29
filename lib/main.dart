@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
@@ -26,6 +27,7 @@ import 'app/user_info.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ConfigHelper.prefs = await SharedPreferences.getInstance();
+
   await initDatabase();
   runApp(MultiProvider(
     providers: [
@@ -79,6 +81,9 @@ class MyApp extends StatelessWidget {
       title: '动漫之家Flutter',
       theme: ThemeData(
         primarySwatch: Provider.of<AppTheme>(context).themeColor,
+        appBarTheme: AppBarTheme(
+          brightness: Brightness.dark,
+        ),
       ),
       themeMode: Provider.of<AppTheme>(context).themeMode,
       darkTheme: ThemeData(
