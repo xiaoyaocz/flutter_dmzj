@@ -67,7 +67,8 @@ class Utils {
       hideBanner = verInfo.hide_banner;
       changeHideBanner.fire(hideBanner);
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      if (packageInfo.buildNumber != verInfo.version_code) {
+      if (int.parse(packageInfo.buildNumber) <
+          int.parse(verInfo.version_code)) {
         return verInfo;
       } else {
         return null;
