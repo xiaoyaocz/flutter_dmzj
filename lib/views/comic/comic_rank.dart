@@ -78,7 +78,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
         Expanded(
           child: EasyRefresh(
             onRefresh: () async {
-              _page = 0;
+              _page = 1;
               await loadData();
             },
             onLoad: loadData,
@@ -126,7 +126,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
           }
         });
         print(v);
-        _page = 0;
+        _page = 1;
         await loadData();
       },
       itemBuilder: (c) => _subTypes.keys
@@ -227,7 +227,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
 
   List<ComicRankListItemResponse> _list = [];
   bool _loading = false;
-  int _page = 0;
+  int _page = 1;
 
   Future loadData() async {
     try {
@@ -255,7 +255,7 @@ class _ComicUpdatePageState extends State<ComicRankPage>
 
       if (detail != null) {
         setState(() {
-          if (_page == 0) {
+          if (_page == 1) {
             _list = detail;
           } else {
             _list.addAll(detail);

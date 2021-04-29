@@ -18,6 +18,7 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_chapter_view_point.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_web_chapter_detail.dart';
+import 'package:flutter_dmzj/protobuf/comic/detail_response.pb.dart';
 import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_dmzj/views/reader/comic_tc.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -33,8 +34,8 @@ import 'package:share/share.dart';
 
 class ComicReaderPage extends StatefulWidget {
   final int comicId;
-  final List<ComicDetailChapterItem> chapters;
-  final ComicDetailChapterItem item;
+  final List<ComicDetailChapterInfoResponse> chapters;
+  final ComicDetailChapterInfoResponse item;
   final String comicTitle;
   bool subscribe;
 
@@ -48,7 +49,7 @@ class ComicReaderPage extends StatefulWidget {
 }
 
 class _ComicReaderPageState extends State<ComicReaderPage> {
-  ComicDetailChapterItem _currentItem;
+  ComicDetailChapterInfoResponse _currentItem;
   Battery _battery = Battery();
   Connectivity _connectivity = Connectivity();
   String _batteryStr = "-%";
@@ -158,17 +159,17 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
 
     ComicHistoryProvider.getItem(widget.comicId).then((historyItem) async {
       if (historyItem != null) {
-        historyItem.chapter_id = _currentItem.chapter_id;
+        historyItem.chapter_id = _currentItem.chapterId;
         historyItem.page = page.toDouble();
         await ComicHistoryProvider.update(historyItem);
       } else {
         await ComicHistoryProvider.insert(ComicHistory(
-            widget.comicId, _currentItem.chapter_id, page.toDouble(), 1));
+            widget.comicId, _currentItem.chapterId, page.toDouble(), 1));
       }
       Utils.changHistory.fire(widget.comicId);
     });
 
-    UserHelper.comicAddComicHistory(widget.comicId, _currentItem.chapter_id,
+    UserHelper.comicAddComicHistory(widget.comicId, _currentItem.chapterId,
         page: page);
     super.dispose();
   }
@@ -198,10 +199,10 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                     color: Color.fromARGB(255, 34, 34, 34),
                     child: Text(
                       _loading
-                          ? "${_currentItem.chapter_title}  加载中 WIFI  100%电量"
+                          ? "${_currentItem.chapterTitle}  加载中 WIFI  100%电量"
                           : Provider.of<AppSetting>(context).comicVerticalMode
-                              ? "${_currentItem.chapter_title}  $_verticalValue  $_networkState  $_batteryStr电量"
-                              : "${_currentItem.chapter_title}  $_selectIndex/${_detail.page_url.length}  $_networkState  $_batteryStr 电量",
+                              ? "${_currentItem.chapterTitle}  $_verticalValue  $_networkState  $_batteryStr电量"
+                              : "${_currentItem.chapterTitle}  $_selectIndex/${_detail.page_url.length}  $_networkState  $_batteryStr 电量",
                       style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   )
@@ -265,7 +266,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                       style: TextStyle(color: Colors.white),
                     ),
                     subtitle: Text(
-                      _currentItem.chapter_title,
+                      _currentItem.chapterTitle,
                       style: TextStyle(color: Colors.white),
                     ),
                     leading: BackButton(
@@ -278,7 +279,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                         ),
                         onPressed: () {
                           Share.share(
-                              '${widget.comicTitle}-${_currentItem.chapter_title}\r\nhttps://m.dmzj.com/view/${widget.comicId}/${_currentItem.chapter_id}.html');
+                              '${widget.comicTitle}-${_currentItem.chapterTitle}\r\nhttps://m.dmzj.com/view/${widget.comicId}/${_currentItem.chapterId}.html');
                         }),
                   )),
             ),
@@ -440,7 +441,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                                     }
                                   },
                                   title: Text(
-                                    f.chapter_title,
+                                    f.chapterTitle,
                                     style: TextStyle(
                                         color: f == _currentItem
                                             ? Theme.of(context).accentColor
@@ -449,7 +450,8 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                                   subtitle: Text(
                                     "更新于" +
                                         TimelineUtil.format(
-                                          f.updatetime * 1000,
+                                          int.parse(f.updatetime.toString()) *
+                                              1000,
                                           locale: 'zh',
                                         ),
                                     style: TextStyle(color: Colors.grey),
@@ -533,7 +535,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         context,
         MaterialPageRoute(
             builder: (BuildContext context) => ComicTCPage(
-                _viewPoints, widget.comicId, _currentItem.chapter_id)));
+                _viewPoints, widget.comicId, _currentItem.chapterId)));
   }
 
   PreloadPageController _pageController = PreloadPageController(initialPage: 1);
@@ -971,11 +973,10 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       setState(() {
         _loading = true;
       });
-      var api = Api.comicChapterDetail(widget.comicId, _currentItem.chapter_id);
+      var api = Api.comicChapterDetail(widget.comicId, _currentItem.chapterId);
 
       if (ConfigHelper.getComicWebApi()) {
-        api =
-            Api.comicWebChapterDetail(widget.comicId, _currentItem.chapter_id);
+        api = Api.comicWebChapterDetail(widget.comicId, _currentItem.chapterId);
       }
       Uint8List responseBody;
       try {
@@ -994,7 +995,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       ComicWebChapterDetail detail = ComicWebChapterDetail.fromJson(jsonMap);
       var historyItem = await ComicHistoryProvider.getItem(widget.comicId);
       if (historyItem != null &&
-          historyItem.chapter_id == _currentItem.chapter_id) {
+          historyItem.chapter_id == _currentItem.chapterId) {
         var page = historyItem.page.toInt();
         if (page > detail.page_url.length) {
           page = detail.page_url.length;
@@ -1019,7 +1020,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
 
       //ConfigHelper.setComicHistory(widget.comicId, _currentItem.chapter_id);
       await UserHelper.comicAddComicHistory(
-          widget.comicId, _currentItem.chapter_id);
+          widget.comicId, _currentItem.chapterId);
     } catch (e) {
       print(e);
     } finally {
@@ -1036,7 +1037,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         _viewPoints = [];
       });
       var response = await http.get(Uri.parse(
-          Api.comicChapterViewPoint(widget.comicId, _currentItem.chapter_id)));
+          Api.comicChapterViewPoint(widget.comicId, _currentItem.chapterId)));
 
       List jsonMap = jsonDecode(response.body);
       List<ComicChapterViewPoint> ls =

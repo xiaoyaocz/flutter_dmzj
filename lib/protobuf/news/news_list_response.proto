@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package dmzj.news;
+
+
+message NewsListResponse {
+    int32 Errno = 1;
+    string Errmsg = 2;
+    repeated NewsListItemResponse Data= 3;
+}
+
+message NewsListItemResponse {
+    int32 ArticleId = 1;
+    string Title = 2;
+    string FromName = 3;
+    string FromUrl=4;
+    int64 CreateTime=5;
+    int32 IsForeign=6;
+    string ForeignUrl=7;
+    string Intro=8;
+    int32 AuthorId=9;
+    int32 Status=10;
+    string RowPicUrl=11;
+    string ColPicUrl=12;
+    int32 QchatShow=13;
+    string PageUrl=14;
+    int32 CommentAmount=15;
+    int32 AuthorUid=16;
+    string Cover=17;
+    string Nickname=18;
+    int32 MoodAmount=19;
+}

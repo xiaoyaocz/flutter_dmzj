@@ -73,7 +73,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
                                   : Theme.of(context).textTheme.button.color),
                         ),
                         onPressed: () async {
-                          _page = 0;
+                          _page = 1;
                           setState(() {
                             _mode = _types[f];
                           });
@@ -89,7 +89,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
         Expanded(
           child: EasyRefresh(
             onRefresh: () async {
-              _page = 0;
+              _page = 1;
               await loadData();
             },
             onLoad: loadData,
@@ -197,7 +197,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
 
   List<ComicUpdateListItemResponse> _list = [];
   bool _loading = false;
-  int _page = 0;
+  int _page = 1;
   Future loadData() async {
     try {
       if (_loading) {
@@ -214,7 +214,7 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
       //     jsonMap.map((i) => ComicUpdateItem.fromJson(i)).toList();
       if (detail != null) {
         setState(() {
-          if (_page == 0) {
+          if (_page == 1) {
             _list = detail;
           } else {
             _list.addAll(detail);

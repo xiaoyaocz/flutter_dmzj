@@ -21,14 +21,15 @@ class ApiUtil {
     }
   }
 
-  static Map<String, dynamic> defaultParameter({bool logined = false}) {
+  static const BASE_URL_V4 = "https://nnv4api.dmzj1.com";
+  static Map<String, dynamic> defaultParameter({bool needLogined = false}) {
     Map<String, dynamic> map = {
       "channel": Platform.operatingSystem,
-      "version": "2.0.0",
+      "version": "3.0.0",
       "timestamp":
           (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0)
     };
-    if (logined && ConfigHelper.getUserIsLogined()) {
+    if (needLogined && ConfigHelper.getUserIsLogined()) {
       map.addAll({'uid': ConfigHelper.getUserInfo()?.uid ?? ""});
     }
     return map;

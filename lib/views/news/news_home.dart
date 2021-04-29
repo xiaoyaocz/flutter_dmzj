@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
+import 'package:flutter_dmzj/app/api/news.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/news/new_list_item_model.dart';
 import 'package:flutter_dmzj/models/news/news_banner_model.dart';
 import 'package:flutter_dmzj/models/news/news_tag_model.dart';
+import 'package:flutter_dmzj/protobuf/news/news_list_response.pb.dart';
 import 'package:flutter_dmzj/views/news/news_detail.dart';
 import 'package:flutter_dmzj/widgets/app_banner.dart';
 import 'package:http/http.dart' as http;
@@ -94,8 +96,8 @@ class NewsNewTabViewState extends State<NewsNewTabView>
     with AutomaticKeepAliveClientMixin {
   ScrollController scrollController = ScrollController();
   List<NewsBannerItemModel> _banners = [];
-  List<NewsListItemModel> _news = [];
-  int _page = 0;
+  List<NewsListItemResponse> _news = [];
+  int _page = 1;
   bool _loading = false;
 
   @override
@@ -169,8 +171,8 @@ class NewsNewTabViewState extends State<NewsNewTabView>
   Widget listItemBuilder(context, index) {
     return index != _news.length
         ? InkWell(
-            onTap: () => Utils.openPage(context, _news[index].article_id, 7,
-                title: _news[index].title, url: _news[index].page_url),
+            onTap: () => Utils.openPage(context, _news[index].articleId, 7,
+                title: _news[index].title, url: _news[index].pageUrl),
             child: Container(
               padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: Container(
@@ -188,7 +190,7 @@ class NewsNewTabViewState extends State<NewsNewTabView>
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: Utils.createCacheImage(
-                            _news[index].row_pic_url, 720, 450),
+                            _news[index].rowPicUrl, 720, 450),
                       ),
                     ),
                     SizedBox(
@@ -209,7 +211,10 @@ class NewsNewTabViewState extends State<NewsNewTabView>
                               Expanded(
                                 child: Text(
                                   TimelineUtil.format(
-                                    _news[index].create_time * 1000,
+                                    int.parse(_news[index]
+                                            .createTime
+                                            .toString()) *
+                                        1000,
                                     locale: 'zh',
                                   ),
                                   style: TextStyle(
@@ -227,7 +232,7 @@ class NewsNewTabViewState extends State<NewsNewTabView>
                                     padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
                                   ),
                                   Text(
-                                    _news[index].mood_amount.toString(),
+                                    _news[index].moodAmount.toString(),
                                     style: TextStyle(
                                         color: Colors.grey, fontSize: 12),
                                   ),
@@ -237,7 +242,7 @@ class NewsNewTabViewState extends State<NewsNewTabView>
                                     padding: EdgeInsets.fromLTRB(8, 0, 4, 0),
                                   ),
                                   Text(
-                                    _news[index].comment_amount.toString(),
+                                    _news[index].commentAmount.toString(),
                                     style: TextStyle(
                                         color: Colors.grey, fontSize: 12),
                                   )
@@ -265,7 +270,7 @@ class NewsNewTabViewState extends State<NewsNewTabView>
   }
 
   Future refreshData() async {
-    _page = 0;
+    _page = 1;
     _news = [];
     _banners = [];
     await loadData();
@@ -277,14 +282,15 @@ class NewsNewTabViewState extends State<NewsNewTabView>
         return;
       }
       _loading = true;
-      if (_page == 0 && widget.hasBanner) {
+      if (_page == 1 && widget.hasBanner) {
         await loadBanner();
       }
-      var response =
-          await http.get(Uri.parse(Api.newsList(widget.id, page: _page)));
-      List jsonMap = jsonDecode(response.body);
-      List<NewsListItemModel> data =
-          jsonMap.map((i) => NewsListItemModel.fromJson(i)).toList();
+      var data = await NewsApi.instance.getNewsList(widget.id, page: _page);
+      // var response =
+      //     await http.get(Uri.parse(Api.newsList(widget.id, page: _page)));
+      // List jsonMap = jsonDecode(response.body);
+      // List<NewsListItemModel> data =
+      //     jsonMap.map((i) => NewsListItemModel.fromJson(i)).toList();
       if (data.length != 0) {
         setState(() {
           _news.addAll(data);
