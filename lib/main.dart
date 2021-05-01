@@ -26,8 +26,12 @@ import 'app/user_info.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ),
+  );
   ConfigHelper.prefs = await SharedPreferences.getInstance();
-
   await initDatabase();
   runApp(MultiProvider(
     providers: [
