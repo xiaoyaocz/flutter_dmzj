@@ -197,15 +197,15 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
                     ),
                     Text(item.status,
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Text(
-                      item.desc,
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
+                    // SizedBox(
+                    //   height: 2,
+                    // ),
+                    // Text(
+                    //   item.desc,
+                    //   style: TextStyle(color: Colors.grey, fontSize: 14),
+                    //   overflow: TextOverflow.ellipsis,
+                    //   maxLines: 2,
+                    // ),
                   ],
                 ),
               )
@@ -218,11 +218,12 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
 
   Future<List<ComicNSSearchItem>> loadData() async {
     try {
-      var response = await http.get(Uri.parse(Api.cmoicNSSearch(this.query)));
-      var jsonMap = jsonDecode(response.body);
-      List ls = jsonMap["data"];
+      var response = await http.get(Uri.parse(Api.comicSacgSearch(this.query)));
+      var jsonMap = jsonDecode(
+          response.body.substring(20, response.body.lastIndexOf(';')));
+      List ls = jsonMap;
       List<ComicNSSearchItem> detail =
-          ls.map((i) => ComicNSSearchItem.fromJson(i)).toList();
+          ls.map((i) => ComicNSSearchItem.fromJson2(i)).toList();
       if (detail != null) {
         return detail;
       }

@@ -34,6 +34,17 @@ String ios,
 String android,
 String uwp,
 }):_id=id,_title=title,_desc=desc,_author=author,_cover=cover,_status=status,_web=web,_ios=ios,_android=android,_uwp=uwp;
+  ComicNSSearchItem.sacg({
+    int id,
+    String cover,
+    String title,
+    String author,
+    String status,
+  })  : _id = id,
+        _cover = cover,
+        _title = title,
+        _author = author,
+        _status = status;
   factory ComicNSSearchItem.fromJson(jsonRes)=>jsonRes == null? null:ComicNSSearchItem(    id : jsonRes['id'],
     title : jsonRes['title'],
     desc : jsonRes['desc'],
@@ -45,6 +56,21 @@ String uwp,
     android : jsonRes['android'],
     uwp : jsonRes['uwp'],
 );
+  factory ComicNSSearchItem.fromJson2(jsonRes) {
+    if (jsonRes == null) return null;
+    String status = jsonRes['status'];
+    if (status.isEmpty)
+      status = "连载中";
+    else
+      status = "已完结";
+    return ComicNSSearchItem.sacg(
+      id: jsonRes['id'],
+      title: jsonRes['comic_name'],
+      author: jsonRes['comic_author'],
+      cover: jsonRes['comic_cover'],
+      status: status,
+    );
+  }
   Map<String, dynamic> toJson() => {
         'id': _id,
         'title': _title,

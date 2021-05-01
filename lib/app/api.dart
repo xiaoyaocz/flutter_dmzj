@@ -326,8 +326,12 @@ class Api {
   static String get novelSearchHotWord =>
       "$apiHost/search/hot/1.json?${defaultParameter()}";
 
-  static String cmoicNSSearch(String keyword) {
+  static String comicNSSearch(String keyword) {
     return "https://dmzj.nsapps.cn/api/dmzj/search?keyword=${Uri.encodeComponent(keyword)}";
+  }
+
+  static String comicSacgSearch(String keyword) {
+    return "http://s.acg.dmzj1.com/comicsum/search.php?s=${Uri.encodeComponent(keyword)}";
   }
 
   static String novelSearch(String keyword, {int page = 0}) {
