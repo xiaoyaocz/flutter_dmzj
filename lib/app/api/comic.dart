@@ -42,7 +42,7 @@ class ComicApi {
 
     var data = ComicDetailResponse.fromBuffer(resultBytes);
     if (data.errno != 0) {
-      throw AppError(data.errmsg);
+      throw AppError(data.errmsg, code: data.errno);
     }
     return data.data;
   }

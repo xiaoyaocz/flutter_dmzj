@@ -203,7 +203,11 @@ class NewsNewTabViewState extends State<NewsNewTabView>
                         children: <Widget>[
                           Container(
                             height: 44,
-                            child: Text(_news[index].title),
+                            child: Text(
+                              _news[index].title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,

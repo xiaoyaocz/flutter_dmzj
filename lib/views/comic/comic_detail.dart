@@ -6,6 +6,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/api/comic.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
+import 'package:flutter_dmzj/app/http_util.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
 import 'package:flutter_dmzj/app/utils.dart';
@@ -605,6 +606,13 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         _detail = detail;
       });
     } catch (e) {
+      if (e is AppError && e.code == 2) {
+        setState(() {
+          _noCopyright = true;
+          _loading = false;
+        });
+        return;
+      }
       print(e);
       Fluttertoast.showToast(msg: e.toString());
     } finally {
