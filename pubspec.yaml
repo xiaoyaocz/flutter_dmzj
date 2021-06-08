@@ -55,6 +55,7 @@ dependencies:
   crypto: ^3.0.1
   protobuf: ^2.0.0
   dio: ^4.0.0
+  ffi: ^1.0.0
   
 dev_dependencies:
   flutter_test:
