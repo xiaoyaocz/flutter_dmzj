@@ -90,7 +90,7 @@ class _ComicCategoryPageState extends State<ComicCategoryPage>
         _loading = true;
       });
       var response = await http.get(Uri.parse(Api.comicCategory()));
-      List jsonMap = jsonDecode(response.body);
+      List jsonMap = jsonDecode(response.body)["data"];
       List<ComicCategoryItem> detail =
           jsonMap.map((i) => ComicCategoryItem.fromJson(i)).toList();
       if (detail != null) {

@@ -159,6 +159,9 @@ class Utils {
 
   static Widget createCacheImage(String url, double width, double height,
       {BoxFit fit = BoxFit.fitWidth}) {
+    if (url.contains("dmzj1.com")) {
+      url = url.replaceAll("dmzj1.com", "muwai.com");
+    }
     return CachedNetworkImage(
       imageUrl: url,
       fit: fit,
@@ -186,6 +189,9 @@ class Utils {
   }
 
   static CachedNetworkImageProvider createCachedImageProvider(String url) {
+    if (url.contains("dmzj1.com")) {
+      url = url.replaceAll("dmzj1.com", "muwai.com");
+    }
     return CachedNetworkImageProvider(
       url,
       headers: {"Referer": "http://www.dmzj.com/"},
