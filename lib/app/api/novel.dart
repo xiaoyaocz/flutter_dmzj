@@ -57,10 +57,10 @@ class NovelApi {
     key += ts;
     key = md5.convert(utf8.encode(key)).toString().toLowerCase();
     // var result = await HttpUtil.instance.httpGet(
-    //   "http://jurisdiction.dmzj1.com" + path,
+    //   "http://jurisdiction.muwai.com" + path,
     //   queryParameters: {"t": ts, "k": key},
     // );
 
-    return "http://jurisdiction.dmzj1.com" + path + "?t=$ts&k=$key";
+    return "http://jurisdiction.muwai.com" + path + "?t=$ts&k=$key";
   }
 }
