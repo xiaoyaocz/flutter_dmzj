@@ -14,6 +14,7 @@ import 'package:flutter_dmzj/protobuf/novel/novel_chapter_response.pb.dart';
 import 'package:flutter_dmzj/views/comic/comic_author.dart';
 import 'package:flutter_dmzj/views/comic/comic_category_detail.dart';
 import 'package:flutter_dmzj/views/comic/comic_detail.dart';
+import 'package:flutter_dmzj/views/comic/comic_detail_v2.dart';
 import 'package:flutter_dmzj/views/comic/comic_special_detail.dart';
 import 'package:flutter_dmzj/views/news/news_detail.dart';
 import 'package:flutter_dmzj/views/novel/novel_category_detail.dart';
@@ -211,7 +212,7 @@ class Utils {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => ComicDetailPage(id)));
+                builder: (BuildContext context) => ComicDetailV2Page(id)));
         break;
       case 2:
         Navigator.push(

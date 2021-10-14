@@ -31,8 +31,9 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
-import 'package:screen/screen.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:share/share.dart';
+import 'package:wakelock/wakelock.dart';
 
 class ComicReaderPage extends StatefulWidget {
   final int comicId;
@@ -59,19 +60,15 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
 
   double _verSliderMax = 0;
   double _verSliderValue = 0;
-
+  double currentBrightness = 0;
   @override
   void initState() {
     super.initState();
     if (ConfigHelper.getComicShowStatusBar()) {
       SystemChrome.setEnabledSystemUIOverlays([]);
     }
-    //亮度信息
-    if (!ConfigHelper.getComicSystemBrightness()) {
-      Screen.setBrightness(ConfigHelper.getComicBrightness());
-    }
-    Screen.keepOn(ConfigHelper.getComicWakelock());
 
+    setBrightness();
     _currentItem = widget.item;
 
     _connectivity.checkConnectivity().then((e) {
@@ -139,6 +136,18 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     loadData();
   }
 
+  void setBrightness() async {
+    //亮度信息
+    if (!ConfigHelper.getComicSystemBrightness()) {
+      currentBrightness = await ScreenBrightness.current;
+      await ScreenBrightness.setScreenBrightness(
+          ConfigHelper.getComicBrightness());
+    }
+    if (ConfigHelper.getComicWakelock()) {
+      await Wakelock.enable();
+    }
+  }
+
   @override
   void setState(fn) {
     if (mounted) {
@@ -149,7 +158,8 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    Screen.keepOn(false);
+    Wakelock.disable();
+    ScreenBrightness.setScreenBrightness(currentBrightness);
     int page = 1;
     if (!ConfigHelper.getComicVertical() ?? false) {
       print(_selectIndex);
@@ -573,8 +583,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
               );
             } else {
               return PhotoViewGalleryPageOptions.customChild(
-                  child: getExtraPage(index)
-              );
+                  child: getExtraPage(index));
             }
           },
           gaplessPlayback: true,
@@ -657,29 +666,29 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         footer: MaterialFooter(enableInfiniteLoad: false),
         header: MaterialHeader(),
         child: ListView.builder(
-          itemCount: _detail.page_url.length + 1,
-          controller: _scrollController,
-          itemBuilder: (ctx, i) {
-            if (i == _detail.page_url.length) {
-              return createTucao(24);
-            } else {
-              var f = _detail.page_url[i];
-              return Container(
-                color: Colors.black,
-                padding: EdgeInsets.only(bottom: 0),
-                child: CachedNetworkImage(
-                  imageUrl: f,
-                  httpHeaders: {"Referer": "http://www.dmzj.com/"},
-                  placeholder: (ctx, i) => Container(
-                      height: 400,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  filterQuality: FilterQuality.high),
-              );
-            }
-          }),
+            itemCount: _detail.page_url.length + 1,
+            controller: _scrollController,
+            itemBuilder: (ctx, i) {
+              if (i == _detail.page_url.length) {
+                return createTucao(24);
+              } else {
+                var f = _detail.page_url[i];
+                return Container(
+                  color: Colors.black,
+                  padding: EdgeInsets.only(bottom: 0),
+                  child: CachedNetworkImage(
+                      imageUrl: f,
+                      httpHeaders: {"Referer": "http://www.dmzj.com/"},
+                      placeholder: (ctx, i) => Container(
+                            height: 400,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                      filterQuality: FilterQuality.high),
+                );
+              }
+            }),
       ),
     );
   }
@@ -809,7 +818,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                                   max: 1,
                                   min: 0.01,
                                   onChanged: (e) {
-                                    Screen.setBrightness(e);
+                                    ScreenBrightness.setScreenBrightness(e);
                                     Provider.of<AppSetting>(context,
                                             listen: false)
                                         .changeBrightness(e);
@@ -866,7 +875,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                     ),
                     value: Provider.of<AppSetting>(context).comicWakelock,
                     onChanged: (e) {
-                      Screen.keepOn(e);
+                      Wakelock.enable();
                       Provider.of<AppSetting>(context, listen: false)
                           .changeComicWakelock(e);
                     }),

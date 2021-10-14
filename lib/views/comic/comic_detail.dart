@@ -149,7 +149,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                     child: Column(
                       children: <Widget>[
                         Column(
-                          children: _related.author_comics
+                          children: (_related?.author_comics ?? [])
                               .map<Widget>((f) => _getItem(
                                       f.author_name + "的其他作品", f.data,
                                       icon: Icon(Icons.chevron_right),
@@ -162,18 +162,15 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                         ),
                         _getItem(
                           "同类题材作品",
-                          _related.theme_comics,
+                          _related?.theme_comics ?? [],
                           ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
                         ),
-                        _related.novels != null && _related.novels.length != 0
-                            ? _getItem(
-                                "相关小说",
-                                _related.novels,
-                                type: 2,
-                                ratio: getWidth() /
-                                    ((getWidth() * (360 / 270)) + 36),
-                              )
-                            : Container()
+                        _getItem(
+                          "相关小说",
+                          _related?.novels ?? [],
+                          type: 2,
+                          ratio: getWidth() / ((getWidth() * (360 / 270)) + 36),
+                        )
                       ],
                     ),
                   ),

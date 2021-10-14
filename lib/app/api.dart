@@ -331,7 +331,7 @@ class Api {
   }
 
   static String comicSacgSearch(String keyword) {
-    return "http://s.acg.muwai.com/comicsum/search.php?s=${Uri.encodeComponent(keyword)}";
+    return "http://s.acg.dmzj.com/comicsum/search.php?s=${Uri.encodeComponent(keyword)}";
   }
 
   static String novelSearch(String keyword, {int page = 0}) {
