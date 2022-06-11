@@ -57,14 +57,20 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
                     child: ButtonTheme(
                       minWidth: 20,
                       height: 32,
-                      child: OutlineButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        textColor: Theme.of(context).accentColor,
-                        borderSide: BorderSide(
-                            color: _types[f] == _mode
-                                ? Theme.of(context).accentColor
-                                : Colors.transparent),
+                      child: OutlinedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(
+                                  color: _types[f] == _mode
+                                      ? Theme.of(context).accentColor
+                                      : Colors.transparent),
+                            ),
+                          ),
+                          foregroundColor: MaterialStateProperty.all(
+                              Theme.of(context).accentColor),
+                        ),
                         child: Text(
                           f,
                           style: TextStyle(

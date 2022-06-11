@@ -131,14 +131,20 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
                           child: ButtonTheme(
                             minWidth: 20,
                             height: 28,
-                            child: OutlineButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              textColor: Theme.of(context).accentColor,
-                              borderSide: BorderSide(
-                                  color: x == f.item
-                                      ? Theme.of(context).accentColor
-                                      : Colors.transparent),
+                            child: OutlinedButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    side: BorderSide(
+                                        color: x == f.item
+                                            ? Theme.of(context).accentColor
+                                            : Colors.transparent),
+                                  ),
+                                ),
+                                foregroundColor: MaterialStateProperty.all(
+                                    Theme.of(context).accentColor),
+                              ),
                               child: Text(
                                 x.tag_name,
                                 style: TextStyle(
@@ -185,14 +191,20 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
                   child: ButtonTheme(
                     minWidth: 20,
                     height: 28,
-                    child: OutlineButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      textColor: Theme.of(context).accentColor,
-                      borderSide: BorderSide(
-                          color: _sort == 0
-                              ? Theme.of(context).accentColor
-                              : Colors.transparent),
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                                color: _sort == 0
+                                    ? Theme.of(context).accentColor
+                                    : Colors.transparent),
+                          ),
+                        ),
+                        foregroundColor: MaterialStateProperty.all(
+                            Theme.of(context).accentColor),
+                      ),
                       child: Text(
                         "人气排序",
                         style: TextStyle(
@@ -216,14 +228,20 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
                   child: ButtonTheme(
                     minWidth: 20,
                     height: 28,
-                    child: OutlineButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      textColor: Theme.of(context).accentColor,
-                      borderSide: BorderSide(
-                          color: _sort == 1
-                              ? Theme.of(context).accentColor
-                              : Colors.transparent),
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                                color: _sort == 1
+                                    ? Theme.of(context).accentColor
+                                    : Colors.transparent),
+                          ),
+                        ),
+                        foregroundColor: MaterialStateProperty.all(
+                            Theme.of(context).accentColor),
+                      ),
                       child: Text(
                         "更新排序",
                         style: TextStyle(

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -10,11 +9,9 @@ import 'package:flutter_dmzj/app/http_util.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
 import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_related_model.dart';
 import 'package:flutter_dmzj/protobuf/comic/detail_response.pb.dart';
 import 'package:flutter_dmzj/sql/comic_history.dart';
-import 'package:flutter_dmzj/views/download/comic_download.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -334,11 +331,19 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                             crossAxisSpacing: 8.0,
                             childAspectRatio: 6 / 2),
                         itemBuilder: (context, i) {
-                          return OutlineButton(
-                            borderSide: BorderSide(
-                                color: f.data[i].chapterId == historyChapter
-                                    ? Theme.of(context).accentColor
-                                    : Colors.grey.withOpacity(0.6)),
+                          return OutlinedButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  side: BorderSide(
+                                    color: f.data[i].chapterId == historyChapter
+                                        ? Theme.of(context).accentColor
+                                        : Colors.grey.withOpacity(0.6),
+                                  ),
+                                ),
+                              ),
+                            ),
                             child: Text(
                               f.data[i].chapterTitle,
                               textAlign: TextAlign.center,
@@ -385,11 +390,14 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       child: ButtonTheme(
         minWidth: 20,
         height: 24,
-        child: OutlineButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-          textColor: Theme.of(context).accentColor,
-          borderSide: BorderSide(color: Theme.of(context).accentColor),
+        child: OutlinedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: BorderSide(color: Theme.of(context).accentColor)),
+            ),
+          ),
           child: Text(
             text,
             style: TextStyle(fontSize: 12),
@@ -751,23 +759,35 @@ class _ComicChapterViewState extends State<ComicChapterView>
                           childAspectRatio: 6 / 2),
                       itemBuilder: (context, i) {
                         if (f.data.length > 14 && f.showNum == 14 && i >= 14) {
-                          return OutlineButton(
+                          return OutlinedButton(
                             onPressed: () {
                               setState(() {
                                 f.showNum = f.data.length - 1;
                               });
                             },
-                            borderSide:
-                                BorderSide(color: Colors.grey.withOpacity(0.4)),
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: Colors.grey.withOpacity(0.4)),
+                                ),
+                              ),
+                            ),
                             child: Text("· · ·"),
                           );
                         }
-                        return OutlineButton(
-                          borderSide: BorderSide(
-                              color:
-                                  f.data[i].chapterId == widget.historyChapter
-                                      ? Theme.of(context).accentColor
-                                      : Colors.grey.withOpacity(0.4)),
+                        return OutlinedButton(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: f.data[i].chapterId ==
+                                            widget.historyChapter
+                                        ? Theme.of(context).accentColor
+                                        : Colors.grey.withOpacity(0.4)),
+                              ),
+                            ),
+                          ),
                           child: Text(
                             f.data[i].chapterTitle,
                             textAlign: TextAlign.center,

@@ -218,9 +218,15 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
     if (borderColor == null) {
       borderColor = Colors.grey.withOpacity(0.6);
     }
-    return OutlineButton(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      borderSide: BorderSide(color: borderColor),
+    return OutlinedButton(
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(color: borderColor),
+          ),
+        ),
+      ),
       child: Text(
         text,
       ),

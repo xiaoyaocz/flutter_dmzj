@@ -212,7 +212,7 @@ class Utils {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => ComicDetailV2Page(id)));
+                builder: (BuildContext context) => ComicDetailPage(id)));
         break;
       case 2:
         Navigator.push(

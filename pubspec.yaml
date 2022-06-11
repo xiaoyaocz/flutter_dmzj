@@ -33,7 +33,7 @@ dependencies:
   cached_network_image: ^2.3.3
   event_bus: ^1.1.1
   carousel_slider: ^2.3.1
-  common_utils: ^1.2.1
+  common_utils: ^2.1.0
   webview_flutter: ^1.0.4
   photo_view: ^0.10.2
   fluttertoast: ^8.0.8

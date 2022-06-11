@@ -6,8 +6,6 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_category_detail_filter.dart';
 import 'package:flutter_dmzj/models/comic/comic_category_detail_item.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_footer.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -135,14 +133,23 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
                           child: ButtonTheme(
                             minWidth: 20,
                             height: 28,
-                            child: OutlineButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              textColor: Theme.of(context).accentColor,
-                              borderSide: BorderSide(
-                                  color: x == f.item
-                                      ? Theme.of(context).accentColor
-                                      : Colors.transparent),
+                            child: OutlinedButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    side: BorderSide(
+                                      color: x == f.item
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .secondary
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                                foregroundColor: MaterialStateProperty.all(
+                                    Theme.of(context).colorScheme.secondary),
+                              ),
                               child: Text(
                                 x.tag_name,
                                 style: TextStyle(
@@ -189,14 +196,21 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
                   child: ButtonTheme(
                     minWidth: 20,
                     height: 28,
-                    child: OutlineButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      textColor: Theme.of(context).accentColor,
-                      borderSide: BorderSide(
-                          color: _sort == 0
-                              ? Theme.of(context).accentColor
-                              : Colors.transparent),
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color: _sort == 0
+                                  ? Theme.of(context).colorScheme.secondary
+                                  : Colors.transparent,
+                            ),
+                          ),
+                        ),
+                        foregroundColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.secondary),
+                      ),
                       child: Text(
                         "人气排序",
                         style: TextStyle(
@@ -220,14 +234,21 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
                   child: ButtonTheme(
                     minWidth: 20,
                     height: 28,
-                    child: OutlineButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      textColor: Theme.of(context).accentColor,
-                      borderSide: BorderSide(
-                          color: _sort == 1
-                              ? Theme.of(context).accentColor
-                              : Colors.transparent),
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color: _sort == 1
+                                  ? Theme.of(context).colorScheme.secondary
+                                  : Colors.transparent,
+                            ),
+                          ),
+                        ),
+                        foregroundColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.secondary),
+                      ),
                       child: Text(
                         "更新排序",
                         style: TextStyle(

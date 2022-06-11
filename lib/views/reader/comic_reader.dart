@@ -741,8 +741,14 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
           ),
           SizedBox(height: 12),
           Center(
-            child: OutlineButton(
-                borderSide: BorderSide(color: Colors.white.withOpacity(0.6)),
+            child: OutlinedButton(
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.white.withOpacity(0.6)),
+                    ),
+                  ),
+                ),
                 onPressed: openTCPage,
                 child: Text(
                   "查看更多(${_viewPoints.length})",
