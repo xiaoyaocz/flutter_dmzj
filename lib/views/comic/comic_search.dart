@@ -44,6 +44,12 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
       return Container();
     }
 
+    //patch start
+    if(this.query.contains(RegExp(r'^id\d+$'))){//id12345
+      Utils.openPage(context, int.parse(this.query.replaceAll(RegExp(r'\d'), '')), 1);
+      return Container();//?
+    }
+    //patch end
     return FutureBuilder<List<ComicNSSearchItem>>(
       future: loadData(),
       builder: (BuildContext context,
