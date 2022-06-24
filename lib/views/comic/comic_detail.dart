@@ -17,6 +17,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:flutter_dmzj/app/api/api_util.dart'; //patch
+import 'package:fixnum/fixnum.dart' as $fixnum;
 
 class ComicDetailPage extends StatefulWidget {
   final int comicId;
@@ -594,8 +596,34 @@ class _ComicDetailPageState extends State<ComicDetailPage>
       // var jsonMap = jsonDecode(responseStr);
 
       // ComicDetail detail = ComicDetail.fromJson(jsonMap);
-      var detail = await ComicApi.instance.getDetail(widget.comicId);
-      if (detail.title == null || detail.title == "") {
+      bool failed = false;
+      ComicDetailInfoResponse detail;
+      try {
+        detail = await ComicApi.instance.getDetail(widget.comicId);
+      } catch (e) {
+        failed = true;
+        Fluttertoast.showToast(msg: e.toString());
+      }
+      if (failed || detail == null || detail.chapters == null || detail.chapters.length == 0) {
+        String path = "https://api.dmzj.com/dynamic/comicinfo/${widget.comicId.toString()}.json";
+        String result = await HttpUtil.instance.httpGet(
+          path,
+          queryParameters: ApiUtil.defaultParameter(needLogined: true),
+        ); //text
+        Map res = jsonDecode(result);
+        var info = res['data']['info'];
+        var list = res['data']['list'];
+        var alone = res['data']['alone'];
+        List<ComicDetailChapterInfoResponse> ch_list = List<ComicDetailChapterInfoResponse>.from(list.map((e) => new ComicDetailChapterInfoResponse(chapterId: int.parse(e['id'] ?? '0'), chapterTitle: e['chapter_name'] ?? '0', updatetime: $fixnum.Int64.parseInt(e['updatetime'] ?? '0'), filesize: int.parse(e['filesize'] ?? '0'), chapterOrder: int.parse(e['chapter_order'] ?? '0'))));
+        List<ComicDetailChapterInfoResponse> ch_alone = List<ComicDetailChapterInfoResponse>.from(alone.map((e) => new ComicDetailChapterInfoResponse(chapterId: int.parse(e['id'] ?? '0'), chapterTitle: e['chapter_name'] ?? '0', updatetime: $fixnum.Int64.parseInt(e['updatetime'] ?? '0'), filesize: int.parse(e['filesize'] ?? '0'), chapterOrder: int.parse(e['chapter_order'] ?? '0'))));
+        List<ComicDetailChapterResponse> ch = List<ComicDetailChapterResponse>.from([
+          new ComicDetailChapterResponse(title: "神隐", data: ch_list),
+          new ComicDetailChapterResponse(title: "单独", data: ch_alone)
+        ]);
+        ComicDetailInfoResponse detail2 = new ComicDetailInfoResponse(id: detail?.id ?? int.parse(info['id'] ?? 0), title: detail?.title ?? info['title'] ?? '', direction: detail?.direction ?? int.parse(info['direction'] ?? '0'), islong: detail?.islong ?? int.parse(info['islong'] ?? '0'), isDmzj: detail?.isDmzj ?? int.parse(info['isDmzj'] ?? '0'), cover: detail?.cover ?? info['cover'] ?? '', description: detail?.description ?? info['description'] ?? '', lastUpdatetime: detail?.lastUpdatetime ?? $fixnum.Int64.parseInt(info['last_updatetime'] ?? '0'), lastUpdateChapterName: detail?.lastUpdateChapterName ?? info['last_update_chapter_name'] ?? '', copyright: detail?.copyright ?? int.parse(info['copyright'] ?? '0'), firstLetter: detail?.firstLetter ?? info['first_letter'] ?? '', comicPy: detail?.comicPy ?? info['comicPy'] ?? info['first_letter'] ?? '', hidden: detail?.hidden ?? int.parse(info['hidden'] ?? '0'), hotNum: detail?.hotNum ?? int.parse(info['hotNum'] ?? '0'), hitNum: detail?.hitNum ?? int.parse(info['hitNum'] ?? '0'), uid: detail?.uid ?? int.parse(info['uid'] ?? '0'), isLock: detail?.isLock ?? int.parse(info['isLock'] ?? '0'), lastUpdateChapterId: detail?.lastUpdateChapterId ?? int.parse(info['lastUpdateChapterId'] ?? '0'), types: detail?.types ?? null, status: detail?.status ?? null, authors: detail?.authors ?? null, subscribeNum: detail?.subscribeNum ?? int.parse(info['subscribeNum'] ?? '0'), chapters: ch, isNeedLogin: detail?.isNeedLogin ?? int.parse(info['isNeedLogin'] ?? '0'), isHideChapter: detail?.isHideChapter ?? int.parse(info['isHideChapter'] ?? '0'),);
+        detail = detail2;
+     }
+     if (detail.title == null || detail.title == "") {
         setState(() {
           _loading = false;
           _noCopyright = true;
