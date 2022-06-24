@@ -237,6 +237,13 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
     try {
       var response = await http.get(Uri.parse(Api.comicSearchHotWord));
       List ls = jsonDecode(response.body);
+      if (this.query.contains(RegExp(r'\d'))) {
+        int id = int.parse(this.query.replaceAll(RegExp(r'\D'), ''));
+        ls.insert(0, {
+          "id": id,
+          "name": "id:" + id.toString()
+        });
+      }
       List<SearchHotWord> detail =
           ls.map((i) => SearchHotWord.fromJson(i)).toList();
       if (detail != null) {
