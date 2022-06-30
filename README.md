@@ -1,8 +1,16 @@
-# 动漫之家 Flutter
+# flutter_dmzj
 
-使用Flutter编写的动漫之家第三方客户端
+A new Flutter project.
 
-## 截图
+## Getting Started
 
-![未标题-1.png](https://vip1.loli.net/2020/08/02/UrBtvZGVcEThqIY.png)
+This project is a starting point for a Flutter application.
 
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
