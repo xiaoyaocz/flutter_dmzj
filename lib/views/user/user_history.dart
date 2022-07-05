@@ -9,7 +9,6 @@ import 'package:flutter_dmzj/models/comic/comic_history_item.dart';
 import 'package:flutter_dmzj/models/novel/novel_history_item.dart';
 import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:http/http.dart' as http;
 
 class UserHistoryPage extends StatefulWidget {

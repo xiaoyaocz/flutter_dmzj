@@ -154,7 +154,9 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
                                 x.tag_name,
                                 style: TextStyle(
                                     color: x == f.item
-                                        ? Theme.of(context).accentColor
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .secondary
                                         : Theme.of(context)
                                             .textTheme
                                             .button
@@ -215,7 +217,7 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
                         "人气排序",
                         style: TextStyle(
                             color: _sort == 0
-                                ? Theme.of(context).accentColor
+                                ? Theme.of(context).colorScheme.secondary
                                 : Theme.of(context).textTheme.button.color),
                       ),
                       onPressed: () async {
@@ -253,7 +255,7 @@ class _ComicCategoryDetailPageState extends State<ComicCategoryDetailPage>
                         "更新排序",
                         style: TextStyle(
                             color: _sort == 1
-                                ? Theme.of(context).accentColor
+                                ? Theme.of(context).colorScheme.secondary
                                 : Theme.of(context).textTheme.button.color),
                       ),
                       onPressed: () async {

@@ -1,17 +1,12 @@
 import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/api/novel.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
 import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
-import 'package:flutter_dmzj/models/novel/novel_volume_item.dart';
 import 'package:flutter_dmzj/protobuf/novel/novel_chapter_response.pb.dart';
 import 'package:flutter_dmzj/protobuf/novel/novel_detail_response.pb.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
@@ -256,7 +251,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
                               item.chapterName,
                               style: TextStyle(
                                   color: item.chapterId == historyChapter
-                                      ? Theme.of(context).accentColor
+                                      ? Theme.of(context).colorScheme.secondary
                                       : Theme.of(context)
                                           .textTheme
                                           .bodyText1
@@ -322,7 +317,7 @@ class _NovelDetailPageState extends State<NovelDetailPage>
     return str;
   }
 
-  DefaultCacheManager _cacheManager = DefaultCacheManager();
+  // DefaultCacheManager _cacheManager = DefaultCacheManager();
   bool _loading = false;
   bool _isSubscribe = false;
   List<NovelChapterVolumeResponse> volumes = [];

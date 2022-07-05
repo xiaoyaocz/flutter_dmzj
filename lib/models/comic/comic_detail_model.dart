@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, unnecessary_getters_setters
+
 import 'dart:convert' show json;
 
 class ComicDetail {

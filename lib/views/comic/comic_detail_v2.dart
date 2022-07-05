@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/views/other/comment_widget.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:share/share.dart';
 
 class ComicDetailV2Page extends StatelessWidget {
   final comicId;
@@ -153,7 +151,7 @@ class ComicDetailV2Page extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               borderRadius: BorderRadius.circular(12),
             ),
             padding: EdgeInsets.all(4),

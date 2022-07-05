@@ -118,7 +118,7 @@ class _SettingPageState extends State<SettingPage> {
                 color: Colors.grey,
               ),
               onTap: () {
-                Fluttertoast.showToast(msg: '老子没写完呢');
+                Fluttertoast.showToast(msg: '还没写完呢');
                 //下载使用API
                 //下载允许使用数据
                 //下载失败，跳过or失败
@@ -155,7 +155,7 @@ class _SettingPageState extends State<SettingPage> {
                 color: Colors.grey,
               ),
               onTap: () {
-                Fluttertoast.showToast(msg: '老子没写完呢');
+                Fluttertoast.showToast(msg: '还没写完呢');
                 //下载使用API
                 //下载允许使用数据
                 //下载失败，跳过or失败

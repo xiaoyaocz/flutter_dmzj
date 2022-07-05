@@ -6,8 +6,6 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_category_detail_filter.dart';
 import 'package:flutter_dmzj/models/novel/novel_category_detail_item.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_footer.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -138,18 +136,22 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
                                     borderRadius: BorderRadius.circular(8),
                                     side: BorderSide(
                                         color: x == f.item
-                                            ? Theme.of(context).accentColor
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .secondary
                                             : Colors.transparent),
                                   ),
                                 ),
                                 foregroundColor: MaterialStateProperty.all(
-                                    Theme.of(context).accentColor),
+                                    Theme.of(context).colorScheme.secondary),
                               ),
                               child: Text(
                                 x.tag_name,
                                 style: TextStyle(
                                     color: x == f.item
-                                        ? Theme.of(context).accentColor
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .secondary
                                         : Theme.of(context)
                                             .textTheme
                                             .button
@@ -198,18 +200,18 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
                             borderRadius: BorderRadius.circular(8),
                             side: BorderSide(
                                 color: _sort == 0
-                                    ? Theme.of(context).accentColor
+                                    ? Theme.of(context).colorScheme.secondary
                                     : Colors.transparent),
                           ),
                         ),
                         foregroundColor: MaterialStateProperty.all(
-                            Theme.of(context).accentColor),
+                            Theme.of(context).colorScheme.secondary),
                       ),
                       child: Text(
                         "人气排序",
                         style: TextStyle(
                             color: _sort == 0
-                                ? Theme.of(context).accentColor
+                                ? Theme.of(context).colorScheme.secondary
                                 : Theme.of(context).textTheme.button.color),
                       ),
                       onPressed: () async {
@@ -235,18 +237,18 @@ class _NovelCategoryDetailPageState extends State<NovelCategoryDetailPage>
                             borderRadius: BorderRadius.circular(8),
                             side: BorderSide(
                                 color: _sort == 1
-                                    ? Theme.of(context).accentColor
+                                    ? Theme.of(context).colorScheme.secondary
                                     : Colors.transparent),
                           ),
                         ),
                         foregroundColor: MaterialStateProperty.all(
-                            Theme.of(context).accentColor),
+                            Theme.of(context).colorScheme.secondary),
                       ),
                       child: Text(
                         "更新排序",
                         style: TextStyle(
                             color: _sort == 1
-                                ? Theme.of(context).accentColor
+                                ? Theme.of(context).colorScheme.secondary
                                 : Theme.of(context).textTheme.button.color),
                       ),
                       onPressed: () async {

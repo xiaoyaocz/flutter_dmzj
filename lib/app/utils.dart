@@ -6,7 +6,6 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
-import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/novel/novel_volume_item.dart';
 import 'package:flutter_dmzj/models/version_info.dart';
 import 'package:flutter_dmzj/protobuf/comic/detail_response.pb.dart';
@@ -14,7 +13,6 @@ import 'package:flutter_dmzj/protobuf/novel/novel_chapter_response.pb.dart';
 import 'package:flutter_dmzj/views/comic/comic_author.dart';
 import 'package:flutter_dmzj/views/comic/comic_category_detail.dart';
 import 'package:flutter_dmzj/views/comic/comic_detail.dart';
-import 'package:flutter_dmzj/views/comic/comic_detail_v2.dart';
 import 'package:flutter_dmzj/views/comic/comic_special_detail.dart';
 import 'package:flutter_dmzj/views/news/news_detail.dart';
 import 'package:flutter_dmzj/views/novel/novel_category_detail.dart';
@@ -44,7 +42,7 @@ class Utils {
         content: new Text(content),
         action: new SnackBarAction(label: action, onPressed: onPressed));
 
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   static void showSnackbar(BuildContext context, String content,
@@ -54,7 +52,7 @@ class Utils {
       duration: duration,
     );
 
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   static bool hideBanner = true;
@@ -88,14 +86,14 @@ class Utils {
               title: title,
               content: content,
               actions: <Widget>[
-                new FlatButton(
+                TextButton(
                   child: new Text("确定"),
                   onPressed: () {
                     result = true;
                     Navigator.of(context).pop();
                   },
                 ),
-                new FlatButton(
+                TextButton(
                   child: new Text("取消"),
                   onPressed: () {
                     result = false;
@@ -133,7 +131,7 @@ class Utils {
               Positioned(
                 bottom: 12,
                 right: 12,
-                child: FlatButton(
+                child: TextButton(
                   onPressed: () async {
                     try {
                       var file = DefaultCacheManager().getFileFromMemory(image);
@@ -149,8 +147,10 @@ class Utils {
                       Fluttertoast.showToast(msg: '保存失败');
                     }
                   },
-                  textColor: Colors.white,
-                  child: Text("保存"),
+                  child: Text(
+                    "保存",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],

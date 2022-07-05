@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/api/comic.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
@@ -340,7 +339,9 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                                   borderRadius: BorderRadius.circular(8),
                                   side: BorderSide(
                                     color: f.data[i].chapterId == historyChapter
-                                        ? Theme.of(context).accentColor
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .secondary
                                         : Colors.grey.withOpacity(0.6),
                                   ),
                                 ),
@@ -351,7 +352,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: f.data[i].chapterId == historyChapter
-                                      ? Theme.of(context).accentColor
+                                      ? Theme.of(context).colorScheme.secondary
                                       : Theme.of(context)
                                           .textTheme
                                           .bodyText1
@@ -397,7 +398,8 @@ class _ComicDetailPageState extends State<ComicDetailPage>
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
-                  side: BorderSide(color: Theme.of(context).accentColor)),
+                  side: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary)),
             ),
           ),
           child: Text(
@@ -566,7 +568,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
   bool _loading = false;
 
   bool _isSubscribe = false;
-  DefaultCacheManager _cacheManager = DefaultCacheManager();
+  //DefaultCacheManager _cacheManager = DefaultCacheManager();
   Future loadData() async {
     try {
       if (_loading) {
@@ -604,8 +606,12 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         failed = true;
         Fluttertoast.showToast(msg: e.toString());
       }
-      if (failed || detail == null || detail.chapters == null || detail.chapters.length == 0) {
-        String path = "https://api.dmzj.com/dynamic/comicinfo/${widget.comicId.toString()}.json";
+      if (failed ||
+          detail == null ||
+          detail.chapters == null ||
+          detail.chapters.length == 0) {
+        String path =
+            "https://api.dmzj.com/dynamic/comicinfo/${widget.comicId.toString()}.json";
         String result = await HttpUtil.instance.httpGet(
           path,
           queryParameters: ApiUtil.defaultParameter(needLogined: true),
@@ -614,16 +620,65 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         var info = res['data']['info'];
         var list = res['data']['list'];
         var alone = res['data']['alone'];
-        List<ComicDetailChapterInfoResponse> ch_list = List<ComicDetailChapterInfoResponse>.from(list.map((e) => new ComicDetailChapterInfoResponse(chapterId: int.parse(e['id'] ?? '0'), chapterTitle: e['chapter_name'] ?? '0', updatetime: $fixnum.Int64.parseInt(e['updatetime'] ?? '0'), filesize: int.parse(e['filesize'] ?? '0'), chapterOrder: int.parse(e['chapter_order'] ?? '0'))));
-        List<ComicDetailChapterInfoResponse> ch_alone = List<ComicDetailChapterInfoResponse>.from(alone.map((e) => new ComicDetailChapterInfoResponse(chapterId: int.parse(e['id'] ?? '0'), chapterTitle: e['chapter_name'] ?? '0', updatetime: $fixnum.Int64.parseInt(e['updatetime'] ?? '0'), filesize: int.parse(e['filesize'] ?? '0'), chapterOrder: int.parse(e['chapter_order'] ?? '0'))));
-        List<ComicDetailChapterResponse> ch = List<ComicDetailChapterResponse>.from([
-          new ComicDetailChapterResponse(title: "神隐", data: ch_list),
-          new ComicDetailChapterResponse(title: "单独", data: ch_alone)
+        List<ComicDetailChapterInfoResponse> chList =
+            List<ComicDetailChapterInfoResponse>.from(list.map((e) =>
+                new ComicDetailChapterInfoResponse(
+                    chapterId: int.parse(e['id'] ?? '0'),
+                    chapterTitle: e['chapter_name'] ?? '0',
+                    updatetime: $fixnum.Int64.parseInt(e['updatetime'] ?? '0'),
+                    filesize: int.parse(e['filesize'] ?? '0'),
+                    chapterOrder: int.parse(e['chapter_order'] ?? '0'))));
+        List<ComicDetailChapterInfoResponse> chAlone =
+            List<ComicDetailChapterInfoResponse>.from(alone.map((e) =>
+                new ComicDetailChapterInfoResponse(
+                    chapterId: int.parse(e['id'] ?? '0'),
+                    chapterTitle: e['chapter_name'] ?? '0',
+                    updatetime: $fixnum.Int64.parseInt(e['updatetime'] ?? '0'),
+                    filesize: int.parse(e['filesize'] ?? '0'),
+                    chapterOrder: int.parse(e['chapter_order'] ?? '0'))));
+        List<ComicDetailChapterResponse> ch =
+            List<ComicDetailChapterResponse>.from([
+          new ComicDetailChapterResponse(title: "神隐", data: chList),
+          new ComicDetailChapterResponse(title: "单独", data: chAlone)
         ]);
-        ComicDetailInfoResponse detail2 = new ComicDetailInfoResponse(id: detail?.id ?? int.parse(info['id'] ?? 0), title: detail?.title ?? info['title'] ?? '', direction: detail?.direction ?? int.parse(info['direction'] ?? '0'), islong: detail?.islong ?? int.parse(info['islong'] ?? '0'), isDmzj: detail?.isDmzj ?? int.parse(info['isDmzj'] ?? '0'), cover: detail?.cover ?? info['cover'] ?? '', description: detail?.description ?? info['description'] ?? '', lastUpdatetime: detail?.lastUpdatetime ?? $fixnum.Int64.parseInt(info['last_updatetime'] ?? '0'), lastUpdateChapterName: detail?.lastUpdateChapterName ?? info['last_update_chapter_name'] ?? '', copyright: detail?.copyright ?? int.parse(info['copyright'] ?? '0'), firstLetter: detail?.firstLetter ?? info['first_letter'] ?? '', comicPy: detail?.comicPy ?? info['comicPy'] ?? info['first_letter'] ?? '', hidden: detail?.hidden ?? int.parse(info['hidden'] ?? '0'), hotNum: detail?.hotNum ?? int.parse(info['hotNum'] ?? '0'), hitNum: detail?.hitNum ?? int.parse(info['hitNum'] ?? '0'), uid: detail?.uid ?? int.parse(info['uid'] ?? '0'), isLock: detail?.isLock ?? int.parse(info['isLock'] ?? '0'), lastUpdateChapterId: detail?.lastUpdateChapterId ?? int.parse(info['lastUpdateChapterId'] ?? '0'), types: detail?.types ?? null, status: detail?.status ?? null, authors: detail?.authors ?? null, subscribeNum: detail?.subscribeNum ?? int.parse(info['subscribeNum'] ?? '0'), chapters: ch, isNeedLogin: detail?.isNeedLogin ?? int.parse(info['isNeedLogin'] ?? '0'), isHideChapter: detail?.isHideChapter ?? int.parse(info['isHideChapter'] ?? '0'),);
+        ComicDetailInfoResponse detail2 = new ComicDetailInfoResponse(
+          id: detail?.id ?? int.parse(info['id'] ?? 0),
+          title: detail?.title ?? info['title'] ?? '',
+          direction: detail?.direction ?? int.parse(info['direction'] ?? '0'),
+          islong: detail?.islong ?? int.parse(info['islong'] ?? '0'),
+          isDmzj: detail?.isDmzj ?? int.parse(info['isDmzj'] ?? '0'),
+          cover: detail?.cover ?? info['cover'] ?? '',
+          description: detail?.description ?? info['description'] ?? '',
+          lastUpdatetime: detail?.lastUpdatetime ??
+              $fixnum.Int64.parseInt(info['last_updatetime'] ?? '0'),
+          lastUpdateChapterName: detail?.lastUpdateChapterName ??
+              info['last_update_chapter_name'] ??
+              '',
+          copyright: detail?.copyright ?? int.parse(info['copyright'] ?? '0'),
+          firstLetter: detail?.firstLetter ?? info['first_letter'] ?? '',
+          comicPy:
+              detail?.comicPy ?? info['comicPy'] ?? info['first_letter'] ?? '',
+          hidden: detail?.hidden ?? int.parse(info['hidden'] ?? '0'),
+          hotNum: detail?.hotNum ?? int.parse(info['hotNum'] ?? '0'),
+          hitNum: detail?.hitNum ?? int.parse(info['hitNum'] ?? '0'),
+          uid: detail?.uid ?? int.parse(info['uid'] ?? '0'),
+          isLock: detail?.isLock ?? int.parse(info['isLock'] ?? '0'),
+          lastUpdateChapterId: detail?.lastUpdateChapterId ??
+              int.parse(info['lastUpdateChapterId'] ?? '0'),
+          types: detail?.types ?? null,
+          status: detail?.status ?? null,
+          authors: detail?.authors ?? null,
+          subscribeNum:
+              detail?.subscribeNum ?? int.parse(info['subscribeNum'] ?? '0'),
+          chapters: ch,
+          isNeedLogin:
+              detail?.isNeedLogin ?? int.parse(info['isNeedLogin'] ?? '0'),
+          isHideChapter:
+              detail?.isHideChapter ?? int.parse(info['isHideChapter'] ?? '0'),
+        );
         detail = detail2;
-     }
-     if (detail.title == null || detail.title == "") {
+      }
+      if (detail.title == null || detail.title == "") {
         setState(() {
           _loading = false;
           _noCopyright = true;
@@ -811,7 +866,9 @@ class _ComicChapterViewState extends State<ComicChapterView>
                                 side: BorderSide(
                                     color: f.data[i].chapterId ==
                                             widget.historyChapter
-                                        ? Theme.of(context).accentColor
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .secondary
                                         : Colors.grey.withOpacity(0.4)),
                               ),
                             ),
@@ -820,13 +877,13 @@ class _ComicChapterViewState extends State<ComicChapterView>
                             f.data[i].chapterTitle,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                color:
-                                    f.data[i].chapterId == widget.historyChapter
-                                        ? Theme.of(context).accentColor
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .color),
+                                color: f.data[i].chapterId ==
+                                        widget.historyChapter
+                                    ? Theme.of(context).colorScheme.secondary
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .color),
                           ),
                           onPressed: () {
                             Utils.openComicReader(

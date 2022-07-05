@@ -55,7 +55,10 @@ class ComicTCPageState extends State<ComicTCPage> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                      color: Theme.of(context).accentColor.withOpacity(color),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withOpacity(color),
                       borderRadius: BorderRadius.circular(8)),
                   child: Text(
                     f.content,
@@ -87,7 +90,7 @@ class ComicTCPageState extends State<ComicTCPage> {
                 ),
               ),
             ),
-            FlatButton.icon(
+            TextButton.icon(
                 onPressed: () async {
                   if (_textEditingController.text.isEmpty) {
                     return;

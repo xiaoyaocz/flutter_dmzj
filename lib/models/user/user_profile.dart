@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert' show json;
 
 class UserProfileModel {
@@ -18,58 +20,64 @@ class UserProfileModel {
   final int is_set_pwd;
   final List<UserBindModel> bind;
 
-    UserProfileModel({
-this.nickname,
-this.description,
-this.birthday,
-this.sex,
-this.cover,
-this.blood,
-this.constellation,
-this.bind_phone,
-this.email,
-this.channel,
-this.is_verify,
-this.is_modify_name,
-this.data,
-this.amount,
-this.is_set_pwd,
-this.bind,
-    });
+  UserProfileModel({
+    this.nickname,
+    this.description,
+    this.birthday,
+    this.sex,
+    this.cover,
+    this.blood,
+    this.constellation,
+    this.bind_phone,
+    this.email,
+    this.channel,
+    this.is_verify,
+    this.is_modify_name,
+    this.data,
+    this.amount,
+    this.is_set_pwd,
+    this.bind,
+  });
 
-
-  factory UserProfileModel.fromJson(jsonRes){ if(jsonRes == null) return null;
-    List<Object> data = jsonRes['data'] is List ? []: null; 
-    if(data!=null) {
- for (var item in jsonRes['data']) { if (item != null) { data.add(item);  }
-    }
-    }
-
-
-    List<UserBindModel> bind = jsonRes['bind'] is List ? []: null; 
-    if(bind!=null) {
- for (var item in jsonRes['bind']) { if (item != null) { bind.add(UserBindModel.fromJson(item));  }
-    }
+  factory UserProfileModel.fromJson(jsonRes) {
+    if (jsonRes == null) return null;
+    List<Object> data = jsonRes['data'] is List ? [] : null;
+    if (data != null) {
+      for (var item in jsonRes['data']) {
+        if (item != null) {
+          data.add(item);
+        }
+      }
     }
 
+    List<UserBindModel> bind = jsonRes['bind'] is List ? [] : null;
+    if (bind != null) {
+      for (var item in jsonRes['bind']) {
+        if (item != null) {
+          bind.add(UserBindModel.fromJson(item));
+        }
+      }
+    }
 
-return UserProfileModel(    nickname : jsonRes['nickname'],
-    description : jsonRes['description'],
-    birthday : jsonRes['birthday'],
-    sex : jsonRes['sex'],
-    cover : jsonRes['cover'],
-    blood : jsonRes['blood'],
-    constellation : jsonRes['constellation'],
-    bind_phone : jsonRes['bind_phone'].toString(),
-    email : jsonRes['email'],
-    channel : jsonRes['channel'],
-    is_verify : jsonRes['is_verify'],
-    is_modify_name : jsonRes['is_modify_name'],
- data:data,
-    amount : jsonRes['amount'],
-    is_set_pwd : jsonRes['is_set_pwd'],
- bind:bind,
-);}
+    return UserProfileModel(
+      nickname: jsonRes['nickname'],
+      description: jsonRes['description'],
+      birthday: jsonRes['birthday'],
+      sex: jsonRes['sex'],
+      cover: jsonRes['cover'],
+      blood: jsonRes['blood'],
+      constellation: jsonRes['constellation'],
+      bind_phone: jsonRes['bind_phone'].toString(),
+      email: jsonRes['email'],
+      channel: jsonRes['channel'],
+      is_verify: jsonRes['is_verify'],
+      is_modify_name: jsonRes['is_modify_name'],
+      data: data,
+      amount: jsonRes['amount'],
+      is_set_pwd: jsonRes['is_set_pwd'],
+      bind: bind,
+    );
+  }
   Map<String, dynamic> toJson() => {
         'nickname': nickname,
         'description': description,
@@ -87,35 +95,36 @@ return UserProfileModel(    nickname : jsonRes['nickname'],
         'amount': amount,
         'is_set_pwd': is_set_pwd,
         'bind': bind,
-};
+      };
 
   @override
-String  toString() {
+  String toString() {
     return json.encode(this);
   }
 }
+
 class UserBindModel {
   final String type;
   final String name;
 
-    UserBindModel({
-this.type,
-this.name,
-    });
+  UserBindModel({
+    this.type,
+    this.name,
+  });
 
-
-  factory UserBindModel.fromJson(jsonRes)=>jsonRes == null? null:UserBindModel(    type : jsonRes['type'],
-    name : jsonRes['name'].toString(),
-);
+  factory UserBindModel.fromJson(jsonRes) => jsonRes == null
+      ? null
+      : UserBindModel(
+          type: jsonRes['type'],
+          name: jsonRes['name'].toString(),
+        );
   Map<String, dynamic> toJson() => {
         'type': type,
         'name': name,
-};
+      };
 
   @override
-String  toString() {
+  String toString() {
     return json.encode(this);
   }
 }
-
-

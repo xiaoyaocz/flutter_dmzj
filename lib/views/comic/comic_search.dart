@@ -128,10 +128,11 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Theme.of(context).accentColor)),
+              border:
+                  Border.all(color: Theme.of(context).colorScheme.secondary)),
           child: Text(
             title,
-            style: TextStyle(color: Theme.of(context).accentColor),
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           ),
         ),
         onTap: () {
@@ -239,10 +240,7 @@ class ComicSearchBarDelegate extends SearchDelegate<String> {
       List ls = jsonDecode(response.body);
       if (this.query.contains(RegExp(r'\d'))) {
         int id = int.parse(this.query.replaceAll(RegExp(r'\D'), ''));
-        ls.insert(0, {
-          "id": id,
-          "name": "id:" + id.toString()
-        });
+        ls.insert(0, {"id": id, "name": "id:" + id.toString()});
       }
       List<SearchHotWord> detail =
           ls.map((i) => SearchHotWord.fromJson(i)).toList();

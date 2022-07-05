@@ -1,13 +1,10 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/user_comment_model.dart';
-import 'package:flutter_easyrefresh/material_footer.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -170,7 +167,8 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
                                       ? ""
                                       : "(${item.like_amount})"),
                               style: TextStyle(
-                                  color: Theme.of(context).accentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   fontSize: 12),
                             ),
                           ),
@@ -184,7 +182,8 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
                                       ? ""
                                       : "(${item.reply_amount})"),
                               style: TextStyle(
-                                  color: Theme.of(context).accentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   fontSize: 12),
                             ),
                           ),
@@ -238,7 +237,8 @@ class _UserCommentWidgetState extends State<UserCommentWidget>
                   child: InkWell(
                     child: Text(
                       item.nickname,
-                      style: TextStyle(color: Theme.of(context).accentColor),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary),
                     ),
                   ),
                 ),

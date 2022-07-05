@@ -3,7 +3,7 @@
 //  source: lib/protobuf/comic/detail_response.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
+// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields, unnecessary_getters_setters
 
 import 'dart:core' as $core;
 import 'dart:core';
@@ -21,13 +21,26 @@ class ComicDetailResponse extends $pb.GeneratedMessage {
               ? ''
               : 'dmzj.comic'),
       createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Errno', $pb.PbFieldType.O3,
+    ..a<$core.int>(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Errno',
+        $pb.PbFieldType.O3,
         protoName: 'Errno')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Errmsg',
+    ..aOS(
+        2,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Errmsg',
         protoName: 'Errmsg')
     ..aOM<ComicDetailInfoResponse>(
-        3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Data',
-        protoName: 'Data', subBuilder: ComicDetailInfoResponse.create)
+        3,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Data',
+        protoName: 'Data',
+        subBuilder: ComicDetailInfoResponse.create)
     ..hasRequiredFields = false;
 
   ComicDetailResponse._() : super();
@@ -124,35 +137,178 @@ class ComicDetailInfoResponse extends $pb.GeneratedMessage {
               ? ''
               : 'dmzj.comic'),
       createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Id', $pb.PbFieldType.O3,
+    ..a<$core.int>(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Id',
+        $pb.PbFieldType.O3,
         protoName: 'Id')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Title',
+    ..aOS(
+        2,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Title',
         protoName: 'Title')
     ..a<$core.int>(
-        3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Direction', $pb.PbFieldType.O3,
+        3,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Direction',
+        $pb.PbFieldType.O3,
         protoName: 'Direction')
-    ..a<$core.int>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Islong', $pb.PbFieldType.O3, protoName: 'Islong')
-    ..a<$core.int>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'IsDmzj', $pb.PbFieldType.O3, protoName: 'IsDmzj')
-    ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Cover', protoName: 'Cover')
-    ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Description', protoName: 'Description')
-    ..aInt64(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'LastUpdatetime', protoName: 'LastUpdatetime')
-    ..aOS(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'LastUpdateChapterName', protoName: 'LastUpdateChapterName')
-    ..a<$core.int>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Copyright', $pb.PbFieldType.O3, protoName: 'Copyright')
-    ..aOS(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'FirstLetter', protoName: 'FirstLetter')
-    ..aOS(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ComicPy', protoName: 'ComicPy')
-    ..a<$core.int>(13, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Hidden', $pb.PbFieldType.O3, protoName: 'Hidden')
-    ..a<$core.int>(14, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'HotNum', $pb.PbFieldType.O3, protoName: 'HotNum')
-    ..a<$core.int>(15, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'HitNum', $pb.PbFieldType.O3, protoName: 'HitNum')
-    ..a<$core.int>(16, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Uid', $pb.PbFieldType.O3, protoName: 'Uid')
-    ..a<$core.int>(17, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'IsLock', $pb.PbFieldType.O3, protoName: 'IsLock')
-    ..a<$core.int>(18, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'LastUpdateChapterId', $pb.PbFieldType.O3, protoName: 'LastUpdateChapterId')
-    ..pc<ComicDetailTypeItemResponse>(19, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Types', $pb.PbFieldType.PM, protoName: 'Types', subBuilder: ComicDetailTypeItemResponse.create)
-    ..pc<ComicDetailTypeItemResponse>(20, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Status', $pb.PbFieldType.PM, protoName: 'Status', subBuilder: ComicDetailTypeItemResponse.create)
-    ..pc<ComicDetailTypeItemResponse>(21, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Authors', $pb.PbFieldType.PM, protoName: 'Authors', subBuilder: ComicDetailTypeItemResponse.create)
-    ..a<$core.int>(22, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'SubscribeNum', $pb.PbFieldType.O3, protoName: 'SubscribeNum')
-    ..pc<ComicDetailChapterResponse>(23, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Chapters', $pb.PbFieldType.PM, protoName: 'Chapters', subBuilder: ComicDetailChapterResponse.create)
-    ..a<$core.int>(24, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'IsNeedLogin', $pb.PbFieldType.O3, protoName: 'IsNeedLogin')
-    ..a<$core.int>(26, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'IsHideChapter', $pb.PbFieldType.O3, protoName: 'IsHideChapter')
+    ..a<$core.int>(
+        4,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Islong',
+        $pb.PbFieldType.O3,
+        protoName: 'Islong')
+    ..a<$core.int>(
+        5,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'IsDmzj',
+        $pb.PbFieldType.O3,
+        protoName: 'IsDmzj')
+    ..aOS(
+        6,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Cover',
+        protoName: 'Cover')
+    ..aOS(
+        7,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Description',
+        protoName: 'Description')
+    ..aInt64(
+        8,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'LastUpdatetime',
+        protoName: 'LastUpdatetime')
+    ..aOS(
+        9,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'LastUpdateChapterName',
+        protoName: 'LastUpdateChapterName')
+    ..a<$core.int>(
+        10,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Copyright',
+        $pb.PbFieldType.O3,
+        protoName: 'Copyright')
+    ..aOS(
+        11,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'FirstLetter',
+        protoName: 'FirstLetter')
+    ..aOS(
+        12,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'ComicPy',
+        protoName: 'ComicPy')
+    ..a<$core.int>(
+        13,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Hidden',
+        $pb.PbFieldType.O3,
+        protoName: 'Hidden')
+    ..a<$core.int>(
+        14,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'HotNum',
+        $pb.PbFieldType.O3,
+        protoName: 'HotNum')
+    ..a<$core.int>(
+        15,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'HitNum',
+        $pb.PbFieldType.O3,
+        protoName: 'HitNum')
+    ..a<$core.int>(
+        16,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Uid',
+        $pb.PbFieldType.O3,
+        protoName: 'Uid')
+    ..a<$core.int>(
+        17,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'IsLock',
+        $pb.PbFieldType.O3,
+        protoName: 'IsLock')
+    ..a<$core.int>(
+        18,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'LastUpdateChapterId',
+        $pb.PbFieldType.O3,
+        protoName: 'LastUpdateChapterId')
+    ..pc<ComicDetailTypeItemResponse>(
+        19,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Types',
+        $pb.PbFieldType.PM,
+        protoName: 'Types',
+        subBuilder: ComicDetailTypeItemResponse.create)
+    ..pc<ComicDetailTypeItemResponse>(
+        20,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Status',
+        $pb.PbFieldType.PM,
+        protoName: 'Status',
+        subBuilder: ComicDetailTypeItemResponse.create)
+    ..pc<ComicDetailTypeItemResponse>(
+        21,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Authors',
+        $pb.PbFieldType.PM,
+        protoName: 'Authors',
+        subBuilder: ComicDetailTypeItemResponse.create)
+    ..a<$core.int>(
+        22,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'SubscribeNum',
+        $pb.PbFieldType.O3,
+        protoName: 'SubscribeNum')
+    ..pc<ComicDetailChapterResponse>(
+        23,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Chapters',
+        $pb.PbFieldType.PM,
+        protoName: 'Chapters',
+        subBuilder: ComicDetailChapterResponse.create)
+    ..a<$core.int>(
+        24,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'IsNeedLogin',
+        $pb.PbFieldType.O3,
+        protoName: 'IsNeedLogin')
+    ..a<$core.int>(
+        26,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'IsHideChapter',
+        $pb.PbFieldType.O3,
+        protoName: 'IsHideChapter')
     ..hasRequiredFields = false;
 
   ComicDetailInfoResponse._() : super();
@@ -573,7 +729,10 @@ class ComicDetailTypeItemResponse extends $pb.GeneratedMessage {
         $pb.PbFieldType.O3,
         protoName: 'TagId')
     ..aOS(
-        2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'TagName',
+        2,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'TagName',
         protoName: 'TagName')
     ..hasRequiredFields = false;
 
@@ -658,7 +817,10 @@ class ComicDetailChapterResponse extends $pb.GeneratedMessage {
               : 'dmzj.comic'),
       createEmptyInstance: create)
     ..aOS(
-        1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Title',
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Title',
         protoName: 'Title')
     ..pc<ComicDetailChapterInfoResponse>(
         2,
@@ -753,14 +915,38 @@ class ComicDetailChapterInfoResponse extends $pb.GeneratedMessage {
               : 'dmzj.comic'),
       createEmptyInstance: create)
     ..a<$core.int>(
-        1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ChapterId', $pb.PbFieldType.O3,
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'ChapterId',
+        $pb.PbFieldType.O3,
         protoName: 'ChapterId')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ChapterTitle',
+    ..aOS(
+        2,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'ChapterTitle',
         protoName: 'ChapterTitle')
-    ..aInt64(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Updatetime',
+    ..aInt64(
+        3,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Updatetime',
         protoName: 'Updatetime')
-    ..a<$core.int>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Filesize', $pb.PbFieldType.O3, protoName: 'Filesize')
-    ..a<$core.int>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ChapterOrder', $pb.PbFieldType.O3, protoName: 'ChapterOrder')
+    ..a<$core.int>(
+        4,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'Filesize',
+        $pb.PbFieldType.O3,
+        protoName: 'Filesize')
+    ..a<$core.int>(
+        5,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'ChapterOrder',
+        $pb.PbFieldType.O3,
+        protoName: 'ChapterOrder')
     ..hasRequiredFields = false;
 
   ComicDetailChapterInfoResponse._() : super();

@@ -56,7 +56,7 @@ class _AppBannerState extends State<AppBanner> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: currentBannerIndex == widget.items.indexOf(index)
-                            ? Theme.of(context).accentColor
+                            ? Theme.of(context).colorScheme.secondary
                             : Color.fromRGBO(0, 0, 0, 0.4)),
                   );
                 }).toList(),

@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                   ? Padding(
                       padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                       child: MaterialButton(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         textColor: Colors.white,
                         minWidth: double.infinity,
                         child: Text("登录"),

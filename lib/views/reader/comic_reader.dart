@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -60,7 +62,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   void initState() {
     super.initState();
     if (ConfigHelper.getComicShowStatusBar()) {
-      SystemChrome.setEnabledSystemUIOverlays([]);
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     }
 
     setBrightness();
@@ -152,7 +154,8 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     Wakelock.disable();
     //ScreenBrightness.setScreenBrightness(currentBrightness);
     int page = 1;
@@ -309,7 +312,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                         minWidth: 10,
                         padding:
                             EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: previousChapter,
                           child: Text(
                             "上一话",
@@ -349,7 +352,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                         minWidth: 10,
                         padding:
                             EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: nextChapter,
                           child: Text(
                             "下一话",
@@ -451,7 +454,9 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                                     f.chapterTitle,
                                     style: TextStyle(
                                         color: f == _currentItem
-                                            ? Theme.of(context).accentColor
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .secondary
                                             : Colors.white),
                                   ),
                                   subtitle: Text(
@@ -479,7 +484,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
 
   void nextPage() async {
     if (_pageController.page == 1) {
-      await previousChapter();
+      previousChapter();
       setState(() {
         _selectIndex = _detail.page_url.length;
         _pageController = PreloadPageController(initialPage: _selectIndex + 1);
@@ -890,8 +895,8 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                     onChanged: (e) {
                       Provider.of<AppSetting>(context, listen: false)
                           .changeComicReadShowStatusBar(e);
-                      SystemChrome.setEnabledSystemUIOverlays(
-                          e ? [] : SystemUiOverlay.values);
+                      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                          overlays: e ? [] : SystemUiOverlay.values);
                     }),
                 SwitchListTile(
                     title: Text(

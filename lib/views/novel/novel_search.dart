@@ -132,10 +132,11 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Theme.of(context).accentColor)),
+              border:
+                  Border.all(color: Theme.of(context).colorScheme.secondary)),
           child: Text(
             title,
-            style: TextStyle(color: Theme.of(context).accentColor),
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           ),
         ),
         onTap: () {

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert' show json;
 
 class ComicChapterDetail {
@@ -18,33 +20,45 @@ class ComicChapterDetail {
   int _comment_count;
   int get comment_count => _comment_count;
 
-    ComicChapterDetail({
-int chapter_id,
-int comic_id,
-String title,
-int chapter_order,
-int direction,
-List<String> page_url,
-int picnum,
-int comment_count,
-}):_chapter_id=chapter_id,_comic_id=comic_id,_title=title,_chapter_order=chapter_order,_direction=direction,_page_url=page_url,_picnum=picnum,_comment_count=comment_count;
-  factory ComicChapterDetail.fromJson(jsonRes){ if(jsonRes == null) return null;
-    List<String> page_url = jsonRes['page_url'] is List ? []: null; 
-    if(page_url!=null) {
- for (var item in jsonRes['page_url']) { if (item != null) { page_url.add(item);  }
-    }
+  ComicChapterDetail({
+    int chapter_id,
+    int comic_id,
+    String title,
+    int chapter_order,
+    int direction,
+    List<String> page_url,
+    int picnum,
+    int comment_count,
+  })  : _chapter_id = chapter_id,
+        _comic_id = comic_id,
+        _title = title,
+        _chapter_order = chapter_order,
+        _direction = direction,
+        _page_url = page_url,
+        _picnum = picnum,
+        _comment_count = comment_count;
+  factory ComicChapterDetail.fromJson(jsonRes) {
+    if (jsonRes == null) return null;
+    List<String> page_url = jsonRes['page_url'] is List ? [] : null;
+    if (page_url != null) {
+      for (var item in jsonRes['page_url']) {
+        if (item != null) {
+          page_url.add(item);
+        }
+      }
     }
 
-
-return ComicChapterDetail(    chapter_id : jsonRes['chapter_id'],
-    comic_id : jsonRes['comic_id'],
-    title : jsonRes['title'],
-    chapter_order : jsonRes['chapter_order'],
-    direction : jsonRes['direction'],
- page_url:page_url,
-    picnum : jsonRes['picnum'],
-    comment_count : jsonRes['comment_count'],
-);}
+    return ComicChapterDetail(
+      chapter_id: jsonRes['chapter_id'],
+      comic_id: jsonRes['comic_id'],
+      title: jsonRes['title'],
+      chapter_order: jsonRes['chapter_order'],
+      direction: jsonRes['direction'],
+      page_url: page_url,
+      picnum: jsonRes['picnum'],
+      comment_count: jsonRes['comment_count'],
+    );
+  }
   Map<String, dynamic> toJson() => {
         'chapter_id': _chapter_id,
         'comic_id': _comic_id,
@@ -54,11 +68,10 @@ return ComicChapterDetail(    chapter_id : jsonRes['chapter_id'],
         'page_url': _page_url,
         'picnum': _picnum,
         'comment_count': _comment_count,
-};
+      };
 
   @override
-String  toString() {
+  String toString() {
     return json.encode(this);
   }
 }
-

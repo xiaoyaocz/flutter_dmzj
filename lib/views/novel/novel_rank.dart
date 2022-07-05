@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +7,6 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/novel/novel_rank_item.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_footer.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 

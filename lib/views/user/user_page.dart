@@ -30,9 +30,11 @@ class _UserPageState extends State<UserPage> {
           ],
         ),
         actions: <Widget>[
-          FlatButton(
-            child: Text("退出登录"),
-            textColor: Colors.white,
+          TextButton(
+            child: Text(
+              "退出登录",
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () {
               showDialog(
                   context: context,
@@ -40,13 +42,13 @@ class _UserPageState extends State<UserPage> {
                         title: Text("退出登录"),
                         content: Text("确定要退出登录吗?"),
                         actions: <Widget>[
-                          new FlatButton(
+                          TextButton(
                             child: new Text("取消"),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                           ),
-                          new FlatButton(
+                          TextButton(
                             child: new Text("确定"),
                             onPressed: () {
                               Provider.of<AppUserInfo>(context).logout();

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/api/comic.dart';
@@ -7,8 +5,6 @@ import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/protobuf/comic/update_list_response.pb.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_footer.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class ComicUpdatePage extends StatefulWidget {
@@ -64,18 +60,18 @@ class _ComicUpdatePageState extends State<ComicUpdatePage>
                               borderRadius: BorderRadius.circular(20),
                               side: BorderSide(
                                   color: _types[f] == _mode
-                                      ? Theme.of(context).accentColor
+                                      ? Theme.of(context).colorScheme.secondary
                                       : Colors.transparent),
                             ),
                           ),
                           foregroundColor: MaterialStateProperty.all(
-                              Theme.of(context).accentColor),
+                              Theme.of(context).colorScheme.secondary),
                         ),
                         child: Text(
                           f,
                           style: TextStyle(
                               color: _types[f] == _mode
-                                  ? Theme.of(context).accentColor
+                                  ? Theme.of(context).colorScheme.secondary
                                   : Theme.of(context).textTheme.button.color),
                         ),
                         onPressed: () async {

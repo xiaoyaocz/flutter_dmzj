@@ -80,8 +80,8 @@ class _PersonalPageState extends State<PersonalPage> {
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      Theme.of(context).accentColor.withOpacity(1),
-                      Theme.of(context).accentColor.withOpacity(0.1)
+                      Theme.of(context).colorScheme.secondary.withOpacity(1),
+                      Theme.of(context).colorScheme.secondary.withOpacity(0.1)
                     ],
                   ),
                 ),
@@ -94,14 +94,14 @@ class _PersonalPageState extends State<PersonalPage> {
                                     title: Text("退出登录"),
                                     content: Text("确定要退出登录吗?"),
                                     actions: <Widget>[
-                                      new FlatButton(
-                                        child: new Text("取消"),
+                                      TextButton(
+                                        child: Text("取消"),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
                                       ),
-                                      new FlatButton(
-                                        child: new Text("确定"),
+                                      TextButton(
+                                        child: Text("确定"),
                                         onPressed: () {
                                           Provider.of<AppUserInfo>(context,
                                                   listen: false)

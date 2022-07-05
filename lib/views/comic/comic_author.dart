@@ -6,7 +6,6 @@ import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_author_model.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:http/http.dart' as http;
 
 class ComicAuthorPage extends StatefulWidget {

@@ -8,8 +8,6 @@ import 'package:flutter_dmzj/models/user/user_subscribe_item.dart';
 import 'package:flutter_dmzj/widgets/user_comment_widget.dart';
 import 'package:flutter_dmzj/widgets/user_subscribe_widget.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_footer.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 

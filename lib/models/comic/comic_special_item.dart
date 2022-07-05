@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert' show json;
 
 class ComicSpecialItem {
@@ -18,25 +20,35 @@ class ComicSpecialItem {
   String _page_url;
   String get page_url => _page_url;
 
-    ComicSpecialItem({
-int id,
-String title,
-String short_title,
-int create_time,
-String small_cover,
-int page_type,
-int sort,
-String page_url,
-}):_id=id,_title=title,_short_title=short_title,_create_time=create_time,_small_cover=small_cover,_page_type=page_type,_sort=sort,_page_url=page_url;
-  factory ComicSpecialItem.fromJson(jsonRes)=>jsonRes == null? null:ComicSpecialItem(    id : jsonRes['id'],
-    title : jsonRes['title'],
-    short_title : jsonRes['short_title'],
-    create_time : jsonRes['create_time'],
-    small_cover : jsonRes['small_cover'],
-    page_type : jsonRes['page_type'],
-    sort : jsonRes['sort'],
-    page_url : jsonRes['page_url'],
-);
+  ComicSpecialItem({
+    int id,
+    String title,
+    String short_title,
+    int create_time,
+    String small_cover,
+    int page_type,
+    int sort,
+    String page_url,
+  })  : _id = id,
+        _title = title,
+        _short_title = short_title,
+        _create_time = create_time,
+        _small_cover = small_cover,
+        _page_type = page_type,
+        _sort = sort,
+        _page_url = page_url;
+  factory ComicSpecialItem.fromJson(jsonRes) => jsonRes == null
+      ? null
+      : ComicSpecialItem(
+          id: jsonRes['id'],
+          title: jsonRes['title'],
+          short_title: jsonRes['short_title'],
+          create_time: jsonRes['create_time'],
+          small_cover: jsonRes['small_cover'],
+          page_type: jsonRes['page_type'],
+          sort: jsonRes['sort'],
+          page_url: jsonRes['page_url'],
+        );
   Map<String, dynamic> toJson() => {
         'id': _id,
         'title': _title,
@@ -46,11 +58,10 @@ String page_url,
         'page_type': _page_type,
         'sort': _sort,
         'page_url': _page_url,
-};
+      };
 
   @override
-String  toString() {
+  String toString() {
     return json.encode(this);
   }
 }
-

@@ -14,10 +14,12 @@ class _ImageViewState extends State<ImageView> {
       appBar: AppBar(
         title: Text("2333"),
       ),
-      bottomNavigationBar: FlatButton(
-        onPressed: ()=>print("object"),
-        textColor: Colors.white,
-        child: Text("下载"),
+      bottomNavigationBar: TextButton(
+        onPressed: () => print("object"),
+        child: Text(
+          "下载",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Container(
           child: PhotoView(

@@ -85,15 +85,24 @@ class MyApp extends StatelessWidget {
       title: '动漫之家Flutter',
       theme: ThemeData(
         primarySwatch: Provider.of<AppTheme>(context).themeColor,
+        colorScheme: ColorScheme.fromSwatch(
+                primarySwatch: Provider.of<AppTheme>(context).themeColor)
+            .copyWith(
+          secondary: Provider.of<AppTheme>(context).themeColor,
+        ),
         appBarTheme: AppBarTheme(
-          brightness: Brightness.dark,
+          systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
       ),
       themeMode: Provider.of<AppTheme>(context).themeMode,
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Provider.of<AppTheme>(context).themeColor,
-        accentColor: Provider.of<AppTheme>(context).themeColor,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Provider.of<AppTheme>(context).themeColor,
+          brightness: Brightness.dark,
+          accentColor: Provider.of<AppTheme>(context).themeColor,
+        ),
       ),
       home: MyHomePage(),
       initialRoute: "/",

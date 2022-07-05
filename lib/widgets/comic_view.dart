@@ -64,7 +64,6 @@ class ComicView extends StatefulWidget {
   /// Mirror to [PhotoView.loadingBuilder]
   final LoadingBuilder loadingBuilder;
 
-  /// Mirror to [PhotoView.loadFailedChild]
   final Widget loadFailedChild;
 
   /// Mirror to [PhotoView.backgroundDecoration]

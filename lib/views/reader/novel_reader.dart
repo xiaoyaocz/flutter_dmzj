@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -52,7 +54,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
     super.initState();
     _currentItem = widget.currentItem;
     //全屏
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     _battery.batteryLevel.then((e) {
       setState(() {
         _batteryStr = e.toString() + "%";
@@ -92,7 +94,8 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     UserHelper.comicAddNovelHistory(
         widget.novelId, _currentItem.volume_id, _currentItem.chapter_id);
     super.dispose();
@@ -395,7 +398,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                         minWidth: 10,
                         padding:
                             EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: previousChapter,
                           child: Text(
                             "上一话",
@@ -436,7 +439,7 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                         minWidth: 10,
                         padding:
                             EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: nextChapter,
                           child: Text(
                             "下一话",
@@ -535,7 +538,9 @@ class _NovelReaderPageState extends State<NovelReaderPage> {
                                     f.chapter_name,
                                     style: TextStyle(
                                         color: f == _currentItem
-                                            ? Theme.of(context).accentColor
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .secondary
                                             : Colors.white),
                                   ),
                                   subtitle: Text(
