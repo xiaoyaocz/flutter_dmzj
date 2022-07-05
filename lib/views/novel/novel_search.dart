@@ -74,7 +74,7 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    if (query.length == 0) {
+    if (this.query.contains(RegExp(r'\d')) ||this.query.length == 0) {
       return FutureBuilder<List<SearchHotWord>>(
         future: loadHotWord(),
         builder: (BuildContext context,
@@ -234,7 +234,19 @@ class NovelSearchBarDelegate extends SearchDelegate<String> {
   Future<List<SearchHotWord>> loadHotWord() async {
     try {
       var response = await http.get(Uri.parse(Api.novelSearchHotWord));
-      List ls = jsonDecode(response.body);
+      List ls;
+      try{
+        ls = jsonDecode(response.body);
+      }catch(e){
+        ls=[];
+      }
+      if (this.query.contains(RegExp(r'\d'))) {
+        int id = int.parse(this.query.replaceAll(RegExp(r'\D'), ''));
+        ls.insert(0, {
+          "id": id,
+          "name": "id:" + id.toString()
+        });
+      }
       List<SearchHotWord> detail =
           ls.map((i) => SearchHotWord.fromJson(i)).toList();
       if (detail != null) {
