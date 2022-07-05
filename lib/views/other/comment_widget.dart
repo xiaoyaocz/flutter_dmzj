@@ -340,7 +340,7 @@ class _CommentWidgetState extends State<CommentWidget>
 
   Widget createMasterComment(CommentItem comment) {
     var list = comment.masterComment;
-
+    if (list == null) return SizedBox();
     List<Widget> items = [];
     if (list.length > 2) {
       items.add(createMsterCommentItem(list.first));
