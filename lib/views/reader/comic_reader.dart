@@ -6,7 +6,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
@@ -16,22 +15,18 @@ import 'package:flutter_dmzj/app/user_helper.dart';
 import 'package:flutter_dmzj/app/user_info.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/comic_chapter_view_point.dart';
-import 'package:flutter_dmzj/models/comic/comic_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/comic_web_chapter_detail.dart';
 import 'package:flutter_dmzj/protobuf/comic/detail_response.pb.dart';
 import 'package:flutter_dmzj/sql/comic_history.dart';
 import 'package:flutter_dmzj/views/reader/comic_tc.dart';
 import 'package:flutter_dmzj/widgets/comic_view.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_easyrefresh/material_footer.dart';
-import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
-import 'package:screen_brightness/screen_brightness.dart';
 import 'package:share/share.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -60,7 +55,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
 
   double _verSliderMax = 0;
   double _verSliderValue = 0;
-  double currentBrightness = 0;
+  //double currentBrightness = 0;
   @override
   void initState() {
     super.initState();
@@ -138,11 +133,11 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
 
   void setBrightness() async {
     //亮度信息
-    if (!ConfigHelper.getComicSystemBrightness()) {
-      currentBrightness = await ScreenBrightness.current;
-      await ScreenBrightness.setScreenBrightness(
-          ConfigHelper.getComicBrightness());
-    }
+    // if (!ConfigHelper.getComicSystemBrightness()) {
+    //   currentBrightness = await ScreenBrightness.current;
+    //   await ScreenBrightness.setScreenBrightness(
+    //       ConfigHelper.getComicBrightness());
+    // }
     if (ConfigHelper.getComicWakelock()) {
       await Wakelock.enable();
     }
@@ -159,7 +154,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     Wakelock.disable();
-    ScreenBrightness.setScreenBrightness(currentBrightness);
+    //ScreenBrightness.setScreenBrightness(currentBrightness);
     int page = 1;
     if (!ConfigHelper.getComicVertical() ?? false) {
       print(_selectIndex);
@@ -797,44 +792,44 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SwitchListTile(
-                    title: Text(
-                      "使用系统亮度",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    value:
-                        Provider.of<AppSetting>(context).comicSystemBrightness,
-                    onChanged: (e) {
-                      Provider.of<AppSetting>(context, listen: false)
-                          .changeComicSystemBrightness(e);
-                    }),
-                !Provider.of<AppSetting>(context).comicSystemBrightness
-                    ? Row(
-                        children: <Widget>[
-                          SizedBox(width: 12),
-                          Icon(
-                            Icons.brightness_2,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                          Expanded(
-                              child: Slider(
-                                  value: Provider.of<AppSetting>(context)
-                                      .comicBrightness,
-                                  max: 1,
-                                  min: 0.01,
-                                  onChanged: (e) {
-                                    ScreenBrightness.setScreenBrightness(e);
-                                    Provider.of<AppSetting>(context,
-                                            listen: false)
-                                        .changeBrightness(e);
-                                  })),
-                          Icon(Icons.brightness_5,
-                              color: Colors.white, size: 18),
-                          SizedBox(width: 12),
-                        ],
-                      )
-                    : Container(),
+                // SwitchListTile(
+                //     title: Text(
+                //       "使用系统亮度",
+                //       style: TextStyle(color: Colors.white),
+                //     ),
+                //     value:
+                //         Provider.of<AppSetting>(context).comicSystemBrightness,
+                //     onChanged: (e) {
+                //       Provider.of<AppSetting>(context, listen: false)
+                //           .changeComicSystemBrightness(e);
+                //     }),
+                // !Provider.of<AppSetting>(context).comicSystemBrightness
+                //     ? Row(
+                //         children: <Widget>[
+                //           SizedBox(width: 12),
+                //           Icon(
+                //             Icons.brightness_2,
+                //             color: Colors.white,
+                //             size: 18,
+                //           ),
+                //           Expanded(
+                //               child: Slider(
+                //                   value: Provider.of<AppSetting>(context)
+                //                       .comicBrightness,
+                //                   max: 1,
+                //                   min: 0.01,
+                //                   onChanged: (e) {
+                //                     //ScreenBrightness.setScreenBrightness(e);
+                //                     Provider.of<AppSetting>(context,
+                //                             listen: false)
+                //                         .changeBrightness(e);
+                //                   })),
+                //           Icon(Icons.brightness_5,
+                //               color: Colors.white, size: 18),
+                //           SizedBox(width: 12),
+                //         ],
+                //       )
+                //     : Container(),
                 SwitchListTile(
                     title: Text(
                       "使用网页API",
