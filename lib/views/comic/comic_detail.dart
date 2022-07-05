@@ -604,7 +604,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         detail = await ComicApi.instance.getDetail(widget.comicId);
       } catch (e) {
         failed = true;
-        Fluttertoast.showToast(msg: e.toString());
+        //Fluttertoast.showToast(msg: e.toString());
       }
       if (failed ||
           detail == null ||
@@ -639,8 +639,10 @@ class _ComicDetailPageState extends State<ComicDetailPage>
         List<ComicDetailChapterResponse> ch =
             List<ComicDetailChapterResponse>.from([
           new ComicDetailChapterResponse(title: "神隐", data: chList),
-          new ComicDetailChapterResponse(title: "单独", data: chAlone)
         ]);
+        if (chAlone.isNotEmpty) {
+          ch.add(ComicDetailChapterResponse(title: "单独", data: chAlone));
+        }
         ComicDetailInfoResponse detail2 = new ComicDetailInfoResponse(
           id: detail?.id ?? int.parse(info['id'] ?? 0),
           title: detail?.title ?? info['title'] ?? '',
