@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
 import 'package:flutter_dmzj/modules/index/index_controller.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
@@ -7,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
 /// 进入分栏的宽度
-const double tabletWidth = 1000;
+const double tabletWidth = 800;
 
 class IndexPage extends GetView<IndexController> {
   const IndexPage({Key? key}) : super(key: key);
@@ -83,7 +84,7 @@ class IndexPage extends GetView<IndexController> {
                   selectedIndex: controller.index.value,
                   backgroundColor: Get.theme.colorScheme.surface,
                   leading: SizedBox(
-                    height: Get.statusBarHeight,
+                    height: AppStyle.statusBarHeight,
                   ),
                   selectedLabelTextStyle: TextStyle(
                     fontSize: 10,

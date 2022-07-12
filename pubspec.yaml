@@ -20,6 +20,9 @@ dependencies:
   flutter_widget_from_html_core: ^0.8.5+3
   multi_split_view: ^2.1.0
   tab_indicator_styler: 2.0.0
+  crypton: ^2.0.5
+  crypto: ^3.0.2
+  logger: 1.1.0
   flutter: 
     sdk: flutter
   flutter_easyrefresh: 
