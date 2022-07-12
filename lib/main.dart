@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/routes/app_pages.dart';
+import 'package:get/get.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  //设置状态栏为透明
+  SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+  );
+  SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  runApp(const DMZJApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class DMZJApp extends StatelessWidget {
+  const DMZJApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Text("123"),
+    return GetMaterialApp(
+      title: '动漫之家 Flutter',
+      theme: AppStyle.lightTheme,
+      darkTheme: AppStyle.darkTheme,
+      initialRoute: AppPages.kIndex,
+      getPages: AppPages.routes,
     );
   }
 }
