@@ -32,7 +32,7 @@ class ComicTCPageState extends State<ComicTCPage> {
         padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 48),
         child: Wrap(
           children: widget.list.map<Widget>((f) {
-            var color = 0.2;
+            var color = 1;/*0.2;
             if (f.num / 100 >= 1) {
               color = 1;
             } else {
@@ -40,7 +40,7 @@ class ComicTCPageState extends State<ComicTCPage> {
               if (color > 1) {
                 color = 1;
               }
-            }
+            }*/
             return Padding(
               padding: EdgeInsets.all(2),
               child: InkWell(

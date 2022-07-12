@@ -493,7 +493,11 @@ class _CommentWidgetState extends State<CommentWidget>
           page: _page, ishot: _isHot)));
 
       List jsonMap = jsonDecode(response.body);
-
+      try {
+        jsonMap.forEach((e)=>e['masterComment']=(e['masterComment'] is Map)?e['masterComment'].values.toList():e['masterComment']);
+      } catch (e) {
+        print(e);
+      }
       List<CommentItem> detail =
           jsonMap.map((f) => CommentItem.fromJson(f)).toList();
       if (detail != null) {
