@@ -114,7 +114,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
                     onSelected: (e) {
                       if (e == "share") {
                         Share.share(
-                            "${_detail.title}\r\nhttp://m.dmzj.com/info/${_detail.comicPy}.html");
+                            "${_detail.title}\r\nhttp://m.dmzj.com/info/${_detail.comicPy}.html");//推荐换用_detail.id
                       } else {
                         if (_detail == null ||
                             _detail.chapters == null ||
@@ -659,7 +659,7 @@ class _ComicDetailPageState extends State<ComicDetailPage>
           copyright: detail?.copyright ?? int.parse(info['copyright'] ?? '0'),
           firstLetter: detail?.firstLetter ?? info['first_letter'] ?? '',
           comicPy:
-              detail?.comicPy ?? info['comicPy'] ?? info['first_letter'] ?? '',
+              detail?.comicPy ?? info['id'],//info['comicPy'] ?? info['first_letter'] ?? '',
           hidden: detail?.hidden ?? int.parse(info['hidden'] ?? '0'),
           hotNum: detail?.hotNum ?? int.parse(info['hotNum'] ?? '0'),
           hitNum: detail?.hitNum ?? int.parse(info['hitNum'] ?? '0'),
