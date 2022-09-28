@@ -110,7 +110,7 @@ class _ComicSpecialPageState extends State<ComicSpecialPage>
         _loading = true;
       });
       var response = await http.get(Uri.parse(Api.comicSpecial(page: _page)));
-      List jsonMap = jsonDecode(response.body)["data"];
+      List jsonMap = jsonDecode(response.body);
       List<ComicSpecialItem> detail =
           jsonMap.map((i) => ComicSpecialItem.fromJson(i)).toList();
       if (detail != null) {

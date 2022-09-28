@@ -4,7 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:convert/convert.dart';
 
 class Api {
-  static final String apiHost = "https://nnv3api.muwai.com";
+  static final String apiHost = "https://nnv3api.dmzj.com";
   static final String version = "3.0.0";
   static String get timeStamp =>
       (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0);
@@ -220,7 +220,7 @@ class Api {
   }
 
   //添加漫画订阅
-  static String get addComicSubscribe => "http://v3api.muwai.com/subscribe/add";
+  static String get addComicSubscribe => "http://v3api.dmzj.com/subscribe/add";
 
   //取消漫画订阅
   static String cancelComicSubscribe(int comicId, String uid) {
@@ -228,7 +228,7 @@ class Api {
   }
 
   //添加小说订阅
-  static String get addNovelSubscribe => "http://v3api.muwai.com/subscribe/add";
+  static String get addNovelSubscribe => "http://v3api.dmzj.com/subscribe/add";
 
   //取消小说订阅
   static String cancelNovelSubscribe(int novelId, String uid) {

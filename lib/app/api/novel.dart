@@ -61,6 +61,6 @@ class NovelApi {
     //   queryParameters: {"t": ts, "k": key},
     // );
 
-    return "http://jurisdiction.muwai.com" + path + "?t=$ts&k=$key";
+    return "http://jurisdiction.dmzj.com" + path + "?t=$ts&k=$key";
   }
 }

@@ -150,7 +150,7 @@ class _ComicSpecialDetailPageState extends State<ComicSpecialDetailPage>
       var response =
           await http.get(Uri.parse(Api.comicSpeciaDetail(widget.id)));
 
-      var jsonMap = jsonDecode(response.body)["data"];
+      var jsonMap = jsonDecode(response.body);
 
       ComicSpecia detail = ComicSpecia.fromJson(jsonMap);
       if (detail.title == null || detail.title == "") {

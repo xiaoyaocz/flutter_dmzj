@@ -21,7 +21,7 @@ class ApiUtil {
     }
   }
 
-  static const BASE_URL_V4 = "https://nnv4api.muwai.com";
+  static const BASE_URL_V4 = "https://nnv4api.dmzj.com";
   static Map<String, dynamic> defaultParameter({bool needLogined = false}) {
     Map<String, dynamic> map = {
       "channel": Platform.operatingSystem,
