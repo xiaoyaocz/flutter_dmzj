@@ -17,19 +17,21 @@ class HttpClient {
     dio.interceptors.add(CustomInterceptor());
   }
 
-  /// Get请求，返回Map
+  /// Get请求
   /// * [path] 请求链接
   /// * [queryParameters] 请求参数
   /// * [cancel] 任务取消Token
   /// * [needLogin] 是否需要登录
   /// * [withDefaultParameter] 是否需要带上一些默认参数
-  Future<dynamic> getJson(
+  /// * [responseType] 返回的类型
+  Future<dynamic> get(
     String path, {
     Map<String, dynamic>? queryParameters,
     String baseUrl = Api.BASE_URL_V3,
     CancelToken? cancel,
     bool withDefaultParameter = true,
     bool needLogin = false,
+    ResponseType responseType = ResponseType.json,
   }) async {
     Map<String, dynamic> header = {};
     queryParameters ??= <String, dynamic>{};
@@ -43,7 +45,7 @@ class HttpClient {
         baseUrl + path,
         queryParameters: queryParameters,
         options: Options(
-          responseType: ResponseType.json,
+          responseType: responseType,
           headers: header,
         ),
         cancelToken: cancel,
@@ -55,6 +57,81 @@ class HttpClient {
       }
       throw AppError("请求失败,请检查网络");
     }
+  }
+
+  /// Get 请求,返回JSON
+  /// * [path] 请求链接
+  /// * [queryParameters] 请求参数
+  /// * [cancel] 任务取消Token
+  /// * [needLogin] 是否需要登录
+  /// * [withDefaultParameter] 是否需要带上一些默认参数
+  Future<dynamic> getJson(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    String baseUrl = Api.BASE_URL_V3,
+    CancelToken? cancel,
+    bool withDefaultParameter = true,
+    bool needLogin = false,
+  }) async {
+    return await get(
+      path,
+      queryParameters: queryParameters,
+      baseUrl: baseUrl,
+      cancel: cancel,
+      withDefaultParameter: withDefaultParameter,
+      needLogin: needLogin,
+      responseType: ResponseType.json,
+    );
+  }
+
+  /// Get 请求,返回Text
+  /// * [path] 请求链接
+  /// * [queryParameters] 请求参数
+  /// * [cancel] 任务取消Token
+  /// * [needLogin] 是否需要登录
+  /// * [withDefaultParameter] 是否需要带上一些默认参数
+  Future<dynamic> getText(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    String baseUrl = Api.BASE_URL_V3,
+    CancelToken? cancel,
+    bool withDefaultParameter = true,
+    bool needLogin = false,
+  }) async {
+    return await get(
+      path,
+      queryParameters: queryParameters,
+      baseUrl: baseUrl,
+      cancel: cancel,
+      withDefaultParameter: withDefaultParameter,
+      needLogin: needLogin,
+      responseType: ResponseType.plain,
+    );
+  }
+
+  /// Get 请求,返回byte
+  /// * [path] 请求链接
+  /// * [queryParameters] 请求参数
+  /// * [cancel] 任务取消Token
+  /// * [needLogin] 是否需要登录
+  /// * [withDefaultParameter] 是否需要带上一些默认参数
+  Future<dynamic> getBytes(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    String baseUrl = Api.BASE_URL_V3,
+    CancelToken? cancel,
+    bool withDefaultParameter = true,
+    bool needLogin = false,
+  }) async {
+    return await get(
+      path,
+      queryParameters: queryParameters,
+      baseUrl: baseUrl,
+      cancel: cancel,
+      withDefaultParameter: withDefaultParameter,
+      needLogin: needLogin,
+      responseType: ResponseType.bytes,
+    );
   }
 
   /// Post请求，返回Map
