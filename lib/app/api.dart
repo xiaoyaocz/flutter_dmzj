@@ -43,7 +43,7 @@ class Api {
   }
 
   //用户相关
-  static String get loginV2 => "https://user.muwai.com/loginV2/m_confirm";
+  static String get loginV2 => "https://user.dmzj.com/loginV2/m_confirm";
   static String userProfile(String uid, String token) {
     return "$apiHost/UCenter/comicsv2/$uid.json?dmzj_token=$token&${defaultParameter()}";
   }
@@ -154,7 +154,7 @@ class Api {
 
   /// 漫画章节详情(手机网页)
   static String comicWebChapterDetail(int comicId, int chapterId) {
-    return "http://m.muwai.com/chapinfo/$comicId/$chapterId.html";
+    return "http://m.dmzj.com/chapinfo/$comicId/$chapterId.html";
   }
 
   /// 漫画吐槽
