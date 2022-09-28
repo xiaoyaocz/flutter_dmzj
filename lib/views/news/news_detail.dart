@@ -89,14 +89,14 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                     _isLike ? Icons.favorite : Icons.favorite_border,
                     size: 18.0,
                   ),
-                  "点赞(${_stat.mood_amount})",
+                  "点赞(${_stat?.mood_amount ?? 0})",
                   addLike),
               IconTextButton(
                   Icon(
                     Icons.chat_bubble_outline,
                     size: 16.0,
                   ),
-                  "评论(${_stat.comment_amount})",
+                  "评论(${_stat?.comment_amount ?? 0})",
                   () => Utils.openCommentPage(
                       context, widget.articleId, 6, widget.title)),
               IconTextButton(

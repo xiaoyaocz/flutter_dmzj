@@ -24,7 +24,7 @@ class Api {
 
   /// 检查新闻收藏
   static String checkNewsSub() {
-    return "https://interface.muwai.com/api/news/subscribe/check";
+    return "https://interface.dmzj.com/api/news/subscribe/check";
   }
 
   /// 点赞新闻
@@ -34,12 +34,12 @@ class Api {
 
   /// 添加新闻收藏
   static String addNewsSub() {
-    return "https://interface.muwai.com/api/news/subscribe/add";
+    return "https://interface.dmzj.com/api/news/subscribe/add";
   }
 
   /// 取消新闻收藏
   static String cancelNewsSub() {
-    return "https://interface.muwai.com/api/news/subscribe/del";
+    return "https://interface.dmzj.com/api/news/subscribe/del";
   }
 
   //用户相关
@@ -243,12 +243,12 @@ class Api {
 
   /// 用户漫画记录
   static String userComicHistory(String uid, {int page = 0}) {
-    return "https://interface.muwai.com/api/getReInfo/comic/$uid/$page?${defaultParameter()}";
+    return "https://interface.dmzj.com/api/getReInfo/comic/$uid/$page?${defaultParameter()}";
   }
 
   /// 用户小说记录
   static String userNovelHistory(String uid, {int page = 0}) {
-    return "https://interface.muwai.com/api/getReInfo/novel/$uid/$page?${defaultParameter()}";
+    return "https://interface.dmzj.com/api/getReInfo/novel/$uid/$page?${defaultParameter()}";
   }
 
   /// 上传观看记录
@@ -262,7 +262,7 @@ class Api {
       "time": timeStamp
     };
     var json = Uri.encodeComponent(jsonEncode(map));
-    return "https://interface.muwai.com/api/record/getRe?st=comic&uid=$uid&callback=record_jsonpCallback&json=[$json]&type=3";
+    return "https://interface.dmzj.com/api/record/getRe?st=comic&uid=$uid&callback=record_jsonpCallback&json=[$json]&type=3";
   }
 
   /// 上传小说观看记录
@@ -279,33 +279,33 @@ class Api {
       "time": timeStamp
     };
     var json = Uri.encodeComponent(jsonEncode(map));
-    return "https://interface.muwai.com/api/record/getRe?st=novel&uid=$uid&callback=record_jsonpCallback&json=[$json]&type=3";
+    return "https://interface.dmzj.com/api/record/getRe?st=novel&uid=$uid&callback=record_jsonpCallback&json=[$json]&type=3";
   }
 
   /// 评论
   static String commentV2(int id, int type,
       {int page = 1, bool ishot = false}) {
-    return "https://interface.muwai.com/api/NewComment2/list?type=$type&obj_id=$id&hot=${ishot ? 1 : 0}&page_index=$page&_=${DateTime.now().millisecondsSinceEpoch}";
+    return "https://interface.dmzj.com/api/NewComment2/list?type=$type&obj_id=$id&hot=${ishot ? 1 : 0}&page_index=$page&_=${DateTime.now().millisecondsSinceEpoch}";
   }
 
   /// 添加评论
   static String addCommentV3(int type) {
-    return "http://v3comment.muwai.com/v1/$type/add/app";
+    return "http://v3comment.dmzj.com/v1/$type/add/app";
   }
 
   /// 检查是否可以评论
   static String checkCommentV3(String uid) {
-    return "http://v3api.muwai.com/comment2/gagcheckv2/$uid.json?${defaultParameter()}";
+    return "http://v3api.dmzj.com/comment2/gagcheckv2/$uid.json?${defaultParameter()}";
   }
 
   /// 点赞评论
   static String likeCommentV3(int objId, String commentId, int type) {
-    return "http://v3comment.muwai.com/v1/$type/like/$commentId?obj_id=$objId&comment_id=$commentId&${defaultParameter()}";
+    return "http://v3comment.dmzj.com/v1/$type/like/$commentId?obj_id=$objId&comment_id=$commentId&${defaultParameter()}";
   }
 
   /// 评论数量
   static String commentCountV2(int id, int type) {
-    return "https://interface.muwai.com/api/NewComment2/total?type=$type&obj_id=$id&countType=1&authorId=&_=${DateTime.now().millisecondsSinceEpoch}";
+    return "https://interface.dmzj.com/api/NewComment2/total?type=$type&obj_id=$id&countType=1&authorId=&_=${DateTime.now().millisecondsSinceEpoch}";
   }
 
   ///  用户评论
