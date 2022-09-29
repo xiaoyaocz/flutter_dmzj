@@ -951,6 +951,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       }
 
       var responseStr = utf8.decode(responseBody);
+      print('加密的漫画章节详情数据: $responseStr');
       var jsonMap = jsonDecode(responseStr);
 
       ComicWebChapterDetail detail = ComicWebChapterDetail.fromJson(jsonMap);

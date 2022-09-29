@@ -5,6 +5,7 @@ import 'package:convert/convert.dart';
 
 class Api {
   static final String apiHost = "https://nnv3api.muwai.com";
+  static final String apiHostV4 = "https://nnv4api.muwai.com";
   static final String version = "3.0.0";
   static String get timeStamp =>
       (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0);
@@ -149,7 +150,7 @@ class Api {
 
   /// 漫画章节详情
   static String comicChapterDetail(int comicId, int chapterId) {
-    return "$apiHost/chapter/$comicId/$chapterId.json?${defaultParameter()}";
+    return "$apiHostV4/comic/chapter/$comicId/$chapterId";
   }
 
   /// 漫画章节详情(手机网页)
