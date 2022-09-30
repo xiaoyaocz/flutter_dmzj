@@ -177,7 +177,10 @@ class _ComicViewState extends State<ComicView> {
             key: ObjectKey(index),
             imageProvider: pageOption.imageProvider,
             loadingBuilder: widget.loadingBuilder,
-            loadFailedChild: widget.loadFailedChild,
+            // errorBuilder: widget.loadFailedChild,
+            errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+              return widget.loadFailedChild;
+            },
             backgroundDecoration: widget.backgroundDecoration,
             controller: pageOption.controller,
             scaleStateController: pageOption.scaleStateController,
