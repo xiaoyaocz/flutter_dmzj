@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package dmzj.comic;
+
+
+message ComicChapterInfoResponse {
+    int32 Errno = 1;
+    string Errmsg = 2;
+    ComicChapterInfoDetailResponse Data= 3;
+}
+
+message ComicChapterInfoDetailResponse {
+    int32 ChapterId = 1;
+    int64 ComicId = 2;
+    string Title=3;
+    int32 ChapterOrder = 4;
+    int32 Direction=5;
+    repeated string PageUrl=6;
+    int32 Picnum=7;
+    repeated string PageUrlHd=8;
+    int32 CommentCount=9;
+}

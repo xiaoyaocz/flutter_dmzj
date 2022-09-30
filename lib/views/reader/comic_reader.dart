@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dmzj/app/api.dart';
+import 'package:flutter_dmzj/app/api/comic.dart';
 import 'package:flutter_dmzj/app/app_setting.dart';
 import 'package:flutter_dmzj/app/config_helper.dart';
 import 'package:flutter_dmzj/app/user_helper.dart';
@@ -934,26 +935,13 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       setState(() {
         _loading = true;
       });
-      var api = Api.comicChapterDetail(widget.comicId, _currentItem.chapterId);
 
+      ComicWebChapterDetail detail;
       if (ConfigHelper.getComicWebApi()) {
-        api = Api.comicWebChapterDetail(widget.comicId, _currentItem.chapterId);
+        detail = await getWebDetail();
+      } else {
+        detail = await getV4Detail();
       }
-      Uint8List responseBody;
-      try {
-        var response = await http.get(Uri.parse(api));
-        responseBody = response.bodyBytes;
-      } catch (e) {
-        var file = await _cacheManager.getFileFromCache(api);
-        if (file != null) {
-          responseBody = await file.file.readAsBytes();
-        }
-      }
-
-      var responseStr = utf8.decode(responseBody);
-      var jsonMap = jsonDecode(responseStr);
-
-      ComicWebChapterDetail detail = ComicWebChapterDetail.fromJson(jsonMap);
       var historyItem = await ComicHistoryProvider.getItem(widget.comicId);
       if (historyItem != null &&
           historyItem.chapter_id == _currentItem.chapterId) {
@@ -976,7 +964,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
       setState(() {
         _detail = detail;
       });
-      await _cacheManager.putFile(api, responseBody);
+      //await _cacheManager.putFile(api, responseBody);
       await loadViewPoint();
 
       //ConfigHelper.setComicHistory(widget.comicId, _currentItem.chapter_id);
@@ -989,6 +977,47 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         _loading = false;
       });
     }
+  }
+
+  final ComicApi comicApi = ComicApi();
+  Future<ComicWebChapterDetail> getV4Detail() async {
+    try {
+      var response =
+          await comicApi.getChapterInfo(widget.comicId, _currentItem.chapterId);
+
+      ComicWebChapterDetail detail = ComicWebChapterDetail(
+        id: response.chapterId,
+        comic_id: response.comicId.toInt(),
+        chapter_name: response.title,
+        chapter_num: 0,
+        picnum: response.picnum,
+        page_url: response.pageUrl,
+        chapter_order: response.chapterOrder,
+        comment_count: response.commentCount,
+      );
+      return detail;
+    } catch (e) {
+      return await getWebDetail();
+    }
+  }
+
+  Future<ComicWebChapterDetail> getWebDetail() async {
+    var api = Api.comicWebChapterDetail(widget.comicId, _currentItem.chapterId);
+    Uint8List responseBody;
+    try {
+      var response = await http.get(Uri.parse(api));
+      responseBody = response.bodyBytes;
+    } catch (e) {
+      var file = await _cacheManager.getFileFromCache(api);
+      if (file != null) {
+        responseBody = await file.file.readAsBytes();
+      }
+    }
+    var responseStr = utf8.decode(responseBody);
+    var jsonMap = jsonDecode(responseStr);
+
+    ComicWebChapterDetail detail = ComicWebChapterDetail.fromJson(jsonMap);
+    return detail;
   }
 
   List<ComicChapterViewPoint> _viewPoints = [];

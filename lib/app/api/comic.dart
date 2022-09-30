@@ -1,4 +1,5 @@
 import 'package:flutter_dmzj/app/http_util.dart';
+import 'package:flutter_dmzj/protobuf/comic/chapter_info_response.pb.dart';
 import 'package:flutter_dmzj/protobuf/comic/detail_response.pb.dart';
 import 'package:flutter_dmzj/protobuf/comic/rank_list_response.pb.dart';
 import 'package:flutter_dmzj/protobuf/comic/update_list_response.pb.dart';
@@ -67,6 +68,23 @@ class ComicApi {
     var data = ComicRankListResponse.fromBuffer(resultBytes);
     if (data.errno != 0) {
       throw AppError(data.errmsg);
+    }
+    return data.data;
+  }
+
+  /// 章节详情
+  Future<ComicChapterInfoDetailResponse> getChapterInfo(
+      int comicId, int chapterId) async {
+    var path = "${ApiUtil.BASE_URL_V4}/comic/chapter/$comicId/$chapterId";
+    var result = await HttpUtil.instance.httpGet(
+      path,
+      queryParameters: ApiUtil.defaultParameter(needLogined: true),
+    );
+    var resultBytes = ApiUtil.decrypt(result);
+
+    var data = ComicChapterInfoResponse.fromBuffer(resultBytes);
+    if (data.errno != 0) {
+      throw AppError(data.errmsg, code: data.errno);
     }
     return data.data;
   }
