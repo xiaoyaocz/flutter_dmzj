@@ -23,6 +23,8 @@ dependencies:
   crypton: ^2.0.5
   crypto: ^3.0.2
   logger: 1.1.0
+  extended_image: 6.2.1
+  flutter_swiper_view: 1.1.8
   flutter: 
     sdk: flutter
   flutter_easyrefresh: 

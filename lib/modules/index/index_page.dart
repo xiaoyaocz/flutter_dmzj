@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
 import 'package:flutter_dmzj/modules/index/index_controller.dart';
@@ -7,9 +8,6 @@ import 'package:flutter_dmzj/routes/app_pages.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
-/// 进入分栏的宽度
-const double tabletWidth = 800;
-
 class IndexPage extends GetView<IndexController> {
   const IndexPage({Key? key}) : super(key: key);
 
@@ -17,7 +15,7 @@ class IndexPage extends GetView<IndexController> {
   Widget build(BuildContext context) {
     final content = _buildContentNavigator();
     final indexStack = _buildIndexStack();
-    return MediaQuery.of(context).size.width > tabletWidth
+    return MediaQuery.of(context).size.width > AppConstant.kTabletWidth
         ? _buildWide(context, indexStack, content)
         : _buildNarrow(context, indexStack, content);
   }
@@ -32,8 +30,8 @@ class IndexPage extends GetView<IndexController> {
               currentIndex: controller.index.value,
               onTap: controller.setIndex,
               type: BottomNavigationBarType.fixed,
-              selectedFontSize: 12,
-              unselectedFontSize: 12,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Remix.bear_smile_line),
@@ -75,7 +73,8 @@ class IndexPage extends GetView<IndexController> {
         children: [
           Obx(
             () => Visibility(
-              visible: MediaQuery.of(context).size.width > tabletWidth,
+              visible:
+                  MediaQuery.of(context).size.width > AppConstant.kTabletWidth,
               child: Material(
                 elevation: 2,
                 child: NavigationRail(
@@ -116,8 +115,7 @@ class IndexPage extends GetView<IndexController> {
               ),
             ),
           ),
-          Flexible(
-            flex: 4,
+          Expanded(
             child: Container(
               constraints: const BoxConstraints(maxWidth: 500),
               decoration: BoxDecoration(
@@ -131,7 +129,6 @@ class IndexPage extends GetView<IndexController> {
             ),
           ),
           Expanded(
-            flex: 6,
             child: content,
           ),
         ],

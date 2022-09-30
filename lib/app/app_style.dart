@@ -19,6 +19,7 @@ class AppStyle {
       backgroundColor: colorSchemeLight.primary,
       foregroundColor: Colors.white,
       systemOverlayStyle: SystemUiOverlayStyle.light,
+      elevation: 0,
     ),
   );
   static ThemeData darkTheme = ThemeData.dark().copyWith(
@@ -29,6 +30,7 @@ class AppStyle {
       backgroundColor: colorSchemeDark.background,
       foregroundColor: Colors.white,
       systemOverlayStyle: SystemUiOverlayStyle.light,
+      elevation: 0,
     ),
   );
   static const vGap4 = SizedBox(

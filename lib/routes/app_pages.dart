@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
+import 'package:flutter_dmzj/modules/common/test_subroute_page.dart';
 import 'package:flutter_dmzj/modules/index/index_controller.dart';
 import 'package:flutter_dmzj/modules/index/index_page.dart';
+import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
 import 'package:get/get.dart';
 
@@ -20,10 +22,14 @@ class AppPages {
         BindingsBuilder.put(
           () => ComicHomeController(),
         ),
+        BindingsBuilder.put(
+          () => UserHomeController(),
+        ),
       ],
     ),
   ];
 
+  /// 定义子路由
   static Route<dynamic>? generateSubRoute(RouteSettings settings) {
     if (settings.name == '/') {
       return GetPageRoute(
@@ -31,15 +37,13 @@ class AppPages {
         page: () => const EmptyPage(),
       );
     }
-    // if (settings.name == RoutePath.kNewsDetail) {
-    //   return GetPageRoute(
-    //     settings: settings,
-    //     //transition: Transition.rightToLeft,
-    //     page: () => NewsDetailPage(
-    //       settings.arguments as int,
-    //     ),
-    //   );
-    // }
-    return GetPageRoute(page: () => Container());
+    if (settings.name == RoutePath.kTestSubRoute) {
+      return GetPageRoute(
+        settings: settings,
+        //transition: Transition.native,
+        page: () => const TestSubRoutePage(),
+      );
+    }
+    return GetPageRoute(page: () => const EmptyPage());
   }
 }

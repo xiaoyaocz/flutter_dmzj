@@ -12,7 +12,7 @@ class AppNavigator {
     Get.toNamed(name, arguments: arg);
   }
 
-  static void toContentPage(String name, {dynamic arg, bool replace = true}) {
+  static void toContentPage(String name, {dynamic arg, bool replace = false}) {
     if (currentContentRouteName == name && replace) {
       Get.offAndToNamed(name, arguments: arg, id: 1);
     } else {

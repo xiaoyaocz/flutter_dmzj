@@ -31,18 +31,18 @@ class ComicHomePage extends GetView<ComicHomeController> {
         ),
         body: TabBarView(
           controller: controller.tabController,
-          children: const [
+          children: [
             ComicRecommendView(),
-            Center(
+            const Center(
               child: Text("2"),
             ),
-            Center(
+            const Center(
               child: Text("3"),
             ),
-            Center(
+            const Center(
               child: Text("4"),
             ),
-            Center(
+            const Center(
               child: Text("5"),
             ),
           ],
