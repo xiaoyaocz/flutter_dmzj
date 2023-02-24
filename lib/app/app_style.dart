@@ -8,7 +8,7 @@ class AppStyle {
     brightness: Brightness.light,
   );
   static ColorScheme colorSchemeDark = ColorScheme.fromSwatch(
-    primarySwatch: Colors.lightBlue,
+    primarySwatch: Colors.blue,
     brightness: Brightness.dark,
   );
   static ThemeData lightTheme = ThemeData.light().copyWith(

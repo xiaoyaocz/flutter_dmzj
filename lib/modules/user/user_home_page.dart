@@ -13,13 +13,25 @@ class UserHomePage extends GetView<UserHomeController> {
       appBar: AppBar(
         title: const Text("用户中心"),
       ),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text("test"),
-          onPressed: () {
-            AppNavigator.toContentPage(RoutePath.kTestSubRoute);
-          },
-        ),
+      body: Column(
+        children: [
+          Center(
+            child: ElevatedButton(
+              child: const Text("login"),
+              onPressed: () {
+                controller.testLogin();
+              },
+            ),
+          ),
+          Center(
+            child: ElevatedButton(
+              child: const Text("test"),
+              onPressed: () {
+                AppNavigator.toContentPage(RoutePath.kTestSubRoute);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

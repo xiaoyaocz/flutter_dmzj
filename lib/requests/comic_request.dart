@@ -1,5 +1,5 @@
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
-import 'package:flutter_dmzj/requests/http_client.dart';
+import 'package:flutter_dmzj/requests/common/http_client.dart';
 
 class ComicRequest {
   /// 漫画-推荐

@@ -8,6 +8,8 @@ class IndexController extends GetxController {
   final index = 0.obs;
   final showContent = false.obs;
   final GlobalKey indexKey = GlobalKey();
+  final GlobalKey subRouterKey = GlobalKey();
+
   final MultiSplitViewController multiSplitViewController =
       MultiSplitViewController(areas: [
     Area(minimalSize: 400, size: 500),

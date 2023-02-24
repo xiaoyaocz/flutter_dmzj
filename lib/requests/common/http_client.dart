@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/requests/api.dart';
-import 'package:flutter_dmzj/requests/custom_interceptor.dart';
+import 'package:flutter_dmzj/requests/common/api.dart';
+import 'package:flutter_dmzj/requests/common/custom_interceptor.dart';
 
 class HttpClient {
   static HttpClient? _httpUtil;
