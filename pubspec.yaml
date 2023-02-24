@@ -27,6 +27,7 @@ dependencies:
   extended_image: ^7.0.2  #拓展Image
   flutter_swiper_view: ^1.1.8 #幻灯片
   easy_refresh: ^3.3.1 #下拉刷新、上拉加载
+  lottie: ^1.4.3 #lottie动画
 
   #系统交互
   url_launcher: ^6.1.10 #打开链接
@@ -44,4 +45,7 @@ dev_dependencies:
 
 flutter: 
   uses-material-design: true
+  assets: 
+    - assets/lotties/
+
 

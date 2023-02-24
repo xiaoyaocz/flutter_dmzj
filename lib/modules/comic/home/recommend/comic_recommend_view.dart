@@ -3,104 +3,68 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
 import 'package:flutter_dmzj/modules/comic/home/recommend/comic_recommend_controller.dart';
-import 'package:flutter_dmzj/widgets/error.dart';
 import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/loadding.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
-
+import 'package:flutter_dmzj/widgets/page_list_view.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:get/get.dart';
+import 'package:remixicon/remixicon.dart';
 
 class ComicRecommendView extends StatelessWidget {
   ComicRecommendView({Key? key}) : super(key: key);
-  final ComicRecommendController controller = ComicRecommendController();
+  final controller = Get.put(ComicRecommendController());
   @override
   Widget build(BuildContext context) {
     return KeepAliveWrapper(
-      child: GetBuilder<ComicRecommendController>(
-        init: controller,
-        builder: (controller) {
-          // 页面错误
-          if (controller.pageError) {
-            return AppErrorWidget(
-              controller.errorMsg,
-              onRefresh: () => controller.loadData(),
+      child: PageListView(
+        pageController: controller,
+        padding: AppStyle.edgeInsetsH12,
+        firstRefresh: true,
+        loadMore: false,
+        showPageLoadding: true,
+        itemBuilder: (context, i) {
+          var item = controller.list[i];
+          if (item.categoryId == 46) {
+            return buildBanner(item);
+          }
+          //近期必看\国漫\热门连载\最新上架
+          if (item.categoryId == 47 ||
+              item.categoryId == 52 ||
+              item.categoryId == 54 ||
+              item.categoryId == 56) {
+            return buildCard(
+              context,
+              child: buildTreeColumnGridView(item.data),
+              title: item.title.toString(),
+              action: buildShowMore(onTap: () {}),
             );
           }
-          return Stack(
-            children: [
-              EasyRefresh(
-                onRefresh: controller.loadData,
-                header: const MaterialHeader(),
-                child: ListView.builder(
-                  itemCount: controller.data?.length ?? 0,
-                  padding: AppStyle.edgeInsetsA12,
-                  itemBuilder: (_, i) {
-                    var item = controller.data![i];
-                    if (item.categoryId == 46) {
-                      return buildBanner(item);
-                    }
-                    //近期必看\国漫\热门连载\最新上架
-                    if (item.categoryId == 47 ||
-                        item.categoryId == 52 ||
-                        item.categoryId == 54 ||
-                        item.categoryId == 56) {
-                      return buildCard(
-                        context,
-                        child: buildTreeColumnGridView(item.data),
-                        title: item.title.toString(),
-                        action: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.refresh),
-                        ),
-                      );
-                    }
-                    //火热专题\美漫大事件\条漫
-                    if (item.categoryId == 48 ||
-                        item.categoryId == 53 ||
-                        item.categoryId == 55) {
-                      return buildCard(
-                        context,
-                        child: buildTwoColumnGridView(item.data),
-                        title: item.title.toString(),
-                        action: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.refresh),
-                        ),
-                      );
-                    }
-                    if (item.categoryId == 51) {
-                      return buildCard(
-                        context,
-                        child: buildAuthorGridView(item.data),
-                        title: item.title.toString(),
-                        action: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.refresh),
-                        ),
-                      );
-                    }
-                    return buildCard(
-                      context,
-                      child: Container(
-                        height: 100,
-                        color: Colors.blue,
-                      ),
-                      title: item.title.toString(),
-                      action: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.refresh),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Visibility(
-                visible: controller.pageLoadding,
-                child: const LoaddingWidget(),
-              ),
-            ],
+          //火热专题\美漫大事件\条漫
+          if (item.categoryId == 48 ||
+              item.categoryId == 53 ||
+              item.categoryId == 55) {
+            return buildCard(
+              context,
+              child: buildTwoColumnGridView(item.data),
+              title: item.title.toString(),
+            );
+          }
+          //大师
+          if (item.categoryId == 51) {
+            return buildCard(
+              context,
+              child: buildAuthorGridView(item.data),
+              title: item.title.toString(),
+            );
+          }
+          return buildCard(
+            context,
+            child: Container(
+              height: 100,
+              color: Colors.blue,
+            ),
+            title: item.title.toString(),
           );
         },
       ),
@@ -114,37 +78,62 @@ class ComicRecommendView extends StatelessWidget {
     Widget? action,
   }) {
     return Padding(
-      padding: AppStyle.edgeInsetsB12,
-      child: Material(
-        borderRadius: AppStyle.radius8,
-        color: Theme.of(context).cardColor,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: AppStyle.radius8,
-          ),
-          padding: AppStyle.edgeInsetsH12,
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: const TextStyle(fontSize: 16, height: 1.0),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 40,
-                    height: 48,
-                    child: action,
-                  ),
-                ],
-              ),
-              child,
-            ],
-          ),
+      padding: AppStyle.edgeInsetsB8,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: AppStyle.radius8,
         ),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                        fontSize: 16, height: 1.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: 48,
+                  child: action,
+                ),
+              ],
+            ),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildShowMore({required Function() onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        children: const [
+          Text(
+            "查看更多",
+            style: TextStyle(fontSize: 14, color: Colors.grey),
+          ),
+          Icon(Icons.chevron_right, size: 18, color: Colors.grey),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRefresh({required Function() onRefresh}) {
+    return InkWell(
+      onTap: onRefresh,
+      child: Row(
+        children: const [
+          Icon(Remix.refresh_line, size: 18, color: Colors.grey),
+          Text(
+            "换一批",
+            style: TextStyle(fontSize: 14, color: Colors.grey),
+          ),
+        ],
       ),
     );
   }
@@ -181,13 +170,14 @@ class ComicRecommendView extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 3,
-      mainAxisSpacing: 8,
-      crossAxisSpacing: 8,
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
       itemCount: items.length,
       itemBuilder: (_, i) {
         var item = items[i];
         return InkWell(
           onTap: () => controller.openDetail(item),
+          borderRadius: AppStyle.radius4,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -202,14 +192,12 @@ class ComicRecommendView extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: AppStyle.edgeInsetsV4,
-                child: Text(
-                  item.title,
-                  maxLines: 1,
-                  style: const TextStyle(height: 1.2),
-                  overflow: TextOverflow.ellipsis,
-                ),
+              AppStyle.vGap8,
+              Text(
+                item.title,
+                maxLines: 1,
+                style: const TextStyle(height: 1.2),
+                overflow: TextOverflow.ellipsis,
               ),
               Text(
                 item.subTitle ?? item.status ?? '',
@@ -242,25 +230,29 @@ class ComicRecommendView extends StatelessWidget {
         var item = items[i];
         return InkWell(
           onTap: () => controller.openDetail(item),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              NetImage(
-                item.cover,
-                width: 64,
-                height: 64,
-                borderRadius: 32,
-              ),
-              Padding(
-                padding: AppStyle.edgeInsetsV8,
-                child: Text(
-                  item.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(height: 1.2),
+          borderRadius: AppStyle.radius8,
+          child: Padding(
+            padding: AppStyle.edgeInsetsA12,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                NetImage(
+                  item.cover,
+                  width: 56,
+                  height: 56,
+                  borderRadius: 32,
                 ),
-              ),
-            ],
+                Padding(
+                  padding: AppStyle.edgeInsetsV8,
+                  child: Text(
+                    item.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(height: 1.2, fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -273,13 +265,14 @@ class ComicRecommendView extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 2,
-      mainAxisSpacing: 8,
-      crossAxisSpacing: 8,
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
       itemCount: items.length,
       itemBuilder: (_, i) {
         var item = items[i];
         return InkWell(
           onTap: () => controller.openDetail(item),
+          borderRadius: AppStyle.radius4,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

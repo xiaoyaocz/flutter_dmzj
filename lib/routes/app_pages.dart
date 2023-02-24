@@ -31,19 +31,21 @@ class AppPages {
 
   /// 定义子路由
   static Route<dynamic>? generateSubRoute(RouteSettings settings) {
-    if (settings.name == '/') {
-      return GetPageRoute(
-        settings: settings,
-        page: () => const EmptyPage(),
-      );
+    switch (settings.name) {
+      case "/":
+        return GetPageRoute(
+          settings: settings,
+          page: () => const EmptyPage(),
+        );
+      case RoutePath.kTestSubRoute:
+        return GetPageRoute(
+          settings: settings,
+          transition: Transition.native,
+          page: () => const TestSubRoutePage(),
+        );
+
+      default:
+        return GetPageRoute(page: () => const EmptyPage());
     }
-    if (settings.name == RoutePath.kTestSubRoute) {
-      return GetPageRoute(
-        settings: settings,
-        //transition: Transition.native,
-        page: () => const TestSubRoutePage(),
-      );
-    }
-    return GetPageRoute(page: () => const EmptyPage());
   }
 }

@@ -22,10 +22,6 @@ class IndexController extends GetxController {
     ),
     const UserHomePage(),
   ];
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   @override
   void onClose() {}

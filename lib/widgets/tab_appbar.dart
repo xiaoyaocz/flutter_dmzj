@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:tab_indicator_styler/tab_indicator_styler.dart';
+import 'package:get/get.dart';
 
 class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Tab> tabs;
@@ -14,38 +14,37 @@ class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
-      child: DefaultTabController(
-        length: 5,
-        child: Container(
-          color: Theme.of(context).colorScheme.primary,
-          padding: EdgeInsets.only(
-              top: AppStyle.statusBarHeight, left: 12, right: 4),
-          height: 56 + AppStyle.statusBarHeight,
-          child: Row(
-            children: [
-              Expanded(
-                child: TabBar(
-                  isScrollable: true,
-                  controller: controller,
-                  labelColor: Theme.of(context).colorScheme.primary,
-                  unselectedLabelColor: Colors.white70,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 20),
-                  indicator: RectangularIndicator(
-                    color: Colors.white.withOpacity(.8),
-                    topLeftRadius: 24,
-                    bottomLeftRadius: 24,
-                    topRightRadius: 24,
-                    bottomRightRadius: 24,
-                    verticalPadding: 8,
-                  ),
-                  tabs: tabs,
+      value: Get.isDarkMode
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: Container(
+        padding: EdgeInsets.only(top: AppStyle.statusBarHeight, right: 4),
+        height: 56 + AppStyle.statusBarHeight,
+        child: Row(
+          children: [
+            Expanded(
+              child: TabBar(
+                isScrollable: true,
+                controller: controller,
+                labelColor: Theme.of(context).colorScheme.primary,
+                unselectedLabelColor:
+                    Get.isDarkMode ? Colors.white70 : Colors.black87,
+                labelStyle: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
+                unselectedLabelStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                labelPadding: AppStyle.edgeInsetsH12,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorColor: Colors.transparent,
+                tabs: tabs,
               ),
-              action ?? const SizedBox(),
-            ],
-          ),
+            ),
+            action ?? const SizedBox(),
+          ],
         ),
       ),
     );

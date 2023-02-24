@@ -91,7 +91,7 @@ class IndexPage extends GetView<IndexController> {
                   ),
                   unselectedLabelTextStyle: TextStyle(
                     fontSize: 10,
-                    color: Theme.of(context).textTheme.bodyText1?.color,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   destinations: const [
                     NavigationRailDestination(
@@ -148,20 +148,21 @@ class IndexPage extends GetView<IndexController> {
 
   /// 子路由
   Widget _buildContentNavigator() {
+    /// 拦截子路由的返回
     return WillPopScope(
       onWillPop: () async {
         if (Navigator.canPop(Get.context!)) {
           return true;
         }
-        if (AppNavigator.contentKey!.currentState!.canPop()) {
-          AppNavigator.contentKey!.currentState!.pop();
+        if (AppNavigator.subNavigatorKey!.currentState!.canPop()) {
+          AppNavigator.subNavigatorKey!.currentState!.pop();
           return false;
         }
         return true;
       },
       child: ClipRect(
         child: Navigator(
-          key: AppNavigator.contentKey,
+          key: AppNavigator.subNavigatorKey,
           initialRoute: '/',
           onUnknownRoute: (settings) => GetPageRoute(
             page: () => const EmptyPage(),

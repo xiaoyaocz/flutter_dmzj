@@ -7,29 +7,23 @@ class AppStyle {
     primarySwatch: Colors.blue,
     brightness: Brightness.light,
   );
-  static ColorScheme colorSchemeDark = ColorScheme.fromSeed(
-    seedColor: Colors.blue,
+  static ColorScheme colorSchemeDark = ColorScheme.fromSwatch(
+    primarySwatch: Colors.lightBlue,
     brightness: Brightness.dark,
   );
   static ThemeData lightTheme = ThemeData.light().copyWith(
     brightness: Brightness.light,
-    //useMaterial3: true,
     colorScheme: colorSchemeLight,
-    appBarTheme: AppBarTheme(
-      backgroundColor: colorSchemeLight.primary,
-      foregroundColor: Colors.white,
-      systemOverlayStyle: SystemUiOverlayStyle.light,
+    scaffoldBackgroundColor: Colors.white,
+    appBarTheme: const AppBarTheme(
       elevation: 0,
     ),
   );
   static ThemeData darkTheme = ThemeData.dark().copyWith(
     brightness: Brightness.dark,
-    // useMaterial3: true,
     colorScheme: colorSchemeDark,
-    appBarTheme: AppBarTheme(
-      backgroundColor: colorSchemeDark.background,
-      foregroundColor: Colors.white,
-      systemOverlayStyle: SystemUiOverlayStyle.light,
+    scaffoldBackgroundColor: const Color(0xff16192a),
+    appBarTheme: const AppBarTheme(
       elevation: 0,
     ),
   );
@@ -87,6 +81,7 @@ class AppStyle {
   static const edgeInsetsR4 = EdgeInsets.only(right: 4);
   static const edgeInsetsR8 = EdgeInsets.only(right: 8);
   static const edgeInsetsR12 = EdgeInsets.only(right: 12);
+  static const edgeInsetsR20 = EdgeInsets.only(right: 20);
   static const edgeInsetsR24 = EdgeInsets.only(right: 24);
 
   static const edgeInsetsL4 = EdgeInsets.only(left: 4);
