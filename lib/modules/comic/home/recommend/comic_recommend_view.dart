@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_dmzj/widgets/error.dart';
 import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
 import 'package:flutter_dmzj/widgets/loadding.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_easyrefresh/easy_refresh.dart';
+
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:get/get.dart';
@@ -31,7 +32,7 @@ class ComicRecommendView extends StatelessWidget {
             children: [
               EasyRefresh(
                 onRefresh: controller.loadData,
-                header: MaterialHeader(),
+                header: const MaterialHeader(),
                 child: ListView.builder(
                   itemCount: controller.data?.length ?? 0,
                   padding: AppStyle.edgeInsetsA12,
