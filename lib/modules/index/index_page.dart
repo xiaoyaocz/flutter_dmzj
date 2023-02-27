@@ -112,18 +112,16 @@ class IndexPage extends GetView<IndexController> {
               ),
             ),
           ),
-          Expanded(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 500),
-              decoration: BoxDecoration(
-                border: Border(
-                  right: BorderSide(
-                    color: Colors.grey.withOpacity(.1),
-                  ),
+          Container(
+            constraints: const BoxConstraints(maxWidth: 450),
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(
+                  color: Colors.grey.withOpacity(.1),
                 ),
               ),
-              child: indexStack,
             ),
+            child: indexStack,
           ),
           Expanded(
             child: content,

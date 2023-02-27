@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_dmzj/app/log.dart';
@@ -9,6 +10,16 @@ import 'package:flutter_dmzj/services/local_storage_service.dart';
 import 'package:get/get.dart';
 
 class UserService extends GetxService {
+  static StreamController loginedStreamController =
+      StreamController.broadcast();
+  static StreamController logoutStreamController = StreamController.broadcast();
+
+  ///登录事件流
+  static Stream get loginedStream => loginedStreamController.stream;
+
+  ///退出登录事件流
+  static Stream get logoutStream => logoutStreamController.stream;
+
   static UserService get instance => Get.find<UserService>();
   final LocalStorageService storage = Get.find<LocalStorageService>();
   final request = UserRequest();
@@ -37,6 +48,7 @@ class UserService extends GetxService {
     userAuthInfo = info;
     storage.setValue(LocalStorageService.kUserAuthInfo, info.toString());
     logined.value = true;
+    UserService.loginedStreamController.add(true);
     refreshProfile();
   }
 
@@ -44,6 +56,7 @@ class UserService extends GetxService {
     storage.removeValue(LocalStorageService.kUserAuthInfo);
     userProfile.value = null;
     logined.value = false;
+    UserService.logoutStreamController.add(true);
   }
 
   Future<bool> login() async {

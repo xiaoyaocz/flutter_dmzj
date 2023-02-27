@@ -13,4 +13,16 @@ class ComicRequest {
     }
     return list;
   }
+
+  /// 猜你喜欢
+  static Future<ComicRecommendModel?> recommendLike() async {
+    var result = await HttpClient.instance.getJson(
+      '/recommend/batchUpdate',
+      needLogin: true,
+      queryParameters: {
+        "category_id": "50",
+      },
+    );
+    return ComicRecommendModel.fromJson(result["data"]);
+  }
 }

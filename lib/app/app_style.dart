@@ -14,7 +14,7 @@ class AppStyle {
   static ThemeData darkTheme = ThemeData.dark().copyWith(
     brightness: Brightness.dark,
     colorScheme: AppColor.colorSchemeDark,
-    scaffoldBackgroundColor: const Color(0xff16192a),
+    scaffoldBackgroundColor: AppColor.backgroundColorDark,
     appBarTheme: const AppBarTheme(
       elevation: 0,
     ),

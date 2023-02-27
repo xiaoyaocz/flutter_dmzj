@@ -26,6 +26,7 @@ class UserLoginController extends GetxController {
         password: passwordController.text,
       );
       UserService.instance.setAuthInfo(data);
+
       loadding.value = false;
       Get.back(result: true);
     } catch (e) {

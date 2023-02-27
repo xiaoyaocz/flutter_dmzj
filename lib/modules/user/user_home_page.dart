@@ -121,6 +121,15 @@ class UserHomePage extends GetView<UserHomeController> {
                       ),
                       onTap: controller.setTheme,
                     ),
+                    ListTile(
+                      leading: const Icon(Remix.settings_line),
+                      title: const Text("更多设置"),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey,
+                      ),
+                      onTap: controller.setTheme,
+                    ),
                   ],
                 ),
                 _buildCard(

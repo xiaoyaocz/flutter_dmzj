@@ -150,14 +150,38 @@ class ComicRecommendView extends StatelessWidget {
             itemHeight: 400,
             autoplay: true,
             itemCount: item.data.length,
-            itemBuilder: (_, i) => NetImage(
-              item.data[i].cover,
-              width: 750,
-              height: 400,
+            itemBuilder: (_, i) => Stack(
+              children: [
+                NetImage(
+                  item.data[i].cover,
+                  width: 750,
+                  height: 400,
+                ),
+                Positioned(
+                    bottom: 4,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        item.data[i].title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 6.0,
+                              color: Colors.black45,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ))
+              ],
             ),
             pagination: const SwiperPagination(
-                margin: AppStyle.edgeInsetsA8,
-                alignment: Alignment.bottomRight),
+              margin: AppStyle.edgeInsetsA8,
+              alignment: Alignment.bottomRight,
+            ),
           ),
         ),
       ),
