@@ -27,7 +27,7 @@ class DMZJApp extends StatelessWidget {
       title: '动漫之家 Flutter',
       theme: AppStyle.lightTheme,
       darkTheme: AppStyle.darkTheme,
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       initialRoute: AppPages.kIndex,
       getPages: AppPages.routes,
       navigatorObservers: [FlutterSmartDialog.observer],

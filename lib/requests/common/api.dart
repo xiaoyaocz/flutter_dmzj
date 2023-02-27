@@ -46,7 +46,7 @@ class Api {
 
   /// 默认的参数
   static Map<String, dynamic> getDefaultParameter({bool withUid = false}) {
-    var map = {
+    var map = <String, dynamic>{
       "channel": "android",
       "version": VERSION,
       "timestamp": timeStamp

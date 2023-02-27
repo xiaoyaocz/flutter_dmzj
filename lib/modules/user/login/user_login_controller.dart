@@ -17,12 +17,19 @@ class UserLoginController extends GetxController {
       SmartDialog.showToast("请输入密码");
       return;
     }
-    loadding.value = true;
-    var data = await userRequest.login(
-      nickname: userNameController.text,
-      password: passwordController.text,
-    );
-    print(data.toJson());
-    loadding.value = false;
+    try {
+      loadding.value = true;
+      var data = await userRequest.login(
+        nickname: userNameController.text,
+        password: passwordController.text,
+      );
+      print(data.toJson());
+      loadding.value = false;
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+      print(e);
+    } finally {
+      loadding.value = false;
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/user/login_result_model.dart';
 import 'package:flutter_dmzj/requests/common/api.dart';
@@ -19,16 +20,19 @@ class UserRequest {
       "nickname": nickname,
       "pwd": pwd,
     });
+
     var result = await HttpClient.instance.postJson(
       "/loginV2/m_confirm",
       baseUrl: Api.BASE_URL_USER,
       data: data,
+      formUrlEncoded: true,
     );
-    if (result["result"] == 1) {
-      var data = LoginResultModel.fromJson(result["data"]);
+    var jsonResult = json.decode(result);
+    if (jsonResult["result"] == 1) {
+      var data = LoginResultModel.fromJson(jsonResult["data"]);
       return data;
     } else {
-      throw AppError(result["msg"].toString());
+      throw AppError(jsonResult["msg"].toString());
     }
   }
 }

@@ -145,6 +145,7 @@ class HttpClient {
     Map<String, dynamic>? data,
     String baseUrl = Api.BASE_URL_V3,
     CancelToken? cancel,
+    bool formUrlEncoded = false,
   }) async {
     Map<String, dynamic> header = {};
     queryParameters ??= {};
@@ -156,6 +157,8 @@ class HttpClient {
         options: Options(
           responseType: ResponseType.json,
           headers: header,
+          contentType:
+              formUrlEncoded ? Headers.formUrlEncodedContentType : null,
         ),
         cancelToken: cancel,
       );

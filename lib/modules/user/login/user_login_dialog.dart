@@ -30,7 +30,7 @@ class UserLoginDialog extends GetView<UserLoginController> {
             ),
             AppStyle.vGap12,
             Padding(
-              padding: AppStyle.edgeInsetsH12,
+              padding: AppStyle.edgeInsetsH24,
               child: TextField(
                 controller: controller.userNameController,
                 autofocus: true,
@@ -46,7 +46,7 @@ class UserLoginDialog extends GetView<UserLoginController> {
             ),
             AppStyle.vGap24,
             Padding(
-              padding: AppStyle.edgeInsetsH12,
+              padding: AppStyle.edgeInsetsH24,
               child: TextField(
                 controller: controller.passwordController,
                 obscureText: true,
@@ -66,7 +66,7 @@ class UserLoginDialog extends GetView<UserLoginController> {
             AppStyle.vGap12,
             Container(
               width: double.infinity,
-              padding: AppStyle.edgeInsetsA12,
+              padding: AppStyle.edgeInsetsA12.copyWith(left: 24, right: 24),
               child: SizedBox(
                 height: 40,
                 child: Obx(
