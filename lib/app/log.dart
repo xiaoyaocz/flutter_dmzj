@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 class Log {
@@ -26,5 +27,13 @@ class Log {
 
   static w(String message) {
     logger.w("${DateTime.now().toString()}\n$message");
+  }
+
+  static void logPrint(dynamic obj) {
+    if (obj is Error) {
+      Log.e(obj.toString(), obj.stackTrace ?? StackTrace.current);
+    } else if (kDebugMode) {
+      print(obj);
+    }
   }
 }

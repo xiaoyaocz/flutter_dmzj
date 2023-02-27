@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/requests/user_request.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -23,11 +25,12 @@ class UserLoginController extends GetxController {
         nickname: userNameController.text,
         password: passwordController.text,
       );
-      print(data.toJson());
+      UserService.instance.setAuthInfo(data);
       loadding.value = false;
+      Get.back(result: true);
     } catch (e) {
       SmartDialog.showToast(e.toString());
-      print(e);
+      Log.logPrint(e);
     } finally {
       loadding.value = false;
     }

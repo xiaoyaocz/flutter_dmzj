@@ -3,7 +3,7 @@ import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/user/login/user_login_controller.dart';
 import 'package:get/get.dart';
 
-class UserLoginDialog extends GetView<UserLoginController> {
+class UserLoginDialog extends StatelessWidget {
   final UserLoginController controller = Get.put(UserLoginController());
   UserLoginDialog({Key? key}) : super(key: key);
 
@@ -85,7 +85,8 @@ class UserLoginDialog extends GetView<UserLoginController> {
                             height: 24,
                             child: CircularProgressIndicator(
                               color: Colors.white,
-                            ))
+                            ),
+                          )
                         : const Text("登录"),
                   ),
                 ),

@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:get/get.dart';
 
 class AppStyle {
-  static ColorScheme colorSchemeLight = ColorScheme.fromSwatch(
-    primarySwatch: Colors.blue,
-    brightness: Brightness.light,
-  );
-  static ColorScheme colorSchemeDark = ColorScheme.fromSwatch(
-    primarySwatch: Colors.blue,
-    brightness: Brightness.dark,
-  );
   static ThemeData lightTheme = ThemeData.light().copyWith(
     brightness: Brightness.light,
-    colorScheme: colorSchemeLight,
+    colorScheme: AppColor.colorSchemeLight,
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
       elevation: 0,
@@ -21,7 +13,7 @@ class AppStyle {
   );
   static ThemeData darkTheme = ThemeData.dark().copyWith(
     brightness: Brightness.dark,
-    colorScheme: colorSchemeDark,
+    colorScheme: AppColor.colorSchemeDark,
     scaffoldBackgroundColor: const Color(0xff16192a),
     appBarTheme: const AppBarTheme(
       elevation: 0,
