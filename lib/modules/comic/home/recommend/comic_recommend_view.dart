@@ -12,8 +12,11 @@ import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
 class ComicRecommendView extends StatelessWidget {
-  ComicRecommendView({Key? key}) : super(key: key);
-  final controller = Get.put(ComicRecommendController());
+  final ComicRecommendController controller;
+  ComicRecommendView({Key? key})
+      : controller = Get.put(ComicRecommendController()),
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return KeepAliveWrapper(
@@ -142,7 +145,7 @@ class ComicRecommendView extends StatelessWidget {
     return Padding(
       padding: AppStyle.edgeInsetsB12,
       child: ClipRRect(
-        borderRadius: AppStyle.radius8,
+        borderRadius: AppStyle.radius4,
         child: AspectRatio(
           aspectRatio: 75 / 40,
           child: Swiper(

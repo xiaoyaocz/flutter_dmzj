@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:get/get.dart';
 
@@ -7,16 +8,48 @@ class AppStyle {
     brightness: Brightness.light,
     colorScheme: AppColor.colorSchemeLight,
     scaffoldBackgroundColor: Colors.white,
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       elevation: 0,
+      backgroundColor: Colors.transparent,
+      foregroundColor: AppColor.black333,
+      shape: Border(
+        bottom: BorderSide(
+          color: Colors.grey.withOpacity(.2),
+          width: 1,
+        ),
+      ),
+      iconTheme: const IconThemeData(
+        color: AppColor.black333,
+      ),
+      titleTextStyle: const TextStyle(
+        fontSize: 16,
+        color: AppColor.black333,
+      ),
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
     ),
   );
   static ThemeData darkTheme = ThemeData.dark().copyWith(
     brightness: Brightness.dark,
     colorScheme: AppColor.colorSchemeDark,
     scaffoldBackgroundColor: AppColor.backgroundColorDark,
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       elevation: 0,
+      backgroundColor: Colors.transparent,
+      foregroundColor: Colors.white,
+      shape: Border(
+        bottom: BorderSide(
+          color: Colors.grey.withOpacity(.2),
+          width: 1,
+        ),
+      ),
+      titleTextStyle: const TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+      ),
+      iconTheme: const IconThemeData(
+        color: Colors.white,
+      ),
+      systemOverlayStyle: SystemUiOverlayStyle.light,
     ),
   );
   static const vGap4 = SizedBox(

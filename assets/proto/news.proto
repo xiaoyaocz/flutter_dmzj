@@ -1,0 +1,31 @@
+syntax = "proto3";
+// 该文件使用ChatGPT辅助生成
+
+message NewsListResponseProto {
+  int32 errno = 1;
+  string errmsg = 2;
+  repeated NewsListInfoProto data = 3;
+}
+
+message NewsListInfoProto {
+  int64 articleId = 1;
+  string title = 2;
+  string fromName = 3;
+  string fromUrl = 4;
+  int64 createTime = 5;
+  int32 isForeign = 6;
+  string foreignUrl = 7;
+  string intro = 8;
+  int64 authorId = 9;
+  int32 status = 10;
+  string rowPicUrl = 11;
+  string colPicUrl = 12;
+  int32 qchatShow = 13;
+  string pageUrl = 14;
+  int64 commentAmount = 15;
+  int64 authorUid = 16;
+  string cover = 17;
+  string nickname = 18;
+  int64 moodAmount = 19;
+}
+

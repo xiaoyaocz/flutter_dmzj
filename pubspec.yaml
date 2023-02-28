@@ -18,6 +18,8 @@ dependencies:
   crypton: ^2.1.0 #加解密
   crypto: ^3.0.2 #加解密
   logger: ^1.2.2 #日志输出
+  protobuf: ^2.1.0 #Protobuf
+  intl: ^0.17.0
 
   #Widget
   flutter_smart_dialog: ^4.8.2+5 #各种弹窗 Toast\Dialog\Popup

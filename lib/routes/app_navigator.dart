@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/routes/route_path.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AppNavigator {
   /// 当前内容路由的名称
@@ -36,6 +41,36 @@ class AppNavigator {
       Get.back();
     } else {
       Get.back(id: 1);
+    }
+  }
+
+  /// 打开新闻详情
+  static void toNewsDetail({
+    required String url,
+    String title = "资讯详情",
+    int newsId = 0,
+  }) {
+    if (!url.startsWith("http:") && !url.startsWith("https:")) {
+      SmartDialog.showToast("无法打开此此链接：$url");
+      return;
+    }
+    if (url.contains("/article/show/")) {
+      toContentPage(RoutePath.kNewsDetail, arg: {
+        "title": title,
+        "newsUrl": url,
+        "newsId": newsId,
+      });
+    } else {
+      toWebView(url);
+    }
+  }
+
+  /// 打开WebView
+  static void toWebView(String url) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      toContentPage(RoutePath.kWebView, arg: url);
+    } else {
+      launchUrlString(url);
     }
   }
 

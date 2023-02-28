@@ -3,7 +3,7 @@ import 'package:flutter_dmzj/requests/common/http_client.dart';
 
 class ComicRequest {
   /// 漫画-推荐
-  static Future<List<ComicRecommendModel>> recommend() async {
+  Future<List<ComicRecommendModel>> recommend() async {
     var list = <ComicRecommendModel>[];
     var result = await HttpClient.instance.getJson(
       '/recommend_new.json',
@@ -15,7 +15,7 @@ class ComicRequest {
   }
 
   /// 猜你喜欢
-  static Future<ComicRecommendModel?> recommendLike() async {
+  Future<ComicRecommendModel?> recommendLike() async {
     var result = await HttpClient.instance.getJson(
       '/recommend/batchUpdate',
       needLogin: true,

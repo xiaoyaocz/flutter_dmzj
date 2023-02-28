@@ -18,6 +18,7 @@ class PageListView extends StatelessWidget {
   final Function()? onLoginSuccess;
   final bool showPageLoadding;
   final bool loadMore;
+  final Widget? header;
   const PageListView({
     required this.itemBuilder,
     required this.pageController,
@@ -27,6 +28,7 @@ class PageListView extends StatelessWidget {
     this.separatorBuilder,
     this.onLoginSuccess,
     this.loadMore = true,
+    this.header,
     Key? key,
   }) : super(key: key);
 
@@ -37,18 +39,37 @@ class PageListView extends StatelessWidget {
         children: [
           EasyRefresh(
             header: const MaterialHeader(),
-            footer: loadMore ? const MaterialFooter() : null,
-            //scrollController: pageController.scrollController,
+            footer: loadMore
+                ? const MaterialFooter(
+                    clamping: false, infiniteOffset: 70, triggerOffset: 70)
+                : null,
             controller: pageController.easyRefreshController,
             refreshOnStart: firstRefresh,
             onLoad: loadMore ? pageController.loadData : null,
             onRefresh: pageController.refreshData,
             child: ListView.separated(
               padding: padding,
-              itemCount: pageController.list.length,
-              itemBuilder: itemBuilder,
-              separatorBuilder:
-                  separatorBuilder ?? (context, i) => const SizedBox(),
+              controller: pageController.scrollController,
+              itemCount: header == null
+                  ? pageController.list.length
+                  : pageController.list.length + 1,
+              itemBuilder: header == null
+                  ? itemBuilder
+                  : (context, index) {
+                      if (index == 0) {
+                        return header;
+                      }
+                      return itemBuilder.call(context, index - 1);
+                    },
+              separatorBuilder: header == null
+                  ? (separatorBuilder ?? (context, i) => const SizedBox())
+                  : (context, index) {
+                      if (index == 0) {
+                        return const SizedBox();
+                      }
+                      return separatorBuilder?.call(context, index - 1) ??
+                          const SizedBox();
+                    },
             ),
           ),
           Offstage(

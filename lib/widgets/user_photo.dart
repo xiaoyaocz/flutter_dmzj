@@ -39,7 +39,6 @@ class UserPhoto extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.lightBlue,
         borderRadius: BorderRadius.circular(56),
         border: showBoder
             ? Border.all(

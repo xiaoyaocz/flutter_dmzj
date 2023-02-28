@@ -4,6 +4,7 @@ import 'package:flutter_dmzj/modules/common/empty_page.dart';
 import 'package:flutter_dmzj/modules/common/test_subroute_page.dart';
 import 'package:flutter_dmzj/modules/index/index_controller.dart';
 import 'package:flutter_dmzj/modules/index/index_page.dart';
+import 'package:flutter_dmzj/modules/news/detail/news_detail_page.dart';
 import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
 import 'package:get/get.dart';
@@ -43,7 +44,16 @@ class AppPages {
           transition: Transition.native,
           page: () => const TestSubRoutePage(),
         );
-
+      case RoutePath.kNewsDetail:
+        var parameter = settings.arguments as Map;
+        return GetPageRoute(
+          settings: settings,
+          page: () => NewsDetailPage(
+            title: parameter["title"],
+            newsUrl: parameter["newsUrl"],
+            newsId: parameter["newsId"],
+          ),
+        );
       default:
         return GetPageRoute(page: () => const EmptyPage());
     }

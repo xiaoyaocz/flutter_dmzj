@@ -1,0 +1,54 @@
+syntax = "proto3";
+// 该文件使用ChatGPT辅助生成
+
+message NovelChapterDetailProto {
+  int64 chapterId = 1;
+  string chapterName = 2;
+  int32 chapterOrder = 3;
+}
+
+message NovelVolumeProto {
+    int64 volume_id = 1;
+    int64 lnovel_id = 2;
+    string volume_name = 3;
+    int32 volume_order = 4;
+    int64 addtime = 5;
+    int32 sum_chapters = 6;
+}
+message NovelChapterResponseProto {
+    int32 errno = 1;
+    string errmsg = 2;
+    repeated NovelVolumeDetailProto data = 3;
+}
+message NovelVolumeDetailProto {
+    int64 volume_id = 1;
+    string volume_name = 2;
+    int32 volume_order = 3;
+    repeated NovelChapterDetailProto chapters = 4;
+}
+
+message NovelInfoProto {
+    int64 novel_id = 1;
+    string name = 2;
+    string zone = 3;
+    string status = 4;
+    string last_update_volume_name = 5;
+    string last_update_chapter_name = 6;
+    int64 last_update_volume_id = 7;
+    int64 last_update_chapter_id = 8;
+    int64 last_update_time = 9;
+    string cover = 10;
+    int64 hot_hits = 11;
+    string introduction = 12;
+    repeated string types = 13;
+    string authors = 14;
+    string first_letter = 15;
+    int64 subscribe_num = 16;
+    int64 redis_update_time = 17;
+    repeated NovelVolumeProto volume = 18;
+}
+message NovelInfoResponseProto {
+    int32 errno = 1;
+    string errmsg = 2;
+    repeated NovelInfoProto data = 3;
+}

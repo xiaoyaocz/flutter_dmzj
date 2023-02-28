@@ -1,0 +1,133 @@
+syntax = "proto3";
+// 该文件使用ChatGPT辅助生成
+
+message ComicChapterDetailProto{
+    int64 chapterId = 1;
+    int64 comicId = 2;
+    string title = 3;
+    int32 chapterOrder = 4;
+    int32 direction = 5;
+    repeated string pageUrl = 6;
+    int32 picnum = 7;
+    repeated string pageUrlHD = 8;
+    int32 commentCount = 9;
+}
+message ComicChapterInfoProto {
+    int64 chapterId = 1;
+    string chapterTitle = 2;
+    int64 updateTime = 3;
+    int32 fileSize = 4;
+    int32 chapterOrder = 5;
+}
+message ComicChapterResponseProto {
+    int32 errno = 1;
+    string errmsg = 2;
+    ComicChapterDetailProto data = 3;
+}
+
+message ComicChapterListProto {
+    string title = 1;
+    repeated ComicChapterInfoProto data = 2;
+}
+
+message ComicDetailResponseProto {
+    int32 errno = 1;
+    string errmsg = 2;
+    ComicDetailProto data = 3;
+}
+
+message ComicDetailProto {
+  int64 id = 1;
+  string title = 2;
+  int32 direction = 3;
+  int32 islong = 4;
+  int32 isDmzj = 5;
+  string cover = 6;
+  string description = 7;
+  int64 lastUpdatetime = 8;
+  string lastUpdateChapterName = 9;
+  int32 copyright = 10;
+  string firstLetter = 11;
+  string comicPy = 12;
+  int32 hidden = 13;
+  int64 hotNum = 14;
+  int64 hitNum = 15;
+  int64 uid = 16;
+  int32 isLock = 17;
+  int32 lastUpdateChapterId = 18;
+  repeated ComicTagProto types = 19;
+  repeated ComicTagProto status = 20;
+  repeated ComicTagProto authors = 21;
+  int64 subscribeNum = 22;
+  repeated ComicChapterListProto chapters = 23;
+  int32 isNeedLogin = 24;
+  repeated ComicDetailUrlLinkProto urlLinks = 25;
+  int32 isHideChapter = 26;
+  repeated ComicDetailUrlLinkProto dhUrlLinks = 27;
+  string cornerMark = 28;
+
+}
+
+message ComicTagProto {
+  int64 tagId = 1;
+  string tagName = 2;
+}
+
+message ComicDetailUrlLinkProto {
+    string title = 1;
+    repeated ComicDetailUrlProto list = 2;
+}
+message ComicDetailUrlProto {
+    int64 id = 1;
+    string title = 2;
+    string url = 3;
+    string icon = 4;
+    string packageName = 5;
+    string dUrl = 6;
+    int32 btype = 7;
+}
+
+message ComicRankListResponseProto {
+    int32 errno = 1;
+    string errmsg = 2;
+    repeated ComicRankListInfoProto data = 3;
+}
+message ComicRankListInfoProto {
+    int64 comic_id = 1;
+    string title = 2;
+    string authors = 3;
+    string status = 4;
+    string cover = 5;
+    string types = 6;
+    int64 last_updatetime = 7;
+    string last_update_chapter_name = 8;
+    string comic_py = 9;
+    int64 num = 10;
+    int32 tag_id = 11;
+    string chapter_name = 12;
+    int64 chapter_id = 13;
+}
+message RankTypeFilterResponseProto {
+    int32 errno = 1;
+    string errmsg = 2;
+    repeated ComicTagProto data = 3;
+}
+
+message ComicUpdateListResponseProto {
+    int32 errno = 1;
+    string errmsg = 2;
+    repeated ComicUpdateListInfoProto data = 3;
+}
+
+message ComicUpdateListInfoProto {
+    int64 comicId = 1;
+    string title = 2;
+    int32 islong = 3;
+    string authors = 4;
+    string types = 5;
+    string cover = 6;
+    string status = 7;
+    string lastUpdateChapterName = 8;
+    int64 lastUpdateChapterId = 9;
+    int64 lastUpdatetime = 10;
+}

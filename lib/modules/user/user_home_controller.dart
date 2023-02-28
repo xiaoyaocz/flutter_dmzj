@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
+import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 
@@ -21,7 +22,7 @@ class UserHomeController extends GetxController {
 
   /// 退出登录
   void logout() async {
-    var result = await Utils.showAlertDialog(
+    var result = await DialogUtils.showAlertDialog(
       "确定要退出登录吗？",
       title: "退出登录",
     );

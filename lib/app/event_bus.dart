@@ -1,9 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter_dmzj/app/log.dart';
 
 /// 全局事件
 class EventBus {
+  /// 点击了底部导航
+  static const String kBottomNavigationBarClicked =
+      "BottomNavigationBarClicked";
+
   static EventBus? _instance;
 
   static EventBus get instance {
@@ -14,11 +18,12 @@ class EventBus {
   final Map<String, StreamController> _streams = {};
 
   /// 触发事件
-  void emit(String name, dynamic data) {
+  void emit<T>(String name, T data) {
     if (!_streams.containsKey(name)) {
       _streams.addAll({name: StreamController.broadcast()});
     }
-    debugPrint("------------触发事件$name；参数:$data------------");
+    Log.d("Emit Event：$name\r\n$data");
+
     _streams[name]!.add(data);
   }
 

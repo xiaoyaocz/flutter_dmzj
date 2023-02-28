@@ -5,6 +5,7 @@ import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
 
 class ComicRecommendController extends BasePageController<ComicRecommendModel> {
+  final ComicRequest request = ComicRequest();
   @override
   void onInit() {
     //refreshData();
@@ -13,7 +14,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
 
   @override
   Future<List<ComicRecommendModel>> getData(int page, int pageSize) async {
-    return await ComicRequest.recommend();
+    return await request.recommend();
   }
 
   void openDetail(ComicRecommendItemModel item) {

@@ -9,4 +9,10 @@ class RoutePath {
   static const kUserLogin = "/user/login";
 
   static const kTestSubRoute = "/test/sub_route";
+
+  /// WebView
+  static const kWebView = "/other/webview";
+
+  /// 新闻详情
+  static const kNewsDetail = "/news/detail";
 }

@@ -85,7 +85,7 @@ class BasePageController<T> extends BaseController {
 
   Future refreshData() async {
     currentPage = 1;
-    list.value.clear();
+    list.clear();
     await loadData();
   }
 
