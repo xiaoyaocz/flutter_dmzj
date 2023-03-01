@@ -57,6 +57,13 @@ document.getElementsByClassName("news_box")[0].style.color="#f1f2f6";
 document.getElementsByClassName("min_box_tit")[0].style.color="#fff";
 """);
             }
+            //加载图片
+            await webViewController!.runJavaScript("""
+\$('.news_box img').each(function () {
+   \$(this).lazyload({
+     effect: "fadeIn"
+   });
+});""");
           } finally {
             pageLoadding.value = false;
           }
