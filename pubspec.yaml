@@ -31,6 +31,8 @@ dependencies:
   flutter_swiper_view: ^1.1.8 #幻灯片
   easy_refresh: ^3.3.1 #下拉刷新、上拉加载
   lottie: ^1.4.3 #lottie动画
+  photo_view: ^0.14.0 #图片浏览
+  
 
   #系统交互
   url_launcher: ^6.1.10 #打开链接
@@ -38,6 +40,9 @@ dependencies:
   package_info_plus: ^3.0.3 #包信息
   flutter_widget_from_html_core: ^0.10.0 #HTML转Widget
   share_plus: ^6.3.1 #分享
+  permission_handler: ^10.2.0 #权限检查
+  path_provider: ^2.0.13 #常用目录
+  image_gallery_saver: ^1.7.1 #保存图片至相册
   
   flutter: 
     sdk: flutter

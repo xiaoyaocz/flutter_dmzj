@@ -65,6 +65,17 @@ class AppNavigator {
     }
   }
 
+  /// 打开评论
+  static void toComment({
+    required int objId,
+    required int type,
+  }) {
+    toContentPage(RoutePath.kComment, arg: {
+      "objId": objId,
+      "type": type,
+    });
+  }
+
   /// 打开WebView
   static void toWebView(String url) {
     if (Platform.isAndroid || Platform.isIOS) {

@@ -86,7 +86,7 @@ class NewsDetailPage extends StatelessWidget {
               ),
               Expanded(
                 child: TextButton.icon(
-                  onPressed: () {},
+                  onPressed: controller.comment,
                   icon: const Icon(
                     Remix.chat_2_line,
                     size: 20,

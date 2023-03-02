@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
+import 'package:flutter_dmzj/modules/comment/comment_page.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
 import 'package:flutter_dmzj/modules/common/test_subroute_page.dart';
 import 'package:flutter_dmzj/modules/index/index_controller.dart';
@@ -52,6 +53,15 @@ class AppPages {
             title: parameter["title"],
             newsUrl: parameter["newsUrl"],
             newsId: parameter["newsId"],
+          ),
+        );
+      case RoutePath.kComment:
+        var parameter = settings.arguments as Map;
+        return GetPageRoute(
+          settings: settings,
+          page: () => CommentPage(
+            objId: parameter["objId"],
+            type: parameter["type"],
           ),
         );
       default:

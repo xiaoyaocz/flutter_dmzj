@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:get/get.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class DialogUtils {
   /// 提示弹窗
@@ -188,5 +191,58 @@ class DialogUtils {
       ),
     );
     return result;
+  }
+
+  static void showImageViewer(int initIndex, List<String> images) {
+    var index = initIndex.obs;
+    Get.dialog(
+      Scaffold(
+        backgroundColor: Colors.black87,
+        body: Stack(
+          children: [
+            PhotoViewGallery.builder(
+              itemCount: images.length,
+              builder: (_, i) {
+                return PhotoViewGalleryPageOptions(
+                  imageProvider: ExtendedNetworkImageProvider(images[i]),
+                  onTapUp: ((context, details, controllerValue) => Get.back()),
+                );
+              },
+              loadingBuilder: (context, event) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              pageController: PageController(
+                initialPage: index.value,
+              ),
+              onPageChanged: ((i) {
+                index.value = i;
+              }),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: AppStyle.edgeInsetsA24,
+              child: Obx(
+                () => Text(
+                  "${index.value + 1}/${images.length}",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            Positioned(
+              right: 12,
+              top: 12,
+              child: TextButton.icon(
+                onPressed: () {
+                  Utils.saveImage(images[index.value]);
+                },
+                icon: const Icon(Icons.save),
+                label: const Text("保存"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
@@ -18,6 +19,8 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   }
 
   void openDetail(ComicRecommendItemModel item) {
-    AppNavigator.toContentPage(RoutePath.kTestSubRoute);
+    AppNavigator.toComment(
+        objId: item.objId ?? 0, type: AppConstant.kTypeComic);
+    //AppNavigator.toContentPage(RoutePath.kTestSubRoute);
   }
 }

@@ -15,4 +15,7 @@ class RoutePath {
 
   /// 新闻详情
   static const kNewsDetail = "/news/detail";
+
+  /// 评论
+  static const kComment = "/comment";
 }

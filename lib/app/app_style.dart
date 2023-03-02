@@ -32,6 +32,9 @@ class AppStyle {
     brightness: Brightness.dark,
     colorScheme: AppColor.colorSchemeDark,
     scaffoldBackgroundColor: AppColor.backgroundColorDark,
+    tabBarTheme: TabBarTheme(
+      indicatorColor: AppColor.colorSchemeDark.primary,
+    ),
     appBarTheme: AppBarTheme(
       elevation: 0,
       backgroundColor: Colors.transparent,

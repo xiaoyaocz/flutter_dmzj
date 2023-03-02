@@ -1,10 +1,14 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
+import 'package:flutter_dmzj/requests/comment_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:flutter_dmzj/widgets/comment_item_widget.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/parsing.dart';
@@ -57,9 +61,9 @@ document.getElementsByClassName("news_box")[0].style.color="#f1f2f6";
 document.getElementsByClassName("min_box_tit")[0].style.color="#fff";
 """);
             }
-            //加载图片
+            //加载前5张图片
             await webViewController!.runJavaScript("""
-\$('.news_box img').each(function () {
+\$('.news_box img:lt(5)').each(function () {
    \$(this).lazyload({
      effect: "fadeIn"
    });
@@ -123,5 +127,9 @@ document.getElementsByClassName("min_box_tit")[0].style.color="#fff";
 
   void share() {
     Share.share("$title\n$newsUrl");
+  }
+
+  void comment() async {
+    AppNavigator.toComment(objId: newsId, type: AppConstant.kTypeNews);
   }
 }

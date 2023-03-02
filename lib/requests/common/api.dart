@@ -17,6 +17,9 @@ class Api {
   /// V3 API
   static const String BASE_URL_V3_API = "https://v3api.muwai.com";
 
+  /// V3 评论
+  static const String BASE_URL_V3_COMMENT = "https://nnv3comment.dmzj.com";
+
   static const String BASE_URL_USER = "https://user.dmzj.com";
 
   /// V4 API的密钥

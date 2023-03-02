@@ -13,7 +13,25 @@ class CommentItem {
     required this.nickname,
     required this.replyAmount,
     required this.userId,
+    required this.gender,
+    this.isEmpty = false,
   });
+
+  factory CommentItem.createEmpty() {
+    return CommentItem(
+      id: 0,
+      objId: 0,
+      content: "该评论不存在，可能已被删除",
+      avatarUrl: "",
+      createTime: 0,
+      images: [],
+      likeAmount: 0,
+      nickname: "-",
+      replyAmount: 0,
+      userId: 0,
+      gender: 0,
+    );
+  }
 
   int id;
   int objId;
@@ -25,5 +43,7 @@ class CommentItem {
   String avatarUrl;
   List<String> images;
   int userId;
-  List<CommentItem> children = [];
+  List<CommentItem> parents = [];
+  bool isEmpty;
+  int gender;
 }

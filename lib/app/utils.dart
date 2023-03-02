@@ -1,5 +1,15 @@
+import 'dart:io';
+
+import 'package:extended_image/extended_image.dart';
+import 'package:flutter_dmzj/app/log.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+// ignore: depend_on_referenced_packages
+import 'package:path/path.dart' as p;
 
 class Utils {
   static late PackageInfo packageInfo;
@@ -43,5 +53,52 @@ class Utils {
     }
 
     return dateFormatWithYear.format(dt);
+  }
+
+  /// 检查相册权限
+  static Future<bool> checkPhotoPermission() async {
+    try {
+      var status = await Permission.photos.status;
+      if (status == PermissionStatus.granted) {
+        return true;
+      }
+      status = await Permission.photos.request();
+      if (status.isGranted) {
+        return true;
+      } else {
+        SmartDialog.showToast("请授予相册权限");
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// 保存图片
+  static void saveImage(String url) async {
+    //TODO Windows\MacOS\Linux另外处理
+    if (Platform.isIOS && !await Utils.checkPhotoPermission()) {
+      return;
+    }
+    try {
+      var provider = ExtendedNetworkImageProvider(url, cache: true);
+      var data = await provider.getNetworkImageData();
+      if (data == null) {
+        SmartDialog.showToast("图片保存失败");
+        return;
+      }
+      var cacheDir = await getTemporaryDirectory();
+      var file = File(p.join(cacheDir.path, p.basename(url)));
+      await file.writeAsBytes(data);
+      final result = await ImageGallerySaver.saveFile(
+        file.path,
+        name: p.basename(url),
+        isReturnPathOfIOS: true,
+      );
+      Log.d(result.toString());
+      SmartDialog.showToast("保存成功");
+    } catch (e) {
+      SmartDialog.showToast("保存失败");
+    }
   }
 }
