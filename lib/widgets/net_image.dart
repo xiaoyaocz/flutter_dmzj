@@ -50,17 +50,27 @@ class _NetImageState extends State<NetImage>
         headers: const {'Referer': "http://www.dmzj.com/"},
         loadStateChanged: (e) {
           if (e.extendedImageLoadState == LoadState.loading) {
-            return const Icon(
-              Icons.image,
-              color: Colors.grey,
-              size: 24,
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(.1),
+              ),
+              child: const Icon(
+                Icons.image,
+                color: Colors.grey,
+                size: 24,
+              ),
             );
           }
           if (e.extendedImageLoadState == LoadState.failed) {
-            return const Icon(
-              Icons.broken_image,
-              color: Colors.grey,
-              size: 24,
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(.1),
+              ),
+              child: const Icon(
+                Icons.broken_image,
+                color: Colors.grey,
+                size: 24,
+              ),
             );
           }
           if (e.extendedImageLoadState == LoadState.completed) {

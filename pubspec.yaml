@@ -21,6 +21,7 @@ dependencies:
   protobuf: ^2.1.0 #Protobuf
   intl: ^0.17.0
   universal_html: ^2.0.9 #HTML解析
+  html_unescape: ^2.0.0 #HTML解码
 
   #Widget
   flutter_smart_dialog: ^4.8.2+5 #各种弹窗 Toast\Dialog\Popup

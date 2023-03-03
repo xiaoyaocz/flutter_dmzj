@@ -2,8 +2,11 @@ import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/comment/comment_item.dart';
 import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
+import 'package:html_unescape/html_unescape.dart';
 
 class CommentRequest {
+  var unescape = HtmlUnescape();
+
   /// 读取最新的评论
   /// - [type] 类型
   /// - [objId] ID
@@ -35,7 +38,9 @@ class CommentRequest {
           item.parents.add(_parseLatestCommentItem(comments, id2));
         }
       }
-      ls.add(item);
+      if (item.id != 0) {
+        ls.add(item);
+      }
     }
     return ls;
   }
@@ -49,7 +54,7 @@ class CommentRequest {
     return CommentItem(
       id: int.tryParse(item["id"].toString()) ?? 0,
       objId: int.tryParse(item["obj_id"].toString()) ?? 0,
-      content: item["content"].toString(),
+      content: unescape.convert(item["content"].toString()),
       avatarUrl: item["avatar_url"].toString(),
       createTime: int.tryParse(item["create_time"].toString()) ?? 0,
       images: item["upload_images"]
@@ -90,7 +95,10 @@ class CommentRequest {
 
     for (var item in result) {
       if (item is Map) {
-        ls.add(_parseHotCommentItem(item));
+        var model = _parseHotCommentItem(item);
+        if (model.id != 0) {
+          ls.add(model);
+        }
       }
     }
     return ls;
@@ -107,7 +115,7 @@ class CommentRequest {
     return CommentItem(
       id: int.tryParse(item["id"].toString()) ?? 0,
       objId: int.tryParse(item["obj_id"].toString()) ?? 0,
-      content: item["content"].toString(),
+      content: unescape.convert(item["content"].toString()),
       avatarUrl: item["cover"].toString(),
       createTime: int.tryParse(item["create_time"].toString()) ?? 0,
       images: item["upload_images"]

@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/requests/comment_request.dart';
+import 'package:flutter_dmzj/requests/news_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/comment_item_widget.dart';
+import 'package:flutter_dmzj/services/db_service.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/parsing.dart';
@@ -18,10 +19,23 @@ class NewsDetailController extends BaseController {
   final String newsUrl;
   final String title;
   final int newsId;
+  final NewsRequest request = NewsRequest();
   NewsDetailController(
       {required this.newsUrl, this.title = "资讯详情", required this.newsId});
   WebViewController? webViewController =
       (Platform.isAndroid || Platform.isIOS) ? WebViewController() : null;
+
+  /// 评论数
+  var commentAmount = 0.obs;
+
+  /// 点赞数
+  var moodAmount = 0.obs;
+
+  /// 是否点过赞
+  var liked = false.obs;
+
+  /// 是否已经收藏
+  var collected = false.obs;
 
   var htmlContent = "".obs;
   var author = "".obs;
@@ -31,12 +45,14 @@ class NewsDetailController extends BaseController {
 
   @override
   void onInit() {
+    liked.value = DBService.instance.newsLikeBox.containsKey(newsId);
     if (Platform.isAndroid || Platform.isIOS) {
       initWebView();
     } else {
       loadHtml();
     }
-
+    loadStat();
+    checkCollected();
     super.onInit();
   }
 
@@ -62,6 +78,7 @@ document.getElementsByClassName("min_box_tit")[0].style.color="#fff";
 """);
             }
             //加载前5张图片
+            //当Web没有滚动条时，图片不会加载，这里手动给他加载出来
             await webViewController!.runJavaScript("""
 \$('.news_box img:lt(5)').each(function () {
    \$(this).lazyload({
@@ -121,8 +138,67 @@ document.getElementsByClassName("min_box_tit")[0].style.color="#fff";
     }
   }
 
+  void loadStat() async {
+    try {
+      var result = await request.stat(newsId);
+      commentAmount.value = result.commentAmount;
+      moodAmount.value = result.moodAmount;
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+    }
+  }
+
+  void checkCollected() async {
+    if (!UserService.instance.logined.value) {
+      return;
+    }
+    try {
+      SmartDialog.showLoading();
+      collected.value = await request.checkCollect(newsId);
+    } catch (e) {
+      Log.logPrint(e);
+    } finally {
+      SmartDialog.dismiss(status: SmartStatus.loading);
+    }
+  }
+
   void refershContent() {
     webViewController!.reload();
+  }
+
+  void collect() async {
+    if (!await UserService.instance.login()) {
+      return;
+    }
+    try {
+      SmartDialog.showLoading();
+      await (collected.value
+          ? request.delCollect(newsId)
+          : request.collect(newsId));
+      collected.value = !collected.value;
+    } catch (e) {
+      Log.logPrint(e);
+    } finally {
+      SmartDialog.dismiss(status: SmartStatus.loading);
+    }
+  }
+
+  void like() async {
+    if (liked.value) {
+      SmartDialog.showToast("已经点过赞了");
+      return;
+    }
+    try {
+      SmartDialog.showLoading();
+      await request.like(newsId);
+      liked.value = true;
+      moodAmount.value += 1;
+      DBService.instance.newsLikeBox.put(newsId, true);
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+    } finally {
+      SmartDialog.dismiss(status: SmartStatus.loading);
+    }
   }
 
   void share() {

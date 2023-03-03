@@ -30,6 +30,8 @@ class UserService extends GetxService {
   String get dmzjToken => userAuthInfo?.dmzjToken ?? '';
   String get userId => userAuthInfo?.uid ?? '';
   String get nickname => userAuthInfo?.nickname ?? '';
+
+  /// 是否已经登录
   var logined = false.obs;
 
   void init() {
@@ -60,6 +62,9 @@ class UserService extends GetxService {
   }
 
   Future<bool> login() async {
+    if (logined.value) {
+      return true;
+    }
     var result = await Get.dialog(UserLoginDialog());
     return (result != null && result == true);
   }

@@ -6,6 +6,7 @@ import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_dmzj/routes/app_pages.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
@@ -47,6 +48,8 @@ Future initServices() async {
   //用户信息
   Log.d("Init User Service");
   Get.put(UserService()).init();
+
+  await Get.put(DBService()).init();
 
   //初始化设置控制器
   Get.put(AppSettingsController());

@@ -75,33 +75,47 @@ class NewsDetailPage extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Remix.thumb_up_line,
-                    size: 20,
+                child: Obx(
+                  () => TextButton.icon(
+                    onPressed: controller.like,
+                    icon: Icon(
+                      controller.liked.value
+                          ? Remix.thumb_up_fill
+                          : Remix.thumb_up_line,
+                      size: 20,
+                    ),
+                    label: Text(controller.moodAmount > 0
+                        ? "${controller.moodAmount}"
+                        : "点赞"),
                   ),
-                  label: const Text("点赞"),
                 ),
               ),
               Expanded(
-                child: TextButton.icon(
-                  onPressed: controller.comment,
-                  icon: const Icon(
-                    Remix.chat_2_line,
-                    size: 20,
+                child: Obx(
+                  () => TextButton.icon(
+                    onPressed: controller.comment,
+                    icon: const Icon(
+                      Remix.chat_2_line,
+                      size: 20,
+                    ),
+                    label: Text(controller.commentAmount > 0
+                        ? "${controller.commentAmount}"
+                        : "评论"),
                   ),
-                  label: const Text("评论"),
                 ),
               ),
               Expanded(
-                child: TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Remix.star_line,
-                    size: 20,
+                child: Obx(
+                  () => TextButton.icon(
+                    onPressed: controller.collect,
+                    icon: Icon(
+                      controller.collected.value
+                          ? Remix.star_fill
+                          : Remix.star_line,
+                      size: 20,
+                    ),
+                    label: Text(controller.collected.value ? "已收藏" : "收藏"),
                   ),
-                  label: const Text("收藏"),
                 ),
               ),
             ],
