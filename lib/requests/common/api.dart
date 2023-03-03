@@ -9,25 +9,28 @@ import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 
 class Api {
-  static const String DOMAIN_NAME = "dmzj.com";
+  static const String DMZJ_DOMAIN_NAME = "dmzj.com";
+  static const String MUWAI_DOMAIN_NAME = "muwai.com";
 
   /// V3接口，无加密
-  static const String BASE_URL_V3 = "https://nnv3api.$DOMAIN_NAME";
+  static const String BASE_URL_V3 = "https://nnv3api.$MUWAI_DOMAIN_NAME";
 
   /// V4接口,返回加密数据的
-  static const String BASE_URL_V4 = "https://nnv4api.$DOMAIN_NAME";
+  static const String BASE_URL_V4 = "https://nnv4api.$MUWAI_DOMAIN_NAME";
 
   /// V3 API
-  static const String BASE_URL_V3_API = "https://v3api.$DOMAIN_NAME";
+  static const String BASE_URL_V3_API = "https://v3api.$MUWAI_DOMAIN_NAME";
 
   /// V3 评论
-  static const String BASE_URL_V3_COMMENT = "https://nnv3comment.$DOMAIN_NAME";
+  static const String BASE_URL_V3_COMMENT =
+      "https://nnv3comment.$MUWAI_DOMAIN_NAME";
 
   /// 用户
-  static const String BASE_URL_USER = "https://user.$DOMAIN_NAME";
+  static const String BASE_URL_USER = "https://user.$DMZJ_DOMAIN_NAME";
 
   /// Interface
-  static const String BASE_URL_INTERFACE = "https://nninterface.$DOMAIN_NAME";
+  static const String BASE_URL_INTERFACE =
+      "https://nninterface.$DMZJ_DOMAIN_NAME";
 
   /// V4 API的密钥
   static const V4_PRIVATE_KEY =

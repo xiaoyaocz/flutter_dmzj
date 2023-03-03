@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
+import 'package:flutter_dmzj/modules/comic/home/latest/comic_latest_view.dart';
 import 'package:flutter_dmzj/modules/comic/home/recommend/comic_recommend_view.dart';
 import 'package:flutter_dmzj/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
@@ -30,9 +31,7 @@ class ComicHomePage extends GetView<ComicHomeController> {
         controller: controller.tabController,
         children: [
           ComicRecommendView(),
-          const Center(
-            child: Text("2"),
-          ),
+          ComicLatestView(),
           const Center(
             child: Text("3"),
           ),

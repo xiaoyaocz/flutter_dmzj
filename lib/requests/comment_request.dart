@@ -130,4 +130,6 @@ class CommentRequest {
       gender: int.tryParse(item["sex"].toString()) ?? 0,
     )..parents.addAll(parents);
   }
+
+  //TODO 发表评论
 }

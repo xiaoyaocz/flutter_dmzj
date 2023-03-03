@@ -1,4 +1,6 @@
+import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
+import 'package:flutter_dmzj/models/proto/comic.pb.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
 
 class ComicRequest {
@@ -25,10 +27,27 @@ class ComicRequest {
     );
     var model = ComicRecommendModel.fromJson(result["data"]);
     for (var item in model.data) {
-      if (item.id != null && item.objId == null) {
+      if (categoryId == 50) {
         item.objId = item.id;
+        item.type = 1;
       }
     }
     return model;
+  }
+
+  // TODO 我的订阅
+
+  /// 最近更新
+  Future<List<ComicUpdateListInfoProto>> latest(
+      {required int type, int page = 1}) async {
+    var result = await HttpClient.instance.getEncryptV4(
+      '/comic/update/list/$type/$page',
+      needLogin: true,
+    );
+    var data = ComicUpdateListResponseProto.fromBuffer(result);
+    if (data.errno != 0) {
+      throw AppError(data.errmsg);
+    }
+    return data.data;
   }
 }
