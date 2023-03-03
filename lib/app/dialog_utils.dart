@@ -204,7 +204,10 @@ class DialogUtils {
               itemCount: images.length,
               builder: (_, i) {
                 return PhotoViewGalleryPageOptions(
-                  imageProvider: ExtendedNetworkImageProvider(images[i]),
+                  imageProvider: ExtendedNetworkImageProvider(
+                    images[i],
+                    cache: true,
+                  ),
                   onTapUp: ((context, details, controllerValue) => Get.back()),
                 );
               },
@@ -220,7 +223,8 @@ class DialogUtils {
             ),
             Container(
               alignment: Alignment.bottomCenter,
-              margin: AppStyle.edgeInsetsA24,
+              margin: AppStyle.edgeInsetsA24
+                  .copyWith(bottom: 24 + AppStyle.bottomBarHeight),
               child: Obx(
                 () => Text(
                   "${index.value + 1}/${images.length}",
@@ -230,8 +234,8 @@ class DialogUtils {
               ),
             ),
             Positioned(
-              right: 12,
-              top: 12,
+              right: 12 + AppStyle.bottomBarHeight,
+              bottom: 12,
               child: TextButton.icon(
                 onPressed: () {
                   Utils.saveImage(images[index.value]);

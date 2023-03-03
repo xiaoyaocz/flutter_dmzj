@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comment/comment_item.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
@@ -41,7 +42,8 @@ class CommentItemWidget extends StatelessWidget {
                       item.nickname,
                       maxLines: 1,
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -67,20 +69,22 @@ class CommentItemWidget extends StatelessWidget {
                   ? Padding(
                       padding: AppStyle.edgeInsetsT12,
                       child: Wrap(
+                        spacing: 4,
+                        runSpacing: 4,
                         children: item.images.map<Widget>((f) {
                           var str = f.split(".").toList();
                           var fileImg = str[0];
                           var fileImgSuffix = str[1];
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: InkWell(
-                              //TODO open
-                              onTap: () => {},
-                              child: NetImage(
-                                "https://images.dmzj.com/commentImg/${item.objId % 500}/${fileImg}_small.$fileImgSuffix",
-                                width: 100,
-                                borderRadius: 4,
-                              ),
+                          return InkWell(
+                            onTap: () {
+                              DialogUtils.showImageViewer(0, [
+                                "https://images.dmzj.com/commentImg/${item.objId % 500}/$f"
+                              ]);
+                            },
+                            child: NetImage(
+                              "https://images.dmzj.com/commentImg/${item.objId % 500}/${fileImg}_small.$fileImgSuffix",
+                              width: 100,
+                              borderRadius: 4,
                             ),
                           );
                         }).toList(),
@@ -238,13 +242,18 @@ class CommentItemWidget extends StatelessWidget {
                   ? Padding(
                       padding: AppStyle.edgeInsetsT8,
                       child: Wrap(
+                        spacing: 4,
+                        runSpacing: 4,
                         children: item.images.map<Widget>((f) {
                           var str = f.split(".").toList();
                           var fileImg = str[0];
                           var fileImgSuffix = str[1];
                           return InkWell(
-                            //TODO click
-                            onTap: () => {},
+                            onTap: () {
+                              DialogUtils.showImageViewer(0, [
+                                "https://images.dmzj.com/commentImg/${item.objId % 500}/$f"
+                              ]);
+                            },
                             child: NetImage(
                               "https://images.dmzj.com/commentImg/${item.objId % 500}/${fileImg}_small.$fileImgSuffix",
                               width: 100,

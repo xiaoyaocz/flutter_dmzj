@@ -61,10 +61,12 @@ class ComicRecommendItemModel {
     this.url,
     required this.objId,
     this.status,
+    this.id,
   });
 
   factory ComicRecommendItemModel.fromJson(Map<String, dynamic> json) =>
       ComicRecommendItemModel(
+        id: asT<int?>(json['id']),
         cover: asT<String>(json['cover'])!,
         title: asT<String>(json['title'])!,
         subTitle: asT<String?>(json['sub_title']),
@@ -73,7 +75,7 @@ class ComicRecommendItemModel {
         objId: asT<int?>(json['obj_id']),
         status: asT<String?>(json['status']),
       );
-
+  int? id;
   String cover;
   String title;
   String? subTitle;

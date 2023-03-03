@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/comment/comment_controller.dart';
 import 'package:flutter_dmzj/modules/comment/comment_list_view.dart';
-import 'package:flutter_dmzj/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
-import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class CommentPage extends StatelessWidget {
   final int objId;

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -54,7 +55,8 @@ class AppNavigator {
       SmartDialog.showToast("无法打开此此链接：$url");
       return;
     }
-    if (url.contains("/article/show/")) {
+    //https://news.dmzj.com/article/77288.html
+    if (url.contains("article/")) {
       toContentPage(RoutePath.kNewsDetail, arg: {
         "title": title,
         "newsUrl": url,
@@ -63,6 +65,16 @@ class AppNavigator {
     } else {
       toWebView(url);
     }
+  }
+
+  /// 打开漫画详情
+  static void toComicDetail(int id) {
+    Log.w("打开漫画:$id");
+  }
+
+  /// 打开小说详情
+  static void toNovelDetail(int id) {
+    Log.w("打开小说:$id");
   }
 
   /// 打开评论

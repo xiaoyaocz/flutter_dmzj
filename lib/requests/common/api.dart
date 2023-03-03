@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:crypton/crypton.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 
 class Api {
   static const String DOMAIN_NAME = "dmzj.com";
@@ -49,7 +50,7 @@ class Api {
     return md5.convert(utf8Content).toString();
   }
 
-  static const String VERSION = "3.0.0";
+  static const String VERSION = "3.8.2";
   static String get timeStamp =>
       (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0);
 
@@ -60,9 +61,8 @@ class Api {
       "version": VERSION,
       "timestamp": timeStamp
     };
-    if (withUid) {
-      //TODO 读取用户ID
-      map.addAll({"uid": ""});
+    if (withUid && UserService.instance.logined.value) {
+      map.addAll({"uid": UserService.instance.userId});
     }
     return map;
   }

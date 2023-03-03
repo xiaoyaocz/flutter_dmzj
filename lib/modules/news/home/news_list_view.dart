@@ -134,6 +134,9 @@ class NewsListView extends StatelessWidget {
               itemHeight: 400,
               autoplay: true,
               itemCount: controller.banners.length,
+              onTap: (i) {
+                controller.openBanner(controller.banners[i]);
+              },
               itemBuilder: (_, i) => Stack(
                 children: [
                   NetImage(

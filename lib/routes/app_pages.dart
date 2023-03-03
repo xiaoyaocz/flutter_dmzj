@@ -3,6 +3,7 @@ import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
 import 'package:flutter_dmzj/modules/comment/comment_page.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
 import 'package:flutter_dmzj/modules/common/test_subroute_page.dart';
+import 'package:flutter_dmzj/modules/common/webview/webview_page.dart';
 import 'package:flutter_dmzj/modules/index/index_controller.dart';
 import 'package:flutter_dmzj/modules/index/index_page.dart';
 import 'package:flutter_dmzj/modules/news/detail/news_detail_page.dart';
@@ -62,6 +63,13 @@ class AppPages {
           page: () => CommentPage(
             objId: parameter["objId"],
             type: parameter["type"],
+          ),
+        );
+      case RoutePath.kWebView:
+        return GetPageRoute(
+          settings: settings,
+          page: () => WebViewPage(
+            url: settings.arguments.toString(),
           ),
         );
       default:

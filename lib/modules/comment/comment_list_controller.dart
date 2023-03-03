@@ -28,6 +28,5 @@ class CommentListController extends BasePageController<CommentItem> {
         page: page,
       );
     }
-    return super.getData(page, pageSize);
   }
 }

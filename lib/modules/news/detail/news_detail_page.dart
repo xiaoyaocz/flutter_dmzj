@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/news/detail/news_detail_controller.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
@@ -23,7 +22,7 @@ class NewsDetailPage extends StatelessWidget {
     required this.newsId,
     Key? key,
   })  : controller = Get.put(
-          NewsDetailController(newsId: newsId, newsUrl: newsUrl, title: title),
+          NewsDetailController(id: newsId, newsUrl: newsUrl, title: title),
           tag: DateTime.now().millisecondsSinceEpoch.toString(),
         ),
         super(key: key);
@@ -32,7 +31,7 @@ class NewsDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(controller.title),
+        title: Obx(() => Text(controller.newsTitle.value)),
         actions: [
           IconButton(
             onPressed: controller.share,
@@ -118,6 +117,16 @@ class NewsDetailPage extends StatelessWidget {
                   ),
                 ),
               ),
+              Expanded(
+                child: TextButton.icon(
+                  onPressed: controller.photoView,
+                  icon: const Icon(
+                    Remix.image_2_line,
+                    size: 20,
+                  ),
+                  label: const Text("图集"),
+                ),
+              ),
             ],
           ),
         ),
@@ -151,12 +160,15 @@ class NewsDetailPage extends StatelessWidget {
                     imgSrc!,
                     borderRadius: 4,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    controller.showImageView(imgSrc ?? "");
+                  },
                 );
               }
 
               return null;
             },
+            onTapUrl: controller.onTapUrl,
           ),
         ],
       ),

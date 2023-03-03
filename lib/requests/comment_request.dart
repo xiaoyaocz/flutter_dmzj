@@ -35,7 +35,7 @@ class CommentRequest {
       if (idSplit.length > 1) {
         item.parents = [];
         for (var id2 in idSplit.skip(1)) {
-          item.parents.add(_parseLatestCommentItem(comments, id2));
+          item.parents.insert(0, _parseLatestCommentItem(comments, id2));
         }
       }
       if (item.id != 0) {

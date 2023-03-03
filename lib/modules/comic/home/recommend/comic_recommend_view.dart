@@ -1,4 +1,3 @@
-import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
@@ -31,16 +30,33 @@ class ComicRecommendView extends StatelessWidget {
           if (item.categoryId == 46) {
             return buildBanner(item);
           }
+          //随便看看
+          if (item.categoryId == 50) {
+            return buildCard(
+              context,
+              child: buildTreeColumnGridView(item.data),
+              title: item.title.toString(),
+              action: buildRefresh(onRefresh: controller.loadRandom),
+            );
+          }
           //近期必看\国漫\热门连载\最新上架
           if (item.categoryId == 47 ||
               item.categoryId == 52 ||
               item.categoryId == 54 ||
               item.categoryId == 56) {
+            Widget? action;
+            //刷新国漫
+            if (item.categoryId == 52) {
+              action = buildRefresh(onRefresh: controller.refreshGuoman);
+            }
+            if (item.categoryId == 54) {
+              action = buildRefresh(onRefresh: controller.refreshHot);
+            }
             return buildCard(
               context,
               child: buildTreeColumnGridView(item.data),
               title: item.title.toString(),
-              action: buildShowMore(onTap: () {}),
+              action: action,
             );
           }
           //火热专题\美漫大事件\条漫
@@ -51,6 +67,9 @@ class ComicRecommendView extends StatelessWidget {
               context,
               child: buildTwoColumnGridView(item.data),
               title: item.title.toString(),
+              action: item.categoryId == 48
+                  ? buildShowMore(onTap: controller.toTopic)
+                  : null,
             );
           }
           //大师
@@ -112,7 +131,7 @@ class ComicRecommendView extends StatelessWidget {
   }
 
   Widget buildShowMore({required Function() onTap}) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
       child: Row(
         children: const [
@@ -127,11 +146,12 @@ class ComicRecommendView extends StatelessWidget {
   }
 
   Widget buildRefresh({required Function() onRefresh}) {
-    return InkWell(
+    return GestureDetector(
       onTap: onRefresh,
       child: Row(
         children: const [
           Icon(Remix.refresh_line, size: 18, color: Colors.grey),
+          AppStyle.hGap4,
           Text(
             "换一批",
             style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -181,6 +201,9 @@ class ComicRecommendView extends StatelessWidget {
                     ))
               ],
             ),
+            onTap: (i) {
+              controller.openDetail(item.data[i]);
+            },
             pagination: const SwiperPagination(
               margin: AppStyle.edgeInsetsA8,
               alignment: Alignment.bottomRight,

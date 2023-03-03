@@ -15,14 +15,20 @@ class ComicRequest {
   }
 
   /// 猜你喜欢
-  Future<ComicRecommendModel?> recommendLike() async {
+  Future<ComicRecommendModel> refreshRecommend(int categoryId) async {
     var result = await HttpClient.instance.getJson(
       '/recommend/batchUpdate',
       needLogin: true,
       queryParameters: {
-        "category_id": "50",
+        "category_id": categoryId,
       },
     );
-    return ComicRecommendModel.fromJson(result["data"]);
+    var model = ComicRecommendModel.fromJson(result["data"]);
+    for (var item in model.data) {
+      if (item.id != null && item.objId == null) {
+        item.objId = item.id;
+      }
+    }
+    return model;
   }
 }
