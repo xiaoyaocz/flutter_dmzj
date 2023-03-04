@@ -79,7 +79,7 @@ class SpecialDetailPage extends StatelessWidget {
                     Remix.heart_line,
                     size: 20,
                   ),
-                  label: Text("订阅全部"),
+                  label: const Text("订阅全部"),
                 ),
               ),
               Expanded(
@@ -175,9 +175,14 @@ class SpecialDetailPage extends StatelessWidget {
             constraints: const BoxConstraints(
               maxWidth: 500,
             ),
-            child: NetImage(
-              detail.mobileHeaderPic,
-              borderRadius: 8,
+            child: AspectRatio(
+              aspectRatio: 710 / 354,
+              child: NetImage(
+                detail.mobileHeaderPic,
+                borderRadius: 8,
+                width: 710,
+                height: 354,
+              ),
             ),
           ),
           AppStyle.vGap12,

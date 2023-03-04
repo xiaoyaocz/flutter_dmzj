@@ -66,6 +66,7 @@ class UserService extends GetxService {
       return true;
     }
     var result = await Get.dialog(UserLoginDialog());
+
     return (result != null && result == true);
   }
 

@@ -39,6 +39,15 @@ class ComicRecommendView extends StatelessWidget {
               action: buildRefresh(onRefresh: controller.loadRandom),
             );
           }
+          //我的订阅
+          if (item.categoryId == 49) {
+            return buildCard(
+              context,
+              child: buildTreeColumnGridView(item.data),
+              title: item.title.toString(),
+              action: buildShowMore(onTap: controller.toMySubscribe),
+            );
+          }
           //近期必看\国漫\热门连载\最新上架
           if (item.categoryId == 47 ||
               item.categoryId == 52 ||
@@ -68,7 +77,7 @@ class ComicRecommendView extends StatelessWidget {
               child: buildTwoColumnGridView(item.data),
               title: item.title.toString(),
               action: item.categoryId == 48
-                  ? buildShowMore(onTap: controller.toTopic)
+                  ? buildShowMore(onTap: controller.toSpecial)
                   : null,
             );
           }

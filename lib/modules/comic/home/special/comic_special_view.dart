@@ -35,7 +35,11 @@ class ComicSpecialView extends StatelessWidget {
               children: [
                 AspectRatio(
                   aspectRatio: 710 / 284,
-                  child: NetImage(item.smallCover),
+                  child: NetImage(
+                    item.smallCover,
+                    width: 710,
+                    height: 354,
+                  ),
                 ),
                 Padding(
                   padding: AppStyle.edgeInsetsA8,

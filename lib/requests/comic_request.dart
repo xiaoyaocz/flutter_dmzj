@@ -41,7 +41,22 @@ class ComicRequest {
     return model;
   }
 
-  // TODO 我的订阅
+  /// 首页-我的订阅
+  Future<ComicRecommendModel> recommendSubscribe() async {
+    var result = await HttpClient.instance.getJson(
+      '/recommend/batchUpdate',
+      needLogin: true,
+      queryParameters: {
+        "category_id": 49,
+      },
+    );
+    var model = ComicRecommendModel.fromJson(result["data"]);
+    for (var item in model.data) {
+      item.objId = item.id;
+      item.type = 1;
+    }
+    return model;
+  }
 
   /// 最近更新
   Future<List<ComicUpdateListInfoProto>> latest(

@@ -1,14 +1,32 @@
+import 'dart:async';
+
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
+import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   final ComicRequest request = ComicRequest();
+  StreamSubscription<dynamic>? subLogin;
+  StreamSubscription<dynamic>? subLogout;
+
+  @override
+  void onInit() {
+    subLogin = UserService.loginedStream.listen((event) {
+      loadSubscribe();
+    });
+    subLogout = UserService.logoutStream.listen((event) {
+      list.removeWhere((x) => x.categoryId == 49);
+    });
+    super.onInit();
+  }
 
   @override
   Future<List<ComicRecommendModel>> getData(int page, int pageSize) async {
@@ -24,6 +42,9 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
       ),
     );
     loadRandom();
+    if (UserService.instance.logined.value) {
+      loadSubscribe();
+    }
     return ls;
   }
 
@@ -52,6 +73,21 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
       var index = list.indexWhere((x) => x.categoryId == 52);
       if (index != -1) {
         list[index] = result;
+      }
+    } catch (e) {
+      Log.logPrint(e);
+    }
+  }
+
+  /// 加载订阅
+  void loadSubscribe() async {
+    try {
+      var result = await request.recommendSubscribe();
+      var index = list.indexWhere((x) => x.categoryId == 49);
+      if (index != -1) {
+        list[index] = result;
+      } else {
+        list.insert(1, result);
       }
     } catch (e) {
       Log.logPrint(e);
@@ -111,5 +147,17 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
     //AppNavigator.toContentPage(RoutePath.kTestSubRoute);
   }
 
-  void toTopic() {}
+  void toSpecial() {
+    var homeController = Get.find<ComicHomeController>();
+    homeController.tabController.animateTo(4);
+  }
+
+  void toMySubscribe() {}
+
+  @override
+  void onClose() {
+    subLogin?.cancel();
+    subLogout?.cancel();
+    super.onClose();
+  }
 }

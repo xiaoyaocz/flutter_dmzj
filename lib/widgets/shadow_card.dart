@@ -27,17 +27,20 @@ class ShadowCard extends StatelessWidget {
                 )
               ],
       ),
-      child: Material(
-        color: Theme.of(context).cardColor,
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(radius),
-        child: InkWell(
+        child: Material(
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(radius),
-          onTap: onTap,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: AppStyle.radius8,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(radius),
+            onTap: onTap,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: AppStyle.radius8,
+              ),
+              child: child,
             ),
-            child: child,
           ),
         ),
       ),
