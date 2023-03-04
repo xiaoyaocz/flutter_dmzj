@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/modules/common/webview/webview_controller.dart';
 import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
 import 'package:get/get.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -83,9 +83,10 @@ class WebViewPage extends StatelessWidget {
                   Expanded(
                     child: IconButton(
                       onPressed: () async {
-                        Share.share(
-                            (await controller.webViewController.currentUrl())
-                                .toString());
+                        Utils.share(
+                          (await controller.webViewController.currentUrl())
+                              .toString(),
+                        );
                       },
                       icon: const Icon(
                         Icons.share,

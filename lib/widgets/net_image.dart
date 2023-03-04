@@ -38,6 +38,18 @@ class _NetImageState extends State<NetImage>
     if (picUrl.contains("dmzj1.com")) {
       picUrl = picUrl.replaceAll("dmzj1.com", "dmzj.com");
     }
+    if (picUrl.isEmpty) {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(.1),
+        ),
+        child: const Icon(
+          Icons.image,
+          color: Colors.grey,
+          size: 24,
+        ),
+      );
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(widget.borderRadius),
       child: ExtendedImage.network(

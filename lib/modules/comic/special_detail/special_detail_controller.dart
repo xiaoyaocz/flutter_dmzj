@@ -1,10 +1,10 @@
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/special_detail_model.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:get/get.dart';
-import 'package:share_plus/share_plus.dart';
 
 class SpecialDetailController extends BaseController {
   final int id;
@@ -45,8 +45,10 @@ class SpecialDetailController extends BaseController {
     if (detail.value == null) {
       return;
     }
-    Share.share(
-        "${detail.value!.title}\r\nhttp://m.dmzj.com/zhuanti/${detail.value!.pageUrl}");
+    Utils.share(
+      "http://m.dmzj.com/zhuanti/${detail.value!.pageUrl}",
+      content: detail.value?.title ?? "",
+    );
   }
 
   void comment() {

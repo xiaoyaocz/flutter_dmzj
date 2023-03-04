@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/modules/comic/home/special/comic_special_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/page_list_view.dart';

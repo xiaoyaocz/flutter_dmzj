@@ -53,7 +53,7 @@ class Api {
     return md5.convert(utf8Content).toString();
   }
 
-  static const String VERSION = "3.8.2";
+  static const String VERSION = "3.0.0";
   static String get timeStamp =>
       (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0);
 

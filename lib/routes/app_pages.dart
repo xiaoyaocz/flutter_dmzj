@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/modules/comic/author_detail/author_detail_page.dart';
 import 'package:flutter_dmzj/modules/comic/category_detail/category_detail_page.dart';
+import 'package:flutter_dmzj/modules/comic/detail/comic_detail_page.dart';
 import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
 import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_page.dart';
 import 'package:flutter_dmzj/modules/comment/comment_page.dart';
@@ -93,6 +94,13 @@ class AppPages {
         return GetPageRoute(
           settings: settings,
           page: () => ComicAuthorDetailPage(
+            settings.arguments as int,
+          ),
+        );
+      case RoutePath.kComicDetail:
+        return GetPageRoute(
+          settings: settings,
+          page: () => ComicDetailPage(
             settings.arguments as int,
           ),
         );

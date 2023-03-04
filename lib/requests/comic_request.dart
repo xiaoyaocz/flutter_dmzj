@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/comic/author_model.dart';
 import 'package:flutter_dmzj/models/comic/category_comic_model.dart';
 import 'package:flutter_dmzj/models/comic/category_filter_model.dart';
 import 'package:flutter_dmzj/models/comic/category_item_model.dart';
+import 'package:flutter_dmzj/models/comic/comic_related_model.dart';
+import 'package:flutter_dmzj/models/comic/detail_info.dart';
+import 'package:flutter_dmzj/models/comic/detail_v1_model.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
 import 'package:flutter_dmzj/models/comic/special_model.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
@@ -194,5 +199,66 @@ class ComicRequest {
     );
 
     return ComicAuthorModel.fromJson(result);
+  }
+
+  /// 作品相关
+  Future<ComicRelatedModel> related({required int id}) async {
+    var result = await HttpClient.instance.getJson(
+      '/v3/comic/related/$id.json',
+    );
+
+    return ComicRelatedModel.fromJson(result);
+  }
+
+  Future<ComicDetailInfo> comicDetail({required int comicId}) async {
+    ComicDetailInfo info;
+    var errorMsg = "";
+    try {
+      var v4 = await comicDetailV4(comicId: comicId);
+      info = ComicDetailInfo.fromV4(v4);
+    } catch (e) {
+      errorMsg += "V4：$e";
+      try {
+        var v1 = await comicDetailV1(comicId: comicId);
+        info = ComicDetailInfo.fromV1(v1);
+      } catch (e) {
+        errorMsg += "\nV1：$e";
+        throw AppError("无法读取漫画信息:\n$errorMsg");
+      }
+    }
+    return info;
+  }
+
+  /// 漫画详情
+  Future<ComicDetailProto> comicDetailV4({
+    required int comicId,
+  }) async {
+    var result = await HttpClient.instance.getEncryptV4(
+      '/comic/detail/$comicId',
+      needLogin: true,
+    );
+    var data = ComicDetailResponseProto.fromBuffer(result);
+    if (data.errno != 0) {
+      throw AppError(data.errmsg);
+    }
+
+    return data.data;
+  }
+
+  /// 漫画详情
+  Future<ComicDetailV1Model> comicDetailV1({
+    required int comicId,
+  }) async {
+    var result = await HttpClient.instance.getJson(
+      '/dynamic/comicinfo/$comicId.json',
+      baseUrl: "https://api.dmzj.com",
+      needLogin: true,
+    );
+    var data = json.decode(result);
+    if (data["result"] != 1) {
+      throw AppError(data["msg"]);
+    }
+
+    return ComicDetailV1Model.fromJson(data["data"]);
   }
 }

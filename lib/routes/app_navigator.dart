@@ -69,7 +69,7 @@ class AppNavigator {
 
   /// 打开漫画详情
   static void toComicDetail(int id) {
-    Log.w("打开漫画:$id");
+    toContentPage(RoutePath.kComicDetail, arg: id);
   }
 
   /// 打开小说详情
@@ -112,9 +112,20 @@ class AppNavigator {
     toContentPage(RoutePath.kSpecialDetail, arg: id);
   }
 
-  static void showBottomSheet(Widget widget) {
+  static void showBottomSheet(
+    Widget widget, {
+    bool isScrollControlled = false,
+  }) {
     showModalBottomSheet(
       context: subNavigatorContext,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+      isScrollControlled: isScrollControlled,
+      backgroundColor: Get.theme.cardColor,
       builder: (context) => widget,
       routeSettings: const RouteSettings(name: "/modalBottomSheet"),
     );

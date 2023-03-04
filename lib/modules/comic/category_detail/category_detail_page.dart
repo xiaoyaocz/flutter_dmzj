@@ -44,9 +44,12 @@ class CategoryDetailPage extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      item.title,
-                      style: Get.textTheme.titleMedium,
+                    Padding(
+                      padding: AppStyle.edgeInsetsV12,
+                      child: Text(
+                        item.title,
+                        style: Get.textTheme.titleMedium,
+                      ),
                     ),
                     Wrap(
                       spacing: 8,
@@ -55,6 +58,7 @@ class CategoryDetailPage extends StatelessWidget {
                           .map(
                             (x) => OutlinedButton(
                               style: OutlinedButton.styleFrom(
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 foregroundColor: x.tagId == item.selectId.value
                                     ? Colors.blue
                                     : Colors.grey,

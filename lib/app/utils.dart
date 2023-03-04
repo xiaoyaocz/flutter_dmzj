@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
+import 'package:share_plus/share_plus.dart';
 
 class Utils {
   static late PackageInfo packageInfo;
@@ -106,5 +107,12 @@ class Utils {
     } catch (e) {
       SmartDialog.showToast("保存失败");
     }
+  }
+
+  /// 分享
+  static void share(String url, {String content = ""}) {
+    //TODO 分享处理
+
+    Share.share(content.isEmpty ? url : "$content\n$url");
   }
 }

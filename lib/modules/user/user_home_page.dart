@@ -39,7 +39,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     child: ListTile(
                       leading: UserPhoto(
                         url: UserService.instance.userProfile.value?.cover,
-                        size: 56,
+                        size: 48,
                       ),
                       title: Text(
                         UserService.instance.userProfile.value?.nickname ?? "",

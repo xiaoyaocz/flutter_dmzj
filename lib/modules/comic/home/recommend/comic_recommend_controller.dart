@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
@@ -109,16 +108,14 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
 
   void openDetail(ComicRecommendItemModel item) {
     //漫画=1
-    if (item.type == 1) {
-      AppNavigator.toComment(
-        objId: item.objId ?? 0,
-        type: AppConstant.kTypeComic,
+    if (item.type == null || item.type == 1) {
+      AppNavigator.toComicDetail(
+        item.objId ?? item.id ?? 0,
       );
     } else if (item.type == 5) {
       //专题=5
-      AppNavigator.toComment(
-        objId: item.objId ?? 0,
-        type: AppConstant.kTypeSpecial,
+      AppNavigator.toSpecialDetail(
+        item.objId ?? 0,
       );
     } else if (item.type == 6) {
       //网页=6
@@ -144,8 +141,6 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
     } else {
       SmartDialog.showToast("未知类型，无法跳转");
     }
-
-    //AppNavigator.toContentPage(RoutePath.kTestSubRoute);
   }
 
   void toSpecial() {

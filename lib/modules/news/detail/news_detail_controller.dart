@@ -7,13 +7,13 @@ import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/app/log.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/requests/news_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:universal_html/parsing.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -243,7 +243,7 @@ getImgLinks();
   }
 
   void share() {
-    Share.share("$title\n$newsUrl");
+    Utils.share(newsUrl, content: title);
   }
 
   void comment() async {
