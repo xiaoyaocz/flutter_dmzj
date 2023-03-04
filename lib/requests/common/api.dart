@@ -23,7 +23,7 @@ class Api {
 
   /// V3 评论
   static const String BASE_URL_V3_COMMENT =
-      "https://nnv3comment.$MUWAI_DOMAIN_NAME";
+      "https://nnv3comment.$DMZJ_DOMAIN_NAME";
 
   /// 用户
   static const String BASE_URL_USER = "https://user.$DMZJ_DOMAIN_NAME";

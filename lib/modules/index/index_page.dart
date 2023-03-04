@@ -75,55 +75,57 @@ class IndexPage extends GetView<IndexController> {
             () => Visibility(
               visible:
                   MediaQuery.of(context).size.width > AppConstant.kTabletWidth,
-              child: NavigationRail(
-                elevation: 2,
-                labelType: NavigationRailLabelType.all,
-                onDestinationSelected: controller.setIndex,
-                selectedIndex: controller.index.value,
-                leading: SizedBox(
-                  height: AppStyle.statusBarHeight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 2),
+                child: NavigationRail(
+                  elevation: 2,
+                  labelType: NavigationRailLabelType.all,
+                  onDestinationSelected: controller.setIndex,
+                  selectedIndex: controller.index.value,
+                  leading: SizedBox(
+                    height: AppStyle.statusBarHeight,
+                  ),
+                  selectedLabelTextStyle: TextStyle(
+                    fontSize: 10,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  unselectedLabelTextStyle: TextStyle(
+                    fontSize: 10,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                  destinations: const [
+                    NavigationRailDestination(
+                      icon: Icon(Remix.bear_smile_line),
+                      label: Text("漫画"),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Remix.article_line),
+                      label: Text("资讯"),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Remix.book_open_line),
+                      label: Text("轻小说"),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Remix.user_smile_line),
+                      label: Text("我的"),
+                    ),
+                  ],
                 ),
-                selectedLabelTextStyle: TextStyle(
-                  fontSize: 10,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                unselectedLabelTextStyle: TextStyle(
-                  fontSize: 10,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-                destinations: const [
-                  NavigationRailDestination(
-                    icon: Icon(Remix.bear_smile_line),
-                    label: Text("漫画"),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Remix.article_line),
-                    label: Text("资讯"),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Remix.book_open_line),
-                    label: Text("轻小说"),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Remix.user_smile_line),
-                    label: Text("我的"),
-                  ),
-                ],
               ),
             ),
           ),
-          Flexible(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 450),
-              decoration: BoxDecoration(
-                border: Border(
-                  right: BorderSide(
-                    color: Colors.grey.withOpacity(.1),
-                  ),
+          Container(
+            // constraints: const BoxConstraints(maxWidth: 450),
+            width: 450,
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(
+                  color: Colors.grey.withOpacity(.1),
                 ),
               ),
-              child: indexStack,
             ),
+            child: indexStack,
           ),
           Expanded(
             child: content,

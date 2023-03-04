@@ -18,20 +18,38 @@ class ComicLatestView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return KeepAliveWrapper(
-      child: PageListView(
-        pageController: controller,
-        firstRefresh: true,
-        showPageLoadding: true,
-        separatorBuilder: (context, i) => Divider(
-          endIndent: 12,
-          indent: 12,
-          color: Colors.grey.withOpacity(.2),
-          height: 1,
-        ),
-        itemBuilder: (context, i) {
-          var item = controller.list[i];
-          return buildItem(item);
-        },
+      child: Column(
+        children: [
+          Row(
+            children: [
+              AppStyle.hGap12,
+              ...controller.types.keys.map(
+                (e) => buildFilterButton(
+                  title: e,
+                  value: controller.types[e],
+                ),
+              ),
+            ],
+          ),
+          AppStyle.vGap12,
+          Expanded(
+            child: PageListView(
+              pageController: controller,
+              firstRefresh: true,
+              showPageLoadding: false,
+              separatorBuilder: (context, i) => Divider(
+                endIndent: 12,
+                indent: 12,
+                color: Colors.grey.withOpacity(.2),
+                height: 1,
+              ),
+              itemBuilder: (context, i) {
+                var item = controller.list[i];
+                return buildItem(item);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -95,9 +113,45 @@ class ComicLatestView extends StatelessWidget {
             ),
             Center(
               child: IconButton(
-                  icon: const Icon(Icons.favorite_border), onPressed: () {}),
+                icon: const Icon(Icons.favorite_border),
+                onPressed: () {
+                  //TODO 订阅漫画
+                },
+              ),
             )
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildFilterButton({required String title, required int value}) {
+    return Container(
+      height: 32,
+      margin: AppStyle.edgeInsetsR8,
+      child: Obx(
+        () => TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor:
+                controller.type.value == value ? Colors.blue : Colors.grey,
+            shape: RoundedRectangleBorder(
+              borderRadius: AppStyle.radius24,
+              side: BorderSide(
+                color:
+                    controller.type.value == value ? Colors.blue : Colors.grey,
+              ),
+            ),
+            textStyle: const TextStyle(fontSize: 14),
+            padding: AppStyle.edgeInsetsH16,
+          ),
+          onPressed: () {
+            if (controller.type.value == value) {
+              return;
+            }
+            controller.type.value = value;
+            controller.refreshData();
+          },
+          child: Text(title),
         ),
       ),
     );

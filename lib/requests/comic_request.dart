@@ -1,4 +1,7 @@
 import 'package:flutter_dmzj/app/app_error.dart';
+import 'package:flutter_dmzj/models/comic/category_comic_model.dart';
+import 'package:flutter_dmzj/models/comic/category_filter_model.dart';
+import 'package:flutter_dmzj/models/comic/category_item_model.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
@@ -49,5 +52,60 @@ class ComicRequest {
       throw AppError(data.errmsg);
     }
     return data.data;
+  }
+
+  /// 分类
+  Future<List<ComicCategoryItemModel>> categores() async {
+    var list = <ComicCategoryItemModel>[];
+    var result = await HttpClient.instance.getJson(
+      '/0/category.json',
+    );
+    for (var item in result) {
+      list.add(ComicCategoryItemModel.fromJson(item));
+    }
+    return list;
+  }
+
+  /// 分类-筛选
+  Future<List<ComicCategoryFilterModel>> categoryFilter() async {
+    var list = <ComicCategoryFilterModel>[];
+    var result = await HttpClient.instance.getJson(
+      '/classify/filter.json',
+    );
+    for (var item in result) {
+      list.add(ComicCategoryFilterModel.fromJson(item));
+    }
+    return list;
+  }
+
+  /// 分类下漫画
+  /// - [ids] 标签
+  /// - [sort] 排序,0=人气,1=更新
+  /// - [page] 页数
+  Future<List<ComicCategoryComicModel>> categoryComic({
+    required List<int> ids,
+    int sort = 0,
+    int page = 1,
+  }) async {
+    var path = "classify/";
+    for (var item in ids) {
+      if (item != 0) {
+        path += "$item-";
+      }
+    }
+    if (path == "classify/") {
+      path = "classify/0";
+    } else {
+      path = path.substring(0, path.length - 1);
+    }
+
+    var list = <ComicCategoryComicModel>[];
+    var result = await HttpClient.instance.getJson(
+      '/$path/$sort/$page.json',
+    );
+    for (var item in result) {
+      list.add(ComicCategoryComicModel.fromJson(item));
+    }
+    return list;
   }
 }

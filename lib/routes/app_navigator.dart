@@ -97,6 +97,11 @@ class AppNavigator {
     }
   }
 
+  /// 打开漫画分类详情
+  static void toComicCategoryDetail(int id) {
+    toContentPage(RoutePath.kComicCategoryDetail, arg: id);
+  }
+
   static void showBottomSheet(Widget widget) {
     showModalBottomSheet(
       context: subNavigatorContext,

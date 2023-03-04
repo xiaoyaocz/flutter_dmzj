@@ -18,6 +18,7 @@ class PageGridView extends StatelessWidget {
   final bool showPageLoadding;
   final double crossAxisSpacing, mainAxisSpacing;
   final int crossAxisCount;
+  final bool loadMore;
   const PageGridView({
     required this.itemBuilder,
     required this.pageController,
@@ -28,6 +29,7 @@ class PageGridView extends StatelessWidget {
     this.crossAxisSpacing = 0.0,
     this.mainAxisSpacing = 0.0,
     required this.crossAxisCount,
+    this.loadMore = true,
     Key? key,
   }) : super(key: key);
 
@@ -38,14 +40,17 @@ class PageGridView extends StatelessWidget {
         children: [
           EasyRefresh(
             header: const MaterialHeader(),
-            footer: const MaterialFooter(),
-            scrollController: pageController.scrollController,
+            footer: loadMore
+                ? const MaterialFooter(
+                    clamping: false, infiniteOffset: 70, triggerOffset: 70)
+                : null,
             controller: pageController.easyRefreshController,
             refreshOnStart: firstRefresh,
-            onLoad: pageController.loadData,
+            onLoad: loadMore ? pageController.loadData : null,
             onRefresh: pageController.refreshData,
             child: MasonryGridView.count(
               padding: padding,
+              controller: pageController.scrollController,
               itemCount: pageController.list.length,
               itemBuilder: itemBuilder,
               crossAxisCount: crossAxisCount,

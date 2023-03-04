@@ -7,6 +7,7 @@ import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_dmzj/routes/app_pages.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
@@ -66,6 +67,13 @@ class DMZJApp extends StatelessWidget {
       themeMode:
           ThemeMode.values[Get.find<AppSettingsController>().themeMode.value],
       initialRoute: AppPages.kIndex,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: const Locale("zh", "CN"),
+      supportedLocales: const [Locale("zh", "CN")],
       getPages: AppPages.routes,
       navigatorObservers: [FlutterSmartDialog.observer],
       builder: FlutterSmartDialog.init(

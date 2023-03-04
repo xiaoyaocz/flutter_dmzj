@@ -18,4 +18,10 @@ class RoutePath {
 
   /// 评论
   static const kComment = "/comment";
+
+  /// 漫画详情
+  static const kComicDetail = "/comic/detail";
+
+  /// 漫画分类详情
+  static const kComicCategoryDetail = "/comic/category/detail";
 }

@@ -155,7 +155,7 @@ class NewsDetailPage extends StatelessWidget {
               if (e.localName == "img") {
                 var imgSrc = e.attributes["src"];
                 imgSrc ??= e.attributes["data-original"];
-                return InkWell(
+                return GestureDetector(
                   child: NetImage(
                     imgSrc!,
                     borderRadius: 4,

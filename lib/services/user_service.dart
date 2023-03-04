@@ -72,6 +72,9 @@ class UserService extends GetxService {
   /// 刷新个人资料
   Future refreshProfile() async {
     try {
+      if (!logined.value) {
+        return;
+      }
       userProfile.value = await request.userProfile();
     } catch (e) {
       Log.logPrint(e);
