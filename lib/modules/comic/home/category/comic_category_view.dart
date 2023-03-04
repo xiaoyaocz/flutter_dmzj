@@ -24,7 +24,7 @@ class ComicCategoryView extends StatelessWidget {
           firstRefresh: true,
           loadMore: false,
           crossAxisCount: count,
-          padding: AppStyle.edgeInsetsH12,
+          padding: AppStyle.edgeInsetsH12.copyWith(bottom: 12),
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
           itemBuilder: (context, i) {

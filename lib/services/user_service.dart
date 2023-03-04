@@ -80,4 +80,8 @@ class UserService extends GetxService {
       Log.logPrint(e);
     }
   }
+
+  void subscribeComic(int comicId) {
+    //TODO 订阅漫画
+  }
 }

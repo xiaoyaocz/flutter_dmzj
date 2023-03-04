@@ -108,4 +108,42 @@ class ComicRequest {
     }
     return list;
   }
+
+  /// 排行榜
+  Future<List<ComicRankListInfoProto>> rank({
+    required int tagId,
+    required byTime,
+    required rankType,
+    int page = 1,
+  }) async {
+    var result = await HttpClient.instance.getEncryptV4(
+      '/comic/rank/list',
+      queryParameters: {
+        'tag_id': tagId,
+        'by_time': byTime,
+        'rank_type': rankType,
+        'page': page
+      },
+      needLogin: true,
+    );
+    var data = ComicRankListResponseProto.fromBuffer(result);
+    if (data.errno != 0) {
+      throw AppError(data.errmsg);
+    }
+    return data.data;
+  }
+
+  /// 排行榜-分类
+  Future<Map<int, String>> rankFilter() async {
+    var result = await HttpClient.instance.getJson(
+      '/rank/type_filter.json',
+    );
+    Map<int, String> map = {};
+    for (var item in result) {
+      map.addAll({
+        item["tag_id"]: item["tag_name"],
+      });
+    }
+    return map;
+  }
 }

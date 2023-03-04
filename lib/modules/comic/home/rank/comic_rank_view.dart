@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
-import 'package:flutter_dmzj/modules/comic/home/latest/comic_latest_controller.dart';
+import 'package:flutter_dmzj/modules/comic/home/rank/comic_rank_controller.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
@@ -10,10 +10,10 @@ import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 
-class ComicLatestView extends StatelessWidget {
-  final ComicLatestController controller;
-  ComicLatestView({Key? key})
-      : controller = Get.put(ComicLatestController()),
+class ComicRankView extends StatelessWidget {
+  final ComicRankController controller;
+  ComicRankView({Key? key})
+      : controller = Get.put(ComicRankController()),
         super(key: key);
 
   @override
@@ -21,16 +21,36 @@ class ComicLatestView extends StatelessWidget {
     return KeepAliveWrapper(
       child: Column(
         children: [
-          Row(
-            children: [
-              AppStyle.hGap12,
-              ...controller.types.keys.map(
-                (e) => buildFilterButton(
-                  title: e,
-                  value: controller.types[e],
+          Obx(
+            () => Row(
+              children: [
+                buildFilter(
+                  // ignore: invalid_use_of_protected_member
+                  types: controller.tags.value,
+                  value: controller.tag.value,
+                  onSelected: (e) {
+                    controller.tag.value = e;
+                    controller.refreshData();
+                  },
                 ),
-              ),
-            ],
+                buildFilter(
+                  types: controller.byTimes,
+                  value: controller.byTime.value,
+                  onSelected: (e) {
+                    controller.byTime.value = e;
+                    controller.refreshData();
+                  },
+                ),
+                buildFilter(
+                  types: controller.rankTypes,
+                  value: controller.rankType.value,
+                  onSelected: (e) {
+                    controller.rankType.value = e;
+                    controller.refreshData();
+                  },
+                ),
+              ],
+            ),
           ),
           AppStyle.vGap12,
           Expanded(
@@ -55,7 +75,43 @@ class ComicLatestView extends StatelessWidget {
     );
   }
 
-  Widget buildItem(ComicUpdateListInfoProto item) {
+  Widget buildFilter({
+    required Map<int, String> types,
+    required int value,
+    required Function(int) onSelected,
+  }) {
+    return Expanded(
+      child: PopupMenuButton<int>(
+        onSelected: onSelected,
+        itemBuilder: (c) => types.keys
+            .map(
+              (k) => CheckedPopupMenuItem<int>(
+                value: k,
+                checked: k == value,
+                child: Text(types[k] ?? ""),
+              ),
+            )
+            .toList(),
+        child: SizedBox(
+          height: 36,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                types[value] ?? "",
+              ),
+              const Icon(
+                Icons.arrow_drop_down,
+                color: Colors.grey,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildItem(ComicRankListInfoProto item) {
     return InkWell(
       onTap: () {
         AppNavigator.toComicDetail(item.comicId.toInt());
@@ -121,38 +177,6 @@ class ComicLatestView extends StatelessWidget {
               ),
             )
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildFilterButton({required String title, required int value}) {
-    return Container(
-      height: 32,
-      margin: AppStyle.edgeInsetsR8,
-      child: Obx(
-        () => TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor:
-                controller.type.value == value ? Colors.blue : Colors.grey,
-            shape: RoundedRectangleBorder(
-              borderRadius: AppStyle.radius24,
-              side: BorderSide(
-                color:
-                    controller.type.value == value ? Colors.blue : Colors.grey,
-              ),
-            ),
-            textStyle: const TextStyle(fontSize: 14),
-            padding: AppStyle.edgeInsetsH16,
-          ),
-          onPressed: () {
-            if (controller.type.value == value) {
-              return;
-            }
-            controller.type.value = value;
-            controller.refreshData();
-          },
-          child: Text(title),
         ),
       ),
     );

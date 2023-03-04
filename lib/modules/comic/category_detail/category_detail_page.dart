@@ -50,6 +50,7 @@ class CategoryDetailPage extends StatelessWidget {
                     ),
                     Wrap(
                       spacing: 8,
+                      runSpacing: 8,
                       children: item.items
                           .map(
                             (x) => OutlinedButton(
