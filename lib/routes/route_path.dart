@@ -24,4 +24,7 @@ class RoutePath {
 
   /// 漫画分类详情
   static const kComicCategoryDetail = "/comic/category/detail";
+
+  /// 专题详情
+  static const kSpecialDetail = "/comic/special/detail";
 }

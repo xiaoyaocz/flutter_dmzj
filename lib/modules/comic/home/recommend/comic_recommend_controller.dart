@@ -82,7 +82,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
       //专题=5
       AppNavigator.toComment(
         objId: item.objId ?? 0,
-        type: AppConstant.kTypeTopic,
+        type: AppConstant.kTypeSpecial,
       );
     } else if (item.type == 6) {
       //网页=6

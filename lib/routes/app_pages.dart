@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/modules/comic/category_detail/category_detail_page.dart';
 import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
+import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_page.dart';
 import 'package:flutter_dmzj/modules/comment/comment_page.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
 import 'package:flutter_dmzj/modules/common/test_subroute_page.dart';
@@ -77,6 +78,13 @@ class AppPages {
         return GetPageRoute(
           settings: settings,
           page: () => CategoryDetailPage(
+            settings.arguments as int,
+          ),
+        );
+      case RoutePath.kSpecialDetail:
+        return GetPageRoute(
+          settings: settings,
+          page: () => SpecialDetailPage(
             settings.arguments as int,
           ),
         );

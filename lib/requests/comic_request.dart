@@ -3,8 +3,11 @@ import 'package:flutter_dmzj/models/comic/category_comic_model.dart';
 import 'package:flutter_dmzj/models/comic/category_filter_model.dart';
 import 'package:flutter_dmzj/models/comic/category_item_model.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
+import 'package:flutter_dmzj/models/comic/special_model.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
+
+import '../models/comic/special_detail_model.dart';
 
 class ComicRequest {
   /// 漫画-推荐
@@ -145,5 +148,26 @@ class ComicRequest {
       });
     }
     return map;
+  }
+
+  /// 专题
+  Future<List<ComicSpecialModel>> special({int page = 1}) async {
+    var list = <ComicSpecialModel>[];
+    var result = await HttpClient.instance.getJson(
+      '/subject/0/$page.json',
+    );
+    for (var item in result) {
+      list.add(ComicSpecialModel.fromJson(item));
+    }
+    return list;
+  }
+
+  /// 专题
+  Future<ComicSpecialDetailModel> specialDetail({required int id}) async {
+    var result = await HttpClient.instance.getJson(
+      '/subject/$id.json',
+    );
+
+    return ComicSpecialDetailModel.fromJson(result);
   }
 }

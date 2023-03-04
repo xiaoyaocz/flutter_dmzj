@@ -113,6 +113,7 @@ class ComicLatestView extends StatelessWidget {
               ),
             ),
             Center(
+              //TODO 订阅处理
               child: IconButton(
                 icon: const Icon(Icons.favorite_border),
                 onPressed: () {

@@ -13,8 +13,9 @@ import 'package:path/path.dart' as p;
 
 class Utils {
   static late PackageInfo packageInfo;
-  static DateFormat dateFormat = DateFormat("MM-dd HH:mm");
-  static DateFormat dateFormatWithYear = DateFormat("yyyy-MM-dd HH:mm");
+  static DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+  static DateFormat dateTimeFormat = DateFormat("MM-dd HH:mm");
+  static DateFormat dateTimeFormatWithYear = DateFormat("yyyy-MM-dd HH:mm");
   static void checkUpdate({bool showMsg = true}) {}
 
   /// 版本号解析
@@ -30,6 +31,11 @@ class Utils {
   /// 时间戳格式化-秒
   static String formatTimestamp(int ts) {
     return formatTimestampMS(ts * 1000);
+  }
+
+  static String formatTimestampToDate(int ts) {
+    var dt = DateTime.fromMillisecondsSinceEpoch(ts * 1000);
+    return dateFormat.format(dt);
   }
 
   /// 时间戳格式化-毫秒
@@ -49,10 +55,10 @@ class Utils {
     }
 
     if (dt.year == dtNow.year) {
-      return dateFormat.format(dt);
+      return dateTimeFormat.format(dt);
     }
 
-    return dateFormatWithYear.format(dt);
+    return dateTimeFormatWithYear.format(dt);
   }
 
   /// 检查相册权限

@@ -9,7 +9,7 @@ class AppConstant {
   static const int kTypeNews = 6;
 
   /// 类型ID-专题
-  static const int kTypeTopic = 2;
+  static const int kTypeSpecial = 2;
 
   /// 类型ID-轻小说
   static const int kTypeNovel = 1;
