@@ -1,4 +1,5 @@
 import 'package:flutter_dmzj/app/app_error.dart';
+import 'package:flutter_dmzj/models/comic/author_model.dart';
 import 'package:flutter_dmzj/models/comic/category_comic_model.dart';
 import 'package:flutter_dmzj/models/comic/category_filter_model.dart';
 import 'package:flutter_dmzj/models/comic/category_item_model.dart';
@@ -184,5 +185,14 @@ class ComicRequest {
     );
 
     return ComicSpecialDetailModel.fromJson(result);
+  }
+
+  /// 作者详情
+  Future<ComicAuthorModel> authorDetail({required int id}) async {
+    var result = await HttpClient.instance.getJson(
+      '/UCenter/author/$id.json',
+    );
+
+    return ComicAuthorModel.fromJson(result);
   }
 }

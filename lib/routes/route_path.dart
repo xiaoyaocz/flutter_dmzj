@@ -27,4 +27,7 @@ class RoutePath {
 
   /// 专题详情
   static const kSpecialDetail = "/comic/special/detail";
+
+  /// 漫画作者详情
+  static const kComicAuthorDetail = "/comic/author/detail";
 }

@@ -102,6 +102,11 @@ class AppNavigator {
     toContentPage(RoutePath.kComicCategoryDetail, arg: id);
   }
 
+  /// 打开漫画作者详情
+  static void toComicAuthorDetail(int id) {
+    toContentPage(RoutePath.kComicAuthorDetail, arg: id);
+  }
+
   /// 打开专题详情
   static void toSpecialDetail(int id) {
     toContentPage(RoutePath.kSpecialDetail, arg: id);
