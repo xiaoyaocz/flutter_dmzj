@@ -24,7 +24,7 @@ class ComicHomePage extends GetView<ComicHomeController> {
         ],
         controller: controller.tabController,
         action: IconButton(
-          onPressed: () {},
+          onPressed: controller.search,
           icon: const Icon(
             Icons.search,
           ),

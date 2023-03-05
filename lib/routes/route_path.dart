@@ -30,4 +30,7 @@ class RoutePath {
 
   /// 漫画作者详情
   static const kComicAuthorDetail = "/comic/author/detail";
+
+  /// 漫画搜索
+  static const kComicSearch = "/comic/search";
 }

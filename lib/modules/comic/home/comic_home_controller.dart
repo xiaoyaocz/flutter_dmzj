@@ -8,6 +8,7 @@ import 'package:flutter_dmzj/modules/comic/home/latest/comic_latest_controller.d
 import 'package:flutter_dmzj/modules/comic/home/rank/comic_rank_controller.dart';
 import 'package:flutter_dmzj/modules/comic/home/recommend/comic_recommend_controller.dart';
 import 'package:flutter_dmzj/modules/comic/home/special/comic_special_controller.dart';
+import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:get/get.dart';
 
 class ComicHomeController extends GetxController
@@ -46,5 +47,9 @@ class ComicHomeController extends GetxController
       controller = Get.find<ComicSpecialController>();
     }
     controller?.scrollToTopOrRefresh();
+  }
+
+  void search() {
+    AppNavigator.toComicSearch();
   }
 }

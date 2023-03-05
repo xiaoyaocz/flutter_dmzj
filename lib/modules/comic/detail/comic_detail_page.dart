@@ -70,6 +70,9 @@ class ComicDetailPage extends StatelessWidget {
             children: [
               Expanded(
                 child: TextButton.icon(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 14),
+                  ),
                   onPressed: controller.subscribe,
                   icon: const Icon(
                     Remix.heart_line,
@@ -80,6 +83,9 @@ class ComicDetailPage extends StatelessWidget {
               ),
               Expanded(
                 child: TextButton.icon(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 14),
+                  ),
                   onPressed: controller.comment,
                   icon: const Icon(
                     Remix.chat_2_line,
@@ -90,6 +96,9 @@ class ComicDetailPage extends StatelessWidget {
               ),
               Expanded(
                 child: TextButton.icon(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 14),
+                  ),
                   onPressed: controller.download,
                   icon: const Icon(
                     Remix.download_line,
@@ -100,6 +109,9 @@ class ComicDetailPage extends StatelessWidget {
               ),
               Expanded(
                 child: TextButton.icon(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 14),
+                  ),
                   onPressed: controller.related,
                   icon: const Icon(
                     Remix.links_line,
@@ -128,6 +140,7 @@ class ComicDetailPage extends StatelessWidget {
             NetImage(
               controller.detail.value.cover,
               width: 120,
+              height: 160,
               borderRadius: 4,
             ),
             AppStyle.hGap12,
@@ -216,7 +229,7 @@ class ComicDetailPage extends StatelessWidget {
                             style: Get.textTheme.titleSmall,
                           ),
                         ),
-                        item.sortType.value == 0
+                        item.sortType.value == 1
                             ? TextButton.icon(
                                 style: TextButton.styleFrom(
                                   textStyle: const TextStyle(fontSize: 14),
@@ -224,7 +237,7 @@ class ComicDetailPage extends StatelessWidget {
                                       MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () {
-                                  item.sortType.value = 1;
+                                  item.sortType.value = 0;
                                   item.sort();
                                 },
                                 icon: const Icon(
@@ -240,7 +253,7 @@ class ComicDetailPage extends StatelessWidget {
                                       MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () {
-                                  item.sortType.value = 0;
+                                  item.sortType.value = 1;
                                   item.sort();
                                 },
                                 icon: const Icon(

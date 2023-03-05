@@ -3,6 +3,7 @@ import 'package:flutter_dmzj/modules/comic/author_detail/author_detail_page.dart
 import 'package:flutter_dmzj/modules/comic/category_detail/category_detail_page.dart';
 import 'package:flutter_dmzj/modules/comic/detail/comic_detail_page.dart';
 import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
+import 'package:flutter_dmzj/modules/comic/search/comic_search_page.dart';
 import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_page.dart';
 import 'package:flutter_dmzj/modules/comment/comment_page.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
@@ -102,6 +103,13 @@ class AppPages {
           settings: settings,
           page: () => ComicDetailPage(
             settings.arguments as int,
+          ),
+        );
+      case RoutePath.kComicSearch:
+        return GetPageRoute(
+          settings: settings,
+          page: () => ComicSearchPage(
+            keyword: settings.arguments.toString(),
           ),
         );
       default:

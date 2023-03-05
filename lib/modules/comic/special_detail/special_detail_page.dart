@@ -74,6 +74,9 @@ class SpecialDetailPage extends StatelessWidget {
             children: [
               Expanded(
                 child: TextButton.icon(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 14),
+                  ),
                   onPressed: controller.subscribeAll,
                   icon: const Icon(
                     Remix.heart_line,
@@ -84,6 +87,9 @@ class SpecialDetailPage extends StatelessWidget {
               ),
               Expanded(
                 child: TextButton.icon(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 14),
+                  ),
                   onPressed: controller.share,
                   icon: const Icon(
                     Remix.share_box_line,
@@ -95,6 +101,9 @@ class SpecialDetailPage extends StatelessWidget {
               Expanded(
                 child: Obx(
                   () => TextButton.icon(
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 14),
+                    ),
                     onPressed: controller.comment,
                     icon: const Icon(
                       Remix.chat_2_line,

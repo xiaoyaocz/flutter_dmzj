@@ -9,6 +9,7 @@ import 'package:flutter_dmzj/models/comic/comic_related_model.dart';
 import 'package:flutter_dmzj/models/comic/detail_info.dart';
 import 'package:flutter_dmzj/models/comic/detail_v1_model.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
+import 'package:flutter_dmzj/models/comic/search_model.dart';
 import 'package:flutter_dmzj/models/comic/special_model.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
@@ -260,5 +261,20 @@ class ComicRequest {
     }
 
     return ComicDetailV1Model.fromJson(data["data"]);
+  }
+
+  /// 漫画搜索
+  /// - [page] 页数从0开始
+  /// - [keyword] 关键字
+  Future<List<ComicSearchModel>> search(
+      {required String keyword, int page = 0}) async {
+    var list = <ComicSearchModel>[];
+    var result = await HttpClient.instance.getJson(
+      '/search/show/0/$keyword/$page.json',
+    );
+    for (var item in result) {
+      list.add(ComicSearchModel.fromJson(item));
+    }
+    return list;
   }
 }

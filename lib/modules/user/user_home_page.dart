@@ -106,6 +106,15 @@ class UserHomePage extends GetView<UserHomeController> {
                       ),
                       onTap: () {},
                     ),
+                    ListTile(
+                      leading: const Icon(Remix.download_line),
+                      title: const Text("下载管理"),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey,
+                      ),
+                      onTap: () {},
+                    ),
                   ],
                 ),
                 _buildCard(

@@ -75,6 +75,7 @@ class DMZJApp extends StatelessWidget {
       locale: const Locale("zh", "CN"),
       supportedLocales: const [Locale("zh", "CN")],
       getPages: AppPages.routes,
+      debugShowCheckedModeBanner: false,
       navigatorObservers: [FlutterSmartDialog.observer],
       builder: FlutterSmartDialog.init(
         loadingBuilder: ((msg) => const AppLoaddingWidget()),

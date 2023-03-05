@@ -92,6 +92,9 @@ class NewsDetailPage extends StatelessWidget {
               Expanded(
                 child: Obx(
                   () => TextButton.icon(
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 14),
+                    ),
                     onPressed: controller.comment,
                     icon: const Icon(
                       Remix.chat_2_line,
@@ -106,6 +109,9 @@ class NewsDetailPage extends StatelessWidget {
               Expanded(
                 child: Obx(
                   () => TextButton.icon(
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 14),
+                    ),
                     onPressed: controller.collect,
                     icon: Icon(
                       controller.collected.value
@@ -119,6 +125,9 @@ class NewsDetailPage extends StatelessWidget {
               ),
               Expanded(
                 child: TextButton.icon(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 14),
+                  ),
                   onPressed: controller.photoView,
                   icon: const Icon(
                     Remix.image_2_line,
