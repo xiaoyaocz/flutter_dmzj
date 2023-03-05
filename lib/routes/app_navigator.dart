@@ -117,6 +117,16 @@ class AppNavigator {
     toContentPage(RoutePath.kComicSearch, arg: keyword);
   }
 
+  /// 打开轻小说搜索
+  static void toNovelSearch({String keyword = ""}) {
+    toContentPage(RoutePath.kNovelSearch, arg: keyword);
+  }
+
+  /// 打开漫画分类详情
+  static void toNovelCategoryDetail(int id) {
+    toContentPage(RoutePath.kNovelCategoryDetail, arg: id);
+  }
+
   static void showBottomSheet(
     Widget widget, {
     bool isScrollControlled = false,

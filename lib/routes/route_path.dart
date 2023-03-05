@@ -33,4 +33,10 @@ class RoutePath {
 
   /// 漫画搜索
   static const kComicSearch = "/comic/search";
+
+  /// 轻小说搜索
+  static const kNovelSearch = "/novel/search";
+
+  /// 轻小说分类详情
+  static const kNovelCategoryDetail = "/novel/category/detail";
 }
