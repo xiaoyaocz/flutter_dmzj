@@ -115,7 +115,7 @@ function getImgLinks(){
     }
   });
   console.log(imgLinks);
-  return imgLinks;
+  return  JSON.stringify(imgLinks);
 }
 getImgLinks();
 ''');
@@ -129,8 +129,10 @@ getImgLinks();
         },
         onWebResourceError: (WebResourceError error) {},
         onNavigationRequest: (NavigationRequest request) async {
-          onTapUrl(request.url);
-          return NavigationDecision.prevent;
+          var result = await onTapUrl(request.url);
+          return result
+              ? NavigationDecision.navigate
+              : NavigationDecision.prevent;
         },
       ),
     );
@@ -274,6 +276,7 @@ getImgLinks();
     if (uri.scheme == "dmzjimage") {
       //打开图片
       showImageView(uri.queryParameters['src'].toString());
+      return true;
     } else if (uri.scheme == "dmzjandroid") {
       var id = int.tryParse(uri.queryParameters["id"].toString()) ?? 0;
       if (uri.path == "/cartoon_description") {
@@ -281,6 +284,7 @@ getImgLinks();
       } else {
         AppNavigator.toNovelDetail(id);
       }
+      return true;
     } else if (uri.scheme == "https" || uri.scheme == "http") {
       if (uri.path.contains("article/")) {
         AppNavigator.toNewsDetail(url: url);
@@ -291,6 +295,6 @@ getImgLinks();
       return true;
     }
 
-    return true;
+    return false;
   }
 }
