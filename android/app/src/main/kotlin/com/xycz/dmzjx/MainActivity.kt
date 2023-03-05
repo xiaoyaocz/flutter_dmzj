@@ -1,4 +1,4 @@
-package com.example.flutter_dmzj
+package com.xycz.dmzjx
 
 import io.flutter.embedding.android.FlutterActivity
 

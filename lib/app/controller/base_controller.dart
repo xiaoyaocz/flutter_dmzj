@@ -31,8 +31,7 @@ class BaseController extends GetxController {
   /// * [showPageError] 显示页面错误
   /// * 只在第一页加载错误时showPageError=true，后续页加载错误时使用Toast弹出通知
   void handleError(Object exception, {bool showPageError = false}) {
-    Log.e(exception.toString(),
-        (exception as Error).stackTrace ?? StackTrace.current);
+    Log.logPrint(exception);
     var msg = exceptionToString(exception);
 
     if (showPageError) {

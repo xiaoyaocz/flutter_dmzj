@@ -159,7 +159,7 @@ class NovelSubscribeView extends StatelessWidget {
             )
             .toList(),
         child: SizedBox(
-          height: 36,
+          height: 40,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

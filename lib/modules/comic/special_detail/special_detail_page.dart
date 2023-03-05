@@ -86,19 +86,6 @@ class SpecialDetailPage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 14),
-                  ),
-                  onPressed: controller.share,
-                  icon: const Icon(
-                    Remix.share_box_line,
-                    size: 20,
-                  ),
-                  label: const Text("分享"),
-                ),
-              ),
-              Expanded(
                 child: Obx(
                   () => TextButton.icon(
                     style: TextButton.styleFrom(
@@ -112,6 +99,19 @@ class SpecialDetailPage extends StatelessWidget {
                     label: Text(
                         "评论(${controller.detail.value?.commentAmount ?? 0})"),
                   ),
+                ),
+              ),
+              Expanded(
+                child: TextButton.icon(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 14),
+                  ),
+                  onPressed: controller.share,
+                  icon: const Icon(
+                    Remix.share_box_line,
+                    size: 20,
+                  ),
+                  label: const Text("分享"),
                 ),
               ),
             ],

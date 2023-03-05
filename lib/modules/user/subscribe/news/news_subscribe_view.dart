@@ -66,7 +66,7 @@ class NewsSubscribeView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                Utils.formatTimestamp(item.subTime.toInt()),
+                                "收藏于${Utils.formatTimestamp(item.subTime.toInt())}",
                                 style: const TextStyle(
                                     color: Colors.grey, fontSize: 12),
                               ),
