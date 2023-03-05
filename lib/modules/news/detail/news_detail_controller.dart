@@ -74,6 +74,7 @@ class NewsDetailController extends BaseController {
     super.onInit();
   }
 
+  var currentUrl = "";
   void initWebView() {
     webViewController!.setJavaScriptMode(JavaScriptMode.unrestricted);
     webViewController!.setBackgroundColor(Get.isDarkMode
@@ -104,18 +105,19 @@ document.getElementsByClassName("min_box_tit")[0].style.color="#fff";
    });
 });""");
             //读取全部的图片
+
             var imagesResult =
-                await webViewController?.runJavaScriptReturningResult(r'''
+                await webViewController?.runJavaScriptReturningResult('''
 function getImgLinks(){
 	var imgLinks = [];
-  $('img').each(function() {
-    var src = $(this).attr('data-original');
+  \$('img').each(function() {
+    var src = \$(this).attr('data-original');
     if (src && src.startsWith('https://images')) {
       imgLinks.push(src);
     }
   });
   console.log(imgLinks);
-  return  JSON.stringify(imgLinks);
+  return ${Platform.isIOS ? "JSON.stringify(imgLinks)" : "imgLinks"};
 }
 getImgLinks();
 ''');
@@ -131,15 +133,14 @@ getImgLinks();
         onNavigationRequest: (NavigationRequest request) async {
           var result = await onTapUrl(request.url);
           return result
-              ? NavigationDecision.navigate
-              : NavigationDecision.prevent;
+              ? NavigationDecision.prevent
+              : NavigationDecision.navigate;
         },
       ),
     );
     Log.d(newsUrl);
-
-    webViewController!.loadRequest(
-        Uri.parse("https://v3api.dmzj.com/article/show/v2/$newsId.html"));
+    currentUrl = "https://v3api.dmzj.com/article/show/v2/$newsId.html";
+    webViewController!.loadRequest(Uri.parse(currentUrl));
   }
 
   void loadHtml() async {
@@ -271,6 +272,10 @@ getImgLinks();
   }
 
   Future<bool> onTapUrl(url) async {
+    //iOS处理
+    if (url == currentUrl) {
+      return false;
+    }
     var uri = Uri.parse(url);
     Log.d(url);
     if (uri.scheme == "dmzjimage") {
@@ -293,8 +298,9 @@ getImgLinks();
       }
 
       return true;
+    } else {
+      SmartDialog.showToast("无法打开链接:$url");
+      return true;
     }
-
-    return false;
   }
 }
