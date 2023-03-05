@@ -9,6 +9,7 @@ class EmptyPage extends StatelessWidget {
     return MediaQuery.of(context).size.width <= AppConstant.kTabletWidth
         ? Container()
         : Scaffold(
+            resizeToAvoidBottomInset: false,
             body: Center(
               child: Image.asset(
                 "assets/images/logo_dmzj.png",
