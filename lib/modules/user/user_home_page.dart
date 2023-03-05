@@ -86,7 +86,7 @@ class UserHomePage extends GetView<UserHomeController> {
                         Icons.chevron_right,
                         color: Colors.grey,
                       ),
-                      onTap: () {},
+                      onTap: controller.toUserSubscribe,
                     ),
                     ListTile(
                       leading: const Icon(Remix.history_line),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -75,6 +76,7 @@ class AppNavigator {
   /// 打开小说详情
   static void toNovelDetail(int id) {
     Log.w("打开小说:$id");
+    toComment(objId: id, type: AppConstant.kTypeNovel);
   }
 
   /// 打开评论
@@ -125,6 +127,12 @@ class AppNavigator {
   /// 打开漫画分类详情
   static void toNovelCategoryDetail(int id) {
     toContentPage(RoutePath.kNovelCategoryDetail, arg: id);
+  }
+
+  /// 打开用户订阅
+  /// - [type] 0=漫画,1=小说,2=新闻
+  static void toUserSubscribe({int type = 0}) {
+    toContentPage(RoutePath.kUserSubscribe, arg: type);
   }
 
   static void showBottomSheet(

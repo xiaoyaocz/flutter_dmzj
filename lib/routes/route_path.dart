@@ -39,4 +39,7 @@ class RoutePath {
 
   /// 轻小说分类详情
   static const kNovelCategoryDetail = "/novel/category/detail";
+
+  /// 用户订阅
+  static const kUserSubscribe = "/user/subscribe";
 }

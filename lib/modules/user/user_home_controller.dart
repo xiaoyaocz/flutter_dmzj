@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 
 import 'package:get/get.dart';
@@ -52,5 +53,13 @@ class UserHomeController extends GetxController {
   /// 检查更新
   void checkUpdate() {
     Utils.checkUpdate(showMsg: true);
+  }
+
+  /// 订阅
+  void toUserSubscribe() async {
+    if (!await UserService.instance.login()) {
+      return;
+    }
+    AppNavigator.toUserSubscribe();
   }
 }

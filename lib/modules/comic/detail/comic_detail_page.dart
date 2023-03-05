@@ -280,18 +280,19 @@ class ComicDetailPage extends StatelessWidget {
                           if (item.showMoreButton &&
                               !item.showAll.value &&
                               i == 14) {
-                            return OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                textStyle: const TextStyle(fontSize: 14),
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                minimumSize: const Size.fromHeight(40),
-                              ),
-                              onPressed: () {
-                                item.showAll.value = true;
-                              },
-                              child: const Text(
-                                "···",
-                                overflow: TextOverflow.ellipsis,
+                            return Tooltip(
+                              message: "展开全部章节",
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  textStyle: const TextStyle(fontSize: 14),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  minimumSize: const Size.fromHeight(40),
+                                ),
+                                onPressed: () {
+                                  item.showAll.value = true;
+                                },
+                                child: const Icon(Icons.arrow_drop_down),
                               ),
                             );
                           }
