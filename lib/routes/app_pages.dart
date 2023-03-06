@@ -3,6 +3,8 @@ import 'package:flutter_dmzj/modules/comic/author_detail/author_detail_page.dart
 import 'package:flutter_dmzj/modules/comic/category_detail/category_detail_page.dart';
 import 'package:flutter_dmzj/modules/comic/detail/comic_detail_page.dart';
 import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
+import 'package:flutter_dmzj/modules/comic/reader/comic_reader_controller.dart';
+import 'package:flutter_dmzj/modules/comic/reader/comic_reader_page.dart';
 import 'package:flutter_dmzj/modules/comic/search/comic_search_page.dart';
 import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_page.dart';
 import 'package:flutter_dmzj/modules/comment/comment_page.dart';
@@ -37,6 +39,18 @@ class AppPages {
           () => UserHomeController(),
         ),
       ],
+    ),
+    GetPage(
+      name: RoutePath.kComicReader,
+      page: () => const ComicReaderPage(),
+      binding: BindingsBuilder.put(
+        () => ComicReaderController(
+          comicId: Get.arguments["comicId"],
+          comicTitle: Get.arguments["comicTitle"],
+          chapters: Get.arguments["chapters"],
+          chapter: Get.arguments["chapter"],
+        ),
+      ),
     ),
   ];
 

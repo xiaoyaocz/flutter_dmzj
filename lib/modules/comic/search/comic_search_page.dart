@@ -51,20 +51,61 @@ class ComicSearchPage extends StatelessWidget {
           ),
         ),
       ),
-      body: PageListView(
-        pageController: controller,
-        firstRefresh: false,
-        showPageLoadding: false,
-        separatorBuilder: (context, i) => Divider(
-          endIndent: 12,
-          indent: 12,
-          color: Colors.grey.withOpacity(.2),
-          height: 1,
-        ),
-        itemBuilder: (context, i) {
-          var item = controller.list[i];
-          return buildItem(item);
-        },
+      body: Stack(
+        children: [
+          PageListView(
+            pageController: controller,
+            firstRefresh: false,
+            showPageLoadding: true,
+            separatorBuilder: (context, i) => Divider(
+              endIndent: 12,
+              indent: 12,
+              color: Colors.grey.withOpacity(.2),
+              height: 1,
+            ),
+            itemBuilder: (context, i) {
+              var item = controller.list[i];
+              return buildItem(item);
+            },
+          ),
+          Positioned.fill(
+            child: Obx(
+              () => Offstage(
+                offstage: !controller.showHotWord.value,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const ListTile(
+                        title: Text("热门搜索"),
+                      ),
+                      Padding(
+                        padding: AppStyle.edgeInsetsH12.copyWith(bottom: 12),
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: controller.hotWords.keys
+                              .map(
+                                (e) => OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  onPressed: () {
+                                    AppNavigator.toComicDetail(e);
+                                  },
+                                  child: Text(controller.hotWords[e] ?? ""),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter_dmzj/app/app_error.dart';
+import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/comic/author_model.dart';
 import 'package:flutter_dmzj/models/comic/category_comic_model.dart';
 import 'package:flutter_dmzj/models/comic/category_filter_model.dart';
 import 'package:flutter_dmzj/models/comic/category_item_model.dart';
+import 'package:flutter_dmzj/models/comic/chapter_detail_web_model.dart';
+import 'package:flutter_dmzj/models/comic/chapter_info.dart';
 import 'package:flutter_dmzj/models/comic/comic_related_model.dart';
 import 'package:flutter_dmzj/models/comic/detail_info.dart';
 import 'package:flutter_dmzj/models/comic/detail_v1_model.dart';
@@ -276,5 +279,72 @@ class ComicRequest {
       list.add(ComicSearchModel.fromJson(item));
     }
     return list;
+  }
+
+  /// 漫画搜索热词
+  Future<Map<int, String>> searchHotWord() async {
+    var result = await HttpClient.instance.getJson(
+      '/search/hot/0.json',
+    );
+    Map<int, String> map = {};
+    for (var item in result) {
+      map.addAll({
+        item["id"]: item["name"],
+      });
+    }
+    return map;
+  }
+
+  /// 章节详情
+  Future<ComicChapterDetail> chapterDetail(
+      {required int comicId, required int chapterId}) async {
+    ComicChapterDetail info;
+
+    try {
+      var v4 = await chapterDetailV4(comicId: comicId, chapterId: chapterId);
+      info = ComicChapterDetail.fromV4(v4);
+    } catch (e) {
+      Log.logPrint(e);
+      try {
+        var v1 = await chapterDetailWeb(comicId: comicId, chapterId: chapterId);
+        info = ComicChapterDetail.fromWebApi(v1);
+      } catch (e) {
+        Log.logPrint(e);
+
+        throw AppError("无法读取章节信息");
+      }
+    }
+    return info;
+  }
+
+  /// 章节详情-V4
+  Future<ComicChapterDetailProto> chapterDetailV4(
+      {required int comicId, required int chapterId}) async {
+    var result = await HttpClient.instance.getEncryptV4(
+      '/comic/chapter/$comicId/$chapterId',
+      needLogin: true,
+    );
+    var data = ComicChapterResponseProto.fromBuffer(result);
+    if (data.errno != 0) {
+      throw AppError(data.errmsg);
+    }
+
+    return data.data;
+  }
+
+  /// 章节详情-WebAPI
+  Future<ComicChapterDetailWebModel> chapterDetailWeb(
+      {required int comicId, required int chapterId}) async {
+    var result = await HttpClient.instance.getJson(
+      '/chapinfo/$comicId/$chapterId.html',
+      baseUrl: "https://m.dmzj.com",
+      needLogin: true,
+    );
+    if (result.toString().startsWith("{")) {
+      var data = json.decode(result);
+      return ComicChapterDetailWebModel.fromJson(data);
+    } else {
+      throw AppError(result);
+    }
   }
 }

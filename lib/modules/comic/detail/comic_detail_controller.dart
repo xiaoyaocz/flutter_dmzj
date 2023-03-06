@@ -3,10 +3,12 @@ import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/detail_info.dart';
+import 'package:flutter_dmzj/models/db/comic_history.dart';
 import 'package:flutter_dmzj/modules/comic/detail/comic_detail_related_page.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
 import 'package:flutter_dmzj/requests/user_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -35,6 +37,7 @@ class ComicDetailControler extends BaseController {
     super.onInit();
   }
 
+  /// 加载信息
   void loadDetail() async {
     try {
       pageLoadding.value = true;
@@ -67,10 +70,12 @@ class ComicDetailControler extends BaseController {
     }
   }
 
+  /// 查看评论
   void comment() {
     AppNavigator.toComment(objId: comicId, type: AppConstant.kTypeComic);
   }
 
+  /// 分享
   void share() {
     if (detail.value.id == 0) {
       return;
@@ -81,6 +86,7 @@ class ComicDetailControler extends BaseController {
     );
   }
 
+  /// 订阅
   void subscribe() async {
     var result = await (subscribeStatus.value
         ? UserService.instance
@@ -91,7 +97,60 @@ class ComicDetailControler extends BaseController {
     }
   }
 
+  /// 下载
   void download() {}
+
+  /// 开始/继续阅读
+  void read() {
+    if (detail.value.volumes.isEmpty) {
+      SmartDialog.showToast("没有可阅读的章节");
+      return;
+    }
+    if (detail.value.volumes.first.chapters.isEmpty) {
+      SmartDialog.showToast("没有可阅读的章节");
+      return;
+    }
+    //查找记录
+    var history = DBService.instance.getComicHistory(comicId);
+    if (history != null) {
+    } else {
+      //从头开始
+      var volume = detail.value.volumes.first;
+      var chapters = List<ComicDetailChapterItem>.from(volume.chapters);
+      //正序
+      chapters.sort((a, b) => a.chapterOrder.compareTo(b.chapterOrder));
+      var chapter = chapters.first;
+      AppNavigator.toComicReader(
+        comicId: comicId,
+        comicTitle: detail.value.title,
+        chapters: chapters,
+        chapter: chapter,
+      );
+      // DBService.instance.addComicHistory(
+      //   ComicHistory(
+      //     comicId: comicId,
+      //     chapterId: chapter.chapterId,
+      //     comicName: detail.value.title,
+      //     comicCover: detail.value.cover,
+      //     chapterName: chapter.chapterTitle,
+      //     updateTime: DateTime.now(),
+      //     page: 0,
+      //   ),
+      // );
+    }
+  }
+
+  void readChapter(ComicDetailVolume volume, ComicDetailChapterItem item) {
+    var chapters = List<ComicDetailChapterItem>.from(volume.chapters);
+    //正序
+    chapters.sort((a, b) => a.chapterOrder.compareTo(b.chapterOrder));
+    AppNavigator.toComicReader(
+      comicId: comicId,
+      comicTitle: detail.value.title,
+      chapters: chapters,
+      chapter: item,
+    );
+  }
 
   void related() async {
     try {
@@ -106,6 +165,24 @@ class ComicDetailControler extends BaseController {
       SmartDialog.showToast(e.toString());
     } finally {
       SmartDialog.dismiss(status: SmartStatus.loading);
+    }
+  }
+
+  void toAuthorDetail(ComicDetailTag e) {
+    if (e.tagId == 0) {
+      //神隐漫画没有ID，直接跳转搜索
+      AppNavigator.toComicSearch(keyword: e.tagName);
+    } else {
+      AppNavigator.toComicAuthorDetail(e.tagId);
+    }
+  }
+
+  void toCategoryDetail(ComicDetailTag e) {
+    if (e.tagId == 0) {
+      //神隐漫画没有ID，直接跳转搜索
+      AppNavigator.toComicSearch(keyword: e.tagName);
+    } else {
+      AppNavigator.toComicCategoryDetail(e.tagId);
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comment/comment_item.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
+import 'package:flutter_dmzj/widgets/user_photo.dart';
 import 'package:get/get.dart';
 import 'dart:ui' as ui;
 
@@ -23,11 +24,8 @@ class CommentItemWidget extends StatelessWidget {
         children: <Widget>[
           InkWell(
             onTap: () {},
-            child: NetImage(
-              item.avatarUrl,
-              width: 48,
-              height: 48,
-              borderRadius: 24,
+            child: UserPhoto(
+              url: item.avatarUrl,
             ),
           ),
           AppStyle.hGap12,

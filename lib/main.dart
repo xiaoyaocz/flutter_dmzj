@@ -6,6 +6,7 @@ import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/app/utils.dart';
+import 'package:flutter_dmzj/models/db/comic_history.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -49,6 +50,8 @@ Future initServices() async {
   //用户信息
   Log.d("Init User Service");
   Get.put(UserService()).init();
+
+  Hive.registerAdapter(ComicHistoryAdapter());
 
   await Get.put(DBService()).init();
 

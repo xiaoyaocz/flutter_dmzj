@@ -148,7 +148,9 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
     homeController.tabController.animateTo(4);
   }
 
-  void toMySubscribe() {}
+  void toMySubscribe() {
+    AppNavigator.toUserSubscribe();
+  }
 
   @override
   void onClose() {

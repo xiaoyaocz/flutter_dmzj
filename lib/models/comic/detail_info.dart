@@ -30,14 +30,15 @@ class ComicDetailInfo {
     required this.status,
     required this.authors,
     this.subscribeNum = 0,
-    required this.chapters,
+    required this.volumes,
+    this.isHide = false,
   });
 
   factory ComicDetailInfo.empty() => ComicDetailInfo(
         types: [],
         status: [],
         authors: [],
-        chapters: [],
+        volumes: [],
       );
 
   factory ComicDetailInfo.fromV4(ComicDetailProto proto) => ComicDetailInfo(
@@ -79,11 +80,11 @@ class ComicDetailInfo {
               ),
             )
             .toList(),
-        chapters: proto.chapters
+        volumes: proto.chapters
             .map(
-              (e) => ComicDetailChapter(
+              (e) => ComicDetailVolume(
                 title: e.title,
-                data: RxList<ComicDetailChapterItem>(
+                chapters: RxList<ComicDetailChapterItem>(
                   e.data
                       .map(
                         (x) => ComicDetailChapterItem(
@@ -102,7 +103,7 @@ class ComicDetailInfo {
       );
   factory ComicDetailInfo.fromV1(ComicDetailV1Model model) {
     var lastChapterId = 0;
-    List<ComicDetailChapter> chapter = [];
+    List<ComicDetailVolume> volumes = [];
     List<ComicDetailChapterItem> serialItems = [];
     List<ComicDetailChapterItem> aloneItems = [];
     for (var item in model.list) {
@@ -130,14 +131,15 @@ class ComicDetailInfo {
     if (serialItems.isNotEmpty) {
       lastChapterId = serialItems.last.chapterId;
     }
-    chapter.add(
-      ComicDetailChapter(
-          title: "连载", data: RxList<ComicDetailChapterItem>(serialItems)),
+    volumes.add(
+      ComicDetailVolume(
+          title: "神隐", chapters: RxList<ComicDetailChapterItem>(serialItems)),
     );
     if (aloneItems.isNotEmpty) {
-      chapter.add(
-        ComicDetailChapter(
-            title: "单行本", data: RxList<ComicDetailChapterItem>(aloneItems)),
+      volumes.add(
+        ComicDetailVolume(
+            title: "神隐-单行本",
+            chapters: RxList<ComicDetailChapterItem>(aloneItems)),
       );
     }
     return ComicDetailInfo(
@@ -155,6 +157,7 @@ class ComicDetailInfo {
       subscribeNum: 0,
       firstLetter: model.info.firstLetter,
       comicPy: "",
+      isHide: true,
       types: model.info.types
           .split("/")
           .map(
@@ -179,7 +182,7 @@ class ComicDetailInfo {
             ),
           )
           .toList(),
-      chapters: chapter,
+      volumes: volumes,
     );
   }
 
@@ -200,7 +203,10 @@ class ComicDetailInfo {
   List<ComicDetailTag> status = [];
   List<ComicDetailTag> authors = [];
   int subscribeNum;
-  List<ComicDetailChapter> chapters = [];
+  List<ComicDetailVolume> volumes = [];
+
+  /// 是否神隐
+  bool isHide;
 
   @override
   String toString() {
@@ -218,26 +224,26 @@ class ComicDetailTag {
   String tagName;
 }
 
-class ComicDetailChapter {
-  ComicDetailChapter({
+class ComicDetailVolume {
+  ComicDetailVolume({
     required this.title,
-    required this.data,
+    required this.chapters,
   }) {
     sort();
   }
 
   String title;
-  RxList<ComicDetailChapterItem> data;
+  RxList<ComicDetailChapterItem> chapters;
   //0倒序,1正序
   var sortType = 0.obs;
   var showAll = false.obs;
-  bool get showMoreButton => data.length > 15;
+  bool get showMoreButton => chapters.length > 15;
 
   void sort() {
     if (sortType.value == 0) {
-      data.sort((a, b) => b.chapterOrder.compareTo(a.chapterOrder));
+      chapters.sort((a, b) => b.chapterOrder.compareTo(a.chapterOrder));
     } else {
-      data.sort((a, b) => a.chapterOrder.compareTo(b.chapterOrder));
+      chapters.sort((a, b) => a.chapterOrder.compareTo(b.chapterOrder));
     }
   }
 }

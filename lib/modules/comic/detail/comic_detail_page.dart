@@ -69,6 +69,11 @@ class ComicDetailPage extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 2,
+        onPressed: controller.read,
+        child: const Icon(Icons.play_circle),
+      ),
       bottomNavigationBar: BottomAppBar(
         child: SizedBox(
           height: 48,
@@ -164,19 +169,53 @@ class ComicDetailPage extends StatelessWidget {
                     style: Get.textTheme.titleMedium,
                   ),
                   AppStyle.vGap8,
-                  //TODO 作者点击
-                  _buildInfo(
-                    title: controller.detail.value.authors
-                        .map((e) => e.tagName)
-                        .join("/"),
+
+                  _buildInfoItems(
                     iconData: Remix.user_smile_line,
+                    children: controller.detail.value.authors
+                        .map(
+                          (e) => GestureDetector(
+                            onTap: () => controller.toAuthorDetail(e),
+                            child: Text(
+                              e.tagName,
+                              style: TextStyle(
+                                fontSize: 14,
+                                decoration: TextDecoration.underline,
+                                color: Get.isDarkMode
+                                    ? Colors.white
+                                    : AppColor.black333,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
-                  //TODO 类型点击
-                  _buildInfo(
-                    title: controller.detail.value.types
-                        .map((e) => e.tagName)
-                        .join("/"),
-                    iconData: Remix.hashtag,
+
+                  // _buildInfo(
+                  //   title: controller.detail.value.types
+                  //       .map((e) => e.tagName)
+                  //       .join("/"),
+                  //   iconData: Remix.hashtag,
+                  // ),
+                  _buildInfoItems(
+                    iconData: Remix.user_smile_line,
+                    children: controller.detail.value.types
+                        .map(
+                          (e) => GestureDetector(
+                            onTap: () => controller.toCategoryDetail(e),
+                            child: Text(
+                              e.tagName,
+                              style: TextStyle(
+                                fontSize: 14,
+                                decoration: TextDecoration.underline,
+                                color: Get.isDarkMode
+                                    ? Colors.white
+                                    : AppColor.black333,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                   _buildInfo(
                     title: "人气 ${controller.detail.value.hitNum}",
@@ -223,7 +262,7 @@ class ComicDetailPage extends StatelessWidget {
 
   Widget _buildChapter() {
     return Column(
-      children: controller.detail.value.chapters
+      children: controller.detail.value.volumes
           .map(
             (item) => Obx(
               () => Column(
@@ -235,7 +274,7 @@ class ComicDetailPage extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            "${item.title}(共${item.data.length}话)",
+                            "${item.title}(共${item.chapters.length}话)",
                             style: Get.textTheme.titleSmall,
                           ),
                         ),
@@ -285,7 +324,7 @@ class ComicDetailPage extends StatelessWidget {
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: (item.showMoreButton && !item.showAll.value)
                             ? 15
-                            : item.data.length,
+                            : item.chapters.length,
                         itemBuilder: (_, i) {
                           if (item.showMoreButton &&
                               !item.showAll.value &&
@@ -308,7 +347,7 @@ class ComicDetailPage extends StatelessWidget {
                             );
                           }
                           return Tooltip(
-                            message: item.data[i].chapterTitle,
+                            message: item.chapters[i].chapterTitle,
                             child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                 foregroundColor:
@@ -319,9 +358,10 @@ class ComicDetailPage extends StatelessWidget {
                               ),
                               onPressed: () {
                                 //TODO 跳转阅读
+                                controller.readChapter(item, item.chapters[i]);
                               },
                               child: Text(
-                                item.data[i].chapterTitle,
+                                item.chapters[i].chapterTitle,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -364,6 +404,32 @@ class ComicDetailPage extends StatelessWidget {
                 fontSize: 14,
                 color: Get.isDarkMode ? Colors.white : AppColor.black333,
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoItems({
+    required List<Widget> children,
+    IconData iconData = Icons.tag,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            iconData,
+            color: Colors.grey,
+            size: 16,
+          ),
+          AppStyle.hGap8,
+          Expanded(
+            child: Wrap(
+              spacing: 8,
+              children: children,
             ),
           ),
         ],

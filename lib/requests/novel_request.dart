@@ -121,4 +121,18 @@ class NovelRequest {
     }
     return list;
   }
+
+  /// 小说搜索热词
+  Future<Map<int, String>> searchHotWord() async {
+    var result = await HttpClient.instance.getJson(
+      '/search/hot/1.json',
+    );
+    Map<int, String> map = {};
+    for (var item in result) {
+      map.addAll({
+        item["id"]: item["name"],
+      });
+    }
+    return map;
+  }
 }

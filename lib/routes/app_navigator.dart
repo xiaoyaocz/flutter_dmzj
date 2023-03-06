@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/log.dart';
+import 'package:flutter_dmzj/models/comic/detail_info.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -133,6 +134,22 @@ class AppNavigator {
   /// - [type] 0=漫画,1=小说,2=新闻
   static void toUserSubscribe({int type = 0}) {
     toContentPage(RoutePath.kUserSubscribe, arg: type);
+  }
+
+  /// 打开漫画阅读
+  static void toComicReader({
+    required int comicId,
+    required String comicTitle,
+    required List<ComicDetailChapterItem> chapters,
+    required ComicDetailChapterItem chapter,
+  }) {
+    // 使用主路由跳转
+    Get.toNamed(RoutePath.kComicReader, arguments: {
+      "comicId": comicId,
+      "comicTitle": comicTitle,
+      "chapters": chapters,
+      "chapter": chapter,
+    });
   }
 
   static void showBottomSheet(
