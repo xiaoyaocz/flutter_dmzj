@@ -14,6 +14,7 @@ import 'package:flutter_dmzj/models/comic/detail_v1_model.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
 import 'package:flutter_dmzj/models/comic/search_model.dart';
 import 'package:flutter_dmzj/models/comic/special_model.dart';
+import 'package:flutter_dmzj/models/comic/view_point_model.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
 
@@ -311,7 +312,7 @@ class ComicRequest {
       } catch (e) {
         Log.logPrint(e);
 
-        throw AppError("无法读取章节信息");
+        throw AppError("ComicID:$comicId ChapterID:$chapterId\n无法读取章节信息");
       }
     }
     return info;
@@ -346,5 +347,18 @@ class ComicRequest {
     } else {
       throw AppError(result);
     }
+  }
+
+  /// 观点、吐槽
+  Future<List<ComicViewPointModel>> viewPoints(
+      {required int comicId, required int chapterId}) async {
+    var list = <ComicViewPointModel>[];
+    var result = await HttpClient.instance.getJson(
+      '/viewPoint/0/$comicId/$chapterId.json',
+    );
+    for (var item in result) {
+      list.add(ComicViewPointModel.fromJson(item));
+    }
+    return list;
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,12 +60,21 @@ Future initServices() async {
   Get.put(AppSettingsController());
 }
 
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
+}
+
 class DMZJApp extends StatelessWidget {
   const DMZJApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: '动漫之家 X',
+      scrollBehavior: AppScrollBehavior(),
       theme: AppStyle.lightTheme,
       darkTheme: AppStyle.darkTheme,
       themeMode:

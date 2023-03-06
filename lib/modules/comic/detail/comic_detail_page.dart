@@ -180,6 +180,7 @@ class ComicDetailPage extends StatelessWidget {
                               e.tagName,
                               style: TextStyle(
                                 fontSize: 14,
+                                height: 1.2,
                                 decoration: TextDecoration.underline,
                                 color: Get.isDarkMode
                                     ? Colors.white
@@ -198,7 +199,7 @@ class ComicDetailPage extends StatelessWidget {
                   //   iconData: Remix.hashtag,
                   // ),
                   _buildInfoItems(
-                    iconData: Remix.user_smile_line,
+                    iconData: Remix.hashtag,
                     children: controller.detail.value.types
                         .map(
                           (e) => GestureDetector(
@@ -207,6 +208,7 @@ class ComicDetailPage extends StatelessWidget {
                               e.tagName,
                               style: TextStyle(
                                 fontSize: 14,
+                                height: 1.2,
                                 decoration: TextDecoration.underline,
                                 color: Get.isDarkMode
                                     ? Colors.white
