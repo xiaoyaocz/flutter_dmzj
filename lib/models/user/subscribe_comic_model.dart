@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 T? asT<T>(dynamic value) {
   if (value is T) {
     return value;
@@ -39,6 +41,9 @@ class UserSubscribeComicModel {
   int subReaded;
   int id;
   String status;
+
+  //是否被选中
+  Rx<bool> isChecked = false.obs;
 
   @override
   String toString() {

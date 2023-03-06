@@ -2,6 +2,7 @@ import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/comment/comment_item.dart';
 import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:html_unescape/html_unescape.dart';
 
 class CommentRequest {
@@ -131,5 +132,38 @@ class CommentRequest {
     )..parents.addAll(parents);
   }
 
-  //TODO 发表评论
+  /// 发表评论
+  /// - [objId] ID
+  /// - [type] 类型 ,见AppConstant
+  /// - [content] 内容
+  /// - [toCommentId] 回复评论ID
+  /// - [originCommentId] 原始评论ID
+  /// - [toUid] 回复用户
+  Future<bool> sendComment({
+    required int objId,
+    required int type,
+    required String content,
+    String toCommentId = "0",
+    String originCommentId = "0",
+    String toUid = "0",
+  }) async {
+    var result = await HttpClient.instance.postJson(
+      "/v1/$type/new/add/app",
+      baseUrl: Api.BASE_URL_V3_COMMENT,
+      data: {
+        "obj_id": objId,
+        "to_comment_id": toCommentId,
+        "origin_comment_id": originCommentId,
+        "to_uid": toUid,
+        "sender_terminal": 1,
+        "content": content,
+        "dmzj_token": UserService.instance.dmzjToken,
+        "_debug": 0
+      },
+    );
+    if (result["code"] != 0) {
+      throw AppError(result["msg"].toString());
+    }
+    return true;
+  }
 }

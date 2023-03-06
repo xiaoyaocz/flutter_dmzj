@@ -23,7 +23,13 @@ class ComicDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("漫画详情"),
+        title: Obx(
+          () => Text(
+            controller.detail.value.title.isEmpty
+                ? "漫画详情"
+                : controller.detail.value.title,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: controller.share,
@@ -69,16 +75,20 @@ class ComicDetailPage extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 14),
+                child: Obx(
+                  () => TextButton.icon(
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 14),
+                    ),
+                    onPressed: controller.subscribe,
+                    icon: Icon(
+                      controller.subscribeStatus.value
+                          ? Remix.heart_fill
+                          : Remix.heart_line,
+                      size: 20,
+                    ),
+                    label: Text(controller.subscribeStatus.value ? "取消" : "订阅"),
                   ),
-                  onPressed: controller.subscribe,
-                  icon: const Icon(
-                    Remix.heart_line,
-                    size: 20,
-                  ),
-                  label: const Text("订阅"),
                 ),
               ),
               Expanded(
@@ -284,6 +294,7 @@ class ComicDetailPage extends StatelessWidget {
                               message: "展开全部章节",
                               child: OutlinedButton(
                                 style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.grey,
                                   textStyle: const TextStyle(fontSize: 14),
                                   tapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,

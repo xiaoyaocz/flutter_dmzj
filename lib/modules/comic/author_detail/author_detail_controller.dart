@@ -1,6 +1,8 @@
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/models/comic/author_model.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:get/get.dart';
 
 class ComicAuthorDetailController extends BaseController {
@@ -35,6 +37,9 @@ class ComicAuthorDetailController extends BaseController {
     if (detail.value == null) {
       return;
     }
-    //TODO 订阅全部
+    UserService.instance.addSubscribe(
+      detail.value!.data.map((e) => e.id).toList(),
+      AppConstant.kTypeComic,
+    );
   }
 }

@@ -12,6 +12,7 @@ class AppStyle {
       elevation: 0,
       backgroundColor: Colors.transparent,
       foregroundColor: AppColor.black333,
+      centerTitle: false,
       shape: Border(
         bottom: BorderSide(
           color: Colors.grey.withOpacity(.2),
@@ -39,6 +40,7 @@ class AppStyle {
       elevation: 0,
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.white,
+      centerTitle: false,
       shape: Border(
         bottom: BorderSide(
           color: Colors.grey.withOpacity(.2),

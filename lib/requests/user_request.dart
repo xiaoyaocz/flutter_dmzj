@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
+import 'package:flutter_dmzj/models/user/bind_status_model.dart';
 import 'package:flutter_dmzj/models/user/login_result_model.dart';
 import 'package:flutter_dmzj/models/user/subscribe_comic_model.dart';
 import 'package:flutter_dmzj/models/user/subscribe_news_model.dart';
@@ -47,12 +49,26 @@ class UserRequest {
       baseUrl: Api.BASE_URL_V3,
       queryParameters: {
         "dmzj_token": UserService.instance.dmzjToken,
-      }..addAll(
-          Api.getDefaultParameter(),
-        ),
+      },
+      withDefaultParameter: true,
     );
 
     return UserProfileModel.fromJson(result);
+  }
+
+  /// 获取绑定手机、设置密码状态
+  Future<UserBindStatusModel> isBindTelPwd() async {
+    var result = await HttpClient.instance.getJson(
+      "/account/isbindtelpwd",
+      baseUrl: Api.BASE_URL_V3,
+      queryParameters: {
+        "dmzj_token": UserService.instance.dmzjToken,
+      },
+      withDefaultParameter: true,
+      checkCode: true,
+    );
+
+    return UserBindStatusModel.fromJson(result);
   }
 
   /// 我的漫画订阅
@@ -105,7 +121,8 @@ class UserRequest {
     return list;
   }
 
-  /// 新闻检查收藏
+  /// 我的新闻收藏
+  /// - [page] 页数从0开始
   Future<List<UserSubscribeNewsModel>> newsSubscribes({int page = 1}) async {
     var uid = UserService.instance.userId;
     var par = {"uid": int.parse(uid), "page": page};
@@ -129,5 +146,66 @@ class UserRequest {
       list.add(UserSubscribeNewsModel.fromJson(item));
     }
     return list;
+  }
+
+  /// 添加订阅
+  /// - [type] 类型，对应AppConstant
+  Future<bool> addSubscribe({required List<int> ids, required int type}) async {
+    var typeStr = "mh";
+    if (type == AppConstant.kTypeComic) {
+      typeStr = "mh";
+    } else if (type == AppConstant.kTypeNovel) {
+      typeStr = "xs";
+    }
+
+    await HttpClient.instance.postJson(
+      '/subscribe/add',
+      data: {
+        "obj_ids": ids.join(","),
+        "type": typeStr,
+        "uid": UserService.instance.userId,
+      },
+    );
+    return true;
+  }
+
+  /// 取消订阅
+  /// - [type] 类型，对应AppConstant
+  Future<bool> removeSubscribe(
+      {required List<int> ids, required int type}) async {
+    var typeStr = "mh";
+    if (type == AppConstant.kTypeComic) {
+      typeStr = "mh";
+    } else if (type == AppConstant.kTypeNovel) {
+      typeStr = "xs";
+    }
+
+    await HttpClient.instance.getJson(
+      '/subscribe/cancel',
+      queryParameters: {
+        "obj_ids": ids.join(","),
+        "type": typeStr,
+        "uid": UserService.instance.userId,
+      },
+    );
+    return true;
+  }
+
+  /// 查询订阅状态
+  /// - [objId] 漫画ID或小说ID
+  /// - [type] 类型，对应AppConstant
+  Future<bool> checkSubscribeStatus(
+      {required int objId, required int type}) async {
+    var typeId = 0;
+    if (type == AppConstant.kTypeComic) {
+      typeId = 0;
+    } else if (type == AppConstant.kTypeNovel) {
+      typeId = 1;
+    }
+    await HttpClient.instance.getJson(
+      '/subscribe/$typeId/${UserService.instance.userId}/$objId',
+      checkCode: true,
+    );
+    return true;
   }
 }

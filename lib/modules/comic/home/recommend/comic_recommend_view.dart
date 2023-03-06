@@ -216,6 +216,7 @@ class ComicRecommendView extends StatelessWidget {
             pagination: const SwiperPagination(
               margin: AppStyle.edgeInsetsA8,
               alignment: Alignment.bottomRight,
+              builder: DotSwiperPaginationBuilder(activeColor: Colors.blue),
             ),
           ),
         ),

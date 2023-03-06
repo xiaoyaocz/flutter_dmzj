@@ -1,6 +1,8 @@
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/models/user/subscribe_novel_model.dart';
 import 'package:flutter_dmzj/requests/user_request.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:get/get.dart';
 
 class NovelSubscribeController
@@ -30,10 +32,31 @@ class NovelSubscribeController
 
   @override
   Future<List<UserSubscribeNovelModel>> getData(int page, int pageSize) async {
-    return await request.novelSubscribes(
+    var ls = await request.novelSubscribes(
       subType: type.value,
       letter: letter.value,
       page: page - 1,
     );
+    UserService.instance.subscribedNovelIds.addAll(ls.map((e) => e.id));
+    return ls;
+  }
+
+  var editMode = false.obs;
+  void cancelEdit() {
+    for (var item in list) {
+      item.isChecked.value = false;
+    }
+    editMode.value = false;
+  }
+
+  void cancelSub() async {
+    var ids = list.where((x) => x.isChecked.value).map((e) => e.id).toList();
+    if (ids.isEmpty) {
+      cancelEdit();
+      return;
+    }
+    cancelEdit();
+    await UserService.instance.cancelSubscribe(ids, AppConstant.kTypeNovel);
+    easyRefreshController.callRefresh();
   }
 }

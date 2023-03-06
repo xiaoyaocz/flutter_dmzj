@@ -189,6 +189,7 @@ class HttpClient {
     String baseUrl = Api.BASE_URL_V3,
     CancelToken? cancel,
     bool formUrlEncoded = false,
+    bool checkCode = false,
   }) async {
     Map<String, dynamic> header = {};
     queryParameters ??= {};
@@ -205,6 +206,17 @@ class HttpClient {
         ),
         cancelToken: cancel,
       );
+      if (checkCode && result.data is Map) {
+        var data = result.data as Map;
+        if (data['code'] == 0) {
+          return result.data['data'];
+        } else {
+          throw AppError(
+            result.data['msg'].toString(),
+            code: int.tryParse(result.data['code'].toString()) ?? 0,
+          );
+        }
+      }
       return result.data;
     } on DioError catch (e) {
       if (e.type == DioErrorType.badResponse) {

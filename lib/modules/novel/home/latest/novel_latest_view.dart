@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/novel/latest_model.dart';
 import 'package:flutter_dmzj/modules/novel/home/latest/novel_latest_controller.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/page_list_view.dart';
@@ -92,6 +94,29 @@ class NovelLatestView extends StatelessWidget {
                 ],
               ),
             ),
+            Center(
+              child: Obx(
+                () => UserService.instance.subscribedNovelIds.contains(item.id)
+                    ? IconButton(
+                        icon: const Icon(Icons.favorite),
+                        onPressed: () {
+                          UserService.instance.cancelSubscribe(
+                            [item.id],
+                            AppConstant.kTypeNovel,
+                          );
+                        },
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.favorite_border),
+                        onPressed: () {
+                          UserService.instance.addSubscribe(
+                            [item.id],
+                            AppConstant.kTypeNovel,
+                          );
+                        },
+                      ),
+              ),
+            )
           ],
         ),
       ),

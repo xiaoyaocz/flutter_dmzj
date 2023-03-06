@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/user/login_result_model.dart';
 import 'package:flutter_dmzj/models/user/user_profile_model.dart';
 import 'package:flutter_dmzj/modules/user/login/user_login_dialog.dart';
 import 'package:flutter_dmzj/requests/user_request.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
 class UserService extends GetxService {
@@ -31,8 +33,20 @@ class UserService extends GetxService {
   String get userId => userAuthInfo?.uid ?? '';
   String get nickname => userAuthInfo?.nickname ?? '';
 
+  /// 是否已经绑定手机号
+  var bindTel = true.obs;
+
+  /// 是否已经设置密码
+  var setPwd = true.obs;
+
   /// 是否已经登录
   var logined = false.obs;
+
+  /// 已经订阅的漫画ID
+  var subscribedComicIds = RxSet<int>();
+
+  /// 已经订阅的小说ID
+  var subscribedNovelIds = RxSet<int>();
 
   void init() {
     var value = storage.getValue(LocalStorageService.kUserAuthInfo, '');
@@ -77,12 +91,67 @@ class UserService extends GetxService {
         return;
       }
       userProfile.value = await request.userProfile();
+      updateBindStatus();
     } catch (e) {
       Log.logPrint(e);
     }
   }
 
-  void subscribeComic(int comicId) {
-    //TODO 订阅漫画
+  void updateBindStatus() async {
+    try {
+      if (!logined.value) {
+        return;
+      }
+      var result = await request.isBindTelPwd();
+      bindTel.value = result.isBindTel == 1;
+      setPwd.value = result.isBindTel == 1;
+    } catch (e) {
+      Log.logPrint(e);
+    }
+  }
+
+  Future<bool> addSubscribe(List<int> ids, int type) async {
+    try {
+      if (!await login()) {
+        return false;
+      }
+      await request.addSubscribe(
+        ids: ids,
+        type: type,
+      );
+      if (type == AppConstant.kTypeComic) {
+        subscribedComicIds.addAll(ids);
+      } else if (type == AppConstant.kTypeNovel) {
+        subscribedNovelIds.addAll(ids);
+      }
+
+      SmartDialog.showToast("订阅成功");
+      return true;
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> cancelSubscribe(List<int> ids, int type) async {
+    try {
+      if (!await login()) {
+        return false;
+      }
+      await request.removeSubscribe(
+        ids: ids,
+        type: type,
+      );
+      if (type == AppConstant.kTypeComic) {
+        subscribedComicIds.removeAll(ids);
+      } else if (type == AppConstant.kTypeNovel) {
+        subscribedNovelIds.removeAll(ids);
+      }
+      SmartDialog.showToast("已取消订阅");
+      return true;
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+      return false;
+    }
   }
 }

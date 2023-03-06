@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/app/utils.dart';
@@ -40,12 +41,23 @@ class UserHomeController extends GetxController {
   /// 关于我们
   void about() {
     Get.dialog(AboutDialog(
-      applicationIcon: Image.asset(
-        'assets/images/logo.png',
-        width: 48,
-        height: 48,
+      applicationIcon: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey.withOpacity(.2),
+          ),
+          borderRadius: AppStyle.radius12,
+        ),
+        child: ClipRRect(
+          borderRadius: AppStyle.radius12,
+          child: Image.asset(
+            'assets/images/logo.png',
+            width: 48,
+            height: 48,
+          ),
+        ),
       ),
-      applicationName: "动漫之家Flutter",
+      applicationName: "动漫之家X",
       applicationLegalese: Utils.packageInfo.version,
     ));
   }

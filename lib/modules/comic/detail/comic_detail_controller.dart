@@ -1,10 +1,13 @@
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
+import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comic/detail_info.dart';
 import 'package:flutter_dmzj/modules/comic/detail/comic_detail_related_page.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
+import 'package:flutter_dmzj/requests/user_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -13,14 +16,22 @@ class ComicDetailControler extends BaseController {
   ComicDetailControler(this.comicId);
 
   final ComicRequest request = ComicRequest();
+  final UserRequest userRequest = UserRequest();
 
   Rx<ComicDetailInfo> detail = Rx<ComicDetailInfo>(ComicDetailInfo.empty());
 
   var expandDescription = false.obs;
 
+  /// 是否已订阅
+  var subscribeStatus = false.obs;
+
   @override
   void onInit() {
+    // 从本地读取订阅状态
+    subscribeStatus.value =
+        UserService.instance.subscribedComicIds.contains(comicId);
     loadDetail();
+    loadSubscribeStatus();
     super.onInit();
   }
 
@@ -38,6 +49,24 @@ class ComicDetailControler extends BaseController {
     }
   }
 
+  /// 检查订阅状态
+  void loadSubscribeStatus() async {
+    try {
+      var result = await userRequest.checkSubscribeStatus(
+        objId: comicId,
+        type: AppConstant.kTypeComic,
+      );
+      subscribeStatus.value = result;
+      if (subscribeStatus.value) {
+        UserService.instance.subscribedComicIds.add(comicId);
+      } else {
+        UserService.instance.subscribedComicIds.remove(comicId);
+      }
+    } catch (e) {
+      Log.logPrint(e);
+    }
+  }
+
   void comment() {
     AppNavigator.toComment(objId: comicId, type: AppConstant.kTypeComic);
   }
@@ -52,7 +81,15 @@ class ComicDetailControler extends BaseController {
     );
   }
 
-  void subscribe() {}
+  void subscribe() async {
+    var result = await (subscribeStatus.value
+        ? UserService.instance
+            .cancelSubscribe([comicId], AppConstant.kTypeComic)
+        : UserService.instance.addSubscribe([comicId], AppConstant.kTypeComic));
+    if (result) {
+      subscribeStatus.value = !subscribeStatus.value;
+    }
+  }
 
   void download() {}
 

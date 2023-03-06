@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
@@ -113,12 +114,27 @@ class ComicLatestView extends StatelessWidget {
               ),
             ),
             Center(
-              //TODO 订阅处理
-              child: IconButton(
-                icon: const Icon(Icons.favorite_border),
-                onPressed: () {
-                  UserService.instance.subscribeComic(item.comicId.toInt());
-                },
+              child: Obx(
+                () => UserService.instance.subscribedComicIds
+                        .contains(item.comicId.toInt())
+                    ? IconButton(
+                        icon: const Icon(Icons.favorite),
+                        onPressed: () {
+                          UserService.instance.cancelSubscribe(
+                            [item.comicId.toInt()],
+                            AppConstant.kTypeComic,
+                          );
+                        },
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.favorite_border),
+                        onPressed: () {
+                          UserService.instance.addSubscribe(
+                            [item.comicId.toInt()],
+                            AppConstant.kTypeComic,
+                          );
+                        },
+                      ),
               ),
             )
           ],

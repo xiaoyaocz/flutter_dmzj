@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/models/comic/author_model.dart';
 import 'package:flutter_dmzj/modules/comic/author_detail/author_detail_controller.dart';
@@ -120,12 +121,26 @@ class ComicAuthorDetailPage extends StatelessWidget {
               ),
             ),
             Center(
-              //TODO 订阅处理
-              child: IconButton(
-                icon: const Icon(Icons.favorite_border),
-                onPressed: () {
-                  UserService.instance.subscribeComic(item.id);
-                },
+              child: Obx(
+                () => UserService.instance.subscribedComicIds.contains(item.id)
+                    ? IconButton(
+                        icon: const Icon(Icons.favorite),
+                        onPressed: () {
+                          UserService.instance.cancelSubscribe(
+                            [item.id],
+                            AppConstant.kTypeComic,
+                          );
+                        },
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.favorite_border),
+                        onPressed: () {
+                          UserService.instance.addSubscribe(
+                            [item.id],
+                            AppConstant.kTypeComic,
+                          );
+                        },
+                      ),
               ),
             )
           ],
