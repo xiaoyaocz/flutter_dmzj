@@ -34,6 +34,7 @@ class SpecialDetailPage extends StatelessWidget {
             Offstage(
               offstage: controller.detail.value == null,
               child: ListView.separated(
+                padding: EdgeInsets.zero,
                 itemCount: (controller.detail.value?.comics.length ?? 0) + 1,
                 separatorBuilder: (context, i) => Divider(
                   endIndent: 12,

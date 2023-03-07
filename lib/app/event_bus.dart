@@ -8,6 +8,11 @@ class EventBus {
   static const String kBottomNavigationBarClicked =
       "BottomNavigationBarClicked";
 
+  /// 更新了漫画记录
+  static const String kUpdatedComicHistory = "UpdateComicHistory";
+
+  /// 更新了小说记录
+  static const String kUpdatedNovelHistory = "UpdateNovelHistory";
   static EventBus? _instance;
 
   static EventBus get instance {

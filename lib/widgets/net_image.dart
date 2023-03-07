@@ -1,5 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_style.dart';
 
 class NetImage extends StatefulWidget {
   final String picUrl;
@@ -7,11 +8,13 @@ class NetImage extends StatefulWidget {
   final double? height;
   final BoxFit? fit;
   final double borderRadius;
+  final bool progress;
   const NetImage(this.picUrl,
       {this.width,
       this.height,
       this.fit = BoxFit.cover,
       this.borderRadius = 0,
+      this.progress = false,
       Key? key})
       : super(key: key);
 
@@ -58,10 +61,35 @@ class _NetImageState extends State<NetImage>
         height: widget.height,
         width: widget.width,
         shape: BoxShape.rectangle,
+        handleLoadingProgress: widget.progress,
         borderRadius: BorderRadius.circular(widget.borderRadius),
         headers: const {'Referer': "http://www.dmzj.com/"},
         loadStateChanged: (e) {
           if (e.extendedImageLoadState == LoadState.loading) {
+            animationController.reset();
+            final double? progress =
+                e.loadingProgress?.expectedTotalBytes != null
+                    ? e.loadingProgress!.cumulativeBytesLoaded /
+                        e.loadingProgress!.expectedTotalBytes!
+                    : null;
+            if (widget.progress) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(
+                      value: progress,
+                    ),
+                    AppStyle.vGap4,
+                    Text(
+                      '${((progress ?? 0.0) * 100).toInt()}%',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              );
+            }
             return Container(
               decoration: BoxDecoration(
                 color: Colors.grey.withOpacity(.1),
@@ -74,6 +102,7 @@ class _NetImageState extends State<NetImage>
             );
           }
           if (e.extendedImageLoadState == LoadState.failed) {
+            animationController.reset();
             return Container(
               decoration: BoxDecoration(
                 color: Colors.grey.withOpacity(.1),

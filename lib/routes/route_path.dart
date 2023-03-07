@@ -45,4 +45,10 @@ class RoutePath {
 
   /// 用户订阅
   static const kUserSubscribe = "/user/subscribe";
+
+  /// 用户观看记录
+  static const kUserHistory = "/user/history";
+
+  /// 本机观看记录
+  static const kLocalHistory = "/user/local/history";
 }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
@@ -9,6 +7,8 @@ import 'package:flutter_dmzj/models/comic/chapter_info.dart';
 import 'package:flutter_dmzj/models/comic/detail_info.dart';
 import 'package:flutter_dmzj/models/comic/view_point_model.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
+import 'package:flutter_dmzj/services/db_service.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -18,6 +18,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class ComicReaderController extends BaseController {
   final int comicId;
   final String comicTitle;
+  final String comicCover;
   final ComicDetailChapterItem chapter;
   final List<ComicDetailChapterItem> chapters;
   final ComicRequest request = ComicRequest();
@@ -26,6 +27,7 @@ class ComicReaderController extends BaseController {
     required this.comicTitle,
     required this.chapters,
     required this.chapter,
+    required this.comicCover,
   }) {
     chapterIndex.value = chapters.indexOf(chapter);
   }
@@ -46,6 +48,9 @@ class ComicReaderController extends BaseController {
   /// 当前页面
   var currentIndex = 0.obs;
 
+  /// 初始化
+  var initialIndex = 0;
+
   /// 是否显示控制器
   var showControls = false.obs;
 
@@ -58,6 +63,7 @@ class ComicReaderController extends BaseController {
       SystemUiMode.manual,
       overlays: [],
     );
+
     itemPositionsListener.itemPositions.addListener(updateItemPosition);
     loadDetail();
     super.onInit();
@@ -69,12 +75,8 @@ class ComicReaderController extends BaseController {
       SystemUiMode.manual,
       overlays: SystemUiOverlay.values,
     );
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.transparent,
-    ));
     itemPositionsListener.itemPositions.removeListener(updateItemPosition);
+    uploadHistory();
     super.onClose();
   }
 
@@ -91,7 +93,6 @@ class ComicReaderController extends BaseController {
         .index;
 
     currentIndex.value = index;
-    print(items);
   }
 
   /// 加载信息
@@ -99,13 +100,33 @@ class ComicReaderController extends BaseController {
     try {
       pageLoadding.value = true;
       pageError.value = false;
+
+      detail.value = ComicChapterDetail.empty();
+      var chapterId = chapters[chapterIndex.value].chapterId;
       loadViewPoints();
+
       var result = await request.chapterDetail(
         comicId: comicId,
-        chapterId: chapters[chapterIndex.value].chapterId,
+        chapterId: chapterId,
       );
-      currentIndex.value = 0;
+      var his = DBService.instance.getComicHistory(comicId);
+      if (his != null && his.chapterId == chapterId && his.page != 0) {
+        var hisIndex = (his.page - 1) < 0 ? 0 : his.page - 1;
+        if (hisIndex >= result.pageUrls.length - 1) {
+          hisIndex = 0;
+        }
+        initialIndex = hisIndex;
+      } else {
+        initialIndex = 0;
+      }
+      currentIndex.value = initialIndex;
+
       detail.value = result;
+      Future.delayed(const Duration(milliseconds: 100), () {
+        jumpToPage(initialIndex);
+      });
+      //上传记录
+      uploadHistory();
     } catch (e) {
       pageError.value = true;
       errorMsg.value = e.toString();
@@ -137,7 +158,6 @@ class ComicReaderController extends BaseController {
         SystemUiMode.edgeToEdge,
         overlays: SystemUiOverlay.values,
       );
-
       SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
@@ -222,6 +242,7 @@ class ComicReaderController extends BaseController {
       SmartDialog.showToast("后面没有了");
       return;
     }
+    setShowControls();
     chapterIndex.value += 1;
     return loadDetail();
   }
@@ -232,8 +253,44 @@ class ComicReaderController extends BaseController {
       SmartDialog.showToast("前面没有了");
       return;
     }
+    setShowControls();
     chapterIndex.value -= 1;
     return loadDetail();
+  }
+
+  /// 下一页
+  void nextPage() {
+    var value = currentIndex.value;
+    var max = detail.value.pageUrls.length;
+    if (value >= max - 1) {
+      nextChapter();
+    } else {
+      jumpToPage(value + 1, anime: true);
+    }
+  }
+
+  /// 上一页
+  void forwardPage() {
+    var value = currentIndex.value;
+
+    if (value == 0) {
+      forwardChapter();
+    } else {
+      jumpToPage(value - 1, anime: true);
+    }
+  }
+
+  /// 跳转页数
+  void jumpToPage(int page, {bool anime = false}) {
+    //竖向
+    if (direction.value == 1) {
+      itemScrollController.jumpTo(index: page);
+    } else {
+      anime
+          ? preloadPageController.animateToPage(page,
+              duration: const Duration(milliseconds: 200), curve: Curves.linear)
+          : preloadPageController.jumpToPage(page);
+    }
   }
 
   /// 查看吐槽
@@ -269,6 +326,7 @@ class ComicReaderController extends BaseController {
             ),
             Expanded(
               child: ListView.separated(
+                padding: EdgeInsets.zero,
                 itemCount: viewPoints.length,
                 separatorBuilder: (_, i) => Divider(
                   indent: 12,
@@ -314,4 +372,16 @@ class ComicReaderController extends BaseController {
 
   /// 显示设置
   void showSettings() {}
+
+  void uploadHistory() {
+    var chapter = chapters[chapterIndex.value];
+    UserService.instance.updateComicHistory(
+      comicId: comicId,
+      chapterId: chapter.chapterId,
+      page: currentIndex.value + 1,
+      comicName: comicTitle,
+      comicCover: comicCover,
+      chapterName: chapter.chapterTitle,
+    );
+  }
 }

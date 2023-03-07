@@ -84,6 +84,7 @@ class ComicDetailRelatedPage extends StatelessWidget {
 
             return MasonryGridView.count(
               shrinkWrap: true,
+              padding: EdgeInsets.zero,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: list.length,
               crossAxisCount: count,

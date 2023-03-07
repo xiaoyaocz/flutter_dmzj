@@ -49,7 +49,7 @@ class PageGridView extends StatelessWidget {
             onLoad: loadMore ? pageController.loadData : null,
             onRefresh: pageController.refreshData,
             child: MasonryGridView.count(
-              padding: padding,
+              padding: padding ?? EdgeInsets.zero,
               controller: pageController.scrollController,
               itemCount: pageController.list.length,
               itemBuilder: itemBuilder,

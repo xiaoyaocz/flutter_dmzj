@@ -23,14 +23,14 @@ class Api {
 
   /// V3 评论
   static const String BASE_URL_V3_COMMENT =
-      "https://nnv3comment.$DMZJ_DOMAIN_NAME";
+      "http://nnv3comment.$MUWAI_DOMAIN_NAME";
 
   /// 用户
-  static const String BASE_URL_USER = "https://user.$DMZJ_DOMAIN_NAME";
+  static const String BASE_URL_USER = "http://user.$MUWAI_DOMAIN_NAME";
 
   /// Interface
   static const String BASE_URL_INTERFACE =
-      "https://nninterface.$DMZJ_DOMAIN_NAME";
+      "http://nninterface.$MUWAI_DOMAIN_NAME";
 
   /// V4 API的密钥
   static const V4_PRIVATE_KEY =

@@ -74,4 +74,17 @@ class UserHomeController extends GetxController {
     }
     AppNavigator.toUserSubscribe();
   }
+
+  /// 历史
+  void toUserHistory() async {
+    if (!await UserService.instance.login()) {
+      return;
+    }
+    AppNavigator.toUserHistory();
+  }
+
+  /// 本机历史
+  void toLocalHistory() async {
+    AppNavigator.toLocalHistory();
+  }
 }

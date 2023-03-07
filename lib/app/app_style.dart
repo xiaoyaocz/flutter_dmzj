@@ -31,10 +31,11 @@ class AppStyle {
   );
   static ThemeData darkTheme = ThemeData.dark().copyWith(
     brightness: Brightness.dark,
+    primaryColor: Colors.blue,
     colorScheme: AppColor.colorSchemeDark,
     scaffoldBackgroundColor: AppColor.backgroundColorDark,
     tabBarTheme: TabBarTheme(
-      indicatorColor: AppColor.colorSchemeDark.primary,
+      indicatorColor: AppColor.colorSchemeDark.secondary,
     ),
     appBarTheme: AppBarTheme(
       elevation: 0,

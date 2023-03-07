@@ -13,21 +13,6 @@ class ComicHistory {
     required this.page,
   });
 
-  factory ComicHistory.empty({
-    required int comicId,
-    required String comicName,
-    required String comicCover,
-  }) =>
-      ComicHistory(
-        comicId: comicId,
-        chapterId: 0,
-        comicName: comicName,
-        comicCover: comicCover,
-        chapterName: "",
-        updateTime: DateTime.now(),
-        page: 0,
-      );
-
   @HiveField(0)
   int comicId;
 

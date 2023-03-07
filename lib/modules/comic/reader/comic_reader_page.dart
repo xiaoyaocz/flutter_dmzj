@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/comic/reader/comic_reader_controller.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
@@ -35,7 +34,38 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                 ),
               ),
             ),
-
+            Positioned.fill(
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: controller.forwardPage,
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 8,
+                    child: Container(),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: controller.nextPage,
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Obx(
               () => Offstage(
                 offstage: !controller.pageLoadding.value,
@@ -90,7 +120,13 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                         icon: const Icon(Icons.arrow_back),
                       ),
                       AppStyle.hGap12,
-                      Text(controller.detail.value.chapterTitle),
+                      Expanded(
+                        child: Text(
+                          controller.detail.value.chapterTitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -194,11 +230,11 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           initialScale: 1.0,
           onScaleEnd: (context, detail, e) {
             controller.lockSwipe.value = (e.scale ?? 1) > 1.0;
-            print(e.scale);
           },
           child: NetImage(
             url,
             fit: BoxFit.contain,
+            progress: true,
           ),
         );
       },
@@ -225,6 +261,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           child: NetImage(
             url,
             fit: BoxFit.fitWidth,
+            progress: true,
           ),
         );
       },
@@ -233,28 +270,31 @@ class ComicReaderPage extends GetView<ComicReaderController> {
 
   Widget buildSilderBar() {
     return Obx(
-      () => Row(
-        children: [
-          Expanded(
-            child: Slider(
-              value: controller.currentIndex.value + 1,
-              max: controller.detail.value.pageUrls.isEmpty
-                  ? 1
-                  : controller.detail.value.pageUrls.length.toDouble(),
-              onChanged: (e) {
-                print(e);
-                //竖向
-                if (controller.direction.value == 1) {
-                  controller.itemScrollController
-                      .jumpTo(index: (e - 1).toInt());
-                } else {
-                  controller.preloadPageController.jumpToPage((e - 1).toInt());
-                }
-              },
-            ),
+      () {
+        var value = controller.currentIndex.value + 1.0;
+        var max = controller.detail.value.pageUrls.length.toDouble();
+        if (value > max) {
+          return const SizedBox(
+            height: 48,
+          );
+        }
+        return SizedBox(
+          height: 48,
+          child: Row(
+            children: [
+              Expanded(
+                child: Slider(
+                  value: value,
+                  max: max,
+                  onChanged: (e) {
+                    controller.jumpToPage((e - 1).toInt());
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

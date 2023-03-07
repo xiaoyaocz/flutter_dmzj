@@ -136,17 +136,31 @@ class AppNavigator {
     toContentPage(RoutePath.kUserSubscribe, arg: type);
   }
 
+  /// 打开用户历史记录
+  /// - [type] 0=漫画,1=小说
+  static void toUserHistory({int type = 0}) {
+    toContentPage(RoutePath.kUserHistory, arg: type);
+  }
+
+  /// 打开本地历史记录
+  /// - [type] 0=漫画,1=小说
+  static void toLocalHistory({int type = 0}) {
+    toContentPage(RoutePath.kLocalHistory, arg: type);
+  }
+
   /// 打开漫画阅读
-  static void toComicReader({
+  static Future toComicReader({
     required int comicId,
     required String comicTitle,
+    required String comicCover,
     required List<ComicDetailChapterItem> chapters,
     required ComicDetailChapterItem chapter,
-  }) {
+  }) async {
     // 使用主路由跳转
-    Get.toNamed(RoutePath.kComicReader, arguments: {
+    await Get.toNamed(RoutePath.kComicReader, arguments: {
       "comicId": comicId,
       "comicTitle": comicTitle,
+      "comicCover": comicCover,
       "chapters": chapters,
       "chapter": chapter,
     });

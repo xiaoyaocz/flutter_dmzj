@@ -48,7 +48,7 @@ class PageListView extends StatelessWidget {
             onLoad: loadMore ? pageController.loadData : null,
             onRefresh: pageController.refreshData,
             child: ListView.separated(
-              padding: padding,
+              padding: padding ?? EdgeInsets.zero,
               controller: pageController.scrollController,
               itemCount: header == null
                   ? pageController.list.length

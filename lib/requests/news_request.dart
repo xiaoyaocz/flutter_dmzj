@@ -36,6 +36,8 @@ class NewsRequest {
   }
 
   /// 读取新闻列表
+  /// - [id] 新闻分类ID
+  /// - [page] 页数，从1开始
   Future<List<NewsListInfoProto>> getNewsList(int id, int page) async {
     var result = await HttpClient.instance.getEncryptV4(
       '/news/list/$id/${id == 0 ? 2 : 3}/$page',
@@ -48,6 +50,7 @@ class NewsRequest {
   }
 
   /// 新闻数据
+  /// - [newsId] 新闻ID
   Future<NewsStatModel> stat(int newsId) async {
     var result = await HttpClient.instance.getJson(
       '/v3/article/total/$newsId.json',
@@ -58,6 +61,7 @@ class NewsRequest {
   }
 
   /// 新闻点赞
+  /// - [newsId] 新闻ID
   Future<bool> like(int newsId) async {
     await HttpClient.instance.getJson(
       '/article/mood/$newsId',
@@ -68,6 +72,7 @@ class NewsRequest {
   }
 
   /// 新闻检查收藏
+  /// - [newsId] 新闻ID
   Future<bool> checkCollect(int newsId) async {
     var uid = UserService.instance.userId;
     var par = {"uid": int.parse(uid), "sub_id": newsId};
@@ -87,6 +92,7 @@ class NewsRequest {
   }
 
   /// 新闻收藏
+  /// - [newsId] 新闻ID
   Future<bool> collect(int newsId) async {
     var uid = UserService.instance.userId;
     var par = {"uid": int.parse(uid), "sub_id": newsId};
@@ -106,6 +112,7 @@ class NewsRequest {
   }
 
   /// 移除收藏
+  /// - [newsId] 新闻ID
   Future<bool> delCollect(int newsId) async {
     var uid = UserService.instance.userId;
     var par = {"uid": int.parse(uid), "sub_id": newsId};

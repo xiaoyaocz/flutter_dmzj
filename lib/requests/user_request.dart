@@ -3,17 +3,23 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
+import 'package:flutter_dmzj/models/user/comic_history_model.dart';
 import 'package:flutter_dmzj/models/user/bind_status_model.dart';
 import 'package:flutter_dmzj/models/user/login_result_model.dart';
+import 'package:flutter_dmzj/models/user/novel_history_model.dart';
 import 'package:flutter_dmzj/models/user/subscribe_comic_model.dart';
 import 'package:flutter_dmzj/models/user/subscribe_news_model.dart';
 import 'package:flutter_dmzj/models/user/subscribe_novel_model.dart';
 import 'package:flutter_dmzj/models/user/user_profile_model.dart';
 import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
+import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 
 class UserRequest {
+  /// 登录
+  /// - [nickname] 用户名
+  /// - [password] 密码
   Future<LoginResultModel> login(
       {required String nickname, required String password}) async {
     var pwd = md5.convert(utf8.encode(password)).toString().toUpperCase();
@@ -206,6 +212,108 @@ class UserRequest {
       '/subscribe/$typeId/${UserService.instance.userId}/$objId',
       checkCode: true,
     );
+    return true;
+  }
+
+  /// 漫画阅读记录
+  /// - [page] 页数从0开始，接口并没有分页
+  Future<List<UserComicHistoryModel>> comicHistory({int page = 0}) async {
+    var list = <UserComicHistoryModel>[];
+    var result = await HttpClient.instance.getJson(
+      '/api/getReInfo/comic/${UserService.instance.userId}/$page',
+      queryParameters: {},
+      baseUrl: Api.BASE_URL_INTERFACE,
+    );
+    var data = json.decode(result);
+    for (var item in data) {
+      list.add(UserComicHistoryModel.fromJson(item));
+    }
+    //远程与本地同步
+    DBService.instance.syncRemoteComicHistory(list);
+    return list;
+  }
+
+  /// 小说阅读记录
+  /// - [page] 页数从0开始，接口并没有分页
+  Future<List<UserNovelHistoryModel>> novelHistory({int page = 0}) async {
+    var list = <UserNovelHistoryModel>[];
+    var result = await HttpClient.instance.getJson(
+      '/api/getReInfo/novel/${UserService.instance.userId}/$page',
+      queryParameters: {},
+      baseUrl: Api.BASE_URL_INTERFACE,
+    );
+    var data = json.decode(result);
+    for (var item in data) {
+      list.add(UserNovelHistoryModel.fromJson(item));
+    }
+    //远程与本地同步
+    DBService.instance.syncRemoteNovelHistory(list);
+    return list;
+  }
+
+  /// 上传漫画记录
+  Future<bool> uploadComicHistory({
+    required int comicId,
+    required int chapterId,
+    required int page,
+    required DateTime time,
+  }) async {
+    var data = {
+      comicId.toString(): chapterId.toString(),
+      "comicId": comicId.toString(),
+      "chapterId": chapterId.toString(),
+      "page": page,
+      "time": (time.millisecondsSinceEpoch ~/ 1000).toString()
+    };
+    await HttpClient.instance.getJson(
+      "/api/record/getRe",
+      baseUrl: Api.BASE_URL_INTERFACE,
+      queryParameters: {
+        "st": "comic",
+        "uid": UserService.instance.userId,
+        "callback": "record_jsonpCallback",
+        "type": 3,
+        "json": "[${json.encode(data)}]",
+      },
+      withDefaultParameter: true,
+      checkCode: true,
+    );
+
+    return true;
+  }
+
+  /// 上传小说记录
+  Future<bool> uploadNovelHistory({
+    required int novelId,
+    required int chapterId,
+    required int volumeId,
+    required int page,
+    required int total,
+    required DateTime time,
+  }) async {
+    var data = {
+      novelId.toString(): chapterId.toString(),
+      "lnovel_id": novelId.toString(),
+      "volume_id": volumeId.toString(),
+      "chapterId": chapterId.toString(),
+      "total_num": total,
+      "page": page,
+      "time": (time.millisecondsSinceEpoch ~/ 1000).toString()
+    };
+    await HttpClient.instance.getJson(
+      "/api/record/getRe",
+      baseUrl: Api.BASE_URL_INTERFACE,
+      queryParameters: {
+        "st": "novel",
+        "uid": UserService.instance.userId,
+        "callback": "record_jsonpCallback",
+        "type": 3,
+        "json": "[${json.encode(data)}]",
+      },
+      withDefaultParameter: true,
+      checkCode: true,
+    );
+
     return true;
   }
 }

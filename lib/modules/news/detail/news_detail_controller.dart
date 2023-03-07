@@ -222,6 +222,7 @@ getImgLinks();
       collected.value = !collected.value;
     } catch (e) {
       Log.logPrint(e);
+      SmartDialog.showToast(e.toString());
     } finally {
       SmartDialog.dismiss(status: SmartStatus.loading);
     }

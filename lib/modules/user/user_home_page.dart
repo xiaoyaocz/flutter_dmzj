@@ -95,7 +95,7 @@ class UserHomePage extends GetView<UserHomeController> {
                         Icons.chevron_right,
                         color: Colors.grey,
                       ),
-                      onTap: () {},
+                      onTap: controller.toUserHistory,
                     ),
                     ListTile(
                       leading: const Icon(Remix.chat_smile_2_line),
@@ -114,6 +114,15 @@ class UserHomePage extends GetView<UserHomeController> {
                         color: Colors.grey,
                       ),
                       onTap: () {},
+                    ),
+                    ListTile(
+                      leading: const Icon(Remix.file_history_line),
+                      title: const Text("本机记录"),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey,
+                      ),
+                      onTap: controller.toLocalHistory,
                     ),
                   ],
                 ),

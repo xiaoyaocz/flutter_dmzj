@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
@@ -42,13 +43,40 @@ class ComicDetailPage extends StatelessWidget {
           Obx(
             () => Offstage(
               offstage: controller.detail.value.id == 0,
-              child: ListView(
-                padding: AppStyle.edgeInsetsA12,
-                children: [
-                  _buildHeader(),
-                  _buildChapter(),
-                  //TODO 阅读记录
-                ],
+              child: EasyRefresh(
+                header: const MaterialHeader(),
+                onRefresh: controller.refreshDetail,
+                child: ListView(
+                  padding: AppStyle.edgeInsetsA12,
+                  children: [
+                    _buildHeader(),
+                    Obx(
+                      () => Offstage(
+                        offstage: controller.history.value == null,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(
+                                "上次看到：${controller.history.value?.chapterName ?? ""}  第${controller.history.value?.page}页",
+                                style: Get.textTheme.titleSmall,
+                              ),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () {
+                                controller.read();
+                              },
+                            ),
+                            Divider(
+                              color: Colors.grey.withOpacity(.2),
+                              height: 1.0,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    _buildChapter(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -323,6 +351,7 @@ class ComicDetailPage extends StatelessWidget {
                     return Obx(
                       () => MasonryGridView.count(
                         shrinkWrap: true,
+                        padding: EdgeInsets.zero,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: (item.showMoreButton && !item.showAll.value)
                             ? 15
@@ -359,7 +388,6 @@ class ComicDetailPage extends StatelessWidget {
                                 minimumSize: const Size.fromHeight(40),
                               ),
                               onPressed: () {
-                                //TODO 跳转阅读
                                 controller.readChapter(item, item.chapters[i]);
                               },
                               child: Text(

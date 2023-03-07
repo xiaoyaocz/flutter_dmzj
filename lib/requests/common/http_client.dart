@@ -15,7 +15,13 @@ class HttpClient {
 
   late Dio dio;
   HttpClient() {
-    dio = Dio();
+    dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 20),
+        receiveTimeout: const Duration(seconds: 20),
+        sendTimeout: const Duration(seconds: 20),
+      ),
+    );
     dio.interceptors.add(CustomInterceptor());
   }
 
