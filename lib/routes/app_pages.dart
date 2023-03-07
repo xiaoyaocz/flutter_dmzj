@@ -18,6 +18,7 @@ import 'package:flutter_dmzj/modules/novel/category_detail/novel_category_detail
 import 'package:flutter_dmzj/modules/novel/search/novel_search_page.dart';
 import 'package:flutter_dmzj/modules/user/history/user_history_page.dart';
 import 'package:flutter_dmzj/modules/user/local_history/local_history_page.dart';
+import 'package:flutter_dmzj/modules/user/settings/settings_page.dart';
 import 'package:flutter_dmzj/modules/user/subscribe/user_subscribe_pgae.dart';
 import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
@@ -165,6 +166,13 @@ class AppPages {
           settings: settings,
           page: () => LocalHistoryPage(
             type: settings.arguments as int,
+          ),
+        );
+      case RoutePath.kSettings:
+        return GetPageRoute(
+          settings: settings,
+          page: () => SettingsPage(
+            index: settings.arguments as int,
           ),
         );
       default:

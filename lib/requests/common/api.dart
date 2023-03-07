@@ -26,7 +26,7 @@ class Api {
       "http://nnv3comment.$MUWAI_DOMAIN_NAME";
 
   /// 用户
-  static const String BASE_URL_USER = "http://user.$MUWAI_DOMAIN_NAME";
+  static const String BASE_URL_USER = "http://user.$DMZJ_DOMAIN_NAME";
 
   /// Interface
   static const String BASE_URL_INTERFACE =

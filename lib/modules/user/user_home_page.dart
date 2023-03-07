@@ -146,7 +146,7 @@ class UserHomePage extends GetView<UserHomeController> {
                         Icons.chevron_right,
                         color: Colors.grey,
                       ),
-                      onTap: controller.setTheme,
+                      onTap: controller.toSettings,
                     ),
                   ],
                 ),

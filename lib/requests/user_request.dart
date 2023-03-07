@@ -29,7 +29,7 @@ class UserRequest {
       "_m": "D6132DCE99D329CACDE913C7FA952CF3",
       "_a": "05CDFDA93076FC56950D6598B94FD986",
       "_i": "8508AEE02C57308631D8E5F774D3AABC",
-      "nickname": nickname,
+      "nickname": Uri.encodeComponent(nickname),
       "pwd": pwd,
     });
 

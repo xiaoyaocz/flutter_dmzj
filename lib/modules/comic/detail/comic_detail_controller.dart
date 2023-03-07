@@ -75,6 +75,22 @@ class ComicDetailControler extends BaseController {
     }
   }
 
+  void refreshV1() async {
+    try {
+      var result =
+          await request.comicDetail(comicId: comicId, priorityV1: true);
+      if (result.volumes.isEmpty) {
+        SmartDialog.showToast("没有找到任何章节");
+        return;
+      }
+      detail.update((val) {
+        val!.volumes = result.volumes;
+      });
+    } catch (e) {
+      SmartDialog.showToast("无法获取章节");
+    }
+  }
+
   /// 加载信息
   void loadDetail() async {
     try {
@@ -82,6 +98,9 @@ class ComicDetailControler extends BaseController {
       pageError.value = false;
       var result = await request.comicDetail(comicId: comicId);
       detail.value = result;
+      if (result.volumes.isEmpty && !result.isHide) {
+        refreshV1();
+      }
     } catch (e) {
       pageError.value = true;
       errorMsg.value = e.toString();

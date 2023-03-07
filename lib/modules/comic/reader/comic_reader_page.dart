@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/comic/reader/comic_reader_controller.dart';
 import 'package:flutter_dmzj/widgets/custom_header.dart';
@@ -104,11 +105,18 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                       () => Row(
                         children: [
                           buildConnectivity(),
-                          AppStyle.hGap8,
                           buildBattery(),
+                          Container(
+                            constraints: const BoxConstraints(maxWidth: 100),
+                            child: Text(
+                              controller.detail.value.chapterTitle,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
                           AppStyle.hGap8,
                           Text(
-                            "${controller.detail.value.chapterTitle}  ${controller.currentIndex.value + 1} / ${controller.detail.value.pageUrls.length}",
+                            "${controller.currentIndex.value + 1} / ${controller.detail.value.pageUrls.length}",
                             style: const TextStyle(fontSize: 12),
                           ),
                         ],
@@ -363,7 +371,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         padding: EdgeInsets.zero,
         children: [
           ListTile(
-            title: Text("观点(${controller.viewPoints.length})"),
+            title: Text("吐槽(${controller.viewPoints.length})"),
           ),
           Padding(
             padding: AppStyle.edgeInsetsH12,
@@ -371,13 +379,15 @@ class ComicReaderPage extends GetView<ComicReaderController> {
               spacing: 8,
               runSpacing: 8,
               children: controller.viewPoints
-                  .take(10)
+                  .take(20)
                   .map(
                     (e) => OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        controller.likeViewPoint(e);
+                      },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -392,10 +402,12 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                             size: 16,
                           ),
                           AppStyle.hGap4,
-                          Text(
-                            "${e.num}",
-                            style: const TextStyle(
-                              fontSize: 14,
+                          Obx(
+                            () => Text(
+                              "${e.num.value}",
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         ],
@@ -408,6 +420,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           Container(
             alignment: Alignment.center,
             width: 100,
+            margin: AppStyle.edgeInsetsA12,
             child: OutlinedButton(
               onPressed: () {
                 controller.showComment();
@@ -458,6 +471,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
     }
     return Row(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Icon(
           icon,
@@ -466,8 +480,9 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         AppStyle.hGap4,
         Text(
           name,
-          style: const TextStyle(fontSize: 12),
-        )
+          style: const TextStyle(fontSize: 12, height: 1.0),
+        ),
+        AppStyle.hGap8,
       ],
     );
   }
@@ -492,19 +507,24 @@ class ComicReaderPage extends GetView<ComicReaderController> {
     } else {
       icon = Icons.battery_0_bar;
     }
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          size: 16,
-        ),
-        AppStyle.hGap4,
-        Text(
-          "$battery%",
-          style: const TextStyle(fontSize: 12),
-        )
-      ],
+    return Visibility(
+      visible: controller.showBattery.value,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Icon(
+            icon,
+            size: 16,
+          ),
+          AppStyle.hGap4,
+          Text(
+            "$battery%",
+            style: const TextStyle(fontSize: 12, height: 1.0),
+          ),
+          AppStyle.hGap8,
+        ],
+      ),
     );
   }
 }

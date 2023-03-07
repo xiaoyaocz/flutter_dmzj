@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 T? asT<T>(dynamic value) {
   if (value is T) {
     return value;
@@ -21,14 +23,14 @@ class ComicViewPointModel {
         id: asT<int>(json['id'])!,
         uid: asT<int>(json['uid'])!,
         content: asT<String>(json['content'])!,
-        num: asT<int>(json['num'])!,
+        num: (asT<int?>(json['num']) ?? 0).obs,
         page: asT<int>(json['page'])!,
       );
 
   int id;
   int uid;
   String content;
-  int num;
+  RxInt num;
   int page;
 
   @override

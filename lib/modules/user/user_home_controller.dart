@@ -87,4 +87,8 @@ class UserHomeController extends GetxController {
   void toLocalHistory() async {
     AppNavigator.toLocalHistory();
   }
+
+  void toSettings() async {
+    AppNavigator.toSettings();
+  }
 }

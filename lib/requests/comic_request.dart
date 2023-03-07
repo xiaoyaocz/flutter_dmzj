@@ -17,6 +17,7 @@ import 'package:flutter_dmzj/models/comic/special_model.dart';
 import 'package:flutter_dmzj/models/comic/view_point_model.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 
 import '../models/comic/special_detail_model.dart';
 
@@ -215,20 +216,27 @@ class ComicRequest {
     return ComicRelatedModel.fromJson(result);
   }
 
-  Future<ComicDetailInfo> comicDetail({required int comicId}) async {
+  Future<ComicDetailInfo> comicDetail(
+      {required int comicId, bool priorityV1 = false}) async {
     ComicDetailInfo info;
     var errorMsg = "";
     try {
-      var v4 = await comicDetailV4(comicId: comicId);
-      info = ComicDetailInfo.fromV4(v4);
+      if (priorityV1) {
+        info = ComicDetailInfo.fromV1(await comicDetailV1(comicId: comicId));
+      } else {
+        info = ComicDetailInfo.fromV4(await comicDetailV4(comicId: comicId));
+      }
     } catch (e) {
-      errorMsg += "V4：$e";
+      errorMsg += "${priorityV1 ? "V1" : "V4"}：$e";
       try {
-        var v1 = await comicDetailV1(comicId: comicId);
-        info = ComicDetailInfo.fromV1(v1);
+        if (priorityV1) {
+          info = ComicDetailInfo.fromV4(await comicDetailV4(comicId: comicId));
+        } else {
+          info = ComicDetailInfo.fromV1(await comicDetailV1(comicId: comicId));
+        }
       } catch (e) {
-        errorMsg += "\nV1：$e";
-        throw AppError("无法读取漫画信息:\n$errorMsg");
+        errorMsg += "\n${priorityV1 ? "V4" : "V1"}：$e";
+        throw AppError("ComicID:$comicId\n无法读取漫画信息:\n$errorMsg");
       }
     }
     return info;
@@ -360,5 +368,40 @@ class ComicRequest {
       list.add(ComicViewPointModel.fromJson(item));
     }
     return list;
+  }
+
+  /// 点赞观点、吐槽
+  Future<bool> likeViewPoint({required int comicId, required int id}) async {
+    await HttpClient.instance.postJson(
+      '/viewPoint/praise',
+      checkCode: true,
+      data: {
+        "sub_type": comicId,
+        "uid": UserService.instance.userId,
+        "vote_id": id,
+      },
+    );
+    return true;
+  }
+
+  /// 点赞观点、吐槽
+  Future<bool> sendViewPoint(
+      {required int comicId,
+      required int chapterId,
+      required String content,
+      required int page}) async {
+    await HttpClient.instance.postJson(
+      '/viewPoint/addv2',
+      checkCode: true,
+      data: {
+        "sub_type": comicId,
+        "uid": UserService.instance.userId,
+        "dmzj_token": UserService.instance.dmzjToken,
+        "page": page,
+        "type": 0,
+        "third_type": chapterId,
+      },
+    );
+    return true;
   }
 }

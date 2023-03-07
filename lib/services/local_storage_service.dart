@@ -29,6 +29,24 @@ class LocalStorageService extends GetxService {
   /// 漫画阅读尾页显示观点/吐槽
   static const String kComicReaderShowViewPoint = "ComicReaderShowViewPoint";
 
+  /// 小说阅读方向
+  static const String kNovelReaderDirection = "NovelReaderDirection";
+
+  /// 小说字体大小
+  static const String kNovelReaderFontSize = "NovelReaderFontSize";
+
+  /// 小说行距
+  static const String kNovelReaderLineSpacing = "NovelReaderLineSpacing";
+
+  /// 小说阅读主题
+  static const String kNovelReaderTheme = "NovelReaderTheme";
+
+  /// 小说阅读显示状态信息
+  static const String kNovelReaderShowStatus = "NovelReaderShowStatus";
+
+  /// 小说全屏阅读
+  static const String kNovelReaderFullScreen = "NovelReaderFullScreen";
+
   late Box settingsBox;
   Future init() async {
     settingsBox = await Hive.openBox(

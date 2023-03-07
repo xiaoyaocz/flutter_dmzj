@@ -51,4 +51,7 @@ class RoutePath {
 
   /// 本机观看记录
   static const kLocalHistory = "/user/local/history";
+
+  /// 设置
+  static const kSettings = "/user/settings";
 }

@@ -100,7 +100,7 @@ class ComicDetailPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         elevation: 2,
         onPressed: controller.read,
-        child: const Icon(Icons.play_circle),
+        child: const Icon(Icons.play_circle_outline_rounded),
       ),
       bottomNavigationBar: BottomAppBar(
         child: SizedBox(

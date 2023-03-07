@@ -148,6 +148,12 @@ class AppNavigator {
     toContentPage(RoutePath.kLocalHistory, arg: type);
   }
 
+  /// 打开本地历史记录
+  /// - [type] 0=漫画,1=小说,2=下载
+  static void toSettings({int type = 0}) {
+    toContentPage(RoutePath.kSettings, arg: type);
+  }
+
   /// 打开漫画阅读
   static Future toComicReader({
     required int comicId,

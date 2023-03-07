@@ -3,6 +3,7 @@ import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/comic/search_model.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
+import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:get/get.dart';
 
 class ComicSearchController extends BasePageController<ComicSearchModel> {
@@ -29,15 +30,30 @@ class ComicSearchController extends BasePageController<ComicSearchModel> {
     super.onInit();
   }
 
-  void submit() {
+  void submit() async {
     if (searchController.text.isEmpty) {
       list.clear();
       showHotWord.value = true;
       return;
     }
+
+    if (searchController.text.startsWith("id:\\") && await handelJumpComic()) {
+      return;
+    }
+
     showHotWord.value = false;
     _keyword = searchController.text;
     refreshData();
+  }
+
+  Future handelJumpComic() async {
+    var id = int.tryParse(searchController.text.replaceAll("id:\\", "")) ?? 0;
+    if (id != 0) {
+      AppNavigator.toComicDetail(id);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override

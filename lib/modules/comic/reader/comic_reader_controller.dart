@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:battery_plus/battery_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
@@ -88,6 +89,9 @@ class ComicReaderController extends BaseController {
   /// 电量信息
   Rx<int> batteryLevel = 0.obs;
 
+  /// 显示电量
+  RxBool showBattery = true.obs;
+
   @override
   void onInit() {
     initConnectivity();
@@ -104,13 +108,23 @@ class ComicReaderController extends BaseController {
 
   /// 初始化电池信息
   void initBattery() async {
-    var battery = Battery();
-    batterySubscription =
-        battery.onBatteryStateChanged.listen((BatteryState state) async {
-      var level = await battery.batteryLevel;
-      batteryLevel.value = level;
-    });
-    batteryLevel.value = await battery.batteryLevel;
+    try {
+      var battery = Battery();
+      batterySubscription =
+          battery.onBatteryStateChanged.listen((BatteryState state) async {
+        try {
+          var level = await battery.batteryLevel;
+          batteryLevel.value = level;
+          showBattery.value = true;
+        } catch (e) {
+          showBattery.value = false;
+        }
+      });
+      batteryLevel.value = await battery.batteryLevel;
+      showBattery.value = true;
+    } catch (e) {
+      showBattery.value = false;
+    }
   }
 
   /// 初始化连接状态
@@ -204,7 +218,7 @@ class ComicReaderController extends BaseController {
         comicId: comicId,
         chapterId: chapters[chapterIndex.value].chapterId,
       );
-      result.sort((a, b) => b.num.compareTo(a.num));
+      result.sort((a, b) => b.num.value.compareTo(a.num.value));
       viewPoints.value = result;
     } catch (e) {
       SmartDialog.showToast("读取吐槽失败");
@@ -348,6 +362,7 @@ class ComicReaderController extends BaseController {
   /// 查看吐槽
   void showComment() {
     setShowControls();
+    TextEditingController tucaoController = TextEditingController();
     showModalBottomSheet(
       context: Get.context!,
       shape: const RoundedRectangleBorder(
@@ -377,42 +392,73 @@ class ComicReaderController extends BaseController {
               color: Colors.grey.withOpacity(.2),
             ),
             Expanded(
-              child: ListView.separated(
-                padding: EdgeInsets.zero,
-                itemCount: viewPoints.length,
-                separatorBuilder: (_, i) => Divider(
-                  indent: 12,
-                  endIndent: 12,
-                  height: 1.0,
-                  color: Colors.grey.withOpacity(.2),
-                ),
-                itemBuilder: (_, i) {
-                  var item = viewPoints[i];
-                  return Padding(
-                    padding: AppStyle.edgeInsetsA12.copyWith(top: 4, bottom: 4),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            item.content,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        TextButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Remix.thumb_up_line,
-                            size: 20,
-                          ),
-                          label: Text("${item.num}"),
-                        ),
-                      ],
-                    ),
-                  );
+              child: EasyRefresh(
+                header: const MaterialHeader(),
+                onRefresh: () async {
+                  loadViewPoints();
                 },
+                child: Obx(
+                  () => ListView.separated(
+                    padding: EdgeInsets.zero,
+                    itemCount: viewPoints.length,
+                    separatorBuilder: (_, i) => Divider(
+                      indent: 12,
+                      endIndent: 12,
+                      height: 1.0,
+                      color: Colors.grey.withOpacity(.2),
+                    ),
+                    itemBuilder: (_, i) {
+                      var item = viewPoints[i];
+                      return Padding(
+                        padding:
+                            AppStyle.edgeInsetsA12.copyWith(top: 4, bottom: 4),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                item.content,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            TextButton.icon(
+                              onPressed: () {
+                                likeViewPoint(item);
+                              },
+                              icon: const Icon(
+                                Remix.thumb_up_line,
+                                size: 20,
+                              ),
+                              label: Obx(() => Text("${item.num.value}")),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              padding: AppStyle.edgeInsetsA8,
+              child: TextField(
+                controller: tucaoController,
+                onSubmitted: (e) {
+                  sendViewPoint(e);
+                },
+                decoration: InputDecoration(
+                  hintText: "发表吐槽",
+                  contentPadding: AppStyle.edgeInsetsH12,
+                  border: const OutlineInputBorder(),
+                  suffixIcon: TextButton(
+                    onPressed: () {
+                      sendViewPoint(tucaoController.text);
+                    },
+                    child: const Text("发布"),
+                  ),
+                ),
               ),
             ),
           ],
@@ -534,7 +580,6 @@ class ComicReaderController extends BaseController {
           ],
         ),
       ),
-      routeSettings: const RouteSettings(name: "/modalBottomSheet"),
     );
   }
 
@@ -553,11 +598,8 @@ class ComicReaderController extends BaseController {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         foregroundColor: selected ? Colors.blue : Colors.grey,
-        shape: RoundedRectangleBorder(
-          borderRadius: AppStyle.radius4,
-          side: BorderSide(
-            color: selected ? Colors.blue : Colors.grey,
-          ),
+        side: BorderSide(
+          color: selected ? Colors.blue : Colors.grey,
         ),
       ),
       onPressed: onTap,
@@ -631,5 +673,41 @@ class ComicReaderController extends BaseController {
       SystemUiMode.manual,
       overlays: SystemUiOverlay.values,
     );
+  }
+
+  void likeViewPoint(ComicViewPointModel item) async {
+    try {
+      await request.likeViewPoint(comicId: comicId, id: item.id);
+
+      item.num.value += 1;
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+    }
+  }
+
+  void sendViewPoint(String content) async {
+    if (!await UserService.instance.login()) {
+      SmartDialog.showToast("请先登录");
+      return;
+    }
+    if (content.isEmpty) {
+      SmartDialog.showToast("内容不能为空");
+      return;
+    }
+    Get.back();
+    try {
+      SmartDialog.showLoading();
+      await request.sendViewPoint(
+        comicId: comicId,
+        chapterId: chapters[chapterIndex.value].chapterId,
+        content: content,
+        page: currentIndex.value + 1,
+      );
+      loadViewPoints();
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+    } finally {
+      SmartDialog.dismiss(status: SmartStatus.loading);
+    }
   }
 }

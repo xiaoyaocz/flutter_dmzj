@@ -9,7 +9,7 @@ class AppSettingsController extends GetxController {
   void onInit() {
     themeMode.value = LocalStorageService.instance
         .getValue(LocalStorageService.kThemeMode, 0);
-
+    //漫画
     comicReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderDirection, 0);
     comicReaderFullScreen.value = LocalStorageService.instance
@@ -20,6 +20,19 @@ class AppSettingsController extends GetxController {
         .getValue(LocalStorageService.kComicReaderShowStatus, true);
     comicReaderShowViewPoint.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderShowViewPoint, true);
+    //小说
+    novelReaderDirection.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNovelReaderDirection, 0);
+    novelReaderFontSize.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNovelReaderFontSize, 16);
+    novelReaderLineSpacing.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNovelReaderLineSpacing, 1.5);
+    novelReaderTheme.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNovelReaderTheme, 0);
+    novelReaderFullScreen.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNovelReaderFullScreen, true);
+    novelReaderShowStatus.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNovelReaderShowStatus, true);
     super.onInit();
   }
 
@@ -104,5 +117,73 @@ class AppSettingsController extends GetxController {
     comicReaderShowViewPoint.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicReaderShowViewPoint, value);
+  }
+
+  /// 小说阅读方向
+  /// * [0] 左右
+  /// * [1] 上下
+  /// * [2] 右左
+  var novelReaderDirection = 0.obs;
+  void setNovelReaderDirection(int direction) {
+    if (novelReaderDirection.value == direction) {
+      return;
+    }
+    novelReaderDirection.value = direction;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kNovelReaderDirection, direction);
+  }
+
+  /// 小说字体
+  var novelReaderFontSize = 16.obs;
+  void setComicReaderFontSize(int size) {
+    if (size < 5) {
+      size = 5;
+    }
+    //应该没人需要这么大的字体吧...
+    if (size > 56) {
+      size = 56;
+    }
+    novelReaderFontSize.value = size;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kNovelReaderFontSize, size);
+  }
+
+  /// 小说行距
+  var novelReaderLineSpacing = 1.5.obs;
+  void setNovelReaderLineSpacing(double spacing) {
+    if (spacing < 1) {
+      spacing = 1;
+    }
+    //应该没人需要这么大的字体吧...
+    if (spacing > 5) {
+      spacing = 5;
+    }
+    novelReaderLineSpacing.value = spacing;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kNovelReaderLineSpacing, spacing);
+  }
+
+  /// 小说阅读主题
+  var novelReaderTheme = 0.obs;
+  void setNovelReaderTheme(int theme) {
+    novelReaderTheme.value = theme;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kNovelReaderTheme, theme);
+  }
+
+  /// 漫画全屏阅读
+  RxBool novelReaderFullScreen = true.obs;
+  void setNovelReaderFullScreen(bool value) {
+    novelReaderFullScreen.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kNovelReaderFullScreen, value);
+  }
+
+  /// 漫画阅读显示状态信息
+  RxBool novelReaderShowStatus = true.obs;
+  void setNovelReaderShowStatus(bool value) {
+    novelReaderShowStatus.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kNovelReaderShowStatus, value);
   }
 }
