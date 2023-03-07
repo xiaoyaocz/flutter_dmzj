@@ -46,6 +46,8 @@ dependencies:
   permission_handler: ^10.2.0 #权限检查
   path_provider: ^2.0.13 #常用目录
   image_gallery_saver: ^1.7.1 #保存图片至相册
+  connectivity_plus: ^3.0.3 #连接状态
+  battery_plus: ^3.0.3 #电池状态
   
   flutter: 
     sdk: flutter

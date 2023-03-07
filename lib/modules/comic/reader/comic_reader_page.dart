@@ -1,6 +1,9 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/comic/reader/comic_reader_controller.dart';
+import 'package:flutter_dmzj/widgets/custom_header.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
 import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
@@ -40,6 +43,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                   Expanded(
                     flex: 1,
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: controller.forwardPage,
                       child: Container(
                         width: double.infinity,
@@ -55,6 +59,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                   Expanded(
                     flex: 1,
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: controller.nextPage,
                       child: Container(
                         width: double.infinity,
@@ -84,18 +89,31 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             Positioned(
               right: 0,
               bottom: 0,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.black38,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                  ),
-                ),
-                padding: AppStyle.edgeInsetsA8.copyWith(top: 4, bottom: 4),
-                child: Obx(
-                  () => Text(
-                    "${controller.detail.value.chapterTitle}  ${controller.currentIndex.value + 1} / ${controller.detail.value.pageUrls.length}",
-                    style: const TextStyle(fontSize: 12),
+              child: Obx(
+                () => Offstage(
+                  offstage: !controller.settings.comicReaderShowStatus.value,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.black38,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                      ),
+                    ),
+                    padding: AppStyle.edgeInsetsA8.copyWith(top: 4, bottom: 4),
+                    child: Obx(
+                      () => Row(
+                        children: [
+                          buildConnectivity(),
+                          AppStyle.hGap8,
+                          buildBattery(),
+                          AppStyle.hGap8,
+                          Text(
+                            "${controller.detail.value.chapterTitle}  ${controller.currentIndex.value + 1} / ${controller.detail.value.pageUrls.length}",
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -213,45 +231,84 @@ class ComicReaderPage extends GetView<ComicReaderController> {
   }
 
   Widget buildHorizontal() {
-    return PreloadPageView.builder(
-      controller: controller.preloadPageController,
-      onPageChanged: (e) {
-        controller.currentIndex.value = e;
-      },
-      physics: controller.lockSwipe.value
-          ? const NeverScrollableScrollPhysics()
-          : null,
-      itemCount: controller.detail.value.pageUrls.length,
-      preloadPagesCount: 4,
-      itemBuilder: (_, i) {
-        var url = controller.detail.value.pageUrls[i];
-        return PhotoView.customChild(
-          wantKeepAlive: true,
-          initialScale: 1.0,
-          onScaleEnd: (context, detail, e) {
-            controller.lockSwipe.value = (e.scale ?? 1) > 1.0;
-          },
-          child: NetImage(
-            url,
-            fit: BoxFit.contain,
-            progress: true,
+    return EasyRefresh(
+      header: MaterialHeader2(
+        triggerOffset: 80,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: AppStyle.radius24,
           ),
-        );
+          padding: AppStyle.edgeInsetsA12,
+          child: const Icon(
+            Icons.chevron_left,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+      footer: MaterialFooter2(
+        triggerOffset: 80,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: AppStyle.radius24,
+          ),
+          padding: AppStyle.edgeInsetsA12,
+          child: const Icon(
+            Icons.chevron_right,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+      refreshOnStart: false,
+      onRefresh: () async {
+        controller.forwardChapter();
       },
+      onLoad: () async {
+        controller.nextChapter();
+      },
+      child: PreloadPageView.builder(
+        controller: controller.preloadPageController,
+        onPageChanged: (e) {
+          controller.currentIndex.value = e;
+        },
+        reverse: controller.direction.value == 2,
+        physics: controller.lockSwipe.value
+            ? const NeverScrollableScrollPhysics()
+            : null,
+        itemCount: controller.detail.value.pageUrls.length,
+        preloadPagesCount: 4,
+        itemBuilder: (_, i) {
+          var url = controller.detail.value.pageUrls[i];
+          if (i == controller.detail.value.pageUrls.length - 1 && url == "TC") {
+            return buildViewPoints();
+          }
+          return PhotoView.customChild(
+            wantKeepAlive: true,
+            initialScale: 1.0,
+            onScaleEnd: (context, detail, e) {
+              controller.lockSwipe.value = (e.scale ?? 1) > 1.0;
+            },
+            child: NetImage(
+              url,
+              fit: BoxFit.contain,
+              progress: true,
+            ),
+          );
+        },
+      ),
     );
   }
 
   Widget buildVertical() {
     return ScrollablePositionedList.builder(
       itemScrollController: controller.itemScrollController,
-      itemCount: controller.detail.value.pageUrls.length + 1,
+      itemCount: controller.detail.value.pageUrls.length,
       itemPositionsListener: controller.itemPositionsListener,
       itemBuilder: (_, i) {
-        if (i == controller.detail.value.pageUrls.length) {
-          return const SizedBox(
-            height: 100,
-            child: Text("底部，吐槽页面"),
-          );
+        if (i == controller.detail.value.pageUrls.length - 1 &&
+            controller.detail.value.pageUrls[i] == "TC") {
+          return buildViewPoints(shrinkWrap: true);
         }
         var url = controller.detail.value.pageUrls[i];
         return Container(
@@ -295,6 +352,159 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           ),
         );
       },
+    );
+  }
+
+  Widget buildViewPoints({bool shrinkWrap = false}) {
+    return Obx(
+      () => ListView(
+        shrinkWrap: shrinkWrap,
+        physics: shrinkWrap ? const NeverScrollableScrollPhysics() : null,
+        padding: EdgeInsets.zero,
+        children: [
+          ListTile(
+            title: Text("观点(${controller.viewPoints.length})"),
+          ),
+          Padding(
+            padding: AppStyle.edgeInsetsH12,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: controller.viewPoints
+                  .take(10)
+                  .map(
+                    (e) => OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            e.content,
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.white),
+                          ),
+                          AppStyle.hGap12,
+                          const Icon(
+                            Remix.thumb_up_line,
+                            size: 16,
+                          ),
+                          AppStyle.hGap4,
+                          Text(
+                            "${e.num}",
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            width: 100,
+            child: OutlinedButton(
+              onPressed: () {
+                controller.showComment();
+              },
+              child: const Text("查看更多"),
+            ),
+          ),
+          AppStyle.vGap12,
+        ],
+      ),
+    );
+  }
+
+  Widget buildConnectivity() {
+    var connectivityType = controller.connectivityType.value;
+    IconData icon = Remix.wifi_line;
+    var name = "WiFi";
+    switch (connectivityType) {
+      case ConnectivityResult.bluetooth:
+        icon = Remix.wifi_line;
+        name = "蓝牙";
+        break;
+      case ConnectivityResult.ethernet:
+        icon = Remix.computer_line;
+        name = "有线";
+        break;
+      case ConnectivityResult.mobile:
+        icon = Remix.base_station_line;
+        name = "流量";
+        break;
+      case ConnectivityResult.wifi:
+        icon = Remix.wifi_line;
+        name = "WiFi";
+        break;
+      case ConnectivityResult.vpn:
+        icon = Remix.shield_keyhole_line;
+        name = "VPN";
+        break;
+      case ConnectivityResult.none:
+        icon = Remix.wifi_off_line;
+        name = "无网络";
+        break;
+      case ConnectivityResult.other:
+        icon = Remix.question_line;
+        name = "未知";
+        break;
+      default:
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: 14,
+        ),
+        AppStyle.hGap4,
+        Text(
+          name,
+          style: const TextStyle(fontSize: 12),
+        )
+      ],
+    );
+  }
+
+  Widget buildBattery() {
+    var battery = controller.batteryLevel.value;
+    IconData icon = Icons.battery_0_bar;
+    if (battery >= 90) {
+      icon = Icons.battery_full;
+    } else if (battery < 90 && battery >= 80) {
+      icon = Icons.battery_6_bar;
+    } else if (battery < 80 && battery >= 70) {
+      icon = Icons.battery_5_bar;
+    } else if (battery < 70 && battery >= 50) {
+      icon = Icons.battery_4_bar;
+    } else if (battery < 50 && battery >= 30) {
+      icon = Icons.battery_3_bar;
+    } else if (battery < 30 && battery >= 20) {
+      icon = Icons.battery_2_bar;
+    } else if (battery < 20 && battery >= 10) {
+      icon = Icons.battery_1_bar;
+    } else {
+      icon = Icons.battery_0_bar;
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: 16,
+        ),
+        AppStyle.hGap4,
+        Text(
+          "$battery%",
+          style: const TextStyle(fontSize: 12),
+        )
+      ],
     );
   }
 }

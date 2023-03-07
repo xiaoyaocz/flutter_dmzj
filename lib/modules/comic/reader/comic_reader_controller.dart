@@ -1,6 +1,11 @@
+import 'dart:async';
+
+import 'package:battery_plus/battery_plus.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/comic/chapter_info.dart';
@@ -31,19 +36,35 @@ class ComicReaderController extends BaseController {
   }) {
     chapterIndex.value = chapters.indexOf(chapter);
   }
+
+  /// APP设置控制器
+  final settings = Get.find<AppSettingsController>();
+
+  /// 预加载控制器
   final PreloadPageController preloadPageController = PreloadPageController();
-  var chapterIndex = 0.obs;
+
+  /// 上下模式控制器
   final ItemScrollController itemScrollController = ItemScrollController();
+
+  /// 监听上下滚动
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
+
+  /// 章节详情
   Rx<ComicChapterDetail> detail =
       Rx<ComicChapterDetail>(ComicChapterDetail.empty());
+
+  /// 连接信息监听
+  StreamSubscription<ConnectivityResult>? connectivitySubscription;
+
+  /// 电量信息监听
+  StreamSubscription<BatteryState>? batterySubscription;
 
   /// 当处于放大图片时，锁定滑动手势
   var lockSwipe = false.obs;
 
-  /// 阅读方向 0=左右，1=上下，2=右左
-  var direction = 0.obs;
+  /// 当前章节索引
+  var chapterIndex = 0.obs;
 
   /// 当前页面
   var currentIndex = 0.obs;
@@ -54,27 +75,64 @@ class ComicReaderController extends BaseController {
   /// 是否显示控制器
   var showControls = false.obs;
 
+  /// 阅读方向
+  var direction = 0.obs;
+
   /// 观点、吐槽
   RxList<ComicViewPointModel> viewPoints = RxList<ComicViewPointModel>();
 
+  /// 连接类型
+  Rx<ConnectivityResult> connectivityType =
+      Rx<ConnectivityResult>(ConnectivityResult.other);
+
+  /// 电量信息
+  Rx<int> batteryLevel = 0.obs;
+
   @override
   void onInit() {
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: [],
-    );
+    initConnectivity();
+    initBattery();
+    direction.value = settings.comicReaderDirection.value;
+    if (settings.comicReaderFullScreen.value) {
+      setFull();
+    }
 
     itemPositionsListener.itemPositions.addListener(updateItemPosition);
     loadDetail();
     super.onInit();
   }
 
+  /// 初始化电池信息
+  void initBattery() async {
+    var battery = Battery();
+    batterySubscription =
+        battery.onBatteryStateChanged.listen((BatteryState state) async {
+      var level = await battery.batteryLevel;
+      batteryLevel.value = level;
+    });
+    batteryLevel.value = await battery.batteryLevel;
+  }
+
+  /// 初始化连接状态
+  void initConnectivity() async {
+    var connectivity = Connectivity();
+    connectivitySubscription =
+        connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      //提醒
+      if (connectivityType.value != result &&
+          result == ConnectivityResult.mobile) {
+        SmartDialog.showToast("您已切换至数据网络，请注意流量消耗");
+      }
+      connectivityType.value = result;
+    });
+    connectivityType.value = await connectivity.checkConnectivity();
+  }
+
   @override
   void onClose() {
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: SystemUiOverlay.values,
-    );
+    connectivitySubscription?.cancel();
+    batterySubscription?.cancel();
+    exitFull();
     itemPositionsListener.itemPositions.removeListener(updateItemPosition);
     uploadHistory();
     super.onClose();
@@ -120,6 +178,9 @@ class ComicReaderController extends BaseController {
         initialIndex = 0;
       }
       currentIndex.value = initialIndex;
+      if (settings.comicReaderShowViewPoint.value) {
+        result.pageUrls.add("TC");
+      }
 
       detail.value = result;
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -153,21 +214,12 @@ class ComicReaderController extends BaseController {
 
   /// 设置显示/隐藏控制按钮
   void setShowControls() {
-    if (!showControls.value) {
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.edgeToEdge,
-        overlays: SystemUiOverlay.values,
-      );
-      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.transparent,
-      ));
-    } else {
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: [],
-      );
+    if (settings.comicReaderFullScreen.value) {
+      if (showControls.value) {
+        setFull();
+      } else {
+        setFullEdge();
+      }
     }
     Future.delayed(const Duration(milliseconds: 100), () {
       showControls.value = !showControls.value;
@@ -188,7 +240,7 @@ class ComicReaderController extends BaseController {
       constraints: const BoxConstraints(
         maxWidth: 500,
       ),
-      backgroundColor: AppStyle.darkTheme.cardColor,
+      backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
       builder: (context) => Theme(
         data: AppStyle.darkTheme,
         child: Column(
@@ -307,7 +359,7 @@ class ComicReaderController extends BaseController {
       constraints: const BoxConstraints(
         maxWidth: 500,
       ),
-      backgroundColor: AppStyle.darkTheme.cardColor,
+      backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
       builder: (context) => Theme(
         data: AppStyle.darkTheme,
         child: Column(
@@ -371,7 +423,174 @@ class ComicReaderController extends BaseController {
   }
 
   /// 显示设置
-  void showSettings() {}
+  void showSettings() {
+    setShowControls();
+
+    showModalBottomSheet(
+      context: Get.context!,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+      constraints: const BoxConstraints(
+        maxWidth: 500,
+      ),
+      backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
+      builder: (context) => Theme(
+        data: AppStyle.darkTheme,
+        child: Column(
+          children: [
+            ListTile(
+              title: const Text("设置"),
+              trailing: IconButton(
+                onPressed: Get.back,
+                icon: const Icon(Icons.close),
+              ),
+              contentPadding: AppStyle.edgeInsetsL12,
+            ),
+            Expanded(
+              child: Obx(
+                () => ListView(
+                  padding: AppStyle.edgeInsetsA12,
+                  children: [
+                    buildBGItem(
+                      child: ListTile(
+                        title: const Text("阅读方向"),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            buildSelectedButton(
+                              onTap: () {
+                                setDirection(0);
+                              },
+                              selected:
+                                  settings.comicReaderDirection.value == 0,
+                              child: const Icon(Remix.arrow_right_line),
+                            ),
+                            AppStyle.hGap8,
+                            buildSelectedButton(
+                              onTap: () {
+                                setDirection(2);
+                              },
+                              selected:
+                                  settings.comicReaderDirection.value == 2,
+                              child: const Icon(Remix.arrow_left_line),
+                            ),
+                            AppStyle.hGap8,
+                            buildSelectedButton(
+                              onTap: () {
+                                setDirection(1);
+                              },
+                              selected:
+                                  settings.comicReaderDirection.value == 1,
+                              child: const Icon(Remix.arrow_down_line),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.comicReaderFullScreen.value,
+                        onChanged: (e) {
+                          settings.setComicReaderFullScreen(e);
+                          if (e) {
+                            setFull();
+                          } else {
+                            exitFull();
+                          }
+                        },
+                        title: const Text("全屏阅读"),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.comicReaderShowStatus.value,
+                        onChanged: (e) {
+                          settings.setComicReaderShowStatus(e);
+                        },
+                        title: const Text("显示状态信息"),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.comicReaderShowViewPoint.value,
+                        onChanged: (e) {
+                          settings.setComicReaderShowViewPoint(e);
+                          setShowViewPoint(e);
+                        },
+                        title: const Text("显示观点/吐槽"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      routeSettings: const RouteSettings(name: "/modalBottomSheet"),
+    );
+  }
+
+  Widget buildBGItem({required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: AppStyle.radius8,
+        color: AppStyle.darkTheme.cardColor,
+      ),
+      child: child,
+    );
+  }
+
+  Widget buildSelectedButton(
+      {required Widget child, bool selected = false, Function()? onTap}) {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: selected ? Colors.blue : Colors.grey,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppStyle.radius4,
+          side: BorderSide(
+            color: selected ? Colors.blue : Colors.grey,
+          ),
+        ),
+      ),
+      onPressed: onTap,
+      child: child,
+    );
+  }
+
+  void setDirection(int value) {
+    initialIndex = currentIndex.value;
+    settings.setComicReaderDirection(value);
+    direction.value = value;
+    if (initialIndex != 0) {
+      Future.delayed(const Duration(milliseconds: 200), () {
+        jumpToPage(initialIndex);
+      });
+    }
+  }
+
+  void setShowViewPoint(bool value) {
+    if (value) {
+      if (!detail.value.pageUrls.contains("TC")) {
+        detail.update((val) {
+          val!.pageUrls.add("TC");
+        });
+      }
+    } else {
+      if (detail.value.pageUrls.contains("TC")) {
+        detail.update((val) {
+          val!.pageUrls.remove("TC");
+        });
+      }
+    }
+  }
 
   void uploadHistory() {
     var chapter = chapters[chapterIndex.value];
@@ -382,6 +601,35 @@ class ComicReaderController extends BaseController {
       comicName: comicTitle,
       comicCover: comicCover,
       chapterName: chapter.chapterTitle,
+    );
+  }
+
+  /// 进入全屏
+  void setFull() {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [],
+    );
+  }
+
+  /// 进入全屏edgeToEdge模式
+  void setFullEdge() {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.edgeToEdge,
+      overlays: SystemUiOverlay.values,
+    );
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.transparent,
+    ));
+  }
+
+  /// 退出全屏
+  void exitFull() {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
     );
   }
 }

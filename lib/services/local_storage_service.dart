@@ -17,6 +17,18 @@ class LocalStorageService extends GetxService {
   /// * 类型：LoginResultModel
   static const String kUserAuthInfo = "UserAuthInfo";
 
+  /// 漫画阅读方向
+  static const String kComicReaderDirection = "ComicReaderDirection";
+
+  /// 漫画全屏阅读
+  static const String kComicReaderFullScreen = "ComicReaderFullScreen";
+
+  /// 漫画阅读显示状态信息
+  static const String kComicReaderShowStatus = "ComicReaderShowStatus";
+
+  /// 漫画阅读尾页显示观点/吐槽
+  static const String kComicReaderShowViewPoint = "ComicReaderShowViewPoint";
+
   late Box settingsBox;
   Future init() async {
     settingsBox = await Hive.openBox(

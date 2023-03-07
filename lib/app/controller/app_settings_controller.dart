@@ -10,6 +10,16 @@ class AppSettingsController extends GetxController {
     themeMode.value = LocalStorageService.instance
         .getValue(LocalStorageService.kThemeMode, 0);
 
+    comicReaderDirection.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderDirection, 0);
+    comicReaderFullScreen.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderFullScreen, true);
+    comicReaderShowStatus.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderShowStatus, true);
+    comicReaderShowStatus.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderShowStatus, true);
+    comicReaderShowViewPoint.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderShowViewPoint, true);
     super.onInit();
   }
 
@@ -56,5 +66,43 @@ class AppSettingsController extends GetxController {
 
     LocalStorageService.instance.setValue(LocalStorageService.kThemeMode, i);
     Get.changeThemeMode(mode);
+  }
+
+  /// 漫画阅读方向
+  /// * [0] 左右
+  /// * [1] 上下
+  /// * [2] 右左
+  var comicReaderDirection = 0.obs;
+  void setComicReaderDirection(int direction) {
+    if (comicReaderDirection.value == direction) {
+      return;
+    }
+    comicReaderDirection.value = direction;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderDirection, direction);
+  }
+
+  /// 漫画全屏阅读
+  RxBool comicReaderFullScreen = true.obs;
+  void setComicReaderFullScreen(bool value) {
+    comicReaderFullScreen.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderFullScreen, value);
+  }
+
+  /// 漫画阅读显示状态信息
+  RxBool comicReaderShowStatus = true.obs;
+  void setComicReaderShowStatus(bool value) {
+    comicReaderShowStatus.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderShowStatus, value);
+  }
+
+  /// 漫画阅读尾页显示观点/吐槽
+  RxBool comicReaderShowViewPoint = true.obs;
+  void setComicReaderShowViewPoint(bool value) {
+    comicReaderShowViewPoint.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderShowViewPoint, value);
   }
 }
