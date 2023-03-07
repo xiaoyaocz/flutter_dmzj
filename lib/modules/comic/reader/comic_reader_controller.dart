@@ -442,7 +442,9 @@ class ComicReaderController extends BaseController {
               ),
             ),
             Container(
-              padding: AppStyle.edgeInsetsA8,
+              padding: AppStyle.edgeInsetsA8.copyWith(
+                bottom: 8 + AppStyle.bottomBarHeight,
+              ),
               child: TextField(
                 controller: tucaoController,
                 onSubmitted: (e) {
@@ -664,6 +666,7 @@ class ComicReaderController extends BaseController {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
       systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light,
     ));
   }
 

@@ -45,7 +45,11 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                     flex: 1,
                     child: GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onTap: controller.forwardPage,
+                      onTap: () {
+                        controller.direction.value == 2
+                            ? controller.nextPage()
+                            : controller.forwardPage();
+                      },
                       child: Container(
                         width: double.infinity,
                         height: double.infinity,
@@ -61,7 +65,11 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                     flex: 1,
                     child: GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onTap: controller.nextPage,
+                      onTap: () {
+                        controller.direction.value == 2
+                            ? controller.forwardPage()
+                            : controller.nextPage();
+                      },
                       child: Container(
                         width: double.infinity,
                         height: double.infinity,
@@ -100,9 +108,10 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                         topLeft: Radius.circular(8),
                       ),
                     ),
-                    padding: AppStyle.edgeInsetsA8.copyWith(top: 4, bottom: 4),
+                    padding: AppStyle.edgeInsetsA12.copyWith(top: 4, bottom: 4),
                     child: Obx(
                       () => Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           buildConnectivity(),
                           buildBattery(),
@@ -111,13 +120,13 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                             child: Text(
                               controller.detail.value.chapterTitle,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 12),
+                              style: const TextStyle(fontSize: 12, height: 1.0),
                             ),
                           ),
                           AppStyle.hGap8,
                           Text(
                             "${controller.currentIndex.value + 1} / ${controller.detail.value.pageUrls.length}",
-                            style: const TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12, height: 1.0),
                           ),
                         ],
                       ),
@@ -471,7 +480,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
     }
     return Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(
           icon,
@@ -511,7 +520,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
       visible: controller.showBattery.value,
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(
             icon,
