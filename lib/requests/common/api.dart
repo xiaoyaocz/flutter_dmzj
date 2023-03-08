@@ -69,4 +69,18 @@ class Api {
     }
     return map;
   }
+
+  /// 小说正文链接
+  static String getNovelContentUrl(
+      {required int volumeId, required int chapterId}) {
+    var path = "/lnovel/${volumeId}_$chapterId.txt";
+    var ts = (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0);
+    var key =
+        "IBAAKCAQEAsUAdKtXNt8cdrcTXLsaFKj9bSK1nEOAROGn2KJXlEVekcPssKUxSN8dsfba51kmHM";
+    key += path;
+    key += ts;
+    key = md5.convert(utf8.encode(key)).toString().toLowerCase();
+
+    return "http://jurisdiction.dmzj.com$path?t=$ts&k=$key";
+  }
 }

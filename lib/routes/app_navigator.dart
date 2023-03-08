@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/comic/detail_info.dart';
+import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -77,7 +77,7 @@ class AppNavigator {
   /// 打开小说详情
   static void toNovelDetail(int id) {
     Log.w("打开小说:$id");
-    toComment(objId: id, type: AppConstant.kTypeNovel);
+    toContentPage(RoutePath.kNovelDetail, arg: id);
   }
 
   /// 打开评论
@@ -168,6 +168,26 @@ class AppNavigator {
       "comicTitle": comicTitle,
       "comicCover": comicCover,
       "chapters": chapters,
+      "chapter": chapter,
+    });
+  }
+
+  /// 打开漫画阅读
+  static Future toNovelReader({
+    required int novelId,
+    required String novelTitle,
+    required String novelCover,
+    required List<NovelDetailVolume> volumes,
+    required NovelDetailVolume volume,
+    required NovelDetailChapter chapter,
+  }) async {
+    // 使用主路由跳转
+    await Get.toNamed(RoutePath.kNovelReader, arguments: {
+      "novelId": novelId,
+      "novelTitle": novelTitle,
+      "novelCover": novelCover,
+      "volume": volume,
+      "volumes": volumes,
       "chapter": chapter,
     });
   }

@@ -27,7 +27,7 @@ message NovelVolumeDetailProto {
     repeated NovelChapterDetailProto chapters = 4;
 }
 
-message NovelInfoProto {
+message NovelDetailProto {
     int64 novel_id = 1;
     string name = 2;
     string zone = 3;
@@ -47,8 +47,8 @@ message NovelInfoProto {
     int64 redis_update_time = 17;
     repeated NovelVolumeProto volume = 18;
 }
-message NovelInfoResponseProto {
+message NovelDetailResponseProto {
     int32 errno = 1;
     string errmsg = 2;
-    repeated NovelInfoProto data = 3;
+    NovelDetailProto data = 3;
 }

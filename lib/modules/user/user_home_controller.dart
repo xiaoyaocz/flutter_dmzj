@@ -91,4 +91,6 @@ class UserHomeController extends GetxController {
   void toSettings() async {
     AppNavigator.toSettings();
   }
+
+  void test() async {}
 }

@@ -21,7 +21,6 @@ class SettingsPage extends StatelessWidget {
             padding: const EdgeInsets.only(right: 56),
             child: TabBar(
               isScrollable: true,
-              labelPadding: AppStyle.edgeInsetsH24,
               indicatorSize: TabBarIndicatorSize.label,
               labelColor: Theme.of(context).colorScheme.primary,
               unselectedLabelColor:
@@ -208,7 +207,7 @@ class SettingsPage extends StatelessWidget {
                 ),
                 AppStyle.hGap12,
                 Text(
-                    "${(settings.novelReaderLineSpacing.value).toStringAsFixed(1)}"),
+                    (settings.novelReaderLineSpacing.value).toStringAsFixed(1)),
                 AppStyle.hGap12,
                 OutlinedButton(
                   onPressed: () {

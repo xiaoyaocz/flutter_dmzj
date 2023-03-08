@@ -3,7 +3,7 @@
 //  source: novel.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name, depend_on_referenced_packages, no_leading_underscores_for_local_identifiers
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name, no_leading_underscores_for_local_identifiers, depend_on_referenced_packages
 
 import 'dart:core' as $core;
 
@@ -514,11 +514,11 @@ class NovelVolumeDetailProto extends $pb.GeneratedMessage {
   $core.List<NovelChapterDetailProto> get chapters => $_getList(3);
 }
 
-class NovelInfoProto extends $pb.GeneratedMessage {
+class NovelDetailProto extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       const $core.bool.fromEnvironment('protobuf.omit_message_names')
           ? ''
-          : 'NovelInfoProto',
+          : 'NovelDetailProto',
       createEmptyInstance: create)
     ..aInt64(
         1,
@@ -614,8 +614,8 @@ class NovelInfoProto extends $pb.GeneratedMessage {
         subBuilder: NovelVolumeProto.create)
     ..hasRequiredFields = false;
 
-  NovelInfoProto._() : super();
-  factory NovelInfoProto({
+  NovelDetailProto._() : super();
+  factory NovelDetailProto({
     $fixnum.Int64? novelId,
     $core.String? name,
     $core.String? zone,
@@ -692,32 +692,32 @@ class NovelInfoProto extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory NovelInfoProto.fromBuffer($core.List<$core.int> i,
+  factory NovelDetailProto.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
-  factory NovelInfoProto.fromJson($core.String i,
+  factory NovelDetailProto.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
-  NovelInfoProto clone() => NovelInfoProto()..mergeFromMessage(this);
+  NovelDetailProto clone() => NovelDetailProto()..mergeFromMessage(this);
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
-  NovelInfoProto copyWith(void Function(NovelInfoProto) updates) =>
-      super.copyWith((message) => updates(message as NovelInfoProto))
-          as NovelInfoProto; // ignore: deprecated_member_use
+  NovelDetailProto copyWith(void Function(NovelDetailProto) updates) =>
+      super.copyWith((message) => updates(message as NovelDetailProto))
+          as NovelDetailProto; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static NovelInfoProto create() => NovelInfoProto._();
-  NovelInfoProto createEmptyInstance() => create();
-  static $pb.PbList<NovelInfoProto> createRepeated() =>
-      $pb.PbList<NovelInfoProto>();
+  static NovelDetailProto create() => NovelDetailProto._();
+  NovelDetailProto createEmptyInstance() => create();
+  static $pb.PbList<NovelDetailProto> createRepeated() =>
+      $pb.PbList<NovelDetailProto>();
   @$core.pragma('dart2js:noInline')
-  static NovelInfoProto getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<NovelInfoProto>(create);
-  static NovelInfoProto? _defaultInstance;
+  static NovelDetailProto getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<NovelDetailProto>(create);
+  static NovelDetailProto? _defaultInstance;
 
   @$pb.TagNumber(1)
   $fixnum.Int64 get novelId => $_getI64(0);
@@ -918,11 +918,11 @@ class NovelInfoProto extends $pb.GeneratedMessage {
   $core.List<NovelVolumeProto> get volume => $_getList(17);
 }
 
-class NovelInfoResponseProto extends $pb.GeneratedMessage {
+class NovelDetailResponseProto extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       const $core.bool.fromEnvironment('protobuf.omit_message_names')
           ? ''
-          : 'NovelInfoResponseProto',
+          : 'NovelDetailResponseProto',
       createEmptyInstance: create)
     ..a<$core.int>(
         1,
@@ -935,20 +935,19 @@ class NovelInfoResponseProto extends $pb.GeneratedMessage {
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
             : 'errmsg')
-    ..pc<NovelInfoProto>(
+    ..aOM<NovelDetailProto>(
         3,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
             : 'data',
-        $pb.PbFieldType.PM,
-        subBuilder: NovelInfoProto.create)
+        subBuilder: NovelDetailProto.create)
     ..hasRequiredFields = false;
 
-  NovelInfoResponseProto._() : super();
-  factory NovelInfoResponseProto({
+  NovelDetailResponseProto._() : super();
+  factory NovelDetailResponseProto({
     $core.int? errno,
     $core.String? errmsg,
-    $core.Iterable<NovelInfoProto>? data,
+    NovelDetailProto? data,
   }) {
     final _result = create();
     if (errno != null) {
@@ -958,38 +957,38 @@ class NovelInfoResponseProto extends $pb.GeneratedMessage {
       _result.errmsg = errmsg;
     }
     if (data != null) {
-      _result.data.addAll(data);
+      _result.data = data;
     }
     return _result;
   }
-  factory NovelInfoResponseProto.fromBuffer($core.List<$core.int> i,
+  factory NovelDetailResponseProto.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
-  factory NovelInfoResponseProto.fromJson($core.String i,
+  factory NovelDetailResponseProto.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
-  NovelInfoResponseProto clone() =>
-      NovelInfoResponseProto()..mergeFromMessage(this);
+  NovelDetailResponseProto clone() =>
+      NovelDetailResponseProto()..mergeFromMessage(this);
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
-  NovelInfoResponseProto copyWith(
-          void Function(NovelInfoResponseProto) updates) =>
-      super.copyWith((message) => updates(message as NovelInfoResponseProto))
-          as NovelInfoResponseProto; // ignore: deprecated_member_use
+  NovelDetailResponseProto copyWith(
+          void Function(NovelDetailResponseProto) updates) =>
+      super.copyWith((message) => updates(message as NovelDetailResponseProto))
+          as NovelDetailResponseProto; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static NovelInfoResponseProto create() => NovelInfoResponseProto._();
-  NovelInfoResponseProto createEmptyInstance() => create();
-  static $pb.PbList<NovelInfoResponseProto> createRepeated() =>
-      $pb.PbList<NovelInfoResponseProto>();
+  static NovelDetailResponseProto create() => NovelDetailResponseProto._();
+  NovelDetailResponseProto createEmptyInstance() => create();
+  static $pb.PbList<NovelDetailResponseProto> createRepeated() =>
+      $pb.PbList<NovelDetailResponseProto>();
   @$core.pragma('dart2js:noInline')
-  static NovelInfoResponseProto getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<NovelInfoResponseProto>(create);
-  static NovelInfoResponseProto? _defaultInstance;
+  static NovelDetailResponseProto getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<NovelDetailResponseProto>(create);
+  static NovelDetailResponseProto? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get errno => $_getIZ(0);
@@ -1016,5 +1015,16 @@ class NovelInfoResponseProto extends $pb.GeneratedMessage {
   void clearErrmsg() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.List<NovelInfoProto> get data => $_getList(2);
+  NovelDetailProto get data => $_getN(2);
+  @$pb.TagNumber(3)
+  set data(NovelDetailProto v) {
+    setField(3, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasData() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearData() => clearField(3);
+  @$pb.TagNumber(3)
+  NovelDetailProto ensureData() => $_ensure(2);
 }

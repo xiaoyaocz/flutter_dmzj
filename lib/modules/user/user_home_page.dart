@@ -113,7 +113,9 @@ class UserHomePage extends GetView<UserHomeController> {
                         Icons.chevron_right,
                         color: Colors.grey,
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        controller.test();
+                      },
                     ),
                     ListTile(
                       leading: const Icon(Remix.file_history_line),

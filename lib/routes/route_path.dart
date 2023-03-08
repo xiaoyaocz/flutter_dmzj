@@ -54,4 +54,10 @@ class RoutePath {
 
   /// 设置
   static const kSettings = "/user/settings";
+
+  /// 小说详情
+  static const kNovelDetail = "/novel/detail";
+
+  /// 小说阅读
+  static const kNovelReader = "/novel/reader";
 }

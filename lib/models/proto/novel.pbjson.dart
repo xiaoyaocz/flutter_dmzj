@@ -60,9 +60,9 @@ const NovelVolumeDetailProto$json = const {
 
 /// Descriptor for `NovelVolumeDetailProto`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List novelVolumeDetailProtoDescriptor = $convert.base64Decode('ChZOb3ZlbFZvbHVtZURldGFpbFByb3RvEhsKCXZvbHVtZV9pZBgBIAEoA1IIdm9sdW1lSWQSHwoLdm9sdW1lX25hbWUYAiABKAlSCnZvbHVtZU5hbWUSIQoMdm9sdW1lX29yZGVyGAMgASgFUgt2b2x1bWVPcmRlchI0CghjaGFwdGVycxgEIAMoCzIYLk5vdmVsQ2hhcHRlckRldGFpbFByb3RvUghjaGFwdGVycw==');
-@$core.Deprecated('Use novelInfoProtoDescriptor instead')
-const NovelInfoProto$json = const {
-  '1': 'NovelInfoProto',
+@$core.Deprecated('Use novelDetailProtoDescriptor instead')
+const NovelDetailProto$json = const {
+  '1': 'NovelDetailProto',
   '2': const [
     const {'1': 'novel_id', '3': 1, '4': 1, '5': 3, '10': 'novelId'},
     const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
@@ -85,17 +85,17 @@ const NovelInfoProto$json = const {
   ],
 };
 
-/// Descriptor for `NovelInfoProto`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List novelInfoProtoDescriptor = $convert.base64Decode('Cg5Ob3ZlbEluZm9Qcm90bxIZCghub3ZlbF9pZBgBIAEoA1IHbm92ZWxJZBISCgRuYW1lGAIgASgJUgRuYW1lEhIKBHpvbmUYAyABKAlSBHpvbmUSFgoGc3RhdHVzGAQgASgJUgZzdGF0dXMSNQoXbGFzdF91cGRhdGVfdm9sdW1lX25hbWUYBSABKAlSFGxhc3RVcGRhdGVWb2x1bWVOYW1lEjcKGGxhc3RfdXBkYXRlX2NoYXB0ZXJfbmFtZRgGIAEoCVIVbGFzdFVwZGF0ZUNoYXB0ZXJOYW1lEjEKFWxhc3RfdXBkYXRlX3ZvbHVtZV9pZBgHIAEoA1ISbGFzdFVwZGF0ZVZvbHVtZUlkEjMKFmxhc3RfdXBkYXRlX2NoYXB0ZXJfaWQYCCABKANSE2xhc3RVcGRhdGVDaGFwdGVySWQSKAoQbGFzdF91cGRhdGVfdGltZRgJIAEoA1IObGFzdFVwZGF0ZVRpbWUSFAoFY292ZXIYCiABKAlSBWNvdmVyEhkKCGhvdF9oaXRzGAsgASgDUgdob3RIaXRzEiIKDGludHJvZHVjdGlvbhgMIAEoCVIMaW50cm9kdWN0aW9uEhQKBXR5cGVzGA0gAygJUgV0eXBlcxIYCgdhdXRob3JzGA4gASgJUgdhdXRob3JzEiEKDGZpcnN0X2xldHRlchgPIAEoCVILZmlyc3RMZXR0ZXISIwoNc3Vic2NyaWJlX251bRgQIAEoA1IMc3Vic2NyaWJlTnVtEioKEXJlZGlzX3VwZGF0ZV90aW1lGBEgASgDUg9yZWRpc1VwZGF0ZVRpbWUSKQoGdm9sdW1lGBIgAygLMhEuTm92ZWxWb2x1bWVQcm90b1IGdm9sdW1l');
-@$core.Deprecated('Use novelInfoResponseProtoDescriptor instead')
-const NovelInfoResponseProto$json = const {
-  '1': 'NovelInfoResponseProto',
+/// Descriptor for `NovelDetailProto`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List novelDetailProtoDescriptor = $convert.base64Decode('ChBOb3ZlbERldGFpbFByb3RvEhkKCG5vdmVsX2lkGAEgASgDUgdub3ZlbElkEhIKBG5hbWUYAiABKAlSBG5hbWUSEgoEem9uZRgDIAEoCVIEem9uZRIWCgZzdGF0dXMYBCABKAlSBnN0YXR1cxI1ChdsYXN0X3VwZGF0ZV92b2x1bWVfbmFtZRgFIAEoCVIUbGFzdFVwZGF0ZVZvbHVtZU5hbWUSNwoYbGFzdF91cGRhdGVfY2hhcHRlcl9uYW1lGAYgASgJUhVsYXN0VXBkYXRlQ2hhcHRlck5hbWUSMQoVbGFzdF91cGRhdGVfdm9sdW1lX2lkGAcgASgDUhJsYXN0VXBkYXRlVm9sdW1lSWQSMwoWbGFzdF91cGRhdGVfY2hhcHRlcl9pZBgIIAEoA1ITbGFzdFVwZGF0ZUNoYXB0ZXJJZBIoChBsYXN0X3VwZGF0ZV90aW1lGAkgASgDUg5sYXN0VXBkYXRlVGltZRIUCgVjb3ZlchgKIAEoCVIFY292ZXISGQoIaG90X2hpdHMYCyABKANSB2hvdEhpdHMSIgoMaW50cm9kdWN0aW9uGAwgASgJUgxpbnRyb2R1Y3Rpb24SFAoFdHlwZXMYDSADKAlSBXR5cGVzEhgKB2F1dGhvcnMYDiABKAlSB2F1dGhvcnMSIQoMZmlyc3RfbGV0dGVyGA8gASgJUgtmaXJzdExldHRlchIjCg1zdWJzY3JpYmVfbnVtGBAgASgDUgxzdWJzY3JpYmVOdW0SKgoRcmVkaXNfdXBkYXRlX3RpbWUYESABKANSD3JlZGlzVXBkYXRlVGltZRIpCgZ2b2x1bWUYEiADKAsyES5Ob3ZlbFZvbHVtZVByb3RvUgZ2b2x1bWU=');
+@$core.Deprecated('Use novelDetailResponseProtoDescriptor instead')
+const NovelDetailResponseProto$json = const {
+  '1': 'NovelDetailResponseProto',
   '2': const [
     const {'1': 'errno', '3': 1, '4': 1, '5': 5, '10': 'errno'},
     const {'1': 'errmsg', '3': 2, '4': 1, '5': 9, '10': 'errmsg'},
-    const {'1': 'data', '3': 3, '4': 3, '5': 11, '6': '.NovelInfoProto', '10': 'data'},
+    const {'1': 'data', '3': 3, '4': 1, '5': 11, '6': '.NovelDetailProto', '10': 'data'},
   ],
 };
 
-/// Descriptor for `NovelInfoResponseProto`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List novelInfoResponseProtoDescriptor = $convert.base64Decode('ChZOb3ZlbEluZm9SZXNwb25zZVByb3RvEhQKBWVycm5vGAEgASgFUgVlcnJubxIWCgZlcnJtc2cYAiABKAlSBmVycm1zZxIjCgRkYXRhGAMgAygLMg8uTm92ZWxJbmZvUHJvdG9SBGRhdGE=');
+/// Descriptor for `NovelDetailResponseProto`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List novelDetailResponseProtoDescriptor = $convert.base64Decode('ChhOb3ZlbERldGFpbFJlc3BvbnNlUHJvdG8SFAoFZXJybm8YASABKAVSBWVycm5vEhYKBmVycm1zZxgCIAEoCVIGZXJybXNnEiUKBGRhdGEYAyABKAsyES5Ob3ZlbERldGFpbFByb3RvUgRkYXRh');

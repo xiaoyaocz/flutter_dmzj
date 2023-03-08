@@ -1,3 +1,4 @@
+import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/novel/category_filter_model.dart';
 import 'package:flutter_dmzj/models/novel/category_model.dart';
 import 'package:flutter_dmzj/models/novel/category_novel_model.dart';
@@ -5,6 +6,8 @@ import 'package:flutter_dmzj/models/novel/latest_model.dart';
 import 'package:flutter_dmzj/models/novel/rank_model.dart';
 import 'package:flutter_dmzj/models/novel/recommend_model.dart';
 import 'package:flutter_dmzj/models/novel/search_model.dart';
+import 'package:flutter_dmzj/models/proto/novel.pb.dart';
+import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
 
 class NovelRequest {
@@ -134,5 +137,49 @@ class NovelRequest {
       });
     }
     return map;
+  }
+
+  /// 小说详情
+  Future<NovelDetailProto> novelDetailV4({
+    required int novelId,
+  }) async {
+    var result = await HttpClient.instance.getEncryptV4(
+      '/novel/detail/$novelId',
+      needLogin: true,
+    );
+    var data = NovelDetailResponseProto.fromBuffer(result);
+    if (data.errno != 0) {
+      throw AppError(data.errmsg);
+    }
+
+    return data.data;
+  }
+
+  /// 小说章节
+  Future<List<NovelVolumeDetailProto>> novelChapterV4({
+    required int novelId,
+  }) async {
+    var result = await HttpClient.instance.getEncryptV4(
+      '/novel/chapter/$novelId',
+      needLogin: true,
+    );
+    var data = NovelChapterResponseProto.fromBuffer(result);
+    if (data.errno != 0) {
+      throw AppError(data.errmsg);
+    }
+
+    return data.data;
+  }
+
+  /// 小说正文内容
+  Future<String> novelContent(
+      {required int volumeId, required int chapterId}) async {
+    var result = await HttpClient.instance.getText(
+      Api.getNovelContentUrl(volumeId: volumeId, chapterId: chapterId),
+      baseUrl: "",
+      withDefaultParameter: false,
+    );
+
+    return result;
   }
 }

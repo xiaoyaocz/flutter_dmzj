@@ -15,6 +15,9 @@ import 'package:flutter_dmzj/modules/index/index_controller.dart';
 import 'package:flutter_dmzj/modules/index/index_page.dart';
 import 'package:flutter_dmzj/modules/news/detail/news_detail_page.dart';
 import 'package:flutter_dmzj/modules/novel/category_detail/novel_category_detail_page.dart';
+import 'package:flutter_dmzj/modules/novel/detail/novel_detail_page.dart';
+import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
+import 'package:flutter_dmzj/modules/novel/reader/novel_reader_page.dart';
 import 'package:flutter_dmzj/modules/novel/search/novel_search_page.dart';
 import 'package:flutter_dmzj/modules/user/history/user_history_page.dart';
 import 'package:flutter_dmzj/modules/user/local_history/local_history_page.dart';
@@ -52,6 +55,20 @@ class AppPages {
           comicTitle: Get.arguments["comicTitle"],
           comicCover: Get.arguments["comicCover"],
           chapters: Get.arguments["chapters"],
+          chapter: Get.arguments["chapter"],
+        ),
+      ),
+    ),
+    GetPage(
+      name: RoutePath.kNovelReader,
+      page: () => const NovelReaderPage(),
+      binding: BindingsBuilder.put(
+        () => NovelReaderController(
+          novelId: Get.arguments["novelId"],
+          novelTitle: Get.arguments["novelTitle"],
+          novelCover: Get.arguments["novelCover"],
+          volume: Get.arguments["volume"],
+          volumes: Get.arguments["volumes"],
           chapter: Get.arguments["chapter"],
         ),
       ),
@@ -173,6 +190,13 @@ class AppPages {
           settings: settings,
           page: () => SettingsPage(
             index: settings.arguments as int,
+          ),
+        );
+      case RoutePath.kNovelDetail:
+        return GetPageRoute(
+          settings: settings,
+          page: () => NovelDetailPage(
+            settings.arguments as int,
           ),
         );
       default:
