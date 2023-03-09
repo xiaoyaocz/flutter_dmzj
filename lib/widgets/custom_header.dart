@@ -331,40 +331,6 @@ physics.SpringDescription kMaterialSpringBuilder({
     );
 
 class _MaterialIndicatorState extends State<_MaterialIndicator> {
-  /// Indicator value.
-  /// See [ProgressIndicator.value].
-  double? get _value {
-    if (_result == IndicatorResult.noMore) {
-      return 0;
-    }
-    if (_mode == IndicatorMode.drag || _mode == IndicatorMode.armed) {
-      const noneOffset = _kCircularProgressIndicatorSize * 0.25;
-      if (_offset < noneOffset) {
-        return 0;
-      }
-      return math.min(
-              (_offset - noneOffset) /
-                  (_actualTriggerOffset * 1.25 - noneOffset),
-              1) *
-          0.75;
-    }
-    return null;
-  }
-
-  /// Indicator value.
-  Color? get _color {
-    if (_result == IndicatorResult.noMore) {
-      return Colors.transparent;
-    }
-    if (widget.valueColor != null) {
-      return null;
-    }
-    final color = widget.color ??
-        ProgressIndicatorTheme.of(context).color ??
-        Theme.of(context).colorScheme.primary;
-    return color.withOpacity(math.min(_offset / _actualTriggerOffset, 1));
-  }
-
   IndicatorMode get _mode => widget.state.mode;
 
   IndicatorResult get _result => widget.state.result;

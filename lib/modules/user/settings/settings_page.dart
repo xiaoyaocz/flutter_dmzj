@@ -163,7 +163,7 @@ class SettingsPage extends StatelessWidget {
               children: [
                 OutlinedButton(
                   onPressed: () {
-                    settings.setComicReaderFontSize(
+                    settings.setNovelReaderFontSize(
                       settings.novelReaderFontSize.value + 1,
                     );
                   },
@@ -177,7 +177,7 @@ class SettingsPage extends StatelessWidget {
                 AppStyle.hGap12,
                 OutlinedButton(
                   onPressed: () {
-                    settings.setComicReaderFontSize(
+                    settings.setNovelReaderFontSize(
                       settings.novelReaderFontSize.value - 1,
                     );
                   },

@@ -177,8 +177,7 @@ class AppNavigator {
     required int novelId,
     required String novelTitle,
     required String novelCover,
-    required List<NovelDetailVolume> volumes,
-    required NovelDetailVolume volume,
+    required List<NovelDetailChapter> chapters,
     required NovelDetailChapter chapter,
   }) async {
     // 使用主路由跳转
@@ -186,8 +185,7 @@ class AppNavigator {
       "novelId": novelId,
       "novelTitle": novelTitle,
       "novelCover": novelCover,
-      "volume": volume,
-      "volumes": volumes,
+      "chapters": chapters,
       "chapter": chapter,
     });
   }

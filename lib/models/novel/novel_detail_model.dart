@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_dmzj/models/proto/novel.pb.dart';
 import 'package:get/get.dart';
 
@@ -102,7 +100,8 @@ class NovelDetailVolume {
         volumeOrder: item.volumeOrder,
         chapters: item.chapters
             .map(
-              (e) => NovelDetailChapter.fromV4(e),
+              (e) => NovelDetailChapter.fromV4(
+                  e, item.volumeId.toInt(), item.volumeName),
             )
             .toList(),
       );
@@ -118,16 +117,23 @@ class NovelDetailChapter {
     required this.chapterId,
     required this.chapterName,
     required this.chapterOrder,
+    required this.volumeId,
+    required this.volumeName,
   });
 
-  factory NovelDetailChapter.fromV4(NovelChapterDetailProto item) =>
+  factory NovelDetailChapter.fromV4(
+          NovelChapterDetailProto item, int volumeId, String volumeName) =>
       NovelDetailChapter(
         chapterId: item.chapterId.toInt(),
         chapterName: item.chapterName,
         chapterOrder: item.chapterOrder,
+        volumeId: volumeId,
+        volumeName: volumeName,
       );
 
   int chapterId;
   String chapterName;
   int chapterOrder;
+  int volumeId;
+  String volumeName;
 }

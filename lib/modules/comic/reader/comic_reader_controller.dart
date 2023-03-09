@@ -310,7 +310,7 @@ class ComicReaderController extends BaseController {
     }
     setShowControls();
     chapterIndex.value += 1;
-    return loadDetail();
+    loadDetail();
   }
 
   /// 上一章
@@ -321,7 +321,7 @@ class ComicReaderController extends BaseController {
     }
     setShowControls();
     chapterIndex.value -= 1;
-    return loadDetail();
+    loadDetail();
   }
 
   /// 下一页

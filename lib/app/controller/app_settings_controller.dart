@@ -135,7 +135,7 @@ class AppSettingsController extends GetxController {
 
   /// 小说字体
   var novelReaderFontSize = 16.obs;
-  void setComicReaderFontSize(int size) {
+  void setNovelReaderFontSize(int size) {
     if (size < 5) {
       size = 5;
     }

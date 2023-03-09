@@ -152,29 +152,28 @@ class NovelDetailControler extends BaseController {
     }
     //查找记录
     if (history.value != null && history.value!.chapterId != 0) {
-      NovelDetailVolume? volume;
       NovelDetailChapter? chapter;
       for (var volumeItem in detail.value.volume) {
         var chapterItem = volumeItem.chapters.firstWhereOrNull(
           (x) => x.chapterId == history.value!.chapterId,
         );
         if (chapterItem != null) {
-          volume = volumeItem;
           chapter = chapterItem;
           break;
         }
       }
-      if (volume != null && chapter != null) {
-        var chapters = List<NovelDetailChapter>.from(volume.chapters);
-        //正序
-        chapters.sort((a, b) => a.chapterOrder.compareTo(b.chapterOrder));
+      if (chapter != null) {
+        List<NovelDetailChapter> chapters = [];
+        for (var volume in detail.value.volume) {
+          chapters.addAll(volume.chapters);
+        }
+
         AppNavigator.toNovelReader(
           novelId: novelId,
           novelCover: detail.value.cover,
           novelTitle: detail.value.name,
-          volumes: detail.value.volume.toList(),
-          volume: volume,
           chapter: chapter,
+          chapters: chapters,
         );
       } else {
         SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读");
@@ -186,31 +185,32 @@ class NovelDetailControler extends BaseController {
 
   void readStart() {
     //从头开始
-    var volume = detail.value.volume.first;
-    var chapters = List<NovelDetailChapter>.from(volume.chapters);
-    //正序
-    chapters.sort((a, b) => a.chapterOrder.compareTo(b.chapterOrder));
+    List<NovelDetailChapter> chapters = [];
+    for (var volume in detail.value.volume) {
+      chapters.addAll(volume.chapters);
+    }
     var chapter = chapters.first;
     AppNavigator.toNovelReader(
       novelId: novelId,
       novelCover: detail.value.cover,
       novelTitle: detail.value.name,
-      volumes: detail.value.volume.toList(),
-      volume: volume,
       chapter: chapter,
+      chapters: chapters,
     );
   }
 
   void readChapter(NovelDetailVolume volume, NovelDetailChapter item) {
-    var chapters = List<NovelDetailChapter>.from(volume.chapters);
+    List<NovelDetailChapter> chapters = [];
+    for (var volume in detail.value.volume) {
+      chapters.addAll(volume.chapters);
+    }
     //正序
     chapters.sort((a, b) => a.chapterOrder.compareTo(b.chapterOrder));
     AppNavigator.toNovelReader(
       novelId: novelId,
       novelCover: detail.value.cover,
       novelTitle: detail.value.name,
-      volumes: detail.value.volume.toList(),
-      volume: volume,
+      chapters: chapters,
       chapter: item,
     );
   }

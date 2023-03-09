@@ -1,66 +1,422 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/modules/novel/reader/novel_horizontal_reader.dart';
+
 import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
+import 'package:flutter_dmzj/widgets/custom_header.dart';
+import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
+import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
+import 'package:remixicon/remixicon.dart';
 
 class NovelReaderPage extends GetView<NovelReaderController> {
   const NovelReaderPage({Key? key}) : super(key: key);
 
+  Color get color =>
+      AppColor.novelThemes[controller.settings.novelReaderTheme.value]!.last;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Obx(
-        () => SafeArea(
-          child: PageView.builder(
-            itemCount: controller.pages.length,
-            itemBuilder: (_, i) {
-              return Padding(
-                padding: AppStyle.edgeInsetsA12,
-                child: Text(
-                  controller.pages[i],
-                  style: TextStyle(
-                    fontSize: controller.fontSize.toDouble(),
-                    height: controller.lineHeight,
+    return Theme(
+      data: AppStyle.darkTheme,
+      child: Obx(
+        () => Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: AppColor
+              .novelThemes[controller.settings.novelReaderTheme.value]!.first,
+          body: Stack(
+            children: [
+              Obx(
+                () => Offstage(
+                  offstage: controller.content.value.isEmpty,
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.setShowControls();
+                    },
+                    child: controller.direction.value == 1
+                        ? buildVertical()
+                        : buildHorizontal(),
                   ),
-                  locale: WidgetsBinding.instance.window.locale,
-                  textAlign: TextAlign.justify,
-                  textDirection: TextDirection.ltr,
                 ),
-              );
-            },
+              ),
+              Positioned.fill(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          controller.direction.value == 2
+                              ? controller.nextPage()
+                              : controller.forwardPage();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 8,
+                      child: Container(),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          controller.direction.value == 2
+                              ? controller.forwardPage()
+                              : controller.nextPage();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Obx(
+                () => Offstage(
+                  offstage: !controller.pageLoadding.value,
+                  child: const AppLoaddingWidget(),
+                ),
+              ),
+              Obx(
+                () => Offstage(
+                  offstage: !controller.pageError.value,
+                  child: AppErrorWidget(
+                    errorMsg: controller.errorMsg.value,
+                    onRefresh: () => controller.loadContent(),
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 8,
+                bottom: 8,
+                child: Obx(
+                  () => Offstage(
+                    offstage: !controller.settings.novelReaderShowStatus.value,
+                    child: Container(
+                      padding:
+                          AppStyle.edgeInsetsA12.copyWith(top: 4, bottom: 4),
+                      child: Obx(
+                        () => Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            buildConnectivity(),
+                            buildBattery(),
+                            AppStyle.hGap4,
+                            Text(
+                              "${controller.currentIndex.value + 1} / ${controller.maxPage.value}",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: color.withOpacity(.6),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              //顶部
+              Obx(
+                () => AnimatedPositioned(
+                  top: controller.showControls.value
+                      ? 0
+                      : -(48 + AppStyle.statusBarHeight),
+                  left: 0,
+                  right: 0,
+                  duration: const Duration(milliseconds: 100),
+                  child: Container(
+                    color: AppStyle.darkTheme.cardColor,
+                    height: 48 + AppStyle.statusBarHeight,
+                    padding: EdgeInsets.only(top: AppStyle.statusBarHeight),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: Get.back,
+                          icon: const Icon(Icons.arrow_back),
+                        ),
+                        AppStyle.hGap12,
+                        Expanded(
+                          child: Text(
+                            controller.chapters[controller.chapterIndex.value]
+                                .chapterName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              //底部
+              Obx(
+                () => AnimatedPositioned(
+                  bottom: controller.showControls.value
+                      ? 0
+                      : -(104 + AppStyle.bottomBarHeight),
+                  left: 0,
+                  right: 0,
+                  duration: const Duration(milliseconds: 100),
+                  child: Container(
+                    color: AppStyle.darkTheme.cardColor,
+                    height: 104 + AppStyle.bottomBarHeight,
+                    padding: EdgeInsets.only(bottom: AppStyle.bottomBarHeight),
+                    alignment: Alignment.center,
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: 500,
+                      ),
+                      child: Column(
+                        children: [
+                          buildSilderBar(),
+                          Material(
+                            color: AppStyle.darkTheme.cardColor,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: controller.forwardChapter,
+                                    icon: const Icon(Remix.skip_back_line),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: controller.showMenu,
+                                    icon: const Icon(Remix.file_list_line),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: controller.showSettings,
+                                    icon: const Icon(Remix.settings_line),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: controller.nextChapter,
+                                    icon: const Icon(Remix.skip_forward_line),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          // child: ListView(
-          //   padding: AppStyle.edgeInsetsA12,
-          //   children: [
-          //     RichText(
-          //       text: TextSpan(
-          //         children: controller.spanList.toList(),
-          //         style: TextStyle(
-          //           fontSize: controller.fontSize.toDouble(),
-          //           height: controller.fontHeight,
-          //         ),
-          //       ),
-          //       textAlign: TextAlign.justify,
-          //       textWidthBasis: TextWidthBasis.longestLine,
-          //     ),
-          //     // child: Text(
-          //     //   controller.text.value,
-          //     //   style: TextStyle(
-          //     //     fontSize: controller.fontSize.toDouble(),
-          //     //     height: controller.fontHeight,
-          //     //   ),
-          //     //   locale: WidgetsBinding.instance.window.locale,
-          //     //   textAlign: TextAlign.justify,
-          //     //   textDirection: TextDirection.ltr,
-          //     // ),
-          //   ],
-          // ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          controller.test();
+    );
+  }
+
+  Widget buildHorizontal() {
+    return EasyRefresh(
+      header: MaterialHeader2(
+        triggerOffset: 80,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: AppStyle.radius24,
+          ),
+          padding: AppStyle.edgeInsetsA12,
+          child: const Icon(
+            Icons.chevron_left,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+      footer: MaterialFooter2(
+        triggerOffset: 80,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: AppStyle.radius24,
+          ),
+          padding: AppStyle.edgeInsetsA12,
+          child: const Icon(
+            Icons.chevron_right,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+      refreshOnStart: false,
+      onRefresh: () async {
+        controller.forwardChapter();
+      },
+      onLoad: () async {
+        controller.nextChapter();
+      },
+      child: NovelHorizontalReader(
+        controller.content.value,
+        controller: controller.pageController,
+        reverse: controller.direction.value == 2,
+        style: TextStyle(
+          fontSize: controller.settings.novelReaderFontSize.value.toDouble(),
+          height: controller.settings.novelReaderLineSpacing.value,
+          color: AppColor
+              .novelThemes[controller.settings.novelReaderTheme.value]!.last,
+        ),
+        padding: AppStyle.edgeInsetsA12.copyWith(
+          bottom: (controller.settings.novelReaderShowStatus.value ? 24 : 12),
+        ),
+        onPageChanged: (i, m) {
+          controller.currentIndex.value = i;
+          controller.maxPage.value = m;
         },
+      ),
+    );
+  }
+
+  Widget buildVertical() {
+    return SingleChildScrollView(
+      controller: controller.scrollController,
+      child: Padding(
+        padding: AppStyle.edgeInsetsA12,
+        child: Text(
+          controller.content.value,
+          style: TextStyle(
+            fontSize: controller.settings.novelReaderFontSize.value.toDouble(),
+            height: controller.settings.novelReaderLineSpacing.value,
+            color: AppColor
+                .novelThemes[controller.settings.novelReaderTheme.value]!.last,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildSilderBar() {
+    return Obx(
+      () {
+        var value = controller.currentIndex.value + 1.0;
+        var max = controller.maxPage.value;
+        if (value > max) {
+          return const SizedBox(
+            height: 48,
+          );
+        }
+        return SizedBox(
+          height: 48,
+          child: Row(
+            children: [
+              Expanded(
+                child: Slider(
+                  value: value,
+                  max: max.toDouble(),
+                  onChanged: (e) {
+                    controller.jumpToPage((e - 1).toInt());
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildConnectivity() {
+    var connectivityType = controller.connectivityType.value;
+    IconData icon = Remix.wifi_line;
+    var name = "WiFi";
+    switch (connectivityType) {
+      case ConnectivityResult.bluetooth:
+        icon = Remix.wifi_line;
+        name = "蓝牙";
+        break;
+      case ConnectivityResult.ethernet:
+        icon = Remix.computer_line;
+        name = "有线";
+        break;
+      case ConnectivityResult.mobile:
+        icon = Remix.base_station_line;
+        name = "流量";
+        break;
+      case ConnectivityResult.wifi:
+        icon = Remix.wifi_line;
+        name = "WiFi";
+        break;
+      case ConnectivityResult.vpn:
+        icon = Remix.shield_keyhole_line;
+        name = "VPN";
+        break;
+      case ConnectivityResult.none:
+        icon = Remix.wifi_off_line;
+        name = "无网络";
+        break;
+      case ConnectivityResult.other:
+        icon = Remix.question_line;
+        name = "未知";
+        break;
+      default:
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(icon, size: 14, color: color.withOpacity(.6)),
+        AppStyle.hGap4,
+        Text(
+          name,
+          style: TextStyle(fontSize: 12, color: color.withOpacity(.6)),
+        ),
+        AppStyle.hGap8,
+      ],
+    );
+  }
+
+  Widget buildBattery() {
+    var battery = controller.batteryLevel.value;
+    IconData icon = Icons.battery_0_bar;
+    if (battery >= 90) {
+      icon = Icons.battery_full;
+    } else if (battery < 90 && battery >= 80) {
+      icon = Icons.battery_6_bar;
+    } else if (battery < 80 && battery >= 70) {
+      icon = Icons.battery_5_bar;
+    } else if (battery < 70 && battery >= 50) {
+      icon = Icons.battery_4_bar;
+    } else if (battery < 50 && battery >= 30) {
+      icon = Icons.battery_3_bar;
+    } else if (battery < 30 && battery >= 20) {
+      icon = Icons.battery_2_bar;
+    } else if (battery < 20 && battery >= 10) {
+      icon = Icons.battery_1_bar;
+    } else {
+      icon = Icons.battery_0_bar;
+    }
+    return Visibility(
+      visible: controller.showBattery.value,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(icon, size: 16, color: color.withOpacity(.6)),
+          AppStyle.hGap4,
+          Text(
+            "$battery%",
+            style: TextStyle(fontSize: 12, color: color.withOpacity(.6)),
+          ),
+          AppStyle.hGap8,
+        ],
       ),
     );
   }
