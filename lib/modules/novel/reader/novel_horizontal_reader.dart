@@ -88,6 +88,9 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
         widget.padding != oldWidget.padding) {
       if (widget.text != oldWidget.text) {
         index = 0;
+        setState(() {
+          textPages = [];
+        });
       }
       resetText();
     }
@@ -275,34 +278,36 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
 
   @override
   Widget build(BuildContext context) {
-    return textPages.isEmpty
-        ? Center(
-            child: Text(
-              "加载中...",
-              style: widget.style,
-            ),
-          )
-        : PageView.builder(
-            controller: widget.controller,
-            reverse: widget.reverse,
-            itemCount: textPages.length,
-            onPageChanged: (e) {
-              index = e;
-              widget.onPageChanged?.call(e, textPages.length);
-            },
-            itemBuilder: (_, i) {
-              return Container(
-                padding: widget.padding ?? EdgeInsets.zero,
-                child: CustomPaint(
-                  painter: NovelTextPainter(
-                    textPages[i],
-                    style: widget.style,
-                    fontHieght: fontHieght,
+    return SafeArea(
+      child: textPages.isEmpty
+          ? Center(
+              child: Text(
+                "加载中...",
+                style: widget.style,
+              ),
+            )
+          : PageView.builder(
+              controller: widget.controller,
+              reverse: widget.reverse,
+              itemCount: textPages.length,
+              onPageChanged: (e) {
+                index = e;
+                widget.onPageChanged?.call(e, textPages.length);
+              },
+              itemBuilder: (_, i) {
+                return Container(
+                  padding: widget.padding ?? EdgeInsets.zero,
+                  child: CustomPaint(
+                    painter: NovelTextPainter(
+                      textPages[i],
+                      style: widget.style,
+                      fontHieght: fontHieght,
+                    ),
                   ),
-                ),
-              );
-            },
-          );
+                );
+              },
+            ),
+    );
   }
 }
 

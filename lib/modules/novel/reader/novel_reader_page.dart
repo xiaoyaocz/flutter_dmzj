@@ -265,58 +265,61 @@ class NovelReaderPage extends GetView<NovelReaderController> {
   Widget buildVertical() {
     return SizedBox(
       height: double.infinity,
-      child: Padding(
-        padding: AppStyle.edgeInsetsA12.copyWith(
-          bottom: (controller.settings.novelReaderShowStatus.value ? 36 : 12),
-        ),
-        child: EasyRefresh(
-          header: MaterialHeader2(
-            triggerOffset: 80,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: AppStyle.radius24,
-              ),
-              padding: AppStyle.edgeInsetsA12,
-              child: const Icon(
-                Icons.arrow_circle_up,
-                color: Colors.blue,
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: AppStyle.edgeInsetsA12.copyWith(
+            bottom: (controller.settings.novelReaderShowStatus.value ? 36 : 12),
+          ),
+          child: EasyRefresh(
+            header: MaterialHeader2(
+              triggerOffset: 80,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: AppStyle.radius24,
+                ),
+                padding: AppStyle.edgeInsetsA12,
+                child: const Icon(
+                  Icons.arrow_circle_up,
+                  color: Colors.blue,
+                ),
               ),
             ),
-          ),
-          footer: MaterialFooter2(
-            triggerOffset: 80,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: AppStyle.radius24,
-              ),
-              padding: AppStyle.edgeInsetsA12,
-              child: const Icon(
-                Icons.arrow_circle_down,
-                color: Colors.blue,
+            footer: MaterialFooter2(
+              triggerOffset: 80,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: AppStyle.radius24,
+                ),
+                padding: AppStyle.edgeInsetsA12,
+                child: const Icon(
+                  Icons.arrow_circle_down,
+                  color: Colors.blue,
+                ),
               ),
             ),
-          ),
-          refreshOnStart: false,
-          onRefresh: () async {
-            controller.forwardChapter();
-          },
-          onLoad: () async {
-            controller.nextChapter();
-          },
-          child: SingleChildScrollView(
-            controller: controller.scrollController,
-            child: Text(
-              controller.content.value,
-              textAlign: TextAlign.justify,
-              style: TextStyle(
-                fontSize:
-                    controller.settings.novelReaderFontSize.value.toDouble(),
-                height: controller.settings.novelReaderLineSpacing.value,
-                color: AppColor
-                    .novelThemes[controller.settings.novelReaderTheme.value]!
-                    .last,
+            refreshOnStart: false,
+            onRefresh: () async {
+              controller.forwardChapter();
+            },
+            onLoad: () async {
+              controller.nextChapter();
+            },
+            child: SingleChildScrollView(
+              controller: controller.scrollController,
+              child: Text(
+                controller.content.value,
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize:
+                      controller.settings.novelReaderFontSize.value.toDouble(),
+                  height: controller.settings.novelReaderLineSpacing.value,
+                  color: AppColor
+                      .novelThemes[controller.settings.novelReaderTheme.value]!
+                      .last,
+                ),
               ),
             ),
           ),
@@ -326,92 +329,91 @@ class NovelReaderPage extends GetView<NovelReaderController> {
   }
 
   Widget buildPicture() {
-    return EasyRefresh(
-      header: MaterialHeader2(
-        triggerOffset: 80,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: AppStyle.radius24,
-          ),
-          padding: AppStyle.edgeInsetsA12,
-          child: const Icon(
-            Icons.chevron_left,
-            color: Colors.blue,
-          ),
-        ),
-      ),
-      footer: MaterialFooter2(
-        triggerOffset: 80,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: AppStyle.radius24,
-          ),
-          padding: AppStyle.edgeInsetsA12,
-          child: const Icon(
-            Icons.chevron_right,
-            color: Colors.blue,
+    return SafeArea(
+      child: EasyRefresh(
+        header: MaterialHeader2(
+          triggerOffset: 80,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: AppStyle.radius24,
+            ),
+            padding: AppStyle.edgeInsetsA12,
+            child: const Icon(
+              Icons.chevron_left,
+              color: Colors.blue,
+            ),
           ),
         ),
-      ),
-      refreshOnStart: false,
-      onRefresh: () async {
-        controller.forwardChapter();
-      },
-      onLoad: () async {
-        controller.nextChapter();
-      },
-      child: controller.direction.value != 1
-          ? PageView.builder(
-              controller: controller.pageController,
-              itemCount: controller.pictures.length,
-              reverse: controller.direction.value == 2,
-              onPageChanged: (e) {
-                controller.currentIndex.value = e;
-                controller.maxPage.value = controller.pictures.length;
-              },
-              itemBuilder: (_, i) {
-                return Padding(
-                  padding: AppStyle.edgeInsetsA12.copyWith(
-                    bottom: (controller.settings.novelReaderShowStatus.value
-                        ? 36
-                        : 12),
-                  ),
-                  child: GestureDetector(
+        footer: MaterialFooter2(
+          triggerOffset: 80,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: AppStyle.radius24,
+            ),
+            padding: AppStyle.edgeInsetsA12,
+            child: const Icon(
+              Icons.chevron_right,
+              color: Colors.blue,
+            ),
+          ),
+        ),
+        refreshOnStart: false,
+        onRefresh: () async {
+          controller.forwardChapter();
+        },
+        onLoad: () async {
+          controller.nextChapter();
+        },
+        child: controller.direction.value != 1
+            ? PageView.builder(
+                controller: controller.pageController,
+                itemCount: controller.pictures.length,
+                reverse: controller.direction.value == 2,
+                onPageChanged: (e) {
+                  controller.currentIndex.value = e;
+                  controller.maxPage.value = controller.pictures.length;
+                },
+                itemBuilder: (_, i) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: (controller.settings.novelReaderShowStatus.value
+                          ? 24
+                          : 12),
+                    ),
+                    child: GestureDetector(
+                      onDoubleTap: () {
+                        DialogUtils.showImageViewer(
+                            i, controller.pictures.toList());
+                      },
+                      child: NetImage(
+                        controller.pictures[i],
+                        fit: BoxFit.contain,
+                        progress: true,
+                      ),
+                    ),
+                  );
+                })
+            : ListView.separated(
+                controller: controller.scrollController,
+                itemCount: controller.pictures.length,
+                padding: EdgeInsets.zero,
+                separatorBuilder: (_, i) => AppStyle.vGap4,
+                itemBuilder: (_, i) {
+                  return GestureDetector(
                     onDoubleTap: () {
                       DialogUtils.showImageViewer(
                           i, controller.pictures.toList());
                     },
                     child: NetImage(
                       controller.pictures[i],
-                      fit: BoxFit.contain,
+                      fit: BoxFit.fitWidth,
                       progress: true,
                     ),
-                  ),
-                );
-              })
-          : ListView.separated(
-              controller: controller.scrollController,
-              itemCount: controller.pictures.length,
-              padding: AppStyle.edgeInsetsA12.copyWith(
-                bottom:
-                    (controller.settings.novelReaderShowStatus.value ? 36 : 12),
-              ),
-              separatorBuilder: (_, i) => AppStyle.vGap12,
-              itemBuilder: (_, i) {
-                return GestureDetector(
-                  onDoubleTap: () {
-                    DialogUtils.showImageViewer(
-                        i, controller.pictures.toList());
-                  },
-                  child: NetImage(
-                    controller.pictures[i],
-                    fit: BoxFit.fitWidth,
-                    progress: true,
-                  ),
-                );
-              }),
+                  );
+                }),
+      ),
     );
   }
 
@@ -481,7 +483,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
     return Positioned(
       right: 8,
       left: 8,
-      bottom: 4,
+      bottom: AppStyle.bottomBarHeight,
       child: Obx(
         () => Offstage(
           offstage: !controller.settings.novelReaderShowStatus.value,

@@ -49,7 +49,7 @@ class NovelReaderController extends BaseController {
   final AppSettingsController settings = Get.find<AppSettingsController>();
   final NovelRequest request = NovelRequest();
 
-  PageController? pageController;
+  final PageController pageController = PageController();
   final ScrollController scrollController = ScrollController();
 
   /// 连接信息监听
@@ -178,10 +178,12 @@ class NovelReaderController extends BaseController {
           }
         }
         isPicture.value = true;
+
         pictures.value = imgs;
+
         content.value = text;
         maxPage.value = pictures.length;
-        pageController = PageController(initialPage: 0);
+
         SmartDialog.showToast("双击插画可放大、保存哦~");
       } else {
         isPicture.value = false;
@@ -195,8 +197,8 @@ class NovelReaderController extends BaseController {
             .replaceAll('\n\n', "\n")
             .replaceAll('\n', "\n　　")
             .replaceAll(RegExp(r"　　\s+"), "　　");
+
         content.value = text;
-        pageController = PageController(initialPage: 0);
       }
       preloadContent();
       //TODO 阅读记录跳转
@@ -303,9 +305,9 @@ class NovelReaderController extends BaseController {
       scrollController.jumpTo(viewportHeight * page);
     } else {
       anime
-          ? pageController?.animateToPage(page,
+          ? pageController.animateToPage(page,
               duration: const Duration(milliseconds: 200), curve: Curves.linear)
-          : pageController?.jumpToPage(page);
+          : pageController.jumpToPage(page);
     }
   }
 

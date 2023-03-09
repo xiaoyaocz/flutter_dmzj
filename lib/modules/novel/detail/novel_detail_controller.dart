@@ -205,8 +205,7 @@ class NovelDetailControler extends BaseController {
     for (var volume in detail.value.volume) {
       chapters.addAll(volume.chapters);
     }
-    //正序
-    chapters.sort((a, b) => a.chapterOrder.compareTo(b.chapterOrder));
+
     AppNavigator.toNovelReader(
       novelId: novelId,
       novelCover: detail.value.cover,

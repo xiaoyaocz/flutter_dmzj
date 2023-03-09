@@ -52,5 +52,7 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>保存图片至相册</string>
 </dict>
 </plist>
