@@ -25,9 +25,10 @@ class NovelHorizontalReader extends StatefulWidget {
   State<NovelHorizontalReader> createState() => _NovelHorizontalReaderState();
 }
 
-class _NovelHorizontalReaderState extends State<NovelHorizontalReader> {
+class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
+    with WidgetsBindingObserver {
   List<List<String>> textPages = [];
-
+  Size _lastSize = const Size(0, 0);
   TextStyle textStyle = const TextStyle();
   double maxWidth = 500;
   double maxHeight = 800;
@@ -40,7 +41,23 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader> {
   @override
   void initState() {
     super.initState();
+    _lastSize = Get.size;
+    WidgetsBinding.instance.addObserver(this);
     resetText();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    if (_lastSize != Get.size) {
+      _lastSize = Get.size;
+      resetText();
+    }
   }
 
   void resetText() {
@@ -54,15 +71,24 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader> {
         AppStyle.bottomBarHeight -
         padding.top -
         padding.bottom;
+    if (text.isEmpty) {
+      setState(() {
+        textPages = [];
+      });
+      return;
+    }
     initText();
   }
 
   @override
   void didUpdateWidget(covariant NovelHorizontalReader oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.text != oldWidget.text ||
+    if ((widget.text != oldWidget.text) ||
         widget.style != oldWidget.style ||
         widget.padding != oldWidget.padding) {
+      if (widget.text != oldWidget.text) {
+        index = 0;
+      }
       resetText();
     }
   }
@@ -85,6 +111,7 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader> {
     // 计算可渲染的最大行数
     int maxLine = (maxHeight / chineseCharSize.height).floor();
     // 在新线程中进行分页
+
     var pages = await compute(
       splitText,
       ComputeParameter(
@@ -249,8 +276,11 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader> {
   @override
   Widget build(BuildContext context) {
     return textPages.isEmpty
-        ? const Center(
-            child: Text("加载中..."),
+        ? Center(
+            child: Text(
+              "加载中...",
+              style: widget.style,
+            ),
           )
         : PageView.builder(
             controller: widget.controller,

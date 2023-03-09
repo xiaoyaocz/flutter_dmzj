@@ -1,6 +1,9 @@
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:path/path.dart' as p;
 
 class LocalStorageService extends GetxService {
   static LocalStorageService get instance => Get.find<LocalStorageService>();
@@ -74,5 +77,46 @@ class LocalStorageService extends GetxService {
 
   void setNoFirst() {
     setValue("First", false);
+  }
+
+  Future saveNovelContent({
+    required int volumeId,
+    required int chapterId,
+    required String content,
+  }) async {
+    try {
+      var dir = await getApplicationSupportDirectory();
+      var novelDir = Directory(p.join(dir.path, "novel"));
+      if (!await novelDir.exists()) {
+        novelDir = await novelDir.create();
+      }
+      var fileName = p.join(novelDir.path, "${volumeId}_$chapterId.txt");
+      var file = File(fileName);
+      await file.writeAsString(content);
+    } catch (e) {
+      Log.logPrint(e);
+    }
+  }
+
+  Future<String?> getNovelContent(
+      {required int volumeId, required int chapterId}) async {
+    try {
+      var dir = await getApplicationSupportDirectory();
+      var novelDir = Directory(p.join(dir.path, "novel"));
+      if (!await novelDir.exists()) {
+        novelDir = await novelDir.create();
+      }
+      var fileName = p.join(novelDir.path, "${volumeId}_$chapterId.txt");
+      var file = File(fileName);
+
+      if (await file.exists()) {
+        var content = await file.readAsString();
+        return content;
+      }
+      return null;
+    } catch (e) {
+      Log.logPrint(e);
+      return null;
+    }
   }
 }

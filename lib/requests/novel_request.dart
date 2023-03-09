@@ -9,6 +9,7 @@ import 'package:flutter_dmzj/models/novel/search_model.dart';
 import 'package:flutter_dmzj/models/proto/novel.pb.dart';
 import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
+import 'package:flutter_dmzj/services/local_storage_service.dart';
 
 class NovelRequest {
   /// 轻小说-推荐
@@ -174,12 +175,21 @@ class NovelRequest {
   /// 小说正文内容
   Future<String> novelContent(
       {required int volumeId, required int chapterId}) async {
+    var localContent = await LocalStorageService.instance
+        .getNovelContent(volumeId: volumeId, chapterId: chapterId);
+    if (localContent != null) {
+      return localContent;
+    }
     var result = await HttpClient.instance.getText(
       Api.getNovelContentUrl(volumeId: volumeId, chapterId: chapterId),
       baseUrl: "",
       withDefaultParameter: false,
     );
-
+    await LocalStorageService.instance.saveNovelContent(
+      volumeId: volumeId,
+      chapterId: chapterId,
+      content: result,
+    );
     return result;
   }
 }

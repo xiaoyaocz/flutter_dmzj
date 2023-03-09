@@ -19,11 +19,11 @@ class AppColor {
   static Map<int, List<Color>> novelThemes = {
     0: [
       const Color.fromRGBO(245, 239, 217, 1),
-      Colors.black,
+      const Color(0xff301e1b),
     ],
     1: [
       const Color.fromRGBO(248, 247, 252, 1),
-      Colors.black,
+      black333,
     ],
     2: [
       const Color.fromRGBO(192, 237, 198, 1),

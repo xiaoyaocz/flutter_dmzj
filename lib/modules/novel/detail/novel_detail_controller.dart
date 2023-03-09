@@ -177,6 +177,7 @@ class NovelDetailControler extends BaseController {
         );
       } else {
         SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读");
+        readStart();
       }
     } else {
       readStart();

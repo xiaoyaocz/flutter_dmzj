@@ -8,8 +8,10 @@ import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
+import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/requests/novel_request.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
@@ -42,12 +44,12 @@ class NovelReaderController extends BaseController {
   var maxPage = 0.obs;
 
   /// 阅读进度，百分比
-  var progress = 0.0;
+  var progress = 0.0.obs;
 
   final AppSettingsController settings = Get.find<AppSettingsController>();
   final NovelRequest request = NovelRequest();
 
-  final PageController pageController = PageController();
+  PageController? pageController;
   final ScrollController scrollController = ScrollController();
 
   /// 连接信息监听
@@ -69,17 +71,26 @@ class NovelReaderController extends BaseController {
   /// 文本内容
   var content = "".obs;
 
+  /// 是否是图片
+  var isPicture = false.obs;
+
+  /// 图片列表
+  RxList<String> pictures = RxList<String>();
+
+  var contentLength = 0;
+
   /// 是否显示控制器
   var showControls = false.obs;
 
   /// 阅读方向
   var direction = 0.obs;
+
   @override
   void onInit() {
     initConnectivity();
     initBattery();
     direction.value = settings.novelReaderDirection.value;
-
+    scrollController.addListener(listenVertical);
     setFull();
 
     loadContent();
@@ -122,15 +133,25 @@ class NovelReaderController extends BaseController {
     connectivityType.value = await connectivity.checkConnectivity();
   }
 
+  /// 监听竖向模式时滚动百分比
+  void listenVertical() {
+    if (scrollController.position.maxScrollExtent > 0) {
+      progress.value = scrollController.position.pixels /
+          scrollController.position.maxScrollExtent;
+    }
+  }
+
   @override
   void onClose() {
+    scrollController.removeListener(listenVertical);
     connectivitySubscription?.cancel();
     batterySubscription?.cancel();
     exitFull();
-
+    uploadHistory();
     super.onClose();
   }
 
+  /// 加载内容
   Future loadContent() async {
     try {
       pageLoadding.value = true;
@@ -143,19 +164,44 @@ class NovelReaderController extends BaseController {
         chapterId: chapter.chapterId,
       );
 
-      text = HtmlUnescape().convert(text);
-      text = text
-          .replaceAll('\r\n', '\n')
-          .replaceAll("<br/>", "\n")
-          .replaceAll('<br />', "\n")
-          .replaceAll('\n\n\n', "\n")
-          .replaceAll('\n\n', "\n")
-          .replaceAll('\n', "\n　　")
-          .replaceAll(RegExp(r"　　\s+"), "　　");
-      content.value = text;
+      contentLength = text.length;
 
+      var subStr = text.substring(0, text.length < 200 ? text.length : 200);
+      //检查是否是插画
+      if (subStr.contains(RegExp('<img.*?>'))) {
+        List<String> imgs = [];
+        for (var item
+            in RegExp(r'<img.*?src=[' '""](.*?)[' '""].*?>').allMatches(text)) {
+          var src = item.group(1);
+          if (src != null && src.isNotEmpty) {
+            imgs.add(src);
+          }
+        }
+        isPicture.value = true;
+        pictures.value = imgs;
+        content.value = text;
+        maxPage.value = pictures.length;
+        pageController = PageController(initialPage: 0);
+        SmartDialog.showToast("双击插画可放大、保存哦~");
+      } else {
+        isPicture.value = false;
+
+        text = HtmlUnescape().convert(text);
+        text = text
+            .replaceAll('\r\n', '\n')
+            .replaceAll("<br/>", "\n")
+            .replaceAll('<br />', "\n")
+            .replaceAll('\n\n\n', "\n")
+            .replaceAll('\n\n', "\n")
+            .replaceAll('\n', "\n　　")
+            .replaceAll(RegExp(r"　　\s+"), "　　");
+        content.value = text;
+        pageController = PageController(initialPage: 0);
+      }
+      preloadContent();
       //TODO 阅读记录跳转
-      //TODO 上传记录
+      //上传记录
+      uploadHistory();
     } catch (e) {
       pageError.value = true;
       errorMsg.value = e.toString();
@@ -166,13 +212,46 @@ class NovelReaderController extends BaseController {
     //SmartDialog.dismiss(status: SmartStatus.loading);
   }
 
+  /// 预加载下一话
+  void preloadContent() async {
+    try {
+      if (chapterIndex.value == chapters.length - 1) {
+        return;
+      }
+      var nextChapter = chapters[chapterIndex.value + 1];
+      await request.novelContent(
+        volumeId: nextChapter.volumeId,
+        chapterId: nextChapter.chapterId,
+      );
+    } catch (e) {
+      Log.logPrint(e);
+    }
+  }
+
+  /// 上传历史记录
+  void uploadHistory() {
+    var chapter = chapters[chapterIndex.value];
+    UserService.instance.updateNovelHistory(
+      novelId: novelId,
+      chapterId: chapter.chapterId,
+      //TODO 已读位置计算
+      index: 0,
+      total: contentLength,
+      novelCover: novelCover,
+      novelName: novelTitle,
+      chapterName: chapter.chapterName,
+      volumeId: chapter.volumeId,
+      volumeName: chapter.volumeName,
+    );
+  }
+
   /// 下一章
   void nextChapter() {
     if (chapterIndex.value == chapters.length - 1) {
       SmartDialog.showToast("后面没有了");
       return;
     }
-    setShowControls();
+
     chapterIndex.value += 1;
     loadContent();
   }
@@ -183,13 +262,16 @@ class NovelReaderController extends BaseController {
       SmartDialog.showToast("前面没有了");
       return;
     }
-    setShowControls();
+
     chapterIndex.value -= 1;
     loadContent();
   }
 
   /// 下一页
   void nextPage() {
+    if (direction.value == 1) {
+      return;
+    }
     var value = currentIndex.value;
     var max = maxPage.value;
     if (value >= max - 1) {
@@ -201,6 +283,9 @@ class NovelReaderController extends BaseController {
 
   /// 上一页
   void forwardPage() {
+    if (direction.value == 1) {
+      return;
+    }
     var value = currentIndex.value;
 
     if (value == 0) {
@@ -214,12 +299,13 @@ class NovelReaderController extends BaseController {
   void jumpToPage(int page, {bool anime = false}) {
     //竖向
     if (direction.value == 1) {
-      //itemScrollController.jumpTo(index: page);
+      final viewportHeight = scrollController.position.viewportDimension;
+      scrollController.jumpTo(viewportHeight * page);
     } else {
       anime
-          ? pageController.animateToPage(page,
+          ? pageController?.animateToPage(page,
               duration: const Duration(milliseconds: 200), curve: Curves.linear)
-          : pageController.jumpToPage(page);
+          : pageController?.jumpToPage(page);
     }
   }
 
@@ -422,6 +508,7 @@ class NovelReaderController extends BaseController {
     );
   }
 
+  /// 设置阅读方向
   void setDirection(int value) {
     settings.setNovelReaderDirection(value);
     direction.value = value;
@@ -451,6 +538,7 @@ class NovelReaderController extends BaseController {
     );
   }
 
+  /// 显示目录
   void showMenu() {
     setShowControls();
     showModalBottomSheet(

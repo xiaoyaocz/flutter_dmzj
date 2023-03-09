@@ -308,7 +308,7 @@ class ComicReaderController extends BaseController {
       SmartDialog.showToast("后面没有了");
       return;
     }
-    setShowControls();
+
     chapterIndex.value += 1;
     loadDetail();
   }
@@ -319,7 +319,7 @@ class ComicReaderController extends BaseController {
       SmartDialog.showToast("前面没有了");
       return;
     }
-    setShowControls();
+
     chapterIndex.value -= 1;
     loadDetail();
   }

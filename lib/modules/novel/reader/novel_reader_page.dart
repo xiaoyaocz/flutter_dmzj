@@ -3,13 +3,17 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/app/dialog_utils.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/modules/novel/reader/novel_horizontal_reader.dart';
 
 import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
 import 'package:flutter_dmzj/widgets/custom_header.dart';
+import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
 import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:remixicon/remixicon.dart';
 
 class NovelReaderPage extends GetView<NovelReaderController> {
@@ -36,9 +40,11 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                     onTap: () {
                       controller.setShowControls();
                     },
-                    child: controller.direction.value == 1
-                        ? buildVertical()
-                        : buildHorizontal(),
+                    child: controller.isPicture.value
+                        ? buildPicture()
+                        : (controller.direction.value == 1
+                            ? buildVertical()
+                            : buildHorizontal()),
                   ),
                 ),
               ),
@@ -99,36 +105,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                   ),
                 ),
               ),
-              Positioned(
-                right: 8,
-                bottom: 8,
-                child: Obx(
-                  () => Offstage(
-                    offstage: !controller.settings.novelReaderShowStatus.value,
-                    child: Container(
-                      padding:
-                          AppStyle.edgeInsetsA12.copyWith(top: 4, bottom: 4),
-                      child: Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            buildConnectivity(),
-                            buildBattery(),
-                            AppStyle.hGap4,
-                            Text(
-                              "${controller.currentIndex.value + 1} / ${controller.maxPage.value}",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: color.withOpacity(.6),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              buildBottomStatus(),
               //顶部
               Obx(
                 () => AnimatedPositioned(
@@ -286,24 +263,191 @@ class NovelReaderPage extends GetView<NovelReaderController> {
   }
 
   Widget buildVertical() {
-    return SingleChildScrollView(
-      controller: controller.scrollController,
+    return SizedBox(
+      height: double.infinity,
       child: Padding(
-        padding: AppStyle.edgeInsetsA12,
-        child: Text(
-          controller.content.value,
-          style: TextStyle(
-            fontSize: controller.settings.novelReaderFontSize.value.toDouble(),
-            height: controller.settings.novelReaderLineSpacing.value,
-            color: AppColor
-                .novelThemes[controller.settings.novelReaderTheme.value]!.last,
+        padding: AppStyle.edgeInsetsA12.copyWith(
+          bottom: (controller.settings.novelReaderShowStatus.value ? 36 : 12),
+        ),
+        child: EasyRefresh(
+          header: MaterialHeader2(
+            triggerOffset: 80,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: AppStyle.radius24,
+              ),
+              padding: AppStyle.edgeInsetsA12,
+              child: const Icon(
+                Icons.arrow_circle_up,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          footer: MaterialFooter2(
+            triggerOffset: 80,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: AppStyle.radius24,
+              ),
+              padding: AppStyle.edgeInsetsA12,
+              child: const Icon(
+                Icons.arrow_circle_down,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          refreshOnStart: false,
+          onRefresh: () async {
+            controller.forwardChapter();
+          },
+          onLoad: () async {
+            controller.nextChapter();
+          },
+          child: SingleChildScrollView(
+            controller: controller.scrollController,
+            child: Text(
+              controller.content.value,
+              textAlign: TextAlign.justify,
+              style: TextStyle(
+                fontSize:
+                    controller.settings.novelReaderFontSize.value.toDouble(),
+                height: controller.settings.novelReaderLineSpacing.value,
+                color: AppColor
+                    .novelThemes[controller.settings.novelReaderTheme.value]!
+                    .last,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
+  Widget buildPicture() {
+    return EasyRefresh(
+      header: MaterialHeader2(
+        triggerOffset: 80,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: AppStyle.radius24,
+          ),
+          padding: AppStyle.edgeInsetsA12,
+          child: const Icon(
+            Icons.chevron_left,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+      footer: MaterialFooter2(
+        triggerOffset: 80,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: AppStyle.radius24,
+          ),
+          padding: AppStyle.edgeInsetsA12,
+          child: const Icon(
+            Icons.chevron_right,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+      refreshOnStart: false,
+      onRefresh: () async {
+        controller.forwardChapter();
+      },
+      onLoad: () async {
+        controller.nextChapter();
+      },
+      child: controller.direction.value != 1
+          ? PageView.builder(
+              controller: controller.pageController,
+              itemCount: controller.pictures.length,
+              reverse: controller.direction.value == 2,
+              onPageChanged: (e) {
+                controller.currentIndex.value = e;
+                controller.maxPage.value = controller.pictures.length;
+              },
+              itemBuilder: (_, i) {
+                return Padding(
+                  padding: AppStyle.edgeInsetsA12.copyWith(
+                    bottom: (controller.settings.novelReaderShowStatus.value
+                        ? 36
+                        : 12),
+                  ),
+                  child: GestureDetector(
+                    onDoubleTap: () {
+                      DialogUtils.showImageViewer(
+                          i, controller.pictures.toList());
+                    },
+                    child: NetImage(
+                      controller.pictures[i],
+                      fit: BoxFit.contain,
+                      progress: true,
+                    ),
+                  ),
+                );
+              })
+          : ListView.separated(
+              controller: controller.scrollController,
+              itemCount: controller.pictures.length,
+              padding: AppStyle.edgeInsetsA12.copyWith(
+                bottom:
+                    (controller.settings.novelReaderShowStatus.value ? 36 : 12),
+              ),
+              separatorBuilder: (_, i) => AppStyle.vGap12,
+              itemBuilder: (_, i) {
+                return GestureDetector(
+                  onDoubleTap: () {
+                    DialogUtils.showImageViewer(
+                        i, controller.pictures.toList());
+                  },
+                  child: NetImage(
+                    controller.pictures[i],
+                    fit: BoxFit.fitWidth,
+                    progress: true,
+                  ),
+                );
+              }),
+    );
+  }
+
   Widget buildSilderBar() {
+    if (controller.direction.value == 1) {
+      return Obx(
+        () {
+          var value = controller.progress.value;
+          var max = 1.0;
+          if (value > max) {
+            return const SizedBox(
+              height: 48,
+            );
+          }
+          return SizedBox(
+            height: 48,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Slider(
+                    value: value,
+                    max: max,
+                    onChanged: (e) {
+                      controller.scrollController.jumpTo(
+                        controller.scrollController.position.maxScrollExtent *
+                            e,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
     return Obx(
       () {
         var value = controller.currentIndex.value + 1.0;
@@ -330,6 +474,48 @@ class NovelReaderPage extends GetView<NovelReaderController> {
           ),
         );
       },
+    );
+  }
+
+  Widget buildBottomStatus() {
+    return Positioned(
+      right: 8,
+      left: 8,
+      bottom: 4,
+      child: Obx(
+        () => Offstage(
+          offstage: !controller.settings.novelReaderShowStatus.value,
+          child: Container(
+            padding: AppStyle.edgeInsetsA12.copyWith(top: 4, bottom: 4),
+            child: Obx(
+              () => Row(
+                children: [
+                  buildConnectivity(),
+                  buildBattery(),
+                  const Expanded(child: SizedBox()),
+                  controller.direction.value != 1
+                      ? Text(
+                          "${controller.currentIndex.value + 1} / ${controller.maxPage.value}",
+                          style: TextStyle(
+                            fontSize: 12,
+                            height: 1.0,
+                            color: color.withOpacity(.6),
+                          ),
+                        )
+                      : Text(
+                          "${(controller.progress.value * 100).toStringAsFixed(0)}%",
+                          style: TextStyle(
+                            fontSize: 12,
+                            height: 1.0,
+                            color: color.withOpacity(.6),
+                          ),
+                        ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -372,11 +558,12 @@ class NovelReaderPage extends GetView<NovelReaderController> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, size: 14, color: color.withOpacity(.6)),
+        Icon(icon, size: 12, color: color.withOpacity(.6)),
         AppStyle.hGap4,
         Text(
           name,
-          style: TextStyle(fontSize: 12, color: color.withOpacity(.6)),
+          style: TextStyle(
+              fontSize: 12, height: 1.0, color: color.withOpacity(.6)),
         ),
         AppStyle.hGap8,
       ],
@@ -385,35 +572,35 @@ class NovelReaderPage extends GetView<NovelReaderController> {
 
   Widget buildBattery() {
     var battery = controller.batteryLevel.value;
-    IconData icon = Icons.battery_0_bar;
-    if (battery >= 90) {
-      icon = Icons.battery_full;
-    } else if (battery < 90 && battery >= 80) {
-      icon = Icons.battery_6_bar;
-    } else if (battery < 80 && battery >= 70) {
-      icon = Icons.battery_5_bar;
-    } else if (battery < 70 && battery >= 50) {
-      icon = Icons.battery_4_bar;
-    } else if (battery < 50 && battery >= 30) {
-      icon = Icons.battery_3_bar;
-    } else if (battery < 30 && battery >= 20) {
-      icon = Icons.battery_2_bar;
-    } else if (battery < 20 && battery >= 10) {
-      icon = Icons.battery_1_bar;
-    } else {
-      icon = Icons.battery_0_bar;
-    }
+    // IconData icon = Icons.battery_0_bar;
+    // if (battery >= 90) {
+    //   icon = Icons.battery_full_rounded;
+    // } else if (battery < 90 && battery >= 80) {
+    //   icon = Icons.battery_6_bar;
+    // } else if (battery < 80 && battery >= 70) {
+    //   icon = Icons.battery_5_bar;
+    // } else if (battery < 70 && battery >= 50) {
+    //   icon = Icons.battery_4_bar;
+    // } else if (battery < 50 && battery >= 30) {
+    //   icon = Icons.battery_3_bar;
+    // } else if (battery < 30 && battery >= 20) {
+    //   icon = Icons.battery_2_bar;
+    // } else if (battery < 20 && battery >= 10) {
+    //   icon = Icons.battery_1_bar;
+    // } else {
+    //   icon = Icons.battery_0_bar;
+    // }
     return Visibility(
       visible: controller.showBattery.value,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(icon, size: 16, color: color.withOpacity(.6)),
-          AppStyle.hGap4,
+          //Icon(icon, size: 12, color: color.withOpacity(.6)),
           Text(
-            "$battery%",
-            style: TextStyle(fontSize: 12, color: color.withOpacity(.6)),
+            "电量 $battery%",
+            style: TextStyle(
+                fontSize: 12, height: 1.0, color: color.withOpacity(.6)),
           ),
           AppStyle.hGap8,
         ],

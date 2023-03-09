@@ -204,6 +204,7 @@ class DialogUtils {
               itemCount: images.length,
               builder: (_, i) {
                 return PhotoViewGalleryPageOptions(
+                  filterQuality: FilterQuality.high,
                   imageProvider: ExtendedNetworkImageProvider(
                     images[i],
                     cache: true,

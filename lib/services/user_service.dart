@@ -252,7 +252,7 @@ class UserService extends GetxService {
         novelId: novelId,
         volumeId: volumeId,
         chapterId: chapterId,
-        page: index,
+        page: 1,
         total: total,
         time: time,
       );
