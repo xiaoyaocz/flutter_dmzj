@@ -67,8 +67,8 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
     padding = widget.padding ?? EdgeInsets.zero;
     maxWidth = Get.width - padding.left - padding.right;
     maxHeight = Get.height -
-        AppStyle.statusBarHeight -
-        AppStyle.bottomBarHeight -
+        //AppStyle.statusBarHeight -
+        //AppStyle.bottomBarHeight -
         padding.top -
         padding.bottom;
     if (text.isEmpty) {

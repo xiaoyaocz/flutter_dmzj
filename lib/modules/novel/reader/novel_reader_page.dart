@@ -270,7 +270,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         ),
         child: Padding(
           padding: AppStyle.edgeInsetsA12.copyWith(
-            bottom: (controller.settings.novelReaderShowStatus.value ? 36 : 12),
+            bottom: (controller.settings.novelReaderShowStatus.value ? 32 : 12),
           ),
           child: EasyRefresh(
             header: MaterialHeader2(
