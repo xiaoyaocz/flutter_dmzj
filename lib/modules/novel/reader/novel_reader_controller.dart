@@ -200,6 +200,10 @@ class NovelReaderController extends BaseController {
 
         content.value = text;
       }
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(0);
+        progress.value = 0.0;
+      }
       preloadContent();
       //TODO 阅读记录跳转
       //上传记录

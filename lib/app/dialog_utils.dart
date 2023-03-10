@@ -29,6 +29,7 @@ class DialogUtils {
         content: Container(
           constraints: const BoxConstraints(
             maxHeight: 400,
+            maxWidth: 500,
           ),
           child: SingleChildScrollView(
             child: Padding(

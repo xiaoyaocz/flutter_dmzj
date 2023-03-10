@@ -26,6 +26,7 @@ class UserPhoto extends StatelessWidget {
                   color: Colors.grey.withOpacity(.2),
                 )
               : null,
+          color: Colors.grey.withOpacity(.2),
           borderRadius: AppStyle.radius32,
         ),
         child: const Icon(

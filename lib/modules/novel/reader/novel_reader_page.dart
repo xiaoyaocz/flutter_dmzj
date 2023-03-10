@@ -250,6 +250,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
               .novelThemes[controller.settings.novelReaderTheme.value]!.last,
         ),
         padding: AppStyle.edgeInsetsA12.copyWith(
+          top: AppStyle.statusBarHeight + 12,
           bottom: (controller.settings.novelReaderShowStatus.value ? 24 : 12),
         ),
         onPageChanged: (i, m) {
@@ -490,7 +491,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
     return Positioned(
       right: 8,
       left: 8,
-      bottom: AppStyle.bottomBarHeight,
+      bottom: 4,
       child: Obx(
         () => Offstage(
           offstage: !controller.settings.novelReaderShowStatus.value,
