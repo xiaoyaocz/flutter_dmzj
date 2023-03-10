@@ -4,11 +4,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
+import 'package:flutter_dmzj/models/db/comic_download_info.dart';
+import 'package:flutter_dmzj/models/db/download_status.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/db/comic_history.dart';
 import 'package:flutter_dmzj/models/db/novel_history.dart';
+import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -55,10 +58,14 @@ Future initServices() async {
 
   Hive.registerAdapter(ComicHistoryAdapter());
   Hive.registerAdapter(NovelHistoryAdapter());
+  Hive.registerAdapter(DownloadStatusAdapter());
+  Hive.registerAdapter(ComicDownloadInfoAdapter());
   await Get.put(DBService()).init();
 
-  //初始化设置控制器
-  Get.put(AppSettingsController());
+  //初始化设置服务
+  Get.put(AppSettingsService());
+
+  Get.put(ComicDownloadService()).init();
 }
 
 class AppScrollBehavior extends MaterialScrollBehavior {
@@ -79,7 +86,7 @@ class DMZJApp extends StatelessWidget {
       theme: AppStyle.lightTheme,
       darkTheme: AppStyle.darkTheme,
       themeMode:
-          ThemeMode.values[Get.find<AppSettingsController>().themeMode.value],
+          ThemeMode.values[Get.find<AppSettingsService>().themeMode.value],
       initialRoute: AppPages.kIndex,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

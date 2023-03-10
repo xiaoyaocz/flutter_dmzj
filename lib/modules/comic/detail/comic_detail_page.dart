@@ -379,21 +379,27 @@ class ComicDetailPage extends StatelessWidget {
                           }
                           return Tooltip(
                             message: item.chapters[i].chapterTitle,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor:
-                                    Get.textTheme.bodyMedium!.color,
-                                textStyle: const TextStyle(fontSize: 14),
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                minimumSize: const Size.fromHeight(40),
-                              ),
-                              onPressed: () {
-                                controller.readChapter(item, item.chapters[i]);
-                              },
-                              child: Text(
-                                item.chapters[i].chapterTitle,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
+                            child: Obx(
+                              () => OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: item.chapters[i].chapterId ==
+                                          controller.history.value?.chapterId
+                                      ? Colors.blue
+                                      : Get.textTheme.bodyMedium!.color,
+                                  textStyle: const TextStyle(fontSize: 14),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  minimumSize: const Size.fromHeight(40),
+                                ),
+                                onPressed: () {
+                                  controller.readChapter(
+                                      item, item.chapters[i]);
+                                },
+                                child: Text(
+                                  item.chapters[i].chapterTitle,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
                           );

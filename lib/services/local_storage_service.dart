@@ -17,6 +17,9 @@ class LocalStorageService extends GetxService {
   /// * [2] 深色模式
   static const String kThemeMode = "ThemeMode";
 
+  /// 首次运行
+  static const String kFirstRun = "FirstRun";
+
   /// 用户登录信息
   /// * 类型：LoginResultModel
   static const String kUserAuthInfo = "UserAuthInfo";
@@ -65,8 +68,10 @@ class LocalStorageService extends GetxService {
 
   late Box settingsBox;
   Future init() async {
+    var dir = await getApplicationSupportDirectory();
     settingsBox = await Hive.openBox(
       "LocalStorage",
+      path: dir.path,
     );
   }
 
@@ -94,7 +99,7 @@ class LocalStorageService extends GetxService {
 
   Future<Directory> getNovelCacheDirectory() async {
     var dir = await getApplicationSupportDirectory();
-    var novelDir = Directory(p.join(dir.path, "novel"));
+    var novelDir = Directory(p.join(dir.path, "novel_cache"));
     if (!await novelDir.exists()) {
       novelDir = await novelDir.create();
     }

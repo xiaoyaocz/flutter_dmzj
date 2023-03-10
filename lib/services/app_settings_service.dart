@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
 import 'package:get/get.dart';
 
-class AppSettingsController extends GetxController {
+class AppSettingsService extends GetxController {
+  static AppSettingsService get instance => Get.find<AppSettingsService>();
   var themeMode = 0.obs;
-
+  var firstRun = false;
   @override
   void onInit() {
     themeMode.value = LocalStorageService.instance
         .getValue(LocalStorageService.kThemeMode, 0);
+    firstRun = LocalStorageService.instance
+        .getValue(LocalStorageService.kFirstRun, true);
     //漫画
     comicReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderDirection, 0);
@@ -227,5 +230,9 @@ class AppSettingsController extends GetxController {
     comicSearchUseWebApi.value = e;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicSearchUseWebApi, e);
+  }
+
+  void setNoFirstRun() {
+    LocalStorageService.instance.setValue(LocalStorageService.kFirstRun, false);
   }
 }

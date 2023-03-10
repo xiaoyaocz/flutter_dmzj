@@ -60,4 +60,13 @@ class RoutePath {
 
   /// 小说阅读
   static const kNovelReader = "/novel/reader";
+
+  /// 漫画下载，选择章节
+  static const kComicDownloadSelect = "/comic/download/chapter";
+
+  /// 小说下载，选择章节
+  static const kNovelDownloadSelect = "/novel/download/chapter";
+
+  /// 下载管理
+  static const kDownloadManage = "/download/manage";
 }

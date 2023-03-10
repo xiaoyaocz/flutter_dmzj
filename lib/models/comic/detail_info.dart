@@ -262,4 +262,8 @@ class ComicDetailChapterItem {
   int updateTime;
   int fileSize;
   int chapterOrder;
+
+  /// 是否已经下载
+  /// 如果已下载，阅读时从本地读取图片
+  bool downloaded = false;
 }

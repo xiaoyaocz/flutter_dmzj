@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
+import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/app/event_bus.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/modules/comic/home/comic_home_page.dart';
 import 'package:flutter_dmzj/modules/news/home/news_home_controller.dart';
 import 'package:flutter_dmzj/modules/news/home/news_home_page.dart';
@@ -25,6 +28,11 @@ class IndexController extends GetxController {
     const SizedBox(),
     const UserHomePage(),
   ];
+  @override
+  void onInit() {
+    Future.delayed(Duration.zero, showFirstRun);
+    super.onInit();
+  }
 
   @override
   void onClose() {}
@@ -41,5 +49,15 @@ class IndexController extends GetxController {
       EventBus.instance.emit<int>(EventBus.kBottomNavigationBarClicked, i);
     }
     index.value = i;
+  }
+
+  void showFirstRun() async {
+    if (AppSettingsService.instance.firstRun) {
+      AppSettingsService.instance.setNoFirstRun();
+      DialogUtils.showStatement();
+      Utils.checkUpdate();
+    } else {
+      Utils.checkUpdate();
+    }
   }
 }

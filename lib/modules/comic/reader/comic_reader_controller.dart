@@ -6,7 +6,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/comic/chapter_info.dart';
@@ -39,7 +39,7 @@ class ComicReaderController extends BaseController {
   }
 
   /// APP设置控制器
-  final settings = Get.find<AppSettingsController>();
+  final settings = AppSettingsService.instance;
 
   /// 预加载控制器
   final PreloadPageController preloadPageController = PreloadPageController();

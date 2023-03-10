@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
@@ -60,7 +61,10 @@ class UserHomePage extends GetView<UserHomeController> {
                   () => Visibility(
                     visible: !UserService.instance.logined.value,
                     child: ListTile(
-                      leading: _buildPhoto(""),
+                      leading: const UserPhoto(
+                        url: "",
+                        size: 48,
+                      ),
                       title: const Text(
                         "未登录",
                         style: TextStyle(height: 1.0),
@@ -113,9 +117,7 @@ class UserHomePage extends GetView<UserHomeController> {
                         Icons.chevron_right,
                         color: Colors.grey,
                       ),
-                      onTap: () {
-                        controller.test();
-                      },
+                      onTap: controller.download,
                     ),
                     ListTile(
                       leading: const Icon(Remix.file_history_line),
@@ -155,6 +157,15 @@ class UserHomePage extends GetView<UserHomeController> {
                 _buildCard(
                   context,
                   children: [
+                    const ListTile(
+                      leading: Icon(Remix.error_warning_line),
+                      title: Text("免责声明"),
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey,
+                      ),
+                      onTap: DialogUtils.showStatement,
+                    ),
                     ListTile(
                       leading: const Icon(Remix.github_fill),
                       title: const Text("开源主页"),
@@ -193,38 +204,6 @@ class UserHomePage extends GetView<UserHomeController> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildPhoto(String? photo) {
-    if (photo == null || photo.isEmpty) {
-      return Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          color: Colors.lightBlue,
-          borderRadius: BorderRadius.circular(56),
-        ),
-        child: const Icon(
-          Remix.user_fill,
-          color: Colors.white,
-          size: 24,
-        ),
-      );
-    }
-    return Container(
-      width: 56,
-      height: 56,
-      decoration: BoxDecoration(
-        color: Colors.lightBlue,
-        borderRadius: BorderRadius.circular(56),
-      ),
-      child: NetImage(
-        photo,
-        width: 56,
-        height: 56,
-        borderRadius: 56,
       ),
     );
   }

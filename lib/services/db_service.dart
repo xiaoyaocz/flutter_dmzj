@@ -5,6 +5,7 @@ import 'package:flutter_dmzj/models/user/comic_history_model.dart';
 import 'package:flutter_dmzj/models/user/novel_history_model.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DBService extends GetxService {
   static DBService get instance => Get.find<DBService>();
@@ -12,9 +13,19 @@ class DBService extends GetxService {
   late Box<ComicHistory> comicHistoryBox;
   late Box<NovelHistory> novelHistoryBox;
   Future init() async {
-    newsLikeBox = await Hive.openBox("NewsLike");
-    comicHistoryBox = await Hive.openBox("ComicHistory");
-    novelHistoryBox = await Hive.openBox("NovelHistory");
+    var dir = await getApplicationSupportDirectory();
+    newsLikeBox = await Hive.openBox(
+      "NewsLike",
+      path: dir.path,
+    );
+    comicHistoryBox = await Hive.openBox(
+      "ComicHistory",
+      path: dir.path,
+    );
+    novelHistoryBox = await Hive.openBox(
+      "NovelHistory",
+      path: dir.path,
+    );
   }
 
   Future putComicHistory(ComicHistory history) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/comment/comment_list_view.dart';
+import 'package:flutter_dmzj/modules/common/comment/comment_list_view.dart';
 import 'package:get/get.dart';
 
 class CommentPage extends StatelessWidget {

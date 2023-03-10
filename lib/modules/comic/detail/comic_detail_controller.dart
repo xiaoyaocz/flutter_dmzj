@@ -155,7 +155,9 @@ class ComicDetailControler extends BaseController {
   }
 
   /// 下载
-  void download() {}
+  void download() {
+    AppNavigator.toComicDownloadSelect(comicId);
+  }
 
   /// 开始/继续阅读
   void read() {

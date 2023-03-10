@@ -1,12 +1,12 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
-  final settings = Get.find<AppSettingsController>();
+  final settings = AppSettingsService.instance;
   var imageCacheSize = "正在计算缓存...".obs;
   var novelCacheSize = "正在计算缓存...".obs;
 

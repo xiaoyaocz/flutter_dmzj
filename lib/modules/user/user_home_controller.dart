@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
@@ -9,8 +9,8 @@ import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:get/get.dart';
 
 class UserHomeController extends GetxController {
-  final AppSettingsController settingController =
-      Get.find<AppSettingsController>();
+  final AppSettingsService settings = AppSettingsService.instance;
+
   @override
   void onInit() {
     UserService.instance.refreshProfile();
@@ -35,7 +35,7 @@ class UserHomeController extends GetxController {
 
   /// 主题设置
   void setTheme() {
-    settingController.changeTheme();
+    settings.changeTheme();
   }
 
   /// 关于我们
@@ -58,7 +58,8 @@ class UserHomeController extends GetxController {
         ),
       ),
       applicationName: "动漫之家X",
-      applicationLegalese: Utils.packageInfo.version,
+      applicationVersion: "Ver ${Utils.packageInfo.version}",
+      applicationLegalese: "@xiaoyaocz",
     ));
   }
 
@@ -90,6 +91,10 @@ class UserHomeController extends GetxController {
 
   void toSettings() async {
     AppNavigator.toSettings();
+  }
+
+  void download() {
+    AppNavigator.toDownloadManage(0);
   }
 
   void test() async {}

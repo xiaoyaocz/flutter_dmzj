@@ -190,6 +190,22 @@ class AppNavigator {
     });
   }
 
+  /// 打开漫画下载-选择章节
+  static void toComicDownloadSelect(int id) {
+    toContentPage(RoutePath.kComicDownloadSelect, arg: id);
+  }
+
+  /// 打开小说下载-选择章节
+  static void toNovelDownloadSelect(int id) {
+    toContentPage(RoutePath.kNovelDownloadSelect, arg: id);
+  }
+
+  /// 打开下载管理
+  /// * [type] 0=下载完成，1=下载中
+  static void toDownloadManage(int type) {
+    toContentPage(RoutePath.kDownloadManage, arg: type);
+  }
+
   static void showBottomSheet(
     Widget widget, {
     bool isScrollControlled = false,

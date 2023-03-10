@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
 import 'package:flutter_dmzj/modules/user/settings/settings_controller.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
@@ -10,7 +9,7 @@ class SettingsPage extends StatelessWidget {
   final int index;
   SettingsPage({required this.index, super.key});
   final controller = Get.put<SettingsController>(SettingsController());
-  final settings = Get.find<AppSettingsController>();
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -73,9 +72,9 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           SwitchListTile(
-            value: settings.comicSearchUseWebApi.value,
+            value: controller.settings.comicSearchUseWebApi.value,
             onChanged: (e) {
-              settings.setComicSearchUseWebApi(e);
+              controller.settings.setComicSearchUseWebApi(e);
             },
             title: const Text("使用Web接口搜索漫画"),
           ),
@@ -96,48 +95,48 @@ class SettingsPage extends StatelessWidget {
               children: [
                 buildSelectedButton(
                   onTap: () {
-                    settings.setComicReaderDirection(0);
+                    controller.settings.setComicReaderDirection(0);
                   },
-                  selected: settings.comicReaderDirection.value == 0,
+                  selected: controller.settings.comicReaderDirection.value == 0,
                   child: const Icon(Remix.arrow_right_line),
                 ),
                 AppStyle.hGap8,
                 buildSelectedButton(
                   onTap: () {
-                    settings.setComicReaderDirection(2);
+                    controller.settings.setComicReaderDirection(2);
                   },
-                  selected: settings.comicReaderDirection.value == 2,
+                  selected: controller.settings.comicReaderDirection.value == 2,
                   child: const Icon(Remix.arrow_left_line),
                 ),
                 AppStyle.hGap8,
                 buildSelectedButton(
                   onTap: () {
-                    settings.setComicReaderDirection(1);
+                    controller.settings.setComicReaderDirection(1);
                   },
-                  selected: settings.comicReaderDirection.value == 1,
+                  selected: controller.settings.comicReaderDirection.value == 1,
                   child: const Icon(Remix.arrow_down_line),
                 )
               ],
             ),
           ),
           SwitchListTile(
-            value: settings.comicReaderFullScreen.value,
+            value: controller.settings.comicReaderFullScreen.value,
             onChanged: (e) {
-              settings.setComicReaderFullScreen(e);
+              controller.settings.setComicReaderFullScreen(e);
             },
             title: const Text("全屏阅读"),
           ),
           SwitchListTile(
-            value: settings.comicReaderShowStatus.value,
+            value: controller.settings.comicReaderShowStatus.value,
             onChanged: (e) {
-              settings.setComicReaderShowStatus(e);
+              controller.settings.setComicReaderShowStatus(e);
             },
             title: const Text("显示状态信息"),
           ),
           SwitchListTile(
-            value: settings.comicReaderShowViewPoint.value,
+            value: controller.settings.comicReaderShowViewPoint.value,
             onChanged: (e) {
-              settings.setComicReaderShowViewPoint(e);
+              controller.settings.setComicReaderShowViewPoint(e);
             },
             title: const Text("显示观点/吐槽"),
           ),
@@ -158,25 +157,25 @@ class SettingsPage extends StatelessWidget {
               children: [
                 buildSelectedButton(
                   onTap: () {
-                    settings.setNovelReaderDirection(0);
+                    controller.settings.setNovelReaderDirection(0);
                   },
-                  selected: settings.novelReaderDirection.value == 0,
+                  selected: controller.settings.novelReaderDirection.value == 0,
                   child: const Icon(Remix.arrow_right_line),
                 ),
                 AppStyle.hGap8,
                 buildSelectedButton(
                   onTap: () {
-                    settings.setNovelReaderDirection(2);
+                    controller.settings.setNovelReaderDirection(2);
                   },
-                  selected: settings.novelReaderDirection.value == 2,
+                  selected: controller.settings.novelReaderDirection.value == 2,
                   child: const Icon(Remix.arrow_left_line),
                 ),
                 AppStyle.hGap8,
                 buildSelectedButton(
                   onTap: () {
-                    settings.setNovelReaderDirection(1);
+                    controller.settings.setNovelReaderDirection(1);
                   },
-                  selected: settings.novelReaderDirection.value == 1,
+                  selected: controller.settings.novelReaderDirection.value == 1,
                   child: const Icon(Remix.arrow_down_line),
                 )
               ],
@@ -190,9 +189,9 @@ class SettingsPage extends StatelessWidget {
           //   title: const Text("全屏阅读"),
           // ),
           SwitchListTile(
-            value: settings.comicReaderShowStatus.value,
+            value: controller.settings.comicReaderShowStatus.value,
             onChanged: (e) {
-              settings.setComicReaderShowStatus(e);
+              controller.settings.setComicReaderShowStatus(e);
             },
             title: const Text("显示状态信息"),
           ),
@@ -203,8 +202,8 @@ class SettingsPage extends StatelessWidget {
               children: [
                 OutlinedButton(
                   onPressed: () {
-                    settings.setNovelReaderFontSize(
-                      settings.novelReaderFontSize.value + 1,
+                    controller.settings.setNovelReaderFontSize(
+                      controller.settings.novelReaderFontSize.value + 1,
                     );
                   },
                   child: const Icon(
@@ -213,12 +212,12 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
                 AppStyle.hGap12,
-                Text("${settings.novelReaderFontSize.value}"),
+                Text("${controller.settings.novelReaderFontSize.value}"),
                 AppStyle.hGap12,
                 OutlinedButton(
                   onPressed: () {
-                    settings.setNovelReaderFontSize(
-                      settings.novelReaderFontSize.value - 1,
+                    controller.settings.setNovelReaderFontSize(
+                      controller.settings.novelReaderFontSize.value - 1,
                     );
                   },
                   child: const Icon(
@@ -236,8 +235,8 @@ class SettingsPage extends StatelessWidget {
               children: [
                 OutlinedButton(
                   onPressed: () {
-                    settings.setNovelReaderLineSpacing(
-                      settings.novelReaderLineSpacing.value + 0.1,
+                    controller.settings.setNovelReaderLineSpacing(
+                      controller.settings.novelReaderLineSpacing.value + 0.1,
                     );
                   },
                   child: const Icon(
@@ -246,13 +245,13 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
                 AppStyle.hGap12,
-                Text(
-                    (settings.novelReaderLineSpacing.value).toStringAsFixed(1)),
+                Text((controller.settings.novelReaderLineSpacing.value)
+                    .toStringAsFixed(1)),
                 AppStyle.hGap12,
                 OutlinedButton(
                   onPressed: () {
-                    settings.setNovelReaderLineSpacing(
-                      settings.novelReaderLineSpacing.value - 0.1,
+                    controller.settings.setNovelReaderLineSpacing(
+                      controller.settings.novelReaderLineSpacing.value - 0.1,
                     );
                   },
                   child: const Icon(
@@ -271,7 +270,7 @@ class SettingsPage extends StatelessWidget {
                   .map(
                     (e) => GestureDetector(
                       onTap: () {
-                        settings.setNovelReaderTheme(e);
+                        controller.settings.setNovelReaderTheme(e);
                       },
                       child: Container(
                         margin: AppStyle.edgeInsetsL8,
@@ -284,7 +283,7 @@ class SettingsPage extends StatelessWidget {
                         child: Visibility(
                           visible:
                               AppColor.novelThemes.keys.toList().indexOf(e) ==
-                                  settings.novelReaderTheme.value,
+                                  controller.settings.novelReaderTheme.value,
                           child: Icon(
                             Icons.check,
                             color: AppColor.novelThemes[e]!.last,
@@ -301,7 +300,8 @@ class SettingsPage extends StatelessWidget {
             padding: AppStyle.edgeInsetsA8,
             decoration: BoxDecoration(
               borderRadius: AppStyle.radius4,
-              color: AppColor.novelThemes[settings.novelReaderTheme]!.first,
+              color: AppColor
+                  .novelThemes[controller.settings.novelReaderTheme]!.first,
             ),
             child: Text(
               """这是一段测试文字，可以预览上面的设置效果。
@@ -309,9 +309,11 @@ class SettingsPage extends StatelessWidget {
 　　晋太元中，武陵人捕鱼为业。缘溪行，忘路之远近。忽逢桃花林，夹岸数百步，中无杂树，芳草鲜美，落英缤纷。渔人甚异之，复前行，欲穷其林。
 　　林尽水源，便得一山，山有小口，仿佛若有光。便舍船，从口入。初极狭，才通人。复行数十步，豁然开朗。土地平旷，屋舍俨然，有良田、美池、桑竹之属。阡陌交通，鸡犬相闻。其中往来种作，男女衣着，悉如外人。黄发垂髫，并怡然自乐……""",
               style: TextStyle(
-                fontSize: settings.novelReaderFontSize.value.toDouble(),
-                height: settings.novelReaderLineSpacing.value,
-                color: AppColor.novelThemes[settings.novelReaderTheme]!.last,
+                fontSize:
+                    controller.settings.novelReaderFontSize.value.toDouble(),
+                height: controller.settings.novelReaderLineSpacing.value,
+                color: AppColor
+                    .novelThemes[controller.settings.novelReaderTheme]!.last,
               ),
             ),
           ),
@@ -326,9 +328,9 @@ class SettingsPage extends StatelessWidget {
         padding: AppStyle.edgeInsetsA12,
         children: [
           SwitchListTile(
-            value: settings.downloadAllowCellular.value,
+            value: controller.settings.downloadAllowCellular.value,
             onChanged: (e) {
-              settings.setDownloadAllowCellular(e);
+              controller.settings.setDownloadAllowCellular(e);
             },
             title: const Text("允许使用流量下载"),
           ),
@@ -341,7 +343,7 @@ class SettingsPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  settings.downloadComicTaskCount.toString(),
+                  controller.settings.downloadComicTaskCount.toString(),
                 ),
                 AppStyle.hGap4,
                 const Icon(
@@ -360,7 +362,7 @@ class SettingsPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  settings.downloadNovelTaskCount.toString(),
+                  controller.settings.downloadNovelTaskCount.toString(),
                 ),
                 AppStyle.hGap4,
                 const Icon(

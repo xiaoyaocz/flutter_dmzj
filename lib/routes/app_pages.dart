@@ -6,8 +6,10 @@ import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
 import 'package:flutter_dmzj/modules/comic/reader/comic_reader_controller.dart';
 import 'package:flutter_dmzj/modules/comic/reader/comic_reader_page.dart';
 import 'package:flutter_dmzj/modules/comic/search/comic_search_page.dart';
+import 'package:flutter_dmzj/modules/comic/select_chapter/comic_select_chapter_page.dart';
 import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_page.dart';
-import 'package:flutter_dmzj/modules/comment/comment_page.dart';
+import 'package:flutter_dmzj/modules/common/comment/comment_page.dart';
+import 'package:flutter_dmzj/modules/common/download/download_pgae.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
 import 'package:flutter_dmzj/modules/common/test_subroute_page.dart';
 import 'package:flutter_dmzj/modules/common/webview/webview_page.dart';
@@ -195,6 +197,20 @@ class AppPages {
         return GetPageRoute(
           settings: settings,
           page: () => NovelDetailPage(
+            settings.arguments as int,
+          ),
+        );
+      case RoutePath.kComicDownloadSelect:
+        return GetPageRoute(
+          settings: settings,
+          page: () => ComicSelectChapterPage(
+            settings.arguments as int,
+          ),
+        );
+      case RoutePath.kDownloadManage:
+        return GetPageRoute(
+          settings: settings,
+          page: () => DownloadPage(
             settings.arguments as int,
           ),
         );

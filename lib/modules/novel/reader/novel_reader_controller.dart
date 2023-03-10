@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
@@ -46,7 +46,7 @@ class NovelReaderController extends BaseController {
   /// 阅读进度，百分比
   var progress = 0.0.obs;
 
-  final AppSettingsController settings = Get.find<AppSettingsController>();
+  final AppSettingsService settings = AppSettingsService.instance;
   final NovelRequest request = NovelRequest();
 
   final PageController pageController = PageController();
