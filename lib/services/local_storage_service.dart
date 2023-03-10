@@ -50,6 +50,15 @@ class LocalStorageService extends GetxService {
   /// 小说全屏阅读
   static const String kNovelReaderFullScreen = "NovelReaderFullScreen";
 
+  /// 下载是否允许使用流量
+  static const String kDownloadAllowCellular = "DownloadAllowCellular";
+
+  /// 下载小说最大任务数
+  static const String kDownloadNovelTaskCount = "DownloadNovelTaskCount";
+
+  /// 下载漫画最大任务数
+  static const String kDownloadComicTaskCount = "DownloadComicTaskCount";
+
   late Box settingsBox;
   Future init() async {
     settingsBox = await Hive.openBox(
@@ -79,17 +88,23 @@ class LocalStorageService extends GetxService {
     setValue("First", false);
   }
 
+  Future<Directory> getNovelCacheDirectory() async {
+    var dir = await getApplicationSupportDirectory();
+    var novelDir = Directory(p.join(dir.path, "novel"));
+    if (!await novelDir.exists()) {
+      novelDir = await novelDir.create();
+    }
+    return novelDir;
+  }
+
   Future saveNovelContent({
     required int volumeId,
     required int chapterId,
     required String content,
   }) async {
     try {
-      var dir = await getApplicationSupportDirectory();
-      var novelDir = Directory(p.join(dir.path, "novel"));
-      if (!await novelDir.exists()) {
-        novelDir = await novelDir.create();
-      }
+      var novelDir = await getNovelCacheDirectory();
+
       var fileName = p.join(novelDir.path, "${volumeId}_$chapterId.txt");
       var file = File(fileName);
       await file.writeAsString(content);
@@ -101,11 +116,7 @@ class LocalStorageService extends GetxService {
   Future<String?> getNovelContent(
       {required int volumeId, required int chapterId}) async {
     try {
-      var dir = await getApplicationSupportDirectory();
-      var novelDir = Directory(p.join(dir.path, "novel"));
-      if (!await novelDir.exists()) {
-        novelDir = await novelDir.create();
-      }
+      var novelDir = await getNovelCacheDirectory();
       var fileName = p.join(novelDir.path, "${volumeId}_$chapterId.txt");
       var file = File(fileName);
 
@@ -117,6 +128,27 @@ class LocalStorageService extends GetxService {
     } catch (e) {
       Log.logPrint(e);
       return null;
+    }
+  }
+
+  Future<int> getNovelCacheSize() async {
+    var novelDir = await getNovelCacheDirectory();
+    var size = 0;
+    await for (var item in novelDir.list()) {
+      size += item.statSync().size;
+    }
+    return size;
+  }
+
+  Future<bool> cleanNovelCacheSize() async {
+    try {
+      var novelDir = await getNovelCacheDirectory();
+
+      await novelDir.delete(recursive: true);
+      return true;
+    } catch (e) {
+      Log.logPrint(e);
+      return false;
     }
   }
 }

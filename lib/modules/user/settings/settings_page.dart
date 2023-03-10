@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
+import 'package:flutter_dmzj/modules/user/settings/settings_controller.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
 class SettingsPage extends StatelessWidget {
   final int index;
   SettingsPage({required this.index, super.key});
+  final controller = Get.put<SettingsController>(SettingsController());
   final settings = Get.find<AppSettingsController>();
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       initialIndex: index,
       child: Scaffold(
         appBar: AppBar(
@@ -22,25 +24,58 @@ class SettingsPage extends StatelessWidget {
             child: TabBar(
               isScrollable: true,
               indicatorSize: TabBarIndicatorSize.label,
+              indicatorColor: Colors.blue,
               labelColor: Theme.of(context).colorScheme.primary,
               unselectedLabelColor:
                   Get.isDarkMode ? Colors.white70 : Colors.black87,
               tabs: const [
-                Tab(text: "漫画阅读"),
-                Tab(text: "小说阅读"),
-                Tab(text: "下载设置"),
+                Tab(text: "常规"),
+                Tab(text: "漫画"),
+                Tab(text: "小说"),
+                Tab(text: "下载"),
               ],
             ),
           ),
         ),
         body: TabBarView(
           children: [
+            buildGeneralSettings(),
             buildComicSettings(),
             buildNovelSettings(),
-            const Text("2"),
+            buildDownloadSettings(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildGeneralSettings() {
+    return ListView(
+      padding: AppStyle.edgeInsetsA12,
+      children: [
+        Obx(
+          () => ListTile(
+            title: const Text("清除图片缓存"),
+            subtitle: Text(controller.imageCacheSize.value),
+            trailing: OutlinedButton(
+              onPressed: () {
+                controller.cleanImageCache();
+              },
+              child: const Text("清除"),
+            ),
+          ),
+        ),
+        Obx(
+          () => ListTile(
+            title: const Text("清除小说缓存"),
+            subtitle: Text(controller.novelCacheSize.value),
+            trailing: OutlinedButton(
+              onPressed: () {},
+              child: const Text("清除"),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -142,13 +177,13 @@ class SettingsPage extends StatelessWidget {
               ],
             ),
           ),
-          SwitchListTile(
-            value: settings.comicReaderFullScreen.value,
-            onChanged: (e) {
-              settings.setComicReaderFullScreen(e);
-            },
-            title: const Text("全屏阅读"),
-          ),
+          // SwitchListTile(
+          //   value: settings.novelReaderFullScreen.value,
+          //   onChanged: (e) {
+          //     settings.setNovelReaderFullScreen(e);
+          //   },
+          //   title: const Text("全屏阅读"),
+          // ),
           SwitchListTile(
             value: settings.comicReaderShowStatus.value,
             onChanged: (e) {
@@ -273,6 +308,61 @@ class SettingsPage extends StatelessWidget {
                 height: settings.novelReaderLineSpacing.value,
                 color: AppColor.novelThemes[settings.novelReaderTheme]!.last,
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildDownloadSettings() {
+    return Obx(
+      () => ListView(
+        padding: AppStyle.edgeInsetsA12,
+        children: [
+          SwitchListTile(
+            value: settings.downloadAllowCellular.value,
+            onChanged: (e) {
+              settings.setDownloadAllowCellular(e);
+            },
+            title: const Text("允许使用流量下载"),
+          ),
+          ListTile(
+            title: const Text("漫画最大任务数"),
+            onTap: () {
+              controller.setDownloadComicTask();
+            },
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  settings.downloadComicTaskCount.toString(),
+                ),
+                AppStyle.hGap4,
+                const Icon(
+                  Icons.chevron_right,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            title: const Text("小说最大任务数"),
+            onTap: () {
+              controller.setDownloadNovelTask();
+            },
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  settings.downloadNovelTaskCount.toString(),
+                ),
+                AppStyle.hGap4,
+                const Icon(
+                  Icons.chevron_right,
+                  color: Colors.grey,
+                ),
+              ],
             ),
           ),
         ],

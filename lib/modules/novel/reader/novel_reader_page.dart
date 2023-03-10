@@ -215,7 +215,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
           ),
           padding: AppStyle.edgeInsetsA12,
           child: const Icon(
-            Icons.chevron_left,
+            Icons.arrow_circle_left,
             color: Colors.blue,
           ),
         ),
@@ -229,7 +229,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
           ),
           padding: AppStyle.edgeInsetsA12,
           child: const Icon(
-            Icons.chevron_right,
+            Icons.arrow_circle_right,
             color: Colors.blue,
           ),
         ),
@@ -265,8 +265,10 @@ class NovelReaderPage extends GetView<NovelReaderController> {
   Widget buildVertical() {
     return SizedBox(
       height: double.infinity,
-      child: SafeArea(
-        bottom: false,
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: AppStyle.statusBarHeight,
+        ),
         child: Padding(
           padding: AppStyle.edgeInsetsA12.copyWith(
             bottom: (controller.settings.novelReaderShowStatus.value ? 36 : 12),
@@ -329,7 +331,10 @@ class NovelReaderPage extends GetView<NovelReaderController> {
   }
 
   Widget buildPicture() {
-    return SafeArea(
+    return Padding(
+      padding: EdgeInsets.only(
+        top: AppStyle.statusBarHeight,
+      ),
       child: EasyRefresh(
         header: MaterialHeader2(
           triggerOffset: 80,
@@ -339,8 +344,10 @@ class NovelReaderPage extends GetView<NovelReaderController> {
               borderRadius: AppStyle.radius24,
             ),
             padding: AppStyle.edgeInsetsA12,
-            child: const Icon(
-              Icons.chevron_left,
+            child: Icon(
+              controller.direction.value != 1
+                  ? Icons.arrow_circle_left
+                  : Icons.arrow_circle_up,
               color: Colors.blue,
             ),
           ),
@@ -353,8 +360,10 @@ class NovelReaderPage extends GetView<NovelReaderController> {
               borderRadius: AppStyle.radius24,
             ),
             padding: AppStyle.edgeInsetsA12,
-            child: const Icon(
-              Icons.chevron_right,
+            child: Icon(
+              controller.direction.value != 1
+                  ? Icons.arrow_circle_right
+                  : Icons.arrow_circle_down,
               color: Colors.blue,
             ),
           ),

@@ -34,8 +34,8 @@ class AppStyle {
     primaryColor: Colors.blue,
     colorScheme: AppColor.colorSchemeDark,
     scaffoldBackgroundColor: AppColor.backgroundColorDark,
-    tabBarTheme: TabBarTheme(
-      indicatorColor: AppColor.colorSchemeDark.secondary,
+    tabBarTheme: const TabBarTheme(
+      indicatorColor: Colors.blue,
     ),
     appBarTheme: AppBarTheme(
       elevation: 0,

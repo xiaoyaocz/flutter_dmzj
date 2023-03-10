@@ -258,7 +258,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           ),
           padding: AppStyle.edgeInsetsA12,
           child: const Icon(
-            Icons.chevron_left,
+            Icons.arrow_circle_left,
             color: Colors.blue,
           ),
         ),
@@ -272,7 +272,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           ),
           padding: AppStyle.edgeInsetsA12,
           child: const Icon(
-            Icons.chevron_right,
+            Icons.arrow_circle_right,
             color: Colors.blue,
           ),
         ),
@@ -318,27 +318,64 @@ class ComicReaderPage extends GetView<ComicReaderController> {
   }
 
   Widget buildVertical() {
-    return ScrollablePositionedList.builder(
-      itemScrollController: controller.itemScrollController,
-      itemCount: controller.detail.value.pageUrls.length,
-      itemPositionsListener: controller.itemPositionsListener,
-      itemBuilder: (_, i) {
-        if (i == controller.detail.value.pageUrls.length - 1 &&
-            controller.detail.value.pageUrls[i] == "TC") {
-          return buildViewPoints(shrinkWrap: true);
-        }
-        var url = controller.detail.value.pageUrls[i];
-        return Container(
-          constraints: const BoxConstraints(
-            minHeight: 200,
+    return EasyRefresh(
+      header: MaterialHeader2(
+        triggerOffset: 80,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: AppStyle.radius24,
           ),
-          child: NetImage(
-            url,
-            fit: BoxFit.fitWidth,
-            progress: true,
+          padding: AppStyle.edgeInsetsA12,
+          child: const Icon(
+            Icons.arrow_circle_up,
+            color: Colors.blue,
           ),
-        );
+        ),
+      ),
+      footer: MaterialFooter2(
+        triggerOffset: 80,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: AppStyle.radius24,
+          ),
+          padding: AppStyle.edgeInsetsA12,
+          child: const Icon(
+            Icons.arrow_circle_down,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+      refreshOnStart: false,
+      onRefresh: () async {
+        controller.forwardChapter();
       },
+      onLoad: () async {
+        controller.nextChapter();
+      },
+      child: ScrollablePositionedList.builder(
+        itemScrollController: controller.itemScrollController,
+        itemCount: controller.detail.value.pageUrls.length,
+        itemPositionsListener: controller.itemPositionsListener,
+        itemBuilder: (_, i) {
+          if (i == controller.detail.value.pageUrls.length - 1 &&
+              controller.detail.value.pageUrls[i] == "TC") {
+            return buildViewPoints(shrinkWrap: true);
+          }
+          var url = controller.detail.value.pageUrls[i];
+          return Container(
+            constraints: const BoxConstraints(
+              minHeight: 200,
+            ),
+            child: NetImage(
+              url,
+              fit: BoxFit.fitWidth,
+              progress: true,
+            ),
+          );
+        },
+      ),
     );
   }
 

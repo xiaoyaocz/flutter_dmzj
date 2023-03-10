@@ -24,6 +24,7 @@ class UserHistoryPage extends StatelessWidget {
           child: TabBar(
             controller: controller.tabController,
             isScrollable: true,
+            indicatorColor: Colors.blue,
             labelPadding: AppStyle.edgeInsetsH24,
             indicatorSize: TabBarIndicatorSize.label,
             labelColor: Theme.of(context).colorScheme.primary,

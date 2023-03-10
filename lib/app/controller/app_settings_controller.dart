@@ -33,6 +33,13 @@ class AppSettingsController extends GetxController {
         .getValue(LocalStorageService.kNovelReaderFullScreen, true);
     novelReaderShowStatus.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderShowStatus, true);
+    //下载
+    downloadAllowCellular.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kDownloadAllowCellular, true);
+    downloadComicTaskCount.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kDownloadComicTaskCount, 5);
+    downloadNovelTaskCount.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kDownloadNovelTaskCount, 5);
     super.onInit();
   }
 
@@ -185,5 +192,29 @@ class AppSettingsController extends GetxController {
     novelReaderShowStatus.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kNovelReaderShowStatus, value);
+  }
+
+  /// 下载是否允许使用流量
+  RxBool downloadAllowCellular = true.obs;
+  void setDownloadAllowCellular(bool value) {
+    downloadAllowCellular.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kDownloadAllowCellular, value);
+  }
+
+  /// 下载漫画最大任务数
+  var downloadComicTaskCount = 5.obs;
+  void setDownloadComicTaskCount(int task) {
+    downloadComicTaskCount.value = task;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kDownloadComicTaskCount, task);
+  }
+
+  /// 下载漫画最大任务数
+  var downloadNovelTaskCount = 5.obs;
+  void setDownloadNovelTaskCount(int task) {
+    downloadNovelTaskCount.value = task;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kDownloadNovelTaskCount, task);
   }
 }

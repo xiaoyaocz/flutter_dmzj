@@ -278,7 +278,8 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Padding(
+      padding: AppStyle.edgeInsetsA12,
       child: textPages.isEmpty
           ? Center(
               child: Text(
