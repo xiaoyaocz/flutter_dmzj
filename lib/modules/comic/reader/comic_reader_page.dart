@@ -521,7 +521,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
       children: [
         Icon(
           icon,
-          size: 14,
+          size: 12,
         ),
         AppStyle.hGap4,
         Text(
@@ -535,37 +535,37 @@ class ComicReaderPage extends GetView<ComicReaderController> {
 
   Widget buildBattery() {
     var battery = controller.batteryLevel.value;
-    IconData icon = Icons.battery_0_bar;
-    if (battery >= 90) {
-      icon = Icons.battery_full;
-    } else if (battery < 90 && battery >= 80) {
-      icon = Icons.battery_6_bar;
-    } else if (battery < 80 && battery >= 70) {
-      icon = Icons.battery_5_bar;
-    } else if (battery < 70 && battery >= 50) {
-      icon = Icons.battery_4_bar;
-    } else if (battery < 50 && battery >= 30) {
-      icon = Icons.battery_3_bar;
-    } else if (battery < 30 && battery >= 20) {
-      icon = Icons.battery_2_bar;
-    } else if (battery < 20 && battery >= 10) {
-      icon = Icons.battery_1_bar;
-    } else {
-      icon = Icons.battery_0_bar;
-    }
+    // IconData icon = Icons.battery_0_bar;
+    // if (battery >= 90) {
+    //   icon = Icons.battery_full;
+    // } else if (battery < 90 && battery >= 80) {
+    //   icon = Icons.battery_6_bar;
+    // } else if (battery < 80 && battery >= 70) {
+    //   icon = Icons.battery_5_bar;
+    // } else if (battery < 70 && battery >= 50) {
+    //   icon = Icons.battery_4_bar;
+    // } else if (battery < 50 && battery >= 30) {
+    //   icon = Icons.battery_3_bar;
+    // } else if (battery < 30 && battery >= 20) {
+    //   icon = Icons.battery_2_bar;
+    // } else if (battery < 20 && battery >= 10) {
+    //   icon = Icons.battery_1_bar;
+    // } else {
+    //   icon = Icons.battery_0_bar;
+    // }
     return Visibility(
       visible: controller.showBattery.value,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 16,
-          ),
-          AppStyle.hGap4,
+          // Icon(
+          //   icon,
+          //   size: 16,
+          // ),
+          // AppStyle.hGap4,
           Text(
-            "$battery%",
+            "电量 $battery%",
             style: const TextStyle(fontSize: 12, height: 1.0),
           ),
           AppStyle.hGap8,

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 
 class LocalStorageService extends GetxService {
@@ -58,6 +59,9 @@ class LocalStorageService extends GetxService {
 
   /// 下载漫画最大任务数
   static const String kDownloadComicTaskCount = "DownloadComicTaskCount";
+
+  /// 漫画搜索使用Web接口
+  static const String kComicSearchUseWebApi = "ComicSearchUseWebApi";
 
   late Box settingsBox;
   Future init() async {

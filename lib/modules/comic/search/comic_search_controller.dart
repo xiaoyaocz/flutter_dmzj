@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/controller/app_settings_controller.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
+import 'package:flutter_dmzj/models/comic/search_item.dart';
 import 'package:flutter_dmzj/models/comic/search_model.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:get/get.dart';
 
-class ComicSearchController extends BasePageController<ComicSearchModel> {
+class ComicSearchController extends BasePageController<SearchComicItem> {
   final String keyword;
   ComicSearchController(this.keyword) {
     searchController = TextEditingController(text: keyword);
@@ -57,11 +59,19 @@ class ComicSearchController extends BasePageController<ComicSearchModel> {
   }
 
   @override
-  Future<List<ComicSearchModel>> getData(int page, int pageSize) async {
+  Future<List<SearchComicItem>> getData(int page, int pageSize) async {
     if (searchController.text.isEmpty) {
       return [];
     }
-    return await request.search(keyword: _keyword, page: page - 1);
+    if (Get.find<AppSettingsController>().comicSearchUseWebApi.value) {
+      //WEB接口不能分页
+      if (page > 1) {
+        return [];
+      }
+      return await request.searchWeb(keyword: _keyword);
+    } else {
+      return await request.search(keyword: _keyword, page: page - 1);
+    }
   }
 
   void loadHotWord() async {

@@ -50,11 +50,11 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget buildGeneralSettings() {
-    return ListView(
-      padding: AppStyle.edgeInsetsA12,
-      children: [
-        Obx(
-          () => ListTile(
+    return Obx(
+      () => ListView(
+        padding: AppStyle.edgeInsetsA12,
+        children: [
+          ListTile(
             title: const Text("清除图片缓存"),
             subtitle: Text(controller.imageCacheSize.value),
             trailing: OutlinedButton(
@@ -64,9 +64,7 @@ class SettingsPage extends StatelessWidget {
               child: const Text("清除"),
             ),
           ),
-        ),
-        Obx(
-          () => ListTile(
+          ListTile(
             title: const Text("清除小说缓存"),
             subtitle: Text(controller.novelCacheSize.value),
             trailing: OutlinedButton(
@@ -74,8 +72,15 @@ class SettingsPage extends StatelessWidget {
               child: const Text("清除"),
             ),
           ),
-        ),
-      ],
+          SwitchListTile(
+            value: settings.comicSearchUseWebApi.value,
+            onChanged: (e) {
+              settings.setComicSearchUseWebApi(e);
+            },
+            title: const Text("使用Web接口搜索漫画"),
+          ),
+        ],
+      ),
     );
   }
 

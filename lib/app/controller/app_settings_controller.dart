@@ -40,6 +40,9 @@ class AppSettingsController extends GetxController {
         .getValue(LocalStorageService.kDownloadComicTaskCount, 5);
     downloadNovelTaskCount.value = LocalStorageService.instance
         .getValue(LocalStorageService.kDownloadNovelTaskCount, 5);
+    //搜索API
+    comicSearchUseWebApi.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicSearchUseWebApi, false);
     super.onInit();
   }
 
@@ -216,5 +219,13 @@ class AppSettingsController extends GetxController {
     downloadNovelTaskCount.value = task;
     LocalStorageService.instance
         .setValue(LocalStorageService.kDownloadNovelTaskCount, task);
+  }
+
+  /// 漫画搜索使用Web接口
+  var comicSearchUseWebApi = false.obs;
+  void setComicSearchUseWebApi(bool e) {
+    comicSearchUseWebApi.value = e;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicSearchUseWebApi, e);
   }
 }

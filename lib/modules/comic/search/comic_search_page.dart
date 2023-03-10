@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/models/comic/search_item.dart';
 import 'package:flutter_dmzj/models/comic/search_model.dart';
 import 'package:flutter_dmzj/modules/comic/search/comic_search_controller.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
@@ -110,10 +111,10 @@ class ComicSearchPage extends StatelessWidget {
     );
   }
 
-  Widget buildItem(ComicSearchModel item) {
+  Widget buildItem(SearchComicItem item) {
     return InkWell(
       onTap: () {
-        AppNavigator.toComicDetail(item.id);
+        AppNavigator.toComicDetail(item.comicId);
       },
       child: Container(
         padding: AppStyle.edgeInsetsA12,
@@ -149,16 +150,16 @@ class ComicSearchPage extends StatelessWidget {
                         text: " ",
                       ),
                       TextSpan(
-                          text: item.authors,
+                          text: item.author,
                           style:
                               const TextStyle(color: Colors.grey, fontSize: 14))
                     ]),
                   ),
                   AppStyle.vGap4,
-                  Text(item.types,
+                  Text(item.tags,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   AppStyle.vGap4,
-                  Text(item.lastName,
+                  Text(item.lastChapterName,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

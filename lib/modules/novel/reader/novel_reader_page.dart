@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/modules/novel/reader/novel_horizontal_reader.dart';
 
 import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
@@ -13,7 +12,6 @@ import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
 import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:remixicon/remixicon.dart';
 
 class NovelReaderPage extends GetView<NovelReaderController> {
