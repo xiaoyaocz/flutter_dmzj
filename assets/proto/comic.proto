@@ -18,6 +18,7 @@ message ComicChapterInfoProto {
     int64 updateTime = 3;
     int32 fileSize = 4;
     int32 chapterOrder = 5;
+    int32 isFee = 6;
 }
 message ComicChapterResponseProto {
     int32 errno = 1;
@@ -65,7 +66,7 @@ message ComicDetailProto {
   int32 isHideChapter = 26;
   repeated ComicDetailUrlLinkProto dhUrlLinks = 27;
   string cornerMark = 28;
-
+  int32 isFee = 29;
 }
 
 message ComicTagProto {

@@ -176,91 +176,109 @@ class ComicDetailPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //信息
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+        Stack(
           children: [
-            NetImage(
-              controller.detail.value.cover,
-              width: 120,
-              height: 160,
-              borderRadius: 4,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                NetImage(
+                  controller.detail.value.cover,
+                  width: 120,
+                  height: 160,
+                  borderRadius: 4,
+                ),
+                AppStyle.hGap12,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        controller.detail.value.title,
+                        style: Get.textTheme.titleMedium,
+                      ),
+                      AppStyle.vGap8,
+
+                      _buildInfoItems(
+                        iconData: Remix.user_smile_line,
+                        children: controller.detail.value.authors
+                            .map(
+                              (e) => GestureDetector(
+                                onTap: () => controller.toAuthorDetail(e),
+                                child: Text(
+                                  e.tagName,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    height: 1.2,
+                                    decoration: TextDecoration.underline,
+                                    color: Get.isDarkMode
+                                        ? Colors.white
+                                        : AppColor.black333,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+
+                      // _buildInfo(
+                      //   title: controller.detail.value.types
+                      //       .map((e) => e.tagName)
+                      //       .join("/"),
+                      //   iconData: Remix.hashtag,
+                      // ),
+                      _buildInfoItems(
+                        iconData: Remix.hashtag,
+                        children: controller.detail.value.types
+                            .map(
+                              (e) => GestureDetector(
+                                onTap: () => controller.toCategoryDetail(e),
+                                child: Text(
+                                  e.tagName,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    height: 1.2,
+                                    decoration: TextDecoration.underline,
+                                    color: Get.isDarkMode
+                                        ? Colors.white
+                                        : AppColor.black333,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                      _buildInfo(
+                        title: "人气 ${controller.detail.value.hitNum}",
+                        iconData: Remix.fire_line,
+                      ),
+                      _buildInfo(
+                        title: "订阅 ${controller.detail.value.subscribeNum}",
+                        iconData: Remix.heart_line,
+                      ),
+                      _buildInfo(
+                        title:
+                            "${Utils.formatTimestampToDate(controller.detail.value.lastUpdatetime)} ${controller.detail.value.status.map((e) => e.tagName).join("/")}",
+                        iconData: Icons.schedule,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            AppStyle.hGap12,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    controller.detail.value.title,
-                    style: Get.textTheme.titleMedium,
+            Obx(
+              () => Positioned(
+                right: 0,
+                top: 0,
+                child: Offstage(
+                  offstage: !controller.detail.value.isVip,
+                  child: Image.asset(
+                    "assets/images/vip_comic.png",
+                    width: 36,
+                    height: 36,
                   ),
-                  AppStyle.vGap8,
-
-                  _buildInfoItems(
-                    iconData: Remix.user_smile_line,
-                    children: controller.detail.value.authors
-                        .map(
-                          (e) => GestureDetector(
-                            onTap: () => controller.toAuthorDetail(e),
-                            child: Text(
-                              e.tagName,
-                              style: TextStyle(
-                                fontSize: 14,
-                                height: 1.2,
-                                decoration: TextDecoration.underline,
-                                color: Get.isDarkMode
-                                    ? Colors.white
-                                    : AppColor.black333,
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-
-                  // _buildInfo(
-                  //   title: controller.detail.value.types
-                  //       .map((e) => e.tagName)
-                  //       .join("/"),
-                  //   iconData: Remix.hashtag,
-                  // ),
-                  _buildInfoItems(
-                    iconData: Remix.hashtag,
-                    children: controller.detail.value.types
-                        .map(
-                          (e) => GestureDetector(
-                            onTap: () => controller.toCategoryDetail(e),
-                            child: Text(
-                              e.tagName,
-                              style: TextStyle(
-                                fontSize: 14,
-                                height: 1.2,
-                                decoration: TextDecoration.underline,
-                                color: Get.isDarkMode
-                                    ? Colors.white
-                                    : AppColor.black333,
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                  _buildInfo(
-                    title: "人气 ${controller.detail.value.hitNum}",
-                    iconData: Remix.fire_line,
-                  ),
-                  _buildInfo(
-                    title: "订阅 ${controller.detail.value.subscribeNum}",
-                    iconData: Remix.heart_line,
-                  ),
-                  _buildInfo(
-                    title:
-                        "${Utils.formatTimestampToDate(controller.detail.value.lastUpdatetime)} ${controller.detail.value.status.map((e) => e.tagName).join("/")}",
-                    iconData: Icons.schedule,
-                  ),
-                ],
+                ),
               ),
             ),
           ],
@@ -380,26 +398,45 @@ class ComicDetailPage extends StatelessWidget {
                           return Tooltip(
                             message: item.chapters[i].chapterTitle,
                             child: Obx(
-                              () => OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: item.chapters[i].chapterId ==
-                                          controller.history.value?.chapterId
-                                      ? Colors.blue
-                                      : Get.textTheme.bodyMedium!.color,
-                                  textStyle: const TextStyle(fontSize: 14),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  minimumSize: const Size.fromHeight(40),
-                                ),
-                                onPressed: () {
-                                  controller.readChapter(
-                                      item, item.chapters[i]);
-                                },
-                                child: Text(
-                                  item.chapters[i].chapterTitle,
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                              () => Stack(
+                                children: [
+                                  OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor:
+                                          item.chapters[i].chapterId ==
+                                                  controller
+                                                      .history.value?.chapterId
+                                              ? Colors.blue
+                                              : Get.textTheme.bodyMedium!.color,
+                                      textStyle: const TextStyle(fontSize: 14),
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      minimumSize: const Size.fromHeight(40),
+                                    ),
+                                    onPressed: () {
+                                      controller.readChapter(
+                                          item, item.chapters[i]);
+                                    },
+                                    child: Text(
+                                      item.chapters[i].chapterTitle,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Obx(
+                                    () => Positioned(
+                                      left: -2,
+                                      top: 0,
+                                      child: Offstage(
+                                        offstage: !item.chapters[i].isVip,
+                                        child: Image.asset(
+                                          "assets/images/vip_chapter.png",
+                                          height: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           );

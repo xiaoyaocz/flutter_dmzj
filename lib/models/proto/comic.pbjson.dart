@@ -35,11 +35,12 @@ const ComicChapterInfoProto$json = const {
     const {'1': 'updateTime', '3': 3, '4': 1, '5': 3, '10': 'updateTime'},
     const {'1': 'fileSize', '3': 4, '4': 1, '5': 5, '10': 'fileSize'},
     const {'1': 'chapterOrder', '3': 5, '4': 1, '5': 5, '10': 'chapterOrder'},
+    const {'1': 'isFee', '3': 6, '4': 1, '5': 5, '10': 'isFee'},
   ],
 };
 
 /// Descriptor for `ComicChapterInfoProto`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List comicChapterInfoProtoDescriptor = $convert.base64Decode('ChVDb21pY0NoYXB0ZXJJbmZvUHJvdG8SHAoJY2hhcHRlcklkGAEgASgDUgljaGFwdGVySWQSIgoMY2hhcHRlclRpdGxlGAIgASgJUgxjaGFwdGVyVGl0bGUSHgoKdXBkYXRlVGltZRgDIAEoA1IKdXBkYXRlVGltZRIaCghmaWxlU2l6ZRgEIAEoBVIIZmlsZVNpemUSIgoMY2hhcHRlck9yZGVyGAUgASgFUgxjaGFwdGVyT3JkZXI=');
+final $typed_data.Uint8List comicChapterInfoProtoDescriptor = $convert.base64Decode('ChVDb21pY0NoYXB0ZXJJbmZvUHJvdG8SHAoJY2hhcHRlcklkGAEgASgDUgljaGFwdGVySWQSIgoMY2hhcHRlclRpdGxlGAIgASgJUgxjaGFwdGVyVGl0bGUSHgoKdXBkYXRlVGltZRgDIAEoA1IKdXBkYXRlVGltZRIaCghmaWxlU2l6ZRgEIAEoBVIIZmlsZVNpemUSIgoMY2hhcHRlck9yZGVyGAUgASgFUgxjaGFwdGVyT3JkZXISFAoFaXNGZWUYBiABKAVSBWlzRmVl');
 @$core.Deprecated('Use comicChapterResponseProtoDescriptor instead')
 const ComicChapterResponseProto$json = const {
   '1': 'ComicChapterResponseProto',
@@ -107,11 +108,12 @@ const ComicDetailProto$json = const {
     const {'1': 'isHideChapter', '3': 26, '4': 1, '5': 5, '10': 'isHideChapter'},
     const {'1': 'dhUrlLinks', '3': 27, '4': 3, '5': 11, '6': '.ComicDetailUrlLinkProto', '10': 'dhUrlLinks'},
     const {'1': 'cornerMark', '3': 28, '4': 1, '5': 9, '10': 'cornerMark'},
+    const {'1': 'isFee', '3': 29, '4': 1, '5': 5, '10': 'isFee'},
   ],
 };
 
 /// Descriptor for `ComicDetailProto`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List comicDetailProtoDescriptor = $convert.base64Decode('ChBDb21pY0RldGFpbFByb3RvEg4KAmlkGAEgASgDUgJpZBIUCgV0aXRsZRgCIAEoCVIFdGl0bGUSHAoJZGlyZWN0aW9uGAMgASgFUglkaXJlY3Rpb24SFgoGaXNsb25nGAQgASgFUgZpc2xvbmcSFgoGaXNEbXpqGAUgASgFUgZpc0RtemoSFAoFY292ZXIYBiABKAlSBWNvdmVyEiAKC2Rlc2NyaXB0aW9uGAcgASgJUgtkZXNjcmlwdGlvbhImCg5sYXN0VXBkYXRldGltZRgIIAEoA1IObGFzdFVwZGF0ZXRpbWUSNAoVbGFzdFVwZGF0ZUNoYXB0ZXJOYW1lGAkgASgJUhVsYXN0VXBkYXRlQ2hhcHRlck5hbWUSHAoJY29weXJpZ2h0GAogASgFUgljb3B5cmlnaHQSIAoLZmlyc3RMZXR0ZXIYCyABKAlSC2ZpcnN0TGV0dGVyEhgKB2NvbWljUHkYDCABKAlSB2NvbWljUHkSFgoGaGlkZGVuGA0gASgFUgZoaWRkZW4SFgoGaG90TnVtGA4gASgDUgZob3ROdW0SFgoGaGl0TnVtGA8gASgDUgZoaXROdW0SEAoDdWlkGBAgASgDUgN1aWQSFgoGaXNMb2NrGBEgASgFUgZpc0xvY2sSMAoTbGFzdFVwZGF0ZUNoYXB0ZXJJZBgSIAEoBVITbGFzdFVwZGF0ZUNoYXB0ZXJJZBIkCgV0eXBlcxgTIAMoCzIOLkNvbWljVGFnUHJvdG9SBXR5cGVzEiYKBnN0YXR1cxgUIAMoCzIOLkNvbWljVGFnUHJvdG9SBnN0YXR1cxIoCgdhdXRob3JzGBUgAygLMg4uQ29taWNUYWdQcm90b1IHYXV0aG9ycxIiCgxzdWJzY3JpYmVOdW0YFiABKANSDHN1YnNjcmliZU51bRIyCghjaGFwdGVycxgXIAMoCzIWLkNvbWljQ2hhcHRlckxpc3RQcm90b1IIY2hhcHRlcnMSIAoLaXNOZWVkTG9naW4YGCABKAVSC2lzTmVlZExvZ2luEjQKCHVybExpbmtzGBkgAygLMhguQ29taWNEZXRhaWxVcmxMaW5rUHJvdG9SCHVybExpbmtzEiQKDWlzSGlkZUNoYXB0ZXIYGiABKAVSDWlzSGlkZUNoYXB0ZXISOAoKZGhVcmxMaW5rcxgbIAMoCzIYLkNvbWljRGV0YWlsVXJsTGlua1Byb3RvUgpkaFVybExpbmtzEh4KCmNvcm5lck1hcmsYHCABKAlSCmNvcm5lck1hcms=');
+final $typed_data.Uint8List comicDetailProtoDescriptor = $convert.base64Decode('ChBDb21pY0RldGFpbFByb3RvEg4KAmlkGAEgASgDUgJpZBIUCgV0aXRsZRgCIAEoCVIFdGl0bGUSHAoJZGlyZWN0aW9uGAMgASgFUglkaXJlY3Rpb24SFgoGaXNsb25nGAQgASgFUgZpc2xvbmcSFgoGaXNEbXpqGAUgASgFUgZpc0RtemoSFAoFY292ZXIYBiABKAlSBWNvdmVyEiAKC2Rlc2NyaXB0aW9uGAcgASgJUgtkZXNjcmlwdGlvbhImCg5sYXN0VXBkYXRldGltZRgIIAEoA1IObGFzdFVwZGF0ZXRpbWUSNAoVbGFzdFVwZGF0ZUNoYXB0ZXJOYW1lGAkgASgJUhVsYXN0VXBkYXRlQ2hhcHRlck5hbWUSHAoJY29weXJpZ2h0GAogASgFUgljb3B5cmlnaHQSIAoLZmlyc3RMZXR0ZXIYCyABKAlSC2ZpcnN0TGV0dGVyEhgKB2NvbWljUHkYDCABKAlSB2NvbWljUHkSFgoGaGlkZGVuGA0gASgFUgZoaWRkZW4SFgoGaG90TnVtGA4gASgDUgZob3ROdW0SFgoGaGl0TnVtGA8gASgDUgZoaXROdW0SEAoDdWlkGBAgASgDUgN1aWQSFgoGaXNMb2NrGBEgASgFUgZpc0xvY2sSMAoTbGFzdFVwZGF0ZUNoYXB0ZXJJZBgSIAEoBVITbGFzdFVwZGF0ZUNoYXB0ZXJJZBIkCgV0eXBlcxgTIAMoCzIOLkNvbWljVGFnUHJvdG9SBXR5cGVzEiYKBnN0YXR1cxgUIAMoCzIOLkNvbWljVGFnUHJvdG9SBnN0YXR1cxIoCgdhdXRob3JzGBUgAygLMg4uQ29taWNUYWdQcm90b1IHYXV0aG9ycxIiCgxzdWJzY3JpYmVOdW0YFiABKANSDHN1YnNjcmliZU51bRIyCghjaGFwdGVycxgXIAMoCzIWLkNvbWljQ2hhcHRlckxpc3RQcm90b1IIY2hhcHRlcnMSIAoLaXNOZWVkTG9naW4YGCABKAVSC2lzTmVlZExvZ2luEjQKCHVybExpbmtzGBkgAygLMhguQ29taWNEZXRhaWxVcmxMaW5rUHJvdG9SCHVybExpbmtzEiQKDWlzSGlkZUNoYXB0ZXIYGiABKAVSDWlzSGlkZUNoYXB0ZXISOAoKZGhVcmxMaW5rcxgbIAMoCzIYLkNvbWljRGV0YWlsVXJsTGlua1Byb3RvUgpkaFVybExpbmtzEh4KCmNvcm5lck1hcmsYHCABKAlSCmNvcm5lck1hcmsSFAoFaXNGZWUYHSABKAVSBWlzRmVl');
 @$core.Deprecated('Use comicTagProtoDescriptor instead')
 const ComicTagProto$json = const {
   '1': 'ComicTagProto',

@@ -4,7 +4,6 @@ import 'package:flutter_dmzj/models/db/download_status.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:flutter_dmzj/services/download_task/comic_downloader.dart';
 import 'package:flutter_dmzj/widgets/status/app_empty_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 

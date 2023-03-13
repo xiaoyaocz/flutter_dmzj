@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
@@ -175,6 +176,10 @@ class ComicReaderController extends BaseController {
 
       detail.value = ComicChapterDetail.empty();
       var chapterId = chapters[chapterIndex.value].chapterId;
+      if (chapters[chapterIndex.value].isVip) {
+        //禁止观看VIP章节
+        throw AppError("请下载动漫之家官方APP观看VIP章节");
+      }
       loadViewPoints();
 
       var result = await request.chapterDetail(
@@ -205,6 +210,7 @@ class ComicReaderController extends BaseController {
     } catch (e) {
       pageError.value = true;
       errorMsg.value = e.toString();
+      setShowControls();
     } finally {
       pageLoadding.value = false;
     }

@@ -32,6 +32,7 @@ class ComicDetailInfo {
     this.subscribeNum = 0,
     required this.volumes,
     this.isHide = false,
+    this.isVip = false,
   });
 
   factory ComicDetailInfo.empty() => ComicDetailInfo(
@@ -44,7 +45,7 @@ class ComicDetailInfo {
   factory ComicDetailInfo.fromV4(ComicDetailProto proto) => ComicDetailInfo(
         id: proto.id.toInt(),
         title: proto.title,
-        direction: proto.direction.toInt(),
+        direction: proto.direction,
         isLong: proto.islong,
         cover: proto.cover,
         description: proto.description,
@@ -56,6 +57,7 @@ class ComicDetailInfo {
         subscribeNum: proto.subscribeNum.toInt(),
         firstLetter: proto.firstLetter,
         comicPy: proto.comicPy,
+        isVip: proto.isFee == 1,
         types: proto.types
             .map(
               (e) => ComicDetailTag(
@@ -93,6 +95,7 @@ class ComicDetailInfo {
                           updateTime: x.updateTime.toInt(),
                           fileSize: x.fileSize,
                           chapterOrder: x.chapterOrder,
+                          isVip: x.isFee == 1,
                         ),
                       )
                       .toList(),
@@ -205,6 +208,8 @@ class ComicDetailInfo {
   int subscribeNum;
   List<ComicDetailVolume> volumes = [];
 
+  bool isVip;
+
   /// 是否神隐
   bool isHide;
 
@@ -255,6 +260,7 @@ class ComicDetailChapterItem {
     required this.updateTime,
     required this.fileSize,
     required this.chapterOrder,
+    this.isVip = false,
   });
 
   int chapterId;
@@ -263,7 +269,5 @@ class ComicDetailChapterItem {
   int fileSize;
   int chapterOrder;
 
-  /// 是否已经下载
-  /// 如果已下载，阅读时从本地读取图片
-  bool downloaded = false;
+  bool isVip;
 }

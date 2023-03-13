@@ -3,7 +3,7 @@
 //  source: comic.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name, depend_on_referenced_packages, no_leading_underscores_for_local_identifiers
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name, no_leading_underscores_for_local_identifiers, depend_on_referenced_packages
 
 import 'dart:core' as $core;
 
@@ -273,6 +273,13 @@ class ComicChapterInfoProto extends $pb.GeneratedMessage {
             : 'chapterOrder',
         $pb.PbFieldType.O3,
         protoName: 'chapterOrder')
+    ..a<$core.int>(
+        6,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'isFee',
+        $pb.PbFieldType.O3,
+        protoName: 'isFee')
     ..hasRequiredFields = false;
 
   ComicChapterInfoProto._() : super();
@@ -282,6 +289,7 @@ class ComicChapterInfoProto extends $pb.GeneratedMessage {
     $fixnum.Int64? updateTime,
     $core.int? fileSize,
     $core.int? chapterOrder,
+    $core.int? isFee,
   }) {
     final _result = create();
     if (chapterId != null) {
@@ -298,6 +306,9 @@ class ComicChapterInfoProto extends $pb.GeneratedMessage {
     }
     if (chapterOrder != null) {
       _result.chapterOrder = chapterOrder;
+    }
+    if (isFee != null) {
+      _result.isFee = isFee;
     }
     return _result;
   }
@@ -389,6 +400,18 @@ class ComicChapterInfoProto extends $pb.GeneratedMessage {
   $core.bool hasChapterOrder() => $_has(4);
   @$pb.TagNumber(5)
   void clearChapterOrder() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get isFee => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set isFee($core.int v) {
+    $_setSignedInt32(5, v);
+  }
+
+  @$pb.TagNumber(6)
+  $core.bool hasIsFee() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearIsFee() => clearField(6);
 }
 
 class ComicChapterResponseProto extends $pb.GeneratedMessage {
@@ -874,6 +897,13 @@ class ComicDetailProto extends $pb.GeneratedMessage {
             ? ''
             : 'cornerMark',
         protoName: 'cornerMark')
+    ..a<$core.int>(
+        29,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'isFee',
+        $pb.PbFieldType.O3,
+        protoName: 'isFee')
     ..hasRequiredFields = false;
 
   ComicDetailProto._() : super();
@@ -906,6 +936,7 @@ class ComicDetailProto extends $pb.GeneratedMessage {
     $core.int? isHideChapter,
     $core.Iterable<ComicDetailUrlLinkProto>? dhUrlLinks,
     $core.String? cornerMark,
+    $core.int? isFee,
   }) {
     final _result = create();
     if (id != null) {
@@ -991,6 +1022,9 @@ class ComicDetailProto extends $pb.GeneratedMessage {
     }
     if (cornerMark != null) {
       _result.cornerMark = cornerMark;
+    }
+    if (isFee != null) {
+      _result.isFee = isFee;
     }
     return _result;
   }
@@ -1302,6 +1336,18 @@ class ComicDetailProto extends $pb.GeneratedMessage {
   $core.bool hasCornerMark() => $_has(27);
   @$pb.TagNumber(28)
   void clearCornerMark() => clearField(28);
+
+  @$pb.TagNumber(29)
+  $core.int get isFee => $_getIZ(28);
+  @$pb.TagNumber(29)
+  set isFee($core.int v) {
+    $_setSignedInt32(28, v);
+  }
+
+  @$pb.TagNumber(29)
+  $core.bool hasIsFee() => $_has(28);
+  @$pb.TagNumber(29)
+  void clearIsFee() => clearField(29);
 }
 
 class ComicTagProto extends $pb.GeneratedMessage {

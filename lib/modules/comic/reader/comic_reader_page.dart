@@ -157,10 +157,13 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                       ),
                       AppStyle.hGap12,
                       Expanded(
-                        child: Text(
-                          controller.detail.value.chapterTitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        child: Obx(
+                          () => Text(
+                            controller.chapters[controller.chapterIndex.value]
+                                .chapterTitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     ],
