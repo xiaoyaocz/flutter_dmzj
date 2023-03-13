@@ -38,5 +38,9 @@ enum DownloadStatus {
 
   /// 已取消
   @HiveField(8)
-  cnacel,
+  cancel,
+
+  /// 等待网络连接
+  @HiveField(9)
+  waitNetwork,
 }

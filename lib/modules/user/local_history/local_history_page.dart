@@ -26,7 +26,7 @@ class LocalHistoryPage extends StatelessWidget {
             controller: controller.tabController,
             isScrollable: true,
             labelPadding: AppStyle.edgeInsetsH24,
-            indicatorColor: Colors.blue,
+            indicatorColor: Theme.of(context).colorScheme.primary,
             indicatorSize: TabBarIndicatorSize.label,
             labelColor: Theme.of(context).colorScheme.primary,
             unselectedLabelColor:

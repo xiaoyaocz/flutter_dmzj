@@ -35,6 +35,10 @@ class ComicSelectChapterController extends BaseController {
       }
       comicTitle = result.title;
       comicCover = result.cover;
+      for (var volume in result.volumes) {
+        volume.sortType.value = 1;
+        volume.sort();
+      }
       volumes.value = result.volumes;
     } catch (e) {
       SmartDialog.showToast("无法获取章节");
@@ -52,6 +56,10 @@ class ComicSelectChapterController extends BaseController {
       if (result.volumes.isEmpty && !result.isHide) {
         refreshV1();
       } else {
+        for (var volume in result.volumes) {
+          volume.sortType.value = 1;
+          volume.sort();
+        }
         volumes.value = result.volumes;
       }
     } catch (e) {
@@ -86,7 +94,7 @@ class ComicSelectChapterController extends BaseController {
   }
 
   void toDownloadManage() {
-    AppNavigator.toDownloadManage(1);
+    AppNavigator.toComicDownloadManage(1);
   }
 
   void startDownload() {
@@ -121,5 +129,6 @@ class ComicSelectChapterController extends BaseController {
       );
     }
     chapterIds.clear();
+    SmartDialog.showToast("已添加到下载列表，下载过程中请保存APP在前台运行");
   }
 }

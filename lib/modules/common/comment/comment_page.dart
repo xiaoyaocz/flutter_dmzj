@@ -21,6 +21,7 @@ class CommentPage extends StatelessWidget {
               isScrollable: true,
               labelPadding: AppStyle.edgeInsetsH24,
               indicatorSize: TabBarIndicatorSize.label,
+              indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,
               unselectedLabelColor:
                   Get.isDarkMode ? Colors.white70 : Colors.black87,

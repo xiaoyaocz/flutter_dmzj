@@ -9,7 +9,8 @@ import 'package:flutter_dmzj/modules/comic/search/comic_search_page.dart';
 import 'package:flutter_dmzj/modules/comic/select_chapter/comic_select_chapter_page.dart';
 import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_page.dart';
 import 'package:flutter_dmzj/modules/common/comment/comment_page.dart';
-import 'package:flutter_dmzj/modules/common/download/download_pgae.dart';
+import 'package:flutter_dmzj/modules/common/download/comic/comic_download_page.dart';
+import 'package:flutter_dmzj/modules/common/download/comic/comic_downloaded_detail_page.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
 import 'package:flutter_dmzj/modules/common/test_subroute_page.dart';
 import 'package:flutter_dmzj/modules/common/webview/webview_page.dart';
@@ -27,6 +28,7 @@ import 'package:flutter_dmzj/modules/user/settings/settings_page.dart';
 import 'package:flutter_dmzj/modules/user/subscribe/user_subscribe_pgae.dart';
 import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
+import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:get/get.dart';
 
 class AppPages {
@@ -207,11 +209,18 @@ class AppPages {
             settings.arguments as int,
           ),
         );
-      case RoutePath.kDownloadManage:
+      case RoutePath.kComicDownload:
         return GetPageRoute(
           settings: settings,
-          page: () => DownloadPage(
+          page: () => ComicDownloadPage(
             settings.arguments as int,
+          ),
+        );
+      case RoutePath.kComicDownloadDetail:
+        return GetPageRoute(
+          settings: settings,
+          page: () => ComicDownloadedDetailPage(
+            settings.arguments as ComicDownloadedItem,
           ),
         );
       default:

@@ -67,6 +67,15 @@ class RoutePath {
   /// 小说下载，选择章节
   static const kNovelDownloadSelect = "/novel/download/chapter";
 
-  /// 下载管理
-  static const kDownloadManage = "/download/manage";
+  /// 漫画下载管理
+  static const kComicDownload = "/download/comic";
+
+  /// 漫画下载详情
+  static const kComicDownloadDetail = "/download/comic/detail";
+
+  /// 小说下载管理
+  static const kNovelownload = "/download/novel";
+
+  /// 小说下载详情
+  static const kNovelDownloadDetail = "/download/novel/chapter";
 }

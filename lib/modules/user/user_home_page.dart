@@ -5,8 +5,8 @@ import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
+import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/user_photo.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
@@ -112,12 +112,40 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.download_line),
-                      title: const Text("下载管理"),
-                      trailing: const Icon(
-                        Icons.chevron_right,
-                        color: Colors.grey,
+                      title: const Text("漫画下载"),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Obx(
+                            () => Visibility(
+                              visible: ComicDownloadService
+                                  .instance.taskQueues.isNotEmpty,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: AppStyle.radius24,
+                                ),
+                                width: 20,
+                                height: 20,
+                                child: Center(
+                                  child: Text(
+                                    "${ComicDownloadService.instance.taskQueues.length}",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          ),
+                        ],
                       ),
-                      onTap: controller.download,
+                      onTap: controller.comicDownload,
                     ),
                     ListTile(
                       leading: const Icon(Remix.file_history_line),

@@ -17,8 +17,10 @@ import 'package:flutter_dmzj/models/comic/search_model.dart';
 import 'package:flutter_dmzj/models/comic/special_model.dart';
 import 'package:flutter_dmzj/models/comic/view_point_model.dart';
 import 'package:flutter_dmzj/models/comic/web_search_model.dart';
+import 'package:flutter_dmzj/models/db/download_status.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
+import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 
 import '../models/comic/special_detail_model.dart';
@@ -312,6 +314,13 @@ class ComicRequest {
     ComicChapterDetail info;
 
     try {
+      //查询本地是否存在
+      var localInfo =
+          ComicDownloadService.instance.box.get("${comicId}_$chapterId");
+      if (localInfo != null && localInfo.status == DownloadStatus.complete) {
+        return ComicChapterDetail.fromDownload(localInfo);
+      }
+
       var v4 = await chapterDetailV4(comicId: comicId, chapterId: chapterId);
       info = ComicChapterDetail.fromV4(v4);
     } catch (e) {

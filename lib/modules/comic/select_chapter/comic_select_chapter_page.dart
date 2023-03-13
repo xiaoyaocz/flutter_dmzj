@@ -83,7 +83,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                     Remix.checkbox_blank_line,
                     size: 20,
                   ),
-                  label: const Text("取消全选"),
+                  label: const Text("取消选中"),
                 ),
               ),
               Expanded(

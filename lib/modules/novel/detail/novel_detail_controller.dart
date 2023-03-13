@@ -4,6 +4,7 @@ import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/event_bus.dart';
 import 'package:flutter_dmzj/app/log.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/db/novel_history.dart';
 import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/requests/novel_request.dart';
@@ -123,8 +124,13 @@ class NovelDetailControler extends BaseController {
     AppNavigator.toComment(objId: novelId, type: AppConstant.kTypeNovel);
   }
 
-  /// TODO 分享
-  void share() {}
+  ///  分享
+  void share() {
+    Utils.share(
+      "http://q.dmzj.com/$novelId/index.shtml",
+      content: detail.value.name,
+    );
+  }
 
   /// 订阅
   void subscribe() async {

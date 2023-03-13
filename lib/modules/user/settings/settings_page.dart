@@ -23,7 +23,7 @@ class SettingsPage extends StatelessWidget {
             child: TabBar(
               isScrollable: true,
               indicatorSize: TabBarIndicatorSize.label,
-              indicatorColor: Colors.blue,
+              indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,
               unselectedLabelColor:
                   Get.isDarkMode ? Colors.white70 : Colors.black87,
@@ -343,7 +343,9 @@ class SettingsPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  controller.settings.downloadComicTaskCount.toString(),
+                  controller.settings.downloadComicTaskCount.value == 0
+                      ? "无限制"
+                      : controller.settings.downloadComicTaskCount.toString(),
                 ),
                 AppStyle.hGap4,
                 const Icon(
@@ -362,7 +364,9 @@ class SettingsPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  controller.settings.downloadNovelTaskCount.toString(),
+                  controller.settings.downloadNovelTaskCount.value == 0
+                      ? "无限制"
+                      : controller.settings.downloadNovelTaskCount.toString(),
                 ),
                 AppStyle.hGap4,
                 const Icon(

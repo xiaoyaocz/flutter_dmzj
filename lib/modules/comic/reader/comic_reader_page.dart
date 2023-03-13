@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/comic/reader/comic_reader_controller.dart';
 import 'package:flutter_dmzj/widgets/custom_header.dart';
+import 'package:flutter_dmzj/widgets/local_image.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
 import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
@@ -306,11 +307,13 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             onScaleEnd: (context, detail, e) {
               controller.lockSwipe.value = (e.scale ?? 1) > 1.0;
             },
-            child: NetImage(
-              url,
-              fit: BoxFit.contain,
-              progress: true,
-            ),
+            child: controller.detail.value.isLocal
+                ? LocalImage(url, fit: BoxFit.contain)
+                : NetImage(
+                    url,
+                    fit: BoxFit.contain,
+                    progress: true,
+                  ),
           );
         },
       ),
@@ -368,11 +371,13 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             constraints: const BoxConstraints(
               minHeight: 200,
             ),
-            child: NetImage(
-              url,
-              fit: BoxFit.fitWidth,
-              progress: true,
-            ),
+            child: controller.detail.value.isLocal
+                ? LocalImage(url, fit: BoxFit.contain)
+                : NetImage(
+                    url,
+                    fit: BoxFit.fitWidth,
+                    progress: true,
+                  ),
           );
         },
       ),
@@ -425,7 +430,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
               spacing: 8,
               runSpacing: 8,
               children: controller.viewPoints
-                  .take(20)
+                  .take(10)
                   .map(
                     (e) => OutlinedButton(
                       style: OutlinedButton.styleFrom(

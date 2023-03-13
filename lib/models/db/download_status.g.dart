@@ -30,7 +30,9 @@ class DownloadStatusAdapter extends TypeAdapter<DownloadStatus> {
       case 7:
         return DownloadStatus.error;
       case 8:
-        return DownloadStatus.cnacel;
+        return DownloadStatus.cancel;
+      case 9:
+        return DownloadStatus.waitNetwork;
       default:
         return DownloadStatus.wait;
     }
@@ -63,8 +65,11 @@ class DownloadStatusAdapter extends TypeAdapter<DownloadStatus> {
       case DownloadStatus.error:
         writer.writeByte(7);
         break;
-      case DownloadStatus.cnacel:
+      case DownloadStatus.cancel:
         writer.writeByte(8);
+        break;
+      case DownloadStatus.waitNetwork:
+        writer.writeByte(9);
         break;
     }
   }

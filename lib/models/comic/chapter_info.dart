@@ -1,5 +1,9 @@
 import 'package:flutter_dmzj/models/comic/chapter_detail_web_model.dart';
+import 'package:flutter_dmzj/models/db/comic_download_info.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
+
+// ignore: depend_on_referenced_packages
+import 'package:path/path.dart' as p;
 
 class ComicChapterDetail {
   ComicChapterDetail({
@@ -11,6 +15,7 @@ class ComicChapterDetail {
     required this.pageUrls,
     required this.picnum,
     required this.commentCount,
+    this.isLocal = false,
   });
   factory ComicChapterDetail.empty() => ComicChapterDetail(
         chapterId: 0,
@@ -46,6 +51,19 @@ class ComicChapterDetail {
         commentCount: item.commentCount,
       );
 
+  factory ComicChapterDetail.fromDownload(ComicDownloadInfo item) =>
+      ComicChapterDetail(
+        chapterId: item.chapterId.toInt(),
+        comicId: item.comicId.toInt(),
+        chapterOrder: item.chapterSort,
+        direction: 1,
+        chapterTitle: item.chapterName,
+        pageUrls: item.files.map((e) => p.join(item.savePath, e)).toList(),
+        picnum: item.files.length,
+        commentCount: 0,
+        isLocal: true,
+      );
+
   int chapterId;
   int comicId;
   int chapterOrder;
@@ -54,4 +72,5 @@ class ComicChapterDetail {
   List<String> pageUrls;
   int picnum;
   int commentCount;
+  bool isLocal;
 }

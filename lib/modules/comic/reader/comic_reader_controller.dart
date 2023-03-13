@@ -221,7 +221,7 @@ class ComicReaderController extends BaseController {
       result.sort((a, b) => b.num.value.compareTo(a.num.value));
       viewPoints.value = result;
     } catch (e) {
-      SmartDialog.showToast("读取吐槽失败");
+      //SmartDialog.showToast("读取吐槽失败");
       Log.logPrint(e.toString());
     }
   }
