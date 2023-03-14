@@ -231,9 +231,9 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                     onTap: () {
                       if (Provider.of<AppSetting>(context, listen: false)
                           .comicReadReverse) {
-                        previousPage();
-                      } else {
                         nextPage();
+                      } else {
+                        previousPage();
                       }
                     },
                     child: Container(),
@@ -249,9 +249,9 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                     onTap: () {
                       if (Provider.of<AppSetting>(context, listen: false)
                           .comicReadReverse) {
-                        nextPage();
-                      } else {
                         previousPage();
+                      } else {
+                        nextPage();
                       }
                     },
                     child: Container(),
@@ -483,7 +483,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     );
   }
 
-  void nextPage() async {
+  void previousPage() async {
     if (_pageController.page == 1) {
       previousChapter();
       setState(() {
@@ -500,17 +500,17 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         } else {
           newPage = _selectIndex - 1;
         }
-        _pageController.jumpToPage(newPage);
+        _pageController.animateToPage(newPage, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
       });
     }
   }
 
-  void previousPage() {
+  void nextPage() {
     if (_pageController.page > _detail.page_url.length) {
       nextChapter();
     } else {
       setState(() {
-        _pageController.jumpToPage(_selectIndex + 1);
+        _pageController.animateToPage(_selectIndex + 1, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
       });
     }
   }
@@ -927,7 +927,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
   bool _loading = false;
   ComicWebChapterDetail _detail;
   DefaultCacheManager _cacheManager = DefaultCacheManager();
-  Future loadData() async {
+  Future loadData({isFirstLoad = true, isNextChapter = false}) async {
     try {
       if (_loading) {
         return;
@@ -943,7 +943,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         detail = await getV4Detail();
       }
       var historyItem = await ComicHistoryProvider.getItem(widget.comicId);
-      if (historyItem != null &&
+      if (isFirstLoad && historyItem != null &&
           historyItem.chapter_id == _currentItem.chapterId) {
         var page = historyItem.page.toInt();
         if (page > detail.page_url.length) {
@@ -955,9 +955,11 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         });
         // _pageController.=;
       } else {
-        _pageController = new PreloadPageController(initialPage: 1);
+        int page = isNextChapter || isFirstLoad ? 1 : detail.page_url.length;
+
+        _pageController = new PreloadPageController(initialPage: page);
         setState(() {
-          _selectIndex = 1;
+          _selectIndex = page;
         });
       }
 
@@ -1049,7 +1051,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     setState(() {
       _currentItem = widget.chapters[widget.chapters.indexOf(_currentItem) + 1];
     });
-    await loadData();
+    await loadData(isFirstLoad: false, isNextChapter: true);
   }
 
   void previousChapter() async {
@@ -1060,6 +1062,6 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
     setState(() {
       _currentItem = widget.chapters[widget.chapters.indexOf(_currentItem) - 1];
     });
-    await loadData();
+    await loadData(isFirstLoad: false, isNextChapter: false);
   }
 }
