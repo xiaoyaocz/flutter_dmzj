@@ -63,13 +63,13 @@ IDI_APP_ICON            ICON                    "resources\\app_icon.ico"
 #ifdef FLUTTER_BUILD_NUMBER
 #define VERSION_AS_NUMBER FLUTTER_BUILD_NUMBER
 #else
-#define VERSION_AS_NUMBER 1,0,0
+#define VERSION_AS_NUMBER 2,0,1
 #endif
 
 #ifdef FLUTTER_BUILD_NAME
 #define VERSION_AS_STRING #FLUTTER_BUILD_NAME
 #else
-#define VERSION_AS_STRING "1.0.0"
+#define VERSION_AS_STRING "2.0.1"
 #endif
 
 VS_VERSION_INFO VERSIONINFO
@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
+            VALUE "CompanyName", "com.xycz" "\0"
             VALUE "FileDescription", "flutter_dmzj" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "flutter_dmzj" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 com.example. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 com.xycz. All rights reserved." "\0"
             VALUE "OriginalFilename", "flutter_dmzj.exe" "\0"
             VALUE "ProductName", "flutter_dmzj" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
