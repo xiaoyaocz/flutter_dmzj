@@ -6,7 +6,7 @@ class CommonRequest {
   /// 检查更新
   Future<VersionModel> checkUpdate() async {
     var result = await Dio().get(
-      "https://cdn.jsdelivr.net/gh/xiaoyaocz/flutter_dmzj@master/assets/app_version.json",
+      "https://cdn.jsdelivr.net/gh/xiaoyaocz/flutter_dmzj@main/document/app_version.json",
       queryParameters: {
         "ts": DateTime.now().millisecondsSinceEpoch,
       },

@@ -36,4 +36,4 @@
 
 ## License
 
-[GPL-3.0 License](https://github.com/xiaoyaocz/flutter_dmzj/blob/master/LICENSE)，禁止用于任何商业用途
+[GPL-3.0 License](https://github.com/xiaoyaocz/flutter_dmzj/blob/main/LICENSE)，禁止用于任何商业用途
