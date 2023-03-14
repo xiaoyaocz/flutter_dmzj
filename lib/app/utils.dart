@@ -1,8 +1,12 @@
 import 'dart:io';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/log.dart';
+import 'package:flutter_dmzj/requests/common_request.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:get/get.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -11,13 +15,13 @@ import 'package:permission_handler/permission_handler.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class Utils {
   static late PackageInfo packageInfo;
   static DateFormat dateFormat = DateFormat("yyyy-MM-dd");
   static DateFormat dateTimeFormat = DateFormat("MM-dd HH:mm");
   static DateFormat dateTimeFormatWithYear = DateFormat("yyyy-MM-dd HH:mm");
-  static void checkUpdate({bool showMsg = true}) {}
 
   /// 版本号解析
   static int parseVersion(String version) {
@@ -114,5 +118,68 @@ class Utils {
     //TODO 分享处理
 
     Share.share(content.isEmpty ? url : "$content\n$url");
+  }
+
+  static void checkUpdate({bool showMsg = false}) async {
+    try {
+      int currentVer = Utils.parseVersion(packageInfo.version);
+      CommonRequest request = CommonRequest();
+      var versionInfo = await request.checkUpdate();
+      if (versionInfo.versionNum > currentVer) {
+        Get.dialog(
+          AlertDialog(
+            title: Text(
+              "发现新版本 ${versionInfo.version}",
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 18),
+            ),
+            content: Text(
+              versionInfo.versionDesc,
+              style: const TextStyle(fontSize: 14, height: 1.4),
+            ),
+            actionsPadding: AppStyle.edgeInsetsH12,
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: const Text("取消"),
+                    ),
+                  ),
+                  AppStyle.hGap12,
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                      ),
+                      onPressed: () {
+                        launchUrlString(
+                          versionInfo.downloadUrl,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      },
+                      child: const Text("更新"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      } else {
+        if (showMsg) {
+          SmartDialog.showToast("当前已经是最新版本了");
+        }
+      }
+    } catch (e) {
+      Log.logPrint(e);
+      if (showMsg) {
+        SmartDialog.showToast("检查更新失败");
+      }
+    }
   }
 }

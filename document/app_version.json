@@ -1,0 +1,7 @@
+{
+    "version": "2.0.1-beta",
+    "version_num": 20001,
+    "version_desc": "完全重写的2.0全新版本\n1. Android/iOS/Mac/Windows/Linux全平台支持\n2. 适配各种屏幕尺寸\n3. 支持离线缓存\n4. 全新设计的UI\n5. 修复一堆的BUG",
+    "prerelease":true,
+    "download_url": "https://github.com/xiaoyaocz/flutter_dmzj/releases"
+}
