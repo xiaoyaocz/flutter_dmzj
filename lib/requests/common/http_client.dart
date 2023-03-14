@@ -72,6 +72,9 @@ class HttpClient {
       }
       return result.data;
     } on DioError catch (e) {
+      if (e.type == DioErrorType.cancel) {
+        rethrow;
+      }
       if (e.type == DioErrorType.badResponse) {
         return throw AppError("请求失败：${e.response?.statusCode ?? -1}");
       }

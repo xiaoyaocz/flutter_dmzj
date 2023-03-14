@@ -6,12 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/models/db/comic_download_info.dart';
 import 'package:flutter_dmzj/models/db/download_status.dart';
+import 'package:flutter_dmzj/models/db/novel_download_info.dart';
 import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/db/comic_history.dart';
 import 'package:flutter_dmzj/models/db/novel_history.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:flutter_dmzj/services/novel_download_service.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -56,16 +58,21 @@ Future initServices() async {
   Log.d("Init User Service");
   Get.put(UserService()).init();
 
+  //注册Hive适配器
   Hive.registerAdapter(ComicHistoryAdapter());
   Hive.registerAdapter(NovelHistoryAdapter());
   Hive.registerAdapter(DownloadStatusAdapter());
   Hive.registerAdapter(ComicDownloadInfoAdapter());
+  Hive.registerAdapter(NovelDownloadInfoAdapter());
   await Get.put(DBService()).init();
 
   //初始化设置服务
   Get.put(AppSettingsService());
 
+  //初始化漫画下载服务
   Get.put(ComicDownloadService()).init();
+  //初始化小说下载服务
+  Get.put(NovelDownloadService()).init();
 }
 
 class AppScrollBehavior extends MaterialScrollBehavior {

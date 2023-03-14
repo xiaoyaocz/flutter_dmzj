@@ -28,6 +28,15 @@ Response Data：${err.response?.data}''', err.stackTrace ?? StackTrace.current);
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     var time = DateTime.now().millisecondsSinceEpoch -
         response.requestOptions.extra["ts"];
+    if (response.requestOptions.uri.toString().contains(".txt")) {
+      Log.i(
+        '''【HTTP请求响应】 耗时:${time}ms
+Request Method：${response.requestOptions.method}
+Request Code：${response.statusCode}
+Request URL：${response.requestOptions.uri}''',
+      );
+      return super.onResponse(response, handler);
+    }
     Log.i(
       '''【HTTP请求响应】 耗时:${time}ms
 Request Method：${response.requestOptions.method}

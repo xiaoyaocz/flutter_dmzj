@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:battery_plus/battery_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -6,17 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/models/db/download_status.dart';
+import 'package:flutter_dmzj/models/db/novel_download_info.dart';
 import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/requests/novel_request.dart';
+import 'package:flutter_dmzj/services/novel_download_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+
+// ignore: depend_on_referenced_packages
+import 'package:path/path.dart' as p;
 
 class NovelReaderController extends BaseController {
   final int novelId;
@@ -73,6 +80,9 @@ class NovelReaderController extends BaseController {
 
   /// 是否是图片
   var isPicture = false.obs;
+
+  /// 是否为本地缓存
+  var isLocal = false;
 
   /// 图片列表
   RxList<String> pictures = RxList<String>();
@@ -158,7 +168,16 @@ class NovelReaderController extends BaseController {
       pageError.value = false;
       content.value = "";
       currentIndex.value = 0;
+      isLocal = false;
       chapter = chapters[chapterIndex.value];
+
+      //查询本地是否存在
+      var localInfo = NovelDownloadService.instance.box
+          .get("${novelId}_${chapter.volumeId}_${chapter.chapterId}");
+      if (localInfo != null && localInfo.status == DownloadStatus.complete) {
+        return await loadFromLocal(localInfo);
+      }
+
       var text = await request.novelContent(
         volumeId: chapter.volumeId,
         chapterId: chapter.chapterId,
@@ -216,6 +235,57 @@ class NovelReaderController extends BaseController {
     }
 
     //SmartDialog.dismiss(status: SmartStatus.loading);
+  }
+
+  Future loadFromLocal(NovelDownloadInfo local) async {
+    try {
+      isLocal = true;
+      var file = File(p.join(local.savePath, local.fileName));
+
+      var text = await file.readAsString();
+
+      //检查是否是插画
+      if (local.isImage) {
+        List<String> imgs =
+            local.imageFiles.map((e) => p.join(local.savePath, e)).toList();
+
+        isPicture.value = true;
+
+        pictures.value = imgs;
+
+        content.value = text;
+        maxPage.value = pictures.length;
+
+        SmartDialog.showToast("双击插画可放大、保存哦~");
+      } else {
+        isPicture.value = false;
+
+        text = HtmlUnescape().convert(text);
+        text = text
+            .replaceAll('\r\n', '\n')
+            .replaceAll("<br/>", "\n")
+            .replaceAll('<br />', "\n")
+            .replaceAll('\n\n\n', "\n")
+            .replaceAll('\n\n', "\n")
+            .replaceAll('\n', "\n　　")
+            .replaceAll(RegExp(r"　　\s+"), "　　");
+
+        content.value = text;
+      }
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(0);
+        progress.value = 0.0;
+      }
+      preloadContent();
+      //TODO 阅读记录跳转
+      //上传记录
+      uploadHistory();
+    } catch (e) {
+      pageError.value = true;
+      errorMsg.value = e.toString();
+    } finally {
+      pageLoadding.value = false;
+    }
   }
 
   /// 预加载下一话

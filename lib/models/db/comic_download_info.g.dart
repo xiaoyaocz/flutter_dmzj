@@ -32,14 +32,14 @@ class ComicDownloadInfoAdapter extends TypeAdapter<ComicDownloadInfo> {
       volumeName: fields[6] as String,
       urls: (fields[14] as List).cast<String>(),
       chapterName: fields[5] as String,
-      isVip: fields[15] as bool,
+      isVip: (fields[15] ?? false) as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, ComicDownloadInfo obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(16)
       ..writeByte(0)
       ..write(obj.taskId)
       ..writeByte(1)

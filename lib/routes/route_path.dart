@@ -74,7 +74,7 @@ class RoutePath {
   static const kComicDownloadDetail = "/download/comic/detail";
 
   /// 小说下载管理
-  static const kNovelownload = "/download/novel";
+  static const kNovelDownload = "/download/novel";
 
   /// 小说下载详情
   static const kNovelDownloadDetail = "/download/novel/chapter";

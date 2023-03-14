@@ -6,6 +6,7 @@ import 'package:flutter_dmzj/models/comic/detail_info.dart';
 import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:flutter_dmzj/services/novel_download_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -202,7 +203,7 @@ class AppNavigator {
     toContentPage(RoutePath.kNovelDownloadSelect, arg: id);
   }
 
-  /// 打开下载管理
+  /// 打开漫画下载管理
   /// * [type] 0=下载完成，1=下载中
   static void toComicDownloadManage(int type) {
     toContentPage(RoutePath.kComicDownload, arg: type);
@@ -212,6 +213,18 @@ class AppNavigator {
   /// * [info] 已下载的漫画信息
   static void toComicDownloadDetail(ComicDownloadedItem info) {
     toContentPage(RoutePath.kComicDownloadDetail, arg: info);
+  }
+
+  /// 打开小说下载管理
+  /// * [type] 0=下载完成，1=下载中
+  static void toNovelDownloadManage(int type) {
+    toContentPage(RoutePath.kNovelDownload, arg: type);
+  }
+
+  /// 打开已下载的小说
+  /// * [info] 已下载的漫画信息
+  static void toNovelDownloadDetail(NovelDownloadedItem info) {
+    toContentPage(RoutePath.kNovelDownloadDetail, arg: info);
   }
 
   static void showBottomSheet(

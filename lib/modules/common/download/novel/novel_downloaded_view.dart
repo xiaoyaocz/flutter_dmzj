@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
 
-import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:flutter_dmzj/services/novel_download_service.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/status/app_empty_widget.dart';
 import 'package:get/get.dart';
 
-class ComicDownloadedView extends StatelessWidget {
-  const ComicDownloadedView({Key? key}) : super(key: key);
+class NovelDownloadedView extends StatelessWidget {
+  const NovelDownloadedView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +19,10 @@ class ComicDownloadedView extends StatelessWidget {
           EasyRefresh(
             header: const MaterialHeader(),
             onRefresh: () async {
-              ComicDownloadService.instance.updateDownlaoded();
+              NovelDownloadService.instance.updateDownlaoded();
             },
             child: ListView.separated(
-              itemCount: ComicDownloadService.instance.downloaded.length,
+              itemCount: NovelDownloadService.instance.downloaded.length,
               separatorBuilder: (_, i) => Divider(
                 endIndent: 12,
                 indent: 12,
@@ -30,16 +30,16 @@ class ComicDownloadedView extends StatelessWidget {
                 height: 1,
               ),
               itemBuilder: (_, i) {
-                var item = ComicDownloadService.instance.downloaded[i];
+                var item = NovelDownloadService.instance.downloaded[i];
                 return buildItem(item);
               },
             ),
           ),
           Offstage(
-            offstage: ComicDownloadService.instance.downloaded.isNotEmpty,
+            offstage: NovelDownloadService.instance.downloaded.isNotEmpty,
             child: AppEmptyWidget(
               onRefresh: () {
-                ComicDownloadService.instance.updateDownlaoded();
+                NovelDownloadService.instance.updateDownlaoded();
               },
             ),
           ),
@@ -48,10 +48,10 @@ class ComicDownloadedView extends StatelessWidget {
     );
   }
 
-  Widget buildItem(ComicDownloadedItem item) {
+  Widget buildItem(NovelDownloadedItem item) {
     return InkWell(
       onTap: () {
-        AppNavigator.toComicDownloadDetail(item);
+        AppNavigator.toNovelDownloadDetail(item);
       },
       child: Container(
         padding: AppStyle.edgeInsetsA12,
@@ -59,7 +59,7 @@ class ComicDownloadedView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             NetImage(
-              item.comicCover,
+              item.novelCover,
               width: 60,
               borderRadius: 4,
             ),
@@ -69,7 +69,7 @@ class ComicDownloadedView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.comicName,
+                    item.novelName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

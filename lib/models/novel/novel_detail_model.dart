@@ -101,7 +101,11 @@ class NovelDetailVolume {
         chapters: item.chapters
             .map(
               (e) => NovelDetailChapter.fromV4(
-                  e, item.volumeId.toInt(), item.volumeName),
+                e,
+                item.volumeId.toInt(),
+                item.volumeName,
+                item.volumeOrder,
+              ),
             )
             .toList(),
       );
@@ -119,21 +123,24 @@ class NovelDetailChapter {
     required this.chapterOrder,
     required this.volumeId,
     required this.volumeName,
+    required this.volumeOrder,
   });
 
-  factory NovelDetailChapter.fromV4(
-          NovelChapterDetailProto item, int volumeId, String volumeName) =>
+  factory NovelDetailChapter.fromV4(NovelChapterDetailProto item, int volumeId,
+          String volumeName, int volumeOrder) =>
       NovelDetailChapter(
         chapterId: item.chapterId.toInt(),
         chapterName: item.chapterName,
         chapterOrder: item.chapterOrder,
         volumeId: volumeId,
         volumeName: volumeName,
+        volumeOrder: volumeOrder,
       );
 
   int chapterId;
   String chapterName;
   int chapterOrder;
   int volumeId;
+  int volumeOrder;
   String volumeName;
 }

@@ -8,6 +8,7 @@ import 'package:flutter_dmzj/modules/novel/reader/novel_horizontal_reader.dart';
 
 import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
 import 'package:flutter_dmzj/widgets/custom_header.dart';
+import 'package:flutter_dmzj/widgets/local_image.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
 import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
@@ -395,11 +396,16 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                         DialogUtils.showImageViewer(
                             i, controller.pictures.toList());
                       },
-                      child: NetImage(
-                        controller.pictures[i],
-                        fit: BoxFit.contain,
-                        progress: true,
-                      ),
+                      child: controller.isLocal
+                          ? LocalImage(
+                              controller.pictures[i],
+                              fit: BoxFit.contain,
+                            )
+                          : NetImage(
+                              controller.pictures[i],
+                              fit: BoxFit.contain,
+                              progress: true,
+                            ),
                     ),
                   );
                 })
@@ -414,11 +420,16 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                       DialogUtils.showImageViewer(
                           i, controller.pictures.toList());
                     },
-                    child: NetImage(
-                      controller.pictures[i],
-                      fit: BoxFit.fitWidth,
-                      progress: true,
-                    ),
+                    child: controller.isLocal
+                        ? LocalImage(
+                            controller.pictures[i],
+                            fit: BoxFit.fitWidth,
+                          )
+                        : NetImage(
+                            controller.pictures[i],
+                            fit: BoxFit.fitWidth,
+                            progress: true,
+                          ),
                   );
                 }),
       ),

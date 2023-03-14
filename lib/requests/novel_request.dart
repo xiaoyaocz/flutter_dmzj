@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/novel/category_filter_model.dart';
 import 'package:flutter_dmzj/models/novel/category_model.dart';
@@ -173,8 +174,16 @@ class NovelRequest {
   }
 
   /// 小说正文内容
-  Future<String> novelContent(
-      {required int volumeId, required int chapterId}) async {
+  /// - [volumeId] 卷ID
+  /// - [chapterId] 章节ID
+  /// - [cancel] 取消Token
+  /// - [cache] 是否缓存
+  Future<String> novelContent({
+    required int volumeId,
+    required int chapterId,
+    CancelToken? cancel,
+    bool cache = true,
+  }) async {
     var localContent = await LocalStorageService.instance
         .getNovelContent(volumeId: volumeId, chapterId: chapterId);
     if (localContent != null) {
@@ -184,12 +193,16 @@ class NovelRequest {
       Api.getNovelContentUrl(volumeId: volumeId, chapterId: chapterId),
       baseUrl: "",
       withDefaultParameter: false,
+      cancel: cancel,
     );
-    await LocalStorageService.instance.saveNovelContent(
-      volumeId: volumeId,
-      chapterId: chapterId,
-      content: result,
-    );
+    if (cache) {
+      await LocalStorageService.instance.saveNovelContent(
+        volumeId: volumeId,
+        chapterId: chapterId,
+        content: result,
+      );
+    }
+
     return result;
   }
 }

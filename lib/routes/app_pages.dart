@@ -11,6 +11,8 @@ import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_page.da
 import 'package:flutter_dmzj/modules/common/comment/comment_page.dart';
 import 'package:flutter_dmzj/modules/common/download/comic/comic_download_page.dart';
 import 'package:flutter_dmzj/modules/common/download/comic/comic_downloaded_detail_page.dart';
+import 'package:flutter_dmzj/modules/common/download/novel/novel_download_page.dart';
+import 'package:flutter_dmzj/modules/common/download/novel/novel_downloaded_detail_page.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
 import 'package:flutter_dmzj/modules/common/test_subroute_page.dart';
 import 'package:flutter_dmzj/modules/common/webview/webview_page.dart';
@@ -22,6 +24,7 @@ import 'package:flutter_dmzj/modules/novel/detail/novel_detail_page.dart';
 import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
 import 'package:flutter_dmzj/modules/novel/reader/novel_reader_page.dart';
 import 'package:flutter_dmzj/modules/novel/search/novel_search_page.dart';
+import 'package:flutter_dmzj/modules/novel/select_chapter/novel_select_chapter_page.dart';
 import 'package:flutter_dmzj/modules/user/history/user_history_page.dart';
 import 'package:flutter_dmzj/modules/user/local_history/local_history_page.dart';
 import 'package:flutter_dmzj/modules/user/settings/settings_page.dart';
@@ -29,6 +32,7 @@ import 'package:flutter_dmzj/modules/user/subscribe/user_subscribe_pgae.dart';
 import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:flutter_dmzj/services/novel_download_service.dart';
 import 'package:get/get.dart';
 
 class AppPages {
@@ -221,6 +225,27 @@ class AppPages {
           settings: settings,
           page: () => ComicDownloadedDetailPage(
             settings.arguments as ComicDownloadedItem,
+          ),
+        );
+      case RoutePath.kNovelDownloadSelect:
+        return GetPageRoute(
+          settings: settings,
+          page: () => NovelSelectChapterPage(
+            settings.arguments as int,
+          ),
+        );
+      case RoutePath.kNovelDownload:
+        return GetPageRoute(
+          settings: settings,
+          page: () => NovelDownloadPage(
+            settings.arguments as int,
+          ),
+        );
+      case RoutePath.kNovelDownloadDetail:
+        return GetPageRoute(
+          settings: settings,
+          page: () => NovelDownloadedDetailPage(
+            settings.arguments as NovelDownloadedItem,
           ),
         );
       default:

@@ -144,7 +144,9 @@ class NovelDetailControler extends BaseController {
   }
 
   /// 下载
-  void download() {}
+  void download() {
+    AppNavigator.toNovelDownloadSelect(novelId);
+  }
 
   /// 开始/继续阅读
   void read() {

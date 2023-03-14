@@ -63,7 +63,7 @@ class UserService extends GetxService {
     userAuthInfo = info;
     logined.value = true;
     if (logined.value) {
-      updateUserHistory();
+      syncRemoteHistory();
     }
   }
 
@@ -74,7 +74,7 @@ class UserService extends GetxService {
     logined.value = true;
     UserService.loginedStreamController.add(true);
     refreshProfile();
-    updateUserHistory();
+    syncRemoteHistory();
   }
 
   void logout() {
@@ -108,16 +108,28 @@ class UserService extends GetxService {
   }
 
   /// 更新一下用户的历史记录
-  void updateUserHistory() {
+  void syncRemoteHistory() {
     if (!logined.value) {
       return;
     }
-    request.comicHistory().then((value) => {}, onError: (e) {
+    syncRemoteComicHistory();
+    syncRemoteNovelHistory();
+  }
+
+  void syncRemoteComicHistory() async {
+    try {
+      await request.comicHistory();
+    } catch (e) {
       Log.logPrint(e);
-    });
-    request.novelHistory().then((value) => {}, onError: (e) {
+    }
+  }
+
+  void syncRemoteNovelHistory() async {
+    try {
+      await request.novelHistory();
+    } catch (e) {
       Log.logPrint(e);
-    });
+    }
   }
 
   /// 更新绑定状态

@@ -47,7 +47,7 @@ class UserHomePage extends GetView<UserHomeController> {
                         TextSpan(
                           text: UserService
                                   .instance.userProfile.value?.nickname ??
-                              "",
+                              "未知用户",
                           children: [
                             WidgetSpan(
                               alignment: PlaceholderAlignment.middle,
@@ -74,7 +74,7 @@ class UserHomePage extends GetView<UserHomeController> {
                             ? "会员有效期至${Utils.dateFormat.format(UserService.instance.userProfile.value?.userfeeinfo?.expiresTime ?? DateTime.now())}"
                             : (UserService
                                     .instance.userProfile.value?.description ??
-                                ""),
+                                "-"),
                         style: Get.textTheme.bodySmall,
                       ),
                       trailing: IconButton(
@@ -107,83 +107,131 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                   ),
                 ),
-                _buildCard(
-                  context,
-                  children: [
-                    ListTile(
-                      leading: const Icon(Remix.heart_line),
-                      title: const Text("我的订阅"),
-                      trailing: const Icon(
-                        Icons.chevron_right,
-                        color: Colors.grey,
+                Obx(
+                  () => _buildCard(
+                    context,
+                    children: [
+                      Visibility(
+                        visible: UserService.instance.logined.value,
+                        child: ListTile(
+                          leading: const Icon(Remix.heart_line),
+                          title: const Text("我的订阅"),
+                          trailing: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          ),
+                          onTap: controller.toUserSubscribe,
+                        ),
                       ),
-                      onTap: controller.toUserSubscribe,
-                    ),
-                    ListTile(
-                      leading: const Icon(Remix.history_line),
-                      title: const Text("浏览记录"),
-                      trailing: const Icon(
-                        Icons.chevron_right,
-                        color: Colors.grey,
+                      Visibility(
+                        visible: UserService.instance.logined.value,
+                        child: ListTile(
+                          leading: const Icon(Remix.history_line),
+                          title: const Text("浏览记录"),
+                          trailing: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          ),
+                          onTap: controller.toUserHistory,
+                        ),
                       ),
-                      onTap: controller.toUserHistory,
-                    ),
-                    ListTile(
-                      leading: const Icon(Remix.chat_smile_2_line),
-                      title: const Text("我的评论"),
-                      trailing: const Icon(
-                        Icons.chevron_right,
-                        color: Colors.grey,
+                      ListTile(
+                        leading: const Icon(Remix.file_history_line),
+                        title: const Text("本机记录"),
+                        trailing: const Icon(
+                          Icons.chevron_right,
+                          color: Colors.grey,
+                        ),
+                        onTap: controller.toLocalHistory,
                       ),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      leading: const Icon(Remix.download_line),
-                      title: const Text("漫画下载"),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Obx(
-                            () => Visibility(
-                              visible: ComicDownloadService
-                                  .instance.taskQueues.isNotEmpty,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: AppStyle.radius24,
-                                ),
-                                width: 20,
-                                height: 20,
-                                child: Center(
-                                  child: Text(
-                                    "${ComicDownloadService.instance.taskQueues.length}",
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white,
+                      Visibility(
+                        visible: UserService.instance.logined.value,
+                        child: ListTile(
+                          leading: const Icon(Remix.chat_smile_2_line),
+                          title: const Text("我的评论"),
+                          trailing: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Icon(Remix.download_line),
+                        title: const Text("漫画下载"),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Obx(
+                              () => Visibility(
+                                visible: ComicDownloadService
+                                    .instance.taskQueues.isNotEmpty,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: AppStyle.radius24,
+                                  ),
+                                  width: 20,
+                                  height: 20,
+                                  child: Center(
+                                    child: Text(
+                                      "${ComicDownloadService.instance.taskQueues.length}",
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
-                        ],
+                            const Icon(
+                              Icons.chevron_right,
+                              color: Colors.grey,
+                            ),
+                          ],
+                        ),
+                        onTap: controller.comicDownload,
                       ),
-                      onTap: controller.comicDownload,
-                    ),
-                    ListTile(
-                      leading: const Icon(Remix.file_history_line),
-                      title: const Text("本机记录"),
-                      trailing: const Icon(
-                        Icons.chevron_right,
-                        color: Colors.grey,
+                      ListTile(
+                        leading: const Icon(Remix.download_line),
+                        title: const Text("小说下载"),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Obx(
+                              () => Visibility(
+                                visible: ComicDownloadService
+                                    .instance.taskQueues.isNotEmpty,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: AppStyle.radius24,
+                                  ),
+                                  width: 20,
+                                  height: 20,
+                                  child: Center(
+                                    child: Text(
+                                      "${ComicDownloadService.instance.taskQueues.length}",
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Icon(
+                              Icons.chevron_right,
+                              color: Colors.grey,
+                            ),
+                          ],
+                        ),
+                        onTap: controller.novelDownload,
                       ),
-                      onTap: controller.toLocalHistory,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 _buildCard(
                   context,
