@@ -20,6 +20,7 @@ class ComicDownloadInfo {
     required this.volumeName,
     required this.urls,
     required this.chapterName,
+    required this.isVip,
   });
 
   ///TaskID 任务，由漫画ID_章节ID组成
@@ -80,4 +81,9 @@ class ComicDownloadInfo {
   /// 下载图片链接
   @HiveField(14)
   List<String> urls;
+
+  /// 是否VIP章节
+  /// * 暂时没啥用，总之先加上
+  @HiveField(15)
+  bool isVip;
 }

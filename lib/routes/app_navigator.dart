@@ -94,6 +94,7 @@ class AppNavigator {
 
   /// 打开WebView
   static void toWebView(String url) {
+    url = url.trimRight().trimLeft();
     if (Platform.isAndroid || Platform.isIOS) {
       toContentPage(RoutePath.kWebView, arg: url);
     } else {

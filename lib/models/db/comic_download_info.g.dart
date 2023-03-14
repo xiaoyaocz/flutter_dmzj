@@ -32,6 +32,7 @@ class ComicDownloadInfoAdapter extends TypeAdapter<ComicDownloadInfo> {
       volumeName: fields[6] as String,
       urls: (fields[14] as List).cast<String>(),
       chapterName: fields[5] as String,
+      isVip: fields[15] as bool,
     );
   }
 
@@ -68,7 +69,9 @@ class ComicDownloadInfoAdapter extends TypeAdapter<ComicDownloadInfo> {
       ..writeByte(13)
       ..write(obj.addTime)
       ..writeByte(14)
-      ..write(obj.urls);
+      ..write(obj.urls)
+      ..writeByte(15)
+      ..write(obj.isVip);
   }
 
   @override

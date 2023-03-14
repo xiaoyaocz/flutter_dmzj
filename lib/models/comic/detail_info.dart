@@ -57,7 +57,7 @@ class ComicDetailInfo {
         subscribeNum: proto.subscribeNum.toInt(),
         firstLetter: proto.firstLetter,
         comicPy: proto.comicPy,
-        isVip: proto.isFee == 1,
+        isVip: proto.isFee != 0,
         types: proto.types
             .map(
               (e) => ComicDetailTag(
@@ -95,7 +95,7 @@ class ComicDetailInfo {
                           updateTime: x.updateTime.toInt(),
                           fileSize: x.fileSize,
                           chapterOrder: x.chapterOrder,
-                          isVip: x.isFee == 1,
+                          isVip: x.isFee != 0,
                         ),
                       )
                       .toList(),

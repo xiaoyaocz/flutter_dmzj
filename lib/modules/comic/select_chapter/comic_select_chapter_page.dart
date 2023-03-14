@@ -204,29 +204,44 @@ class ComicSelectChapterPage extends StatelessWidget {
                   return Tooltip(
                     message: chapter.chapterTitle,
                     child: Obx(
-                      () => OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor:
-                              controller.chapterIds.contains(chapter.chapterId)
+                      () => Stack(
+                        children: [
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: controller.chapterIds
+                                      .contains(chapter.chapterId)
                                   ? Colors.blue
                                   : Get.textTheme.bodyMedium!.color,
-                          side:
-                              controller.chapterIds.contains(chapter.chapterId)
+                              side: controller.chapterIds
+                                      .contains(chapter.chapterId)
                                   ? const BorderSide(color: Colors.blue)
                                   : null,
-                          textStyle: const TextStyle(fontSize: 14),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          minimumSize: const Size.fromHeight(40),
-                        ),
-                        onPressed: ComicDownloadService.instance.downloadIds
-                                .contains("${comicId}_${chapter.chapterId}")
-                            ? null
-                            : () => controller.selectItem(chapter),
-                        child: Text(
-                          item.chapters[i].chapterTitle,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                              textStyle: const TextStyle(fontSize: 14),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              minimumSize: const Size.fromHeight(40),
+                            ),
+                            onPressed: ComicDownloadService.instance.downloadIds
+                                    .contains("${comicId}_${chapter.chapterId}")
+                                ? null
+                                : () => controller.selectItem(chapter),
+                            child: Text(
+                              item.chapters[i].chapterTitle,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Positioned(
+                            left: -2,
+                            top: 0,
+                            child: Offstage(
+                              offstage: !item.chapters[i].isVip,
+                              child: Image.asset(
+                                "assets/images/vip_chapter.png",
+                                height: 16,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );

@@ -90,7 +90,7 @@ class UserProfileModel {
       bind: bind,
       userfeeinfo: json['userFeeInfo'] == null
           ? null
-          : Userfeeinfo.fromJson(
+          : UserfeeInfo.fromJson(
               asT<Map<String, dynamic>>(json['userFeeInfo'])!),
       userLevel: asT<String?>(json['user_level']),
       cookieVal: asT<String?>(json['cookie_val']),
@@ -121,7 +121,7 @@ class UserProfileModel {
   int? amount;
   int? isSetPwd;
   List<UserPorfileBindModel>? bind;
-  Userfeeinfo? userfeeinfo;
+  UserfeeInfo? userfeeinfo;
   String? userLevel;
   String? cookieVal;
   int? isBbsAdmin;
@@ -268,19 +268,23 @@ class UserPorfileBindModel {
       };
 }
 
-class Userfeeinfo {
-  Userfeeinfo({
+class UserfeeInfo {
+  UserfeeInfo({
     this.mCate,
     this.mPeriod,
   });
 
-  factory Userfeeinfo.fromJson(Map<String, dynamic> json) => Userfeeinfo(
+  factory UserfeeInfo.fromJson(Map<String, dynamic> json) => UserfeeInfo(
         mCate: asT<int?>(json['m_cate']),
         mPeriod: asT<int?>(json['m_period']),
       );
 
   int? mCate;
   int? mPeriod;
+
+  bool get isVip => (mCate ?? 0) > 0;
+  DateTime get expiresTime =>
+      DateTime.fromMillisecondsSinceEpoch((mPeriod ?? 0) * 1000);
 
   @override
   String toString() {

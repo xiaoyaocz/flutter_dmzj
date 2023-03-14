@@ -178,7 +178,7 @@ class ComicReaderController extends BaseController {
       var chapterId = chapters[chapterIndex.value].chapterId;
       if (chapters[chapterIndex.value].isVip) {
         //禁止观看VIP章节
-        throw AppError("请下载动漫之家官方APP观看VIP章节");
+        throw AppError("请使用动漫之家官方APP观看VIP章节");
       }
       loadViewPoints();
 

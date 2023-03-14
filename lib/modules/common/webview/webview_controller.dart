@@ -1,6 +1,7 @@
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
+import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:get/get.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
@@ -16,7 +17,7 @@ class WebViewPageController extends BaseController {
     super.onInit();
   }
 
-  void initWebView() {
+  void initWebView() async {
     webViewController.setJavaScriptMode(JavaScriptMode.unrestricted);
 
     webViewController.setBackgroundColor(Get.isDarkMode
@@ -42,7 +43,9 @@ class WebViewPageController extends BaseController {
         },
       ),
     );
-    webViewController.loadRequest(Uri.parse(url));
+    webViewController.loadRequest(Uri.parse(url), headers: {
+      "Cookie": UserService.instance.userProfile.value?.cookieVal ?? "",
+    });
 
     /// TODO 无法加载Mixed Content
     /// 19年的问题了，Flutter还没解决...

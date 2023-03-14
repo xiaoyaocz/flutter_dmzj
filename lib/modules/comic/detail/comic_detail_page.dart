@@ -423,16 +423,14 @@ class ComicDetailPage extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  Obx(
-                                    () => Positioned(
-                                      left: -2,
-                                      top: 0,
-                                      child: Offstage(
-                                        offstage: !item.chapters[i].isVip,
-                                        child: Image.asset(
-                                          "assets/images/vip_chapter.png",
-                                          height: 16,
-                                        ),
+                                  Positioned(
+                                    left: -2,
+                                    top: 0,
+                                    child: Offstage(
+                                      offstage: !item.chapters[i].isVip,
+                                      child: Image.asset(
+                                        "assets/images/vip_chapter.png",
+                                        height: 16,
                                       ),
                                     ),
                                   ),

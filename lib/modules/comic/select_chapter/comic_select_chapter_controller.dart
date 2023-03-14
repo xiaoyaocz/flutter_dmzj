@@ -71,6 +71,11 @@ class ComicSelectChapterController extends BaseController {
   }
 
   void selectItem(ComicDetailChapterItem item) {
+    //禁止下载VIP章节
+    if (item.isVip) {
+      SmartDialog.showToast("请使用动漫之家官方APP下载VIP章节");
+      return;
+    }
     if (chapterIds.contains(item.chapterId)) {
       chapterIds.remove(item.chapterId);
     } else {
@@ -81,6 +86,9 @@ class ComicSelectChapterController extends BaseController {
   void selectAll() {
     for (var volume in volumes) {
       for (var chapter in volume.chapters) {
+        if (chapter.isVip) {
+          continue;
+        }
         var id = "${comicId}_${chapter.chapterId}";
         if (!ComicDownloadService.instance.downloadIds.contains(id)) {
           chapterIds.add(chapter.chapterId);
@@ -126,6 +134,7 @@ class ComicSelectChapterController extends BaseController {
         comicTitle: comicTitle,
         comicCover: comicCover,
         chapterName: chapter.chapterTitle,
+        isVip: chapter.isVip,
       );
     }
     chapterIds.clear();

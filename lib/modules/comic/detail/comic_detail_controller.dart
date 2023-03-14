@@ -222,7 +222,7 @@ class ComicDetailControler extends BaseController {
   void readChapter(ComicDetailVolume volume, ComicDetailChapterItem item) {
     //禁止观看VIP章节
     if (item.isVip) {
-      SmartDialog.showToast("请下载动漫之家官方APP观看VIP章节");
+      SmartDialog.showToast("请使用动漫之家官方APP观看VIP章节");
       return;
     }
     var chapters = List<ComicDetailChapterItem>.from(volume.chapters);

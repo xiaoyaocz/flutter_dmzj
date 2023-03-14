@@ -315,6 +315,7 @@ class ComicDownloadService extends GetxService {
     required String volumeName,
     required String comicTitle,
     required String comicCover,
+    required bool isVip,
   }) async {
     var taskId = "${comicId}_$chapterId";
     if (box.containsKey(taskId)) {
@@ -336,6 +337,7 @@ class ComicDownloadService extends GetxService {
       volumeName: volumeName,
       chapterName: chapterName,
       urls: [],
+      isVip: isVip,
     );
     await box.put(
       taskId,

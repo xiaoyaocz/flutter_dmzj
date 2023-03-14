@@ -14,6 +14,7 @@ import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class UserService extends GetxService {
   static StreamController loginedStreamController =
@@ -99,6 +100,7 @@ class UserService extends GetxService {
         return;
       }
       userProfile.value = await request.userProfile();
+      updateCookie();
       updateBindStatus();
     } catch (e) {
       Log.logPrint(e);
@@ -259,5 +261,48 @@ class UserService extends GetxService {
     } catch (e) {
       Log.logPrint(e);
     }
+  }
+
+  void updateCookie() async {
+    final WebViewCookieManager cookieManager = WebViewCookieManager();
+    for (var item in getCookies()) {
+      await cookieManager.setCookie(item);
+    }
+  }
+
+  List<WebViewCookie> getCookies() {
+    var cookie = userProfile.value?.cookieVal ?? "";
+    if (cookie.isEmpty) {
+      return [];
+    }
+    List<WebViewCookie> cookies = [];
+
+    cookie.split(";").forEach((element) {
+      List<String> keyValue = element.split("=");
+      if (keyValue.length == 2) {
+        cookies.add(
+          WebViewCookie(
+            domain: ".dmzj.com",
+            value: keyValue[1],
+            name: keyValue[0],
+          ),
+        );
+        cookies.add(
+          WebViewCookie(
+            domain: ".idmzj.com",
+            value: keyValue[1],
+            name: keyValue[0],
+          ),
+        );
+        cookies.add(
+          WebViewCookie(
+            domain: ".muwai.com",
+            value: keyValue[1],
+            name: keyValue[0],
+          ),
+        );
+      }
+    });
+    return cookies;
   }
 }

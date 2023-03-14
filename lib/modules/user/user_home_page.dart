@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
@@ -42,13 +43,39 @@ class UserHomePage extends GetView<UserHomeController> {
                         url: UserService.instance.userProfile.value?.cover,
                         size: 48,
                       ),
-                      title: Text(
-                        UserService.instance.userProfile.value?.nickname ?? "",
-                        style: const TextStyle(height: 1.0),
+                      title: Text.rich(
+                        TextSpan(
+                          text: UserService
+                                  .instance.userProfile.value?.nickname ??
+                              "",
+                          children: [
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: Visibility(
+                                visible: (UserService.instance.userProfile.value
+                                        ?.userfeeinfo?.isVip ??
+                                    false),
+                                child: Padding(
+                                  padding: AppStyle.edgeInsetsL4,
+                                  child: Image.asset(
+                                    "assets/images/vip.png",
+                                    height: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       subtitle: Text(
-                        UserService.instance.userProfile.value?.description ??
-                            "",
+                        (UserService.instance.userProfile.value?.userfeeinfo
+                                    ?.isVip ??
+                                false)
+                            ? "会员有效期至${Utils.dateFormat.format(UserService.instance.userProfile.value?.userfeeinfo?.expiresTime ?? DateTime.now())}"
+                            : (UserService
+                                    .instance.userProfile.value?.description ??
+                                ""),
+                        style: Get.textTheme.bodySmall,
                       ),
                       trailing: IconButton(
                         onPressed: controller.logout,
