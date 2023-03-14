@@ -22,7 +22,9 @@
 - [x] MacOS `Beta`
 - [x] Linux `Beta`
 
-请到[Releases](https://github.com/xiaoyaocz/flutter_dmzj/releases)下载最新版本，iOS请下载ipa文件自行签名安装
+请到[Releases](https://github.com/xiaoyaocz/flutter_dmzj/releases)下载最新版本，iOS请下载ipa文件自行签名安装。
+
+反馈问题、相关讨论请到[Discussions](https://github.com/xiaoyaocz/flutter_dmzj/discussions)，代码改进请直接提交PR。
 
 ## 声明
 
