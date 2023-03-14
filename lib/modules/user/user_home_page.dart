@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
@@ -47,7 +46,7 @@ class UserHomePage extends GetView<UserHomeController> {
                         TextSpan(
                           text: UserService
                                   .instance.userProfile.value?.nickname ??
-                              "未知用户",
+                              UserService.instance.nickname,
                           children: [
                             WidgetSpan(
                               alignment: PlaceholderAlignment.middle,
@@ -68,13 +67,9 @@ class UserHomePage extends GetView<UserHomeController> {
                         ),
                       ),
                       subtitle: Text(
-                        (UserService.instance.userProfile.value?.userfeeinfo
-                                    ?.isVip ??
-                                false)
-                            ? "会员有效期至${Utils.dateFormat.format(UserService.instance.userProfile.value?.userfeeinfo?.expiresTime ?? DateTime.now())}"
-                            : (UserService
-                                    .instance.userProfile.value?.description ??
-                                "-"),
+                        UserService.instance.isVip
+                            ? UserService.instance.vipInfo
+                            : UserService.instance.sign,
                         style: Get.textTheme.bodySmall,
                       ),
                       trailing: IconButton(
@@ -153,7 +148,7 @@ class UserHomePage extends GetView<UserHomeController> {
                             Icons.chevron_right,
                             color: Colors.grey,
                           ),
-                          onTap: () {},
+                          onTap: controller.userComment,
                         ),
                       ),
                       ListTile(

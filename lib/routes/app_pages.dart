@@ -8,6 +8,7 @@ import 'package:flutter_dmzj/modules/comic/reader/comic_reader_page.dart';
 import 'package:flutter_dmzj/modules/comic/search/comic_search_page.dart';
 import 'package:flutter_dmzj/modules/comic/select_chapter/comic_select_chapter_page.dart';
 import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_page.dart';
+import 'package:flutter_dmzj/modules/common/comment/add_comment_page.dart';
 import 'package:flutter_dmzj/modules/common/comment/comment_page.dart';
 import 'package:flutter_dmzj/modules/common/download/comic/comic_download_page.dart';
 import 'package:flutter_dmzj/modules/common/download/comic/comic_downloaded_detail_page.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
 import 'package:flutter_dmzj/modules/novel/reader/novel_reader_page.dart';
 import 'package:flutter_dmzj/modules/novel/search/novel_search_page.dart';
 import 'package:flutter_dmzj/modules/novel/select_chapter/novel_select_chapter_page.dart';
+import 'package:flutter_dmzj/modules/user/comment/user_comment_page.dart';
 import 'package:flutter_dmzj/modules/user/history/user_history_page.dart';
 import 'package:flutter_dmzj/modules/user/local_history/local_history_page.dart';
 import 'package:flutter_dmzj/modules/user/settings/settings_page.dart';
@@ -113,6 +115,16 @@ class AppPages {
           page: () => CommentPage(
             objId: parameter["objId"],
             type: parameter["type"],
+          ),
+        );
+      case RoutePath.kCommentAdd:
+        var parameter = settings.arguments as Map;
+        return GetPageRoute(
+          settings: settings,
+          page: () => AddCommentPage(
+            objId: parameter["objId"],
+            type: parameter["type"],
+            replyItem: parameter["replyItem"],
           ),
         );
       case RoutePath.kWebView:
@@ -246,6 +258,13 @@ class AppPages {
           settings: settings,
           page: () => NovelDownloadedDetailPage(
             settings.arguments as NovelDownloadedItem,
+          ),
+        );
+      case RoutePath.kUserComment:
+        return GetPageRoute(
+          settings: settings,
+          page: () => UserCommentPage(
+            settings.arguments as int,
           ),
         );
       default:

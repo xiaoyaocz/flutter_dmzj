@@ -1,13 +1,11 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 
 import 'package:flutter_dmzj/modules/novel/select_chapter/novel_select_chapter_controller.dart';
 import 'package:flutter_dmzj/services/novel_download_service.dart';
 import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
 import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 

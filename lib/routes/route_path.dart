@@ -78,4 +78,10 @@ class RoutePath {
 
   /// 小说下载详情
   static const kNovelDownloadDetail = "/download/novel/chapter";
+
+  /// 添加/回复评论
+  static const kCommentAdd = "/comment/add";
+
+  /// 用户的评论
+  static const kUserComment = "/user/comment";
 }

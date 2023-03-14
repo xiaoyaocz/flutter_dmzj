@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/event_bus.dart';
 import 'package:flutter_dmzj/app/log.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/db/comic_history.dart';
 import 'package:flutter_dmzj/models/db/novel_history.dart';
 import 'package:flutter_dmzj/models/user/login_result_model.dart';
@@ -37,6 +38,15 @@ class UserService extends GetxService {
   String get dmzjToken => userAuthInfo?.dmzjToken ?? '';
   String get userId => userAuthInfo?.uid ?? '';
   String get nickname => userAuthInfo?.nickname ?? '';
+
+  bool get isVip => (userProfile.value?.userfeeinfo?.isVip ?? false);
+
+  String get sign => (userProfile.value?.description ?? "").isEmpty
+      ? "无个性签名"
+      : userProfile.value?.description ?? "";
+
+  String get vipInfo =>
+      "会员有效期至${Utils.dateFormat.format(userProfile.value?.userfeeinfo?.expiresTime ?? DateTime.now())}";
 
   /// 是否已经绑定手机号
   var bindTel = true.obs;

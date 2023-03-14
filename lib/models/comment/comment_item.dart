@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 /// 动漫之家评论接口太TM混乱了
 /// 使用此类统一Model
 
@@ -14,6 +16,8 @@ class CommentItem {
     required this.replyAmount,
     required this.userId,
     required this.gender,
+    required this.type,
+    required this.originId,
     this.isEmpty = false,
   });
 
@@ -25,11 +29,14 @@ class CommentItem {
       avatarUrl: "",
       createTime: 0,
       images: [],
-      likeAmount: 0,
+      likeAmount: 0.obs,
       nickname: "-",
       replyAmount: 0,
       userId: 0,
       gender: 0,
+      type: 0,
+      originId: 0,
+      isEmpty: true,
     );
   }
 
@@ -37,7 +44,7 @@ class CommentItem {
   int objId;
   String content;
   int createTime;
-  int likeAmount;
+  Rx<int> likeAmount;
   int replyAmount;
   String nickname;
   String avatarUrl;
@@ -46,4 +53,6 @@ class CommentItem {
   List<CommentItem> parents = [];
   bool isEmpty;
   int gender;
+  int type;
+  int originId;
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/comic/detail_info.dart';
+import 'package:flutter_dmzj/models/comment/comment_item.dart';
 import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/routes/route_path.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
@@ -225,6 +226,32 @@ class AppNavigator {
   /// * [info] 已下载的漫画信息
   static void toNovelDownloadDetail(NovelDownloadedItem info) {
     toContentPage(RoutePath.kNovelDownloadDetail, arg: info);
+  }
+
+  /// 打开添加/回复评论
+  static void toAddComment({
+    required int objId,
+    required int type,
+    CommentItem? replyItem,
+  }) {
+    toContentPage(RoutePath.kCommentAdd, arg: {
+      "objId": objId,
+      "type": type,
+      "replyItem": replyItem,
+    });
+  }
+
+  /// 打开用户的评论
+  /// * [userId] 用户ID
+  static void toUserComment(int userId) {
+    toContentPage(RoutePath.kUserComment, arg: userId);
+  }
+
+  /// 打开用户中心
+  /// * [userId] 用户ID
+  static void toUserCenter(int userId) {
+    //TODO 跳转至用户中心
+    toUserComment(userId);
   }
 
   static void showBottomSheet(

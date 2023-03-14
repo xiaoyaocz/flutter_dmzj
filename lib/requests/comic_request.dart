@@ -411,6 +411,7 @@ class ComicRequest {
         "page": page,
         "type": 0,
         "third_type": chapterId,
+        "content": content,
       },
     );
     return true;

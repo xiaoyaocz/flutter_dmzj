@@ -101,5 +101,7 @@ class UserHomeController extends GetxController {
     AppNavigator.toNovelDownloadManage(0);
   }
 
-  void test() async {}
+  void userComment() {
+    AppNavigator.toUserComment(int.tryParse(UserService.instance.userId) ?? 0);
+  }
 }

@@ -30,7 +30,7 @@ class ComicRecommendModel {
       categoryId: asT<int>(json['category_id'])!,
       title: asT<String>(json['title'])!,
       sort: asT<int>(json['sort'])!,
-      data: data!,
+      data: data??[],
     );
   }
 
