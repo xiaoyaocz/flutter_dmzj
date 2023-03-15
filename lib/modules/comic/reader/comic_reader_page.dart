@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/comic/reader/comic_reader_controller.dart';
@@ -33,7 +34,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                   onTap: () {
                     controller.setShowControls();
                   },
-                  child: controller.direction.value == 1
+                  child: controller.direction.value == ReaderDirection.kUpToDown
                       ? buildVertical()
                       : buildHorizontal(),
                 ),
@@ -47,7 +48,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                     child: GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
-                        controller.direction.value == 2
+                        controller.leftHandMode
                             ? controller.nextPage()
                             : controller.forwardPage();
                       },
@@ -67,7 +68,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                     child: GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
-                        controller.direction.value == 2
+                        controller.leftHandMode
                             ? controller.forwardPage()
                             : controller.nextPage();
                       },
@@ -293,7 +294,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         onPageChanged: (e) {
           controller.currentIndex.value = e;
         },
-        reverse: controller.direction.value == 2,
+        reverse: controller.direction.value == ReaderDirection.kRightToLeft,
         physics: controller.lockSwipe.value
             ? const NeverScrollableScrollPhysics()
             : null,

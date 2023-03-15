@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/services/app_settings_service.dart';
@@ -80,6 +81,9 @@ class ComicReaderController extends BaseController {
   /// 阅读方向
   var direction = 0.obs;
 
+  /// 左手模式
+  var leftHandMode = false;
+
   /// 观点、吐槽
   RxList<ComicViewPointModel> viewPoints = RxList<ComicViewPointModel>();
 
@@ -98,6 +102,7 @@ class ComicReaderController extends BaseController {
     initConnectivity();
     initBattery();
     direction.value = settings.comicReaderDirection.value;
+    leftHandMode = settings.comicReaderLeftHandMode.value;
     if (settings.comicReaderFullScreen.value) {
       setFull();
     }
@@ -355,7 +360,7 @@ class ComicReaderController extends BaseController {
   /// 跳转页数
   void jumpToPage(int page, {bool anime = false}) {
     //竖向
-    if (direction.value == 1) {
+    if (direction.value == ReaderDirection.kUpToDown) {
       itemScrollController.jumpTo(index: page);
     } else {
       anime
@@ -517,32 +522,43 @@ class ComicReaderController extends BaseController {
                           children: [
                             buildSelectedButton(
                               onTap: () {
-                                setDirection(0);
+                                setDirection(ReaderDirection.kLeftToRight);
                               },
-                              selected:
-                                  settings.comicReaderDirection.value == 0,
+                              selected: settings.comicReaderDirection.value ==
+                                  ReaderDirection.kLeftToRight,
                               child: const Icon(Remix.arrow_right_line),
                             ),
                             AppStyle.hGap8,
                             buildSelectedButton(
                               onTap: () {
-                                setDirection(2);
+                                setDirection(ReaderDirection.kRightToLeft);
                               },
-                              selected:
-                                  settings.comicReaderDirection.value == 2,
+                              selected: settings.comicReaderDirection.value ==
+                                  ReaderDirection.kRightToLeft,
                               child: const Icon(Remix.arrow_left_line),
                             ),
                             AppStyle.hGap8,
                             buildSelectedButton(
                               onTap: () {
-                                setDirection(1);
+                                setDirection(ReaderDirection.kUpToDown);
                               },
-                              selected:
-                                  settings.comicReaderDirection.value == 1,
+                              selected: settings.comicReaderDirection.value ==
+                                  ReaderDirection.kUpToDown,
                               child: const Icon(Remix.arrow_down_line),
                             )
                           ],
                         ),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.comicReaderLeftHandMode.value,
+                        onChanged: (e) {
+                          leftHandMode = e;
+                          settings.setComicReaderLeftHandMode(e);
+                        },
+                        title: const Text("左手模式"),
                       ),
                     ),
                     AppStyle.vGap12,

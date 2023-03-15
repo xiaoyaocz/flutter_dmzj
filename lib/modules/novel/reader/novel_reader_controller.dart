@@ -6,6 +6,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/models/db/download_status.dart';
 import 'package:flutter_dmzj/models/db/novel_download_info.dart';
@@ -95,11 +96,16 @@ class NovelReaderController extends BaseController {
   /// 阅读方向
   var direction = 0.obs;
 
+  /// 左手模式
+  var leftHandMode = false;
+
   @override
   void onInit() {
     initConnectivity();
     initBattery();
     direction.value = settings.novelReaderDirection.value;
+    leftHandMode = settings.novelReaderLeftHandMode.value;
+
     scrollController.addListener(listenVertical);
     setFull();
 
@@ -345,7 +351,7 @@ class NovelReaderController extends BaseController {
 
   /// 下一页
   void nextPage() {
-    if (direction.value == 1) {
+    if (direction.value == ReaderDirection.kUpToDown) {
       return;
     }
     var value = currentIndex.value;
@@ -359,7 +365,7 @@ class NovelReaderController extends BaseController {
 
   /// 上一页
   void forwardPage() {
-    if (direction.value == 1) {
+    if (direction.value == ReaderDirection.kUpToDown) {
       return;
     }
     var value = currentIndex.value;
@@ -374,7 +380,7 @@ class NovelReaderController extends BaseController {
   /// 跳转页数
   void jumpToPage(int page, {bool anime = false}) {
     //竖向
-    if (direction.value == 1) {
+    if (direction.value == ReaderDirection.kUpToDown) {
       final viewportHeight = scrollController.position.viewportDimension;
       scrollController.jumpTo(viewportHeight * page);
     } else {
@@ -426,32 +432,43 @@ class NovelReaderController extends BaseController {
                           children: [
                             buildSelectedButton(
                               onTap: () {
-                                setDirection(0);
+                                setDirection(ReaderDirection.kLeftToRight);
                               },
-                              selected:
-                                  settings.novelReaderDirection.value == 0,
+                              selected: settings.novelReaderDirection.value ==
+                                  ReaderDirection.kLeftToRight,
                               child: const Icon(Remix.arrow_right_line),
                             ),
                             AppStyle.hGap8,
                             buildSelectedButton(
                               onTap: () {
-                                setDirection(2);
+                                setDirection(ReaderDirection.kRightToLeft);
                               },
-                              selected:
-                                  settings.novelReaderDirection.value == 2,
+                              selected: settings.novelReaderDirection.value ==
+                                  ReaderDirection.kRightToLeft,
                               child: const Icon(Remix.arrow_left_line),
                             ),
                             AppStyle.hGap8,
                             buildSelectedButton(
                               onTap: () {
-                                setDirection(1);
+                                setDirection(ReaderDirection.kUpToDown);
                               },
-                              selected:
-                                  settings.novelReaderDirection.value == 1,
+                              selected: settings.novelReaderDirection.value ==
+                                  ReaderDirection.kUpToDown,
                               child: const Icon(Remix.arrow_down_line),
                             )
                           ],
                         ),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.novelReaderLeftHandMode.value,
+                        onChanged: (e) {
+                          leftHandMode = e;
+                          settings.setNovelReaderLeftHandMode(e);
+                        },
+                        title: const Text("左手模式"),
                       ),
                     ),
                     AppStyle.vGap12,

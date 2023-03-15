@@ -14,3 +14,14 @@ class AppConstant {
   /// 类型ID-轻小说
   static const int kTypeNovel = 1;
 }
+
+class ReaderDirection {
+  /// 左右 0
+  static const int kLeftToRight = 0;
+
+  /// 上下 1
+  static const int kUpToDown = 1;
+
+  /// 右左 2
+  static const int kRightToLeft = 2;
+}
