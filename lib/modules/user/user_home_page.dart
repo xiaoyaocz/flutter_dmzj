@@ -6,6 +6,7 @@ import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:flutter_dmzj/services/novel_download_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_dmzj/widgets/user_photo.dart';
 import 'package:get/get.dart';
@@ -196,7 +197,7 @@ class UserHomePage extends GetView<UserHomeController> {
                           children: [
                             Obx(
                               () => Visibility(
-                                visible: ComicDownloadService
+                                visible: NovelDownloadService
                                     .instance.taskQueues.isNotEmpty,
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -207,7 +208,7 @@ class UserHomePage extends GetView<UserHomeController> {
                                   height: 20,
                                   child: Center(
                                     child: Text(
-                                      "${ComicDownloadService.instance.taskQueues.length}",
+                                      "${NovelDownloadService.instance.taskQueues.length}",
                                       style: const TextStyle(
                                         fontSize: 10,
                                         color: Colors.white,
