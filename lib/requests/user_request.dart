@@ -175,6 +175,28 @@ class UserRequest {
     return true;
   }
 
+  /// 更新订阅的阅读状态
+  /// - [type] 类型，对应AppConstant
+  Future<bool> subscribeRead({required int id, required int type}) async {
+    var typeStr = "mh";
+    if (type == AppConstant.kTypeComic) {
+      typeStr = "mh";
+    } else if (type == AppConstant.kTypeNovel) {
+      typeStr = "xs";
+    }
+
+    await HttpClient.instance.getJson(
+      '/subscribe/read',
+      queryParameters: {
+        "obj_id": id,
+        "type": typeStr,
+      },
+      withDefaultParameter: true,
+      needLogin: true,
+    );
+    return true;
+  }
+
   /// 取消订阅
   /// - [type] 类型，对应AppConstant
   Future<bool> removeSubscribe(

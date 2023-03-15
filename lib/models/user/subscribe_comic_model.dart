@@ -19,6 +19,7 @@ class UserSubscribeComicModel {
     required this.subReaded,
     required this.id,
     required this.status,
+    required this.hasNew,
   });
 
   factory UserSubscribeComicModel.fromJson(Map<String, dynamic> json) =>
@@ -31,6 +32,7 @@ class UserSubscribeComicModel {
         subReaded: asT<int>(json['sub_readed'])!,
         id: asT<int>(json['id'])!,
         status: asT<String>(json['status'])!,
+        hasNew: (asT<int>(json['sub_readed']) == 0).obs,
       );
 
   String name;
@@ -41,6 +43,9 @@ class UserSubscribeComicModel {
   int subReaded;
   int id;
   String status;
+
+  //是否有新的更新
+  Rx<bool> hasNew = false.obs;
 
   //是否被选中
   Rx<bool> isChecked = false.obs;

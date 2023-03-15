@@ -51,6 +51,7 @@ class NovelDetailControler extends BaseController {
     getHistory();
     loadDetail();
     loadSubscribeStatus();
+    updateSubscribeRead();
     super.onInit();
   }
 
@@ -58,6 +59,15 @@ class NovelDetailControler extends BaseController {
     getHistory();
     loadDetail();
     loadSubscribeStatus();
+  }
+
+  /// 更新订阅的阅读状态
+  void updateSubscribeRead() {
+    try {
+      userRequest.subscribeRead(id: novelId, type: AppConstant.kTypeNovel);
+    } catch (e) {
+      Log.logPrint(e);
+    }
   }
 
   @override

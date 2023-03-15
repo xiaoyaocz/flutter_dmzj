@@ -102,6 +102,7 @@ class NovelSubscribeView extends StatelessWidget {
           item.isChecked.value = !item.isChecked.value;
           return;
         }
+        item.hasNew.value = false;
         AppNavigator.toNovelDetail(item.id);
       },
       onLongPress: () {
@@ -128,8 +129,8 @@ class NovelSubscribeView extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    right: 0,
-                    top: 0,
+                    left: 0,
+                    bottom: 0,
                     child: Container(
                       decoration: BoxDecoration(
                         color:
@@ -146,6 +147,33 @@ class NovelSubscribeView extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Obx(
+                      () => Visibility(
+                        visible: item.hasNew.value,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.deepOrange,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(4),
+                              topRight: Radius.circular(4),
+                            ),
+                          ),
+                          padding:
+                              AppStyle.edgeInsetsH8.copyWith(top: 2, bottom: 2),
+                          child: const Text(
+                            "新",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                     ),
