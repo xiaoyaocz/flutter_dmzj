@@ -97,6 +97,14 @@ class SettingsPage extends StatelessWidget {
       () => ListView(
         padding: AppStyle.edgeInsetsA12,
         children: [
+          SwitchListTile(
+            value: controller.settings.comicReaderHD.value,
+            onChanged: (e) {
+              controller.settings.setComicReaderHD(e);
+            },
+            title: const Text("优先加载高清图"),
+            subtitle: const Text("部分单行本可能未分页"),
+          ),
           ListTile(
             title: const Text("阅读方向"),
             trailing: Row(

@@ -190,6 +190,7 @@ class ComicReaderController extends BaseController {
       var result = await request.chapterDetail(
         comicId: comicId,
         chapterId: chapterId,
+        useHD: AppSettingsService.instance.comicReaderHD.value,
       );
       var his = DBService.instance.getComicHistory(comicId);
       if (his != null && his.chapterId == chapterId && his.page != 0) {
@@ -514,6 +515,18 @@ class ComicReaderController extends BaseController {
                 () => ListView(
                   padding: AppStyle.edgeInsetsA12,
                   children: [
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.comicReaderHD.value,
+                        onChanged: (e) {
+                          settings.setComicReaderHD(e);
+                          loadDetail();
+                        },
+                        title: const Text("优先加载高清图"),
+                        subtitle: const Text("部分单行本可能未分页"),
+                      ),
+                    ),
+                    AppStyle.vGap12,
                     buildBGItem(
                       child: ListTile(
                         title: const Text("阅读方向"),

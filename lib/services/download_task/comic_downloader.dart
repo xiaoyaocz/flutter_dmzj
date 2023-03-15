@@ -8,6 +8,7 @@ import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/db/comic_download_info.dart';
 import 'package:flutter_dmzj/models/db/download_status.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:get/get.dart';
 
@@ -70,6 +71,7 @@ class ComicDownloader {
       var detail = await request.chapterDetail(
         comicId: info.value.comicId,
         chapterId: info.value.chapterId,
+        useHD: AppSettingsService.instance.comicReaderHD.value,
       );
       if (detail.pageUrls.isEmpty) {
         updateStatus(DownloadStatus.errorLoad);

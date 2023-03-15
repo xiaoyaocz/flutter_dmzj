@@ -25,7 +25,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderShowViewPoint, true);
     comicReaderLeftHandMode.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderLeftHandMode, false);
-
+    comicReaderHD.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderHD, false);
     //小说
     novelReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
@@ -262,6 +263,14 @@ class AppSettingsService extends GetxController {
     novelReaderLeftHandMode.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kNovelReaderLeftHandMode, value);
+  }
+
+  /// 漫画阅读优先加载高清图
+  RxBool comicReaderHD = false.obs;
+  void setComicReaderHD(bool value) {
+    comicReaderHD.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderHD, value);
   }
 
   void setNoFirstRun() {
