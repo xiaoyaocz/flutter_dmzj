@@ -66,6 +66,9 @@ class LocalStorageService extends GetxService {
   /// 漫画搜索使用Web接口
   static const String kComicSearchUseWebApi = "ComicSearchUseWebApi";
 
+  /// 显示字体大小跟随系统
+  static const String kUseSystemFontSize = "UseSystemFontSize";
+
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();
