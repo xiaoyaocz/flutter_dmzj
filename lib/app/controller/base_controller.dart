@@ -26,6 +26,8 @@ class BaseController extends GetxController {
   /// 错误信息
   var errorMsg = "".obs;
 
+  Error? error;
+
   /// 显示错误
   /// * [msg] 错误信息
   /// * [showPageError] 显示页面错误
@@ -33,7 +35,9 @@ class BaseController extends GetxController {
   void handleError(Object exception, {bool showPageError = false}) {
     Log.logPrint(exception);
     var msg = exceptionToString(exception);
-
+    if (exception is Error) {
+      error = exception;
+    }
     if (showPageError) {
       pageError.value = true;
       errorMsg.value = msg;
@@ -58,6 +62,7 @@ class BaseDataController<T> extends BaseController {
       loadding = true;
       pageError.value = false;
       pageLoadding.value = true;
+      error = null;
       var result = await getData();
       data = result;
     } catch (e) {
@@ -96,6 +101,7 @@ class BasePageController<T> extends BaseController {
       pageError.value = false;
       pageEmpty.value = false;
       notLogin.value = false;
+      error = null;
       pageLoadding.value = currentPage == 1;
 
       var result = await getData(currentPage, pageSize);
