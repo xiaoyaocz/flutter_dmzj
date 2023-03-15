@@ -165,71 +165,125 @@ class NovelDownloadedDetailPage extends StatelessWidget {
             ),
           ]),
         ),
-        LayoutBuilder(builder: (ctx, constraints) {
-          var count = constraints.maxWidth ~/ 160;
-          if (count < 3) count = 3;
-
-          return MasonryGridView.count(
+        ListView.separated(
+            itemCount: item.chapters.length,
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: item.chapters.length,
+            separatorBuilder: (_, i) => const Divider(
+                  height: 1,
+                ),
             itemBuilder: (_, i) {
               var chapter = item.chapters[i];
 
-              return Tooltip(
-                message: chapter.chapterName,
-                child: Obx(
-                  () => controller.editMode.value
-                      ? OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor:
-                                controller.selectItems.contains(chapter)
-                                    ? Colors.blue
-                                    : Get.textTheme.bodyMedium!.color,
-                            side: controller.selectItems.contains(chapter)
-                                ? const BorderSide(color: Colors.blue)
-                                : null,
-                            textStyle: const TextStyle(fontSize: 14),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            minimumSize: const Size.fromHeight(40),
-                          ),
-                          onPressed: () {
-                            controller.selectItem(chapter);
-                          },
-                          child: Text(
-                            item.chapters[i].chapterName,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )
-                      : OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: item.chapters[i].chapterId ==
-                                    controller.history.value?.chapterId
+              return Obx(
+                () => controller.editMode.value
+                    ? CheckboxListTile(
+                        title: Text(
+                          chapter.chapterName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Get.textTheme.bodyMedium!.copyWith(
+                            color: controller.history.value?.chapterId ==
+                                    chapter.chapterId
                                 ? Colors.blue
-                                : Get.textTheme.bodyMedium!.color,
-                            textStyle: const TextStyle(fontSize: 14),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            minimumSize: const Size.fromHeight(40),
-                          ),
-                          onPressed: () {
-                            controller.readChapter(item, chapter);
-                          },
-                          child: Text(
-                            item.chapters[i].chapterName,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
+                                : null,
                           ),
                         ),
-                ),
+                        contentPadding: AppStyle.edgeInsetsA4,
+                        visualDensity: const VisualDensity(
+                            vertical: VisualDensity.minimumDensity),
+                        value: controller.selectItems.contains(chapter),
+                        onChanged: (e) {
+                          controller.selectItem(chapter);
+                        },
+                      )
+                    : ListTile(
+                        title: Text(
+                          chapter.chapterName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Get.textTheme.bodyMedium!.copyWith(
+                            color: controller.history.value?.chapterId ==
+                                    chapter.chapterId
+                                ? Colors.blue
+                                : null,
+                          ),
+                        ),
+                        contentPadding: AppStyle.edgeInsetsA4,
+                        visualDensity: const VisualDensity(
+                            vertical: VisualDensity.minimumDensity),
+                        onTap: () {
+                          controller.readChapter(item, chapter);
+                        },
+                      ),
               );
-            },
-            crossAxisCount: count,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-          );
-        })
+            })
+        // LayoutBuilder(builder: (ctx, constraints) {
+        //   var count = constraints.maxWidth ~/ 160;
+        //   if (count < 3) count = 3;
+
+        //   return MasonryGridView.count(
+        //     shrinkWrap: true,
+        //     padding: EdgeInsets.zero,
+        //     physics: const NeverScrollableScrollPhysics(),
+        //     itemCount: item.chapters.length,
+        //     itemBuilder: (_, i) {
+        //       var chapter = item.chapters[i];
+
+        //       return Tooltip(
+        //         message: chapter.chapterName,
+        //         child: Obx(
+        //           () => controller.editMode.value
+        //               ? OutlinedButton(
+        //                   style: OutlinedButton.styleFrom(
+        //                     foregroundColor:
+        //                         controller.selectItems.contains(chapter)
+        //                             ? Colors.blue
+        //                             : Get.textTheme.bodyMedium!.color,
+        //                     side: controller.selectItems.contains(chapter)
+        //                         ? const BorderSide(color: Colors.blue)
+        //                         : null,
+        //                     textStyle: const TextStyle(fontSize: 14),
+        //                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        //                     minimumSize: const Size.fromHeight(40),
+        //                   ),
+        //                   onPressed: () {
+        //                     controller.selectItem(chapter);
+        //                   },
+        //                   child: Text(
+        //                     item.chapters[i].chapterName,
+        //                     textAlign: TextAlign.center,
+        //                     overflow: TextOverflow.ellipsis,
+        //                   ),
+        //                 )
+        //               : OutlinedButton(
+        //                   style: OutlinedButton.styleFrom(
+        //                     foregroundColor: item.chapters[i].chapterId ==
+        //                             controller.history.value?.chapterId
+        //                         ? Colors.blue
+        //                         : Get.textTheme.bodyMedium!.color,
+        //                     textStyle: const TextStyle(fontSize: 14),
+        //                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        //                     minimumSize: const Size.fromHeight(40),
+        //                   ),
+        //                   onPressed: () {
+        //                     controller.readChapter(item, chapter);
+        //                   },
+        //                   child: Text(
+        //                     item.chapters[i].chapterName,
+        //                     textAlign: TextAlign.center,
+        //                     overflow: TextOverflow.ellipsis,
+        //                   ),
+        //                 ),
+        //         ),
+        //       );
+        //     },
+        //     crossAxisCount: count,
+        //     crossAxisSpacing: 8,
+        //     mainAxisSpacing: 8,
+        //   );
+        // })
       ],
     );
   }
