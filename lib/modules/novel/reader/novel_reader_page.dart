@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/modules/novel/reader/novel_horizontal_reader.dart';
@@ -41,7 +42,8 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                     },
                     child: controller.isPicture.value
                         ? buildPicture()
-                        : (controller.direction.value == 1
+                        : (controller.direction.value ==
+                                ReaderDirection.kUpToDown
                             ? buildVertical()
                             : buildHorizontal()),
                   ),
@@ -55,7 +57,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                       child: GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
-                          controller.direction.value == 2
+                          controller.leftHandMode
                               ? controller.nextPage()
                               : controller.forwardPage();
                         },
@@ -75,7 +77,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                       child: GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
-                          controller.direction.value == 2
+                          controller.leftHandMode
                               ? controller.forwardPage()
                               : controller.nextPage();
                         },
@@ -243,7 +245,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
       child: NovelHorizontalReader(
         controller.content.value,
         controller: controller.pageController,
-        reverse: controller.direction.value == 2,
+        reverse: controller.direction.value == ReaderDirection.kRightToLeft,
         style: TextStyle(
           fontSize: controller.settings.novelReaderFontSize.value.toDouble(),
           height: controller.settings.novelReaderLineSpacing.value,
@@ -345,7 +347,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
             ),
             padding: AppStyle.edgeInsetsA12,
             child: Icon(
-              controller.direction.value != 1
+              controller.direction.value != ReaderDirection.kUpToDown
                   ? Icons.arrow_circle_left
                   : Icons.arrow_circle_up,
               color: Colors.blue,
@@ -361,7 +363,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
             ),
             padding: AppStyle.edgeInsetsA12,
             child: Icon(
-              controller.direction.value != 1
+              controller.direction.value != ReaderDirection.kUpToDown
                   ? Icons.arrow_circle_right
                   : Icons.arrow_circle_down,
               color: Colors.blue,
@@ -375,11 +377,12 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         onLoad: () async {
           controller.nextChapter();
         },
-        child: controller.direction.value != 1
+        child: controller.direction.value != ReaderDirection.kUpToDown
             ? PageView.builder(
                 controller: controller.pageController,
                 itemCount: controller.pictures.length,
-                reverse: controller.direction.value == 2,
+                reverse:
+                    controller.direction.value == ReaderDirection.kRightToLeft,
                 onPageChanged: (e) {
                   controller.currentIndex.value = e;
                   controller.maxPage.value = controller.pictures.length;
@@ -437,7 +440,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
   }
 
   Widget buildSilderBar() {
-    if (controller.direction.value == 1) {
+    if (controller.direction.value == ReaderDirection.kUpToDown) {
       return Obx(
         () {
           var value = controller.progress.value;
@@ -514,7 +517,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                   buildConnectivity(),
                   buildBattery(),
                   const Expanded(child: SizedBox()),
-                  controller.direction.value != 1
+                  controller.direction.value != ReaderDirection.kUpToDown
                       ? Text(
                           "${controller.currentIndex.value + 1} / ${controller.maxPage.value}",
                           style: TextStyle(

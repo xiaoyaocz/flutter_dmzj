@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -92,8 +93,14 @@ class Utils {
       return;
     }
     try {
-      var provider = ExtendedNetworkImageProvider(url, cache: true);
-      var data = await provider.getNetworkImageData();
+      Uint8List? data;
+      if (url.startsWith("http")) {
+        var provider = ExtendedNetworkImageProvider(url, cache: true);
+        data = await provider.getNetworkImageData();
+      } else {
+        data = await File(url).readAsBytes();
+      }
+
       if (data == null) {
         SmartDialog.showToast("图片保存失败");
         return;

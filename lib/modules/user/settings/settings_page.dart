@@ -129,6 +129,13 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           SwitchListTile(
+            value: controller.settings.comicReaderLeftHandMode.value,
+            onChanged: (e) {
+              controller.settings.setComicReaderLeftHandMode(e);
+            },
+            title: const Text("左手模式"),
+          ),
+          SwitchListTile(
             value: controller.settings.comicReaderFullScreen.value,
             onChanged: (e) {
               controller.settings.setComicReaderFullScreen(e);
@@ -189,6 +196,13 @@ class SettingsPage extends StatelessWidget {
                 )
               ],
             ),
+          ),
+          SwitchListTile(
+            value: controller.settings.novelReaderLeftHandMode.value,
+            onChanged: (e) {
+              controller.settings.setNovelReaderLeftHandMode(e);
+            },
+            title: const Text("左手模式"),
           ),
           // SwitchListTile(
           //   value: settings.novelReaderFullScreen.value,

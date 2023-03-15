@@ -69,6 +69,12 @@ class LocalStorageService extends GetxService {
   /// 显示字体大小跟随系统
   static const String kUseSystemFontSize = "UseSystemFontSize";
 
+  /// 漫画-左手模式
+  static const String kComicReaderLeftHandMode = "ComicReaderLeftHandMode";
+
+  /// 小说-左手模式
+  static const String kNovelReaderLeftHandMode = "NovelReaderLeftHandMode";
+
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();

@@ -207,14 +207,26 @@ class DialogUtils {
             PhotoViewGallery.builder(
               itemCount: images.length,
               builder: (_, i) {
-                return PhotoViewGalleryPageOptions(
-                  filterQuality: FilterQuality.high,
-                  imageProvider: ExtendedNetworkImageProvider(
-                    images[i],
-                    cache: true,
-                  ),
-                  onTapUp: ((context, details, controllerValue) => Get.back()),
-                );
+                if (images[i].startsWith("http")) {
+                  return PhotoViewGalleryPageOptions(
+                    filterQuality: FilterQuality.high,
+                    imageProvider: ExtendedNetworkImageProvider(
+                      images[i],
+                      cache: true,
+                    ),
+                    onTapUp: ((context, details, controllerValue) =>
+                        Get.back()),
+                  );
+                } else {
+                  return PhotoViewGalleryPageOptions(
+                    filterQuality: FilterQuality.high,
+                    imageProvider: ExtendedMemoryImageProvider(
+                      File(images[i]).readAsBytesSync(),
+                    ),
+                    onTapUp: ((context, details, controllerValue) =>
+                        Get.back()),
+                  );
+                }
               },
               loadingBuilder: (context, event) => const Center(
                 child: CircularProgressIndicator(),

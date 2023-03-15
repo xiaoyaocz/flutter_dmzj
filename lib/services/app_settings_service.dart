@@ -23,6 +23,9 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderShowStatus, true);
     comicReaderShowViewPoint.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderShowViewPoint, true);
+    comicReaderLeftHandMode.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderLeftHandMode, false);
+
     //小说
     novelReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
@@ -36,6 +39,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kNovelReaderFullScreen, true);
     novelReaderShowStatus.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderShowStatus, true);
+    novelReaderLeftHandMode.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNovelReaderLeftHandMode, false);
     //下载
     downloadAllowCellular.value = LocalStorageService.instance
         .getValue(LocalStorageService.kDownloadAllowCellular, true);
@@ -241,6 +246,22 @@ class AppSettingsService extends GetxController {
     useSystemFontSize.value = e;
     LocalStorageService.instance
         .setValue(LocalStorageService.kUseSystemFontSize, e);
+  }
+
+  /// 漫画阅读左手模式
+  RxBool comicReaderLeftHandMode = false.obs;
+  void setComicReaderLeftHandMode(bool value) {
+    comicReaderLeftHandMode.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderLeftHandMode, value);
+  }
+
+  /// 小说阅读左手模式
+  RxBool novelReaderLeftHandMode = false.obs;
+  void setNovelReaderLeftHandMode(bool value) {
+    novelReaderLeftHandMode.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kNovelReaderLeftHandMode, value);
   }
 
   void setNoFirstRun() {
