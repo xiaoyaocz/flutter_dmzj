@@ -39,14 +39,17 @@ class ComicChapterDetail {
         commentCount: item.commentCount,
       );
 
-  factory ComicChapterDetail.fromV4(ComicChapterDetailProto item) =>
+  factory ComicChapterDetail.fromV4(ComicChapterDetailProto item, bool useHD) =>
       ComicChapterDetail(
         chapterId: item.chapterId.toInt(),
         comicId: item.comicId.toInt(),
         chapterOrder: item.chapterOrder,
         direction: item.direction,
         chapterTitle: item.title,
-        pageUrls: item.pageUrlHD.isNotEmpty ? item.pageUrlHD : item.pageUrl,
+        pageUrls: useHD
+            ? (item.pageUrlHD.isNotEmpty ? item.pageUrlHD : item.pageUrl)
+            : (item.pageUrl.isNotEmpty ? item.pageUrl : item.pageUrlHD),
+        //pageUrls: item.pageUrlHD.isNotEmpty ? item.pageUrlHD : item.pageUrl,
         picnum: item.picnum,
         commentCount: item.commentCount,
       );

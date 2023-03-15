@@ -310,7 +310,9 @@ class ComicRequest {
 
   /// 章节详情
   Future<ComicChapterDetail> chapterDetail(
-      {required int comicId, required int chapterId}) async {
+      {required int comicId,
+      required int chapterId,
+      required bool useHD}) async {
     ComicChapterDetail info;
 
     try {
@@ -322,7 +324,7 @@ class ComicRequest {
       }
 
       var v4 = await chapterDetailV4(comicId: comicId, chapterId: chapterId);
-      info = ComicChapterDetail.fromV4(v4);
+      info = ComicChapterDetail.fromV4(v4, useHD);
     } catch (e) {
       Log.logPrint(e);
       try {

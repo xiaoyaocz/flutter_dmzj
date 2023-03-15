@@ -75,6 +75,9 @@ class LocalStorageService extends GetxService {
   /// 小说-左手模式
   static const String kNovelReaderLeftHandMode = "NovelReaderLeftHandMode";
 
+  /// 漫画阅读优先加载高清图
+  static const String kComicReaderHD = "ComicReaderHD";
+
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();
