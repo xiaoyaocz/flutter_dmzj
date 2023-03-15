@@ -1,0 +1,6 @@
+display_name: 动漫之家X
+publisher_display_name: xiaoyaocz
+identity_name: com.xycz.dmzjx
+logo_path: assets/images/logo.png
+capabilities: internetClient
+languages: zh-cn
