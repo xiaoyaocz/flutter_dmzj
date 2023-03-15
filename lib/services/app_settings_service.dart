@@ -46,6 +46,9 @@ class AppSettingsService extends GetxController {
     //搜索API
     comicSearchUseWebApi.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicSearchUseWebApi, false);
+    //字体大小
+    useSystemFontSize.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kUseSystemFontSize, false);
     super.onInit();
   }
 
@@ -230,6 +233,14 @@ class AppSettingsService extends GetxController {
     comicSearchUseWebApi.value = e;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicSearchUseWebApi, e);
+  }
+
+  /// 显示字体大小跟随系统
+  var useSystemFontSize = false.obs;
+  void setUseSystemFontSize(bool e) {
+    useSystemFontSize.value = e;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kUseSystemFontSize, e);
   }
 
   void setNoFirstRun() {

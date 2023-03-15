@@ -77,6 +77,15 @@ class SettingsPage extends StatelessWidget {
               controller.settings.setComicSearchUseWebApi(e);
             },
             title: const Text("使用Web接口搜索漫画"),
+            subtitle: const Text("开启后可以搜索到更多漫画"),
+          ),
+          SwitchListTile(
+            value: controller.settings.useSystemFontSize.value,
+            onChanged: (e) {
+              controller.settings.setUseSystemFontSize(e);
+            },
+            title: const Text("字体大小跟随系统"),
+            subtitle: const Text("开启可能会有布局错乱"),
           ),
         ],
       ),
@@ -308,6 +317,8 @@ class SettingsPage extends StatelessWidget {
 
 　　晋太元中，武陵人捕鱼为业。缘溪行，忘路之远近。忽逢桃花林，夹岸数百步，中无杂树，芳草鲜美，落英缤纷。渔人甚异之，复前行，欲穷其林。
 　　林尽水源，便得一山，山有小口，仿佛若有光。便舍船，从口入。初极狭，才通人。复行数十步，豁然开朗。土地平旷，屋舍俨然，有良田、美池、桑竹之属。阡陌交通，鸡犬相闻。其中往来种作，男女衣着，悉如外人。黄发垂髫，并怡然自乐……""",
+              //不需要跟随系统
+              textScaleFactor: 1.0,
               style: TextStyle(
                 fontSize:
                     controller.settings.novelReaderFontSize.value.toDouble(),

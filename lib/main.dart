@@ -108,9 +108,13 @@ class DMZJApp extends StatelessWidget {
       builder: FlutterSmartDialog.init(
         loadingBuilder: ((msg) => const AppLoaddingWidget()),
         //字体大小不跟随系统变化
-        builder: (context, child) => MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: child!,
+        builder: (context, child) => Obx(
+          () => MediaQuery(
+            data: AppSettingsService.instance.useSystemFontSize.value
+                ? MediaQuery.of(context)
+                : MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: child!,
+          ),
         ),
       ),
     );
