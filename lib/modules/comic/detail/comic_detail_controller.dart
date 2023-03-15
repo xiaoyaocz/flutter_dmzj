@@ -52,6 +52,7 @@ class ComicDetailControler extends BaseController {
     getHistory();
     loadDetail();
     loadSubscribeStatus();
+    updateSubscribeRead();
     super.onInit();
   }
 
@@ -59,6 +60,15 @@ class ComicDetailControler extends BaseController {
     getHistory();
     loadDetail();
     loadSubscribeStatus();
+  }
+
+  /// 更新订阅的阅读状态
+  void updateSubscribeRead() {
+    try {
+      userRequest.subscribeRead(id: comicId, type: AppConstant.kTypeComic);
+    } catch (e) {
+      Log.logPrint(e);
+    }
   }
 
   @override
