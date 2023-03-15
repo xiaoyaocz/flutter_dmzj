@@ -115,7 +115,7 @@ class ComicRequest {
   /// 分类下漫画
   /// - [ids] 标签
   /// - [sort] 排序,0=人气,1=更新
-  /// - [page] 页数
+  /// - [page] 页数，从0开始
   Future<List<ComicCategoryComicModel>> categoryComic({
     required List<int> ids,
     int sort = 0,

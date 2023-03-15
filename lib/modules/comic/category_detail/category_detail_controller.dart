@@ -18,6 +18,19 @@ class CategoryDetailController
     super.onInit();
   }
 
+  String getTitle() {
+    var items = filters.where((x) => x.selectId.value != 0 && x.title != "排序");
+
+    if (items.isEmpty) {
+      return "全部漫画";
+    } else {
+      return items
+          .map((e) =>
+              e.items.firstWhere((x) => x.tagId == e.selectId.value).tagName)
+          .join("-");
+    }
+  }
+
   void loadFilter() async {
     try {
       filters.value = await request.categoryFilter();
@@ -45,14 +58,14 @@ class CategoryDetailController
   @override
   Future<List<ComicCategoryComicModel>> getData(int page, int pageSize) async {
     if (filters.isEmpty) {
-      return await request.categoryComic(ids: [id], page: page);
+      return await request.categoryComic(ids: [id], page: page - 1);
     } else {
       var sort = filters.first.selectId.value;
       var ids = filters
           .where((x) => x.title != "排序")
           .map((e) => e.selectId.value)
           .toList();
-      return await request.categoryComic(ids: ids, sort: sort, page: page);
+      return await request.categoryComic(ids: ids, sort: sort, page: page - 1);
     }
   }
 }

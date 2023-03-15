@@ -18,6 +18,19 @@ class NovelCategoryDetailController
     super.onInit();
   }
 
+  String getTitle() {
+    var items = filters.where((x) => x.selectId.value != 0 && x.title != "排序");
+
+    if (items.isEmpty) {
+      return "全部小说";
+    } else {
+      return items
+          .map((e) =>
+              e.items.firstWhere((x) => x.tagId == e.selectId.value).tagName)
+          .join("-");
+    }
+  }
+
   void loadFilter() async {
     try {
       filters.value = await request.categoryFilter();
@@ -45,7 +58,7 @@ class NovelCategoryDetailController
   @override
   Future<List<NovelCategoryNovelModel>> getData(int page, int pageSize) async {
     if (filters.isEmpty) {
-      return await request.categoryNovel(cateId: id, page: page);
+      return await request.categoryNovel(cateId: id, page: page - 1);
     } else {
       var sort = filters.first.selectId.value;
       var cateId =
@@ -55,7 +68,7 @@ class NovelCategoryDetailController
               0;
 
       return await request.categoryNovel(
-          cateId: cateId, status: status, sort: sort, page: page);
+          cateId: cateId, status: status, sort: sort, page: page - 1);
     }
   }
 }

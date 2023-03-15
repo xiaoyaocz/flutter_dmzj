@@ -21,7 +21,11 @@ class CategoryDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("漫画分类"),
+        title: Obx(
+          () => Text(
+            controller.getTitle(),
+          ),
+        ),
         actions: [
           Builder(
             builder: (BuildContext context) => IconButton(

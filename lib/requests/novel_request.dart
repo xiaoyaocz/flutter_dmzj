@@ -65,7 +65,7 @@ class NovelRequest {
   /// 分类下漫画
   /// - [cateId] 分类
   /// - [sort] 排序,0=人气,1=更新
-  /// - [page] 页数
+  /// - [page] 页数，从0开始
   Future<List<NovelCategoryNovelModel>> categoryNovel({
     int cateId = 0,
     int status = 0,
