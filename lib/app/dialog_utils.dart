@@ -21,6 +21,7 @@ class DialogUtils {
     String confirm = '',
     String cancel = '',
     bool selectable = false,
+    bool barrierDismissible = true,
     List<Widget>? actions,
   }) async {
     var result = await Get.dialog(
@@ -50,6 +51,7 @@ class DialogUtils {
           ...?actions,
         ],
       ),
+      barrierDismissible: barrierDismissible,
     );
     return result ?? false;
   }
@@ -162,6 +164,7 @@ class DialogUtils {
       title: "免责声明",
       confirm: "已阅读并同意",
       cancel: "退出",
+      barrierDismissible: false,
     ).then((value) {
       if (!value) {
         exit(0);
