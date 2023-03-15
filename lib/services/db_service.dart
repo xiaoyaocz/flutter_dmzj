@@ -60,7 +60,7 @@ class DBService extends GetxService {
     try {
       for (var item in items) {
         var remoteTime =
-            DateTime.fromMillisecondsSinceEpoch(item.viewingTime * 1000);
+            DateTime.fromMillisecondsSinceEpoch(item.viewingTime ?? 0 * 1000);
         //本地是否存在记录
         var local = comicHistoryBox.get(item.comicId);
         if (local != null && local.chapterId != 0) {
@@ -134,7 +134,7 @@ class DBService extends GetxService {
     try {
       for (var item in items) {
         var remoteTime =
-            DateTime.fromMillisecondsSinceEpoch(item.viewingTime * 1000);
+            DateTime.fromMillisecondsSinceEpoch(item.viewingTime ?? 0 * 1000);
         //本地是否存在记录
         var local = novelHistoryBox.get(item.lnovelId);
         if (local != null && local.chapterId != 0) {
@@ -149,10 +149,10 @@ class DBService extends GetxService {
                 novelCover: item.cover,
                 chapterName: item.chapterName ?? "-",
                 updateTime: remoteTime,
-                index: item.record,
+                index: item.record ?? 0,
                 volumeId: item.volumeId ?? 0,
                 volumeName: item.volumeName ?? "",
-                total: item.totalNum,
+                total: item.totalNum ?? 0,
               ),
             );
           }
@@ -166,10 +166,10 @@ class DBService extends GetxService {
               novelCover: item.cover,
               chapterName: item.chapterName ?? "-",
               updateTime: remoteTime,
-              index: item.record,
+              index: item.record ?? 0,
               volumeId: item.volumeId ?? 0,
               volumeName: item.volumeName ?? "",
-              total: item.totalNum,
+              total: item.totalNum ?? 0,
             ),
           );
         }

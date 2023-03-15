@@ -36,10 +36,16 @@ class Utils {
 
   /// 时间戳格式化-秒
   static String formatTimestamp(int ts) {
+    if (ts == 0) {
+      return "----";
+    }
     return formatTimestampMS(ts * 1000);
   }
 
   static String formatTimestampToDate(int ts) {
+    if (ts == 0) {
+      return "----";
+    }
     var dt = DateTime.fromMillisecondsSinceEpoch(ts * 1000);
     return dateFormat.format(dt);
   }

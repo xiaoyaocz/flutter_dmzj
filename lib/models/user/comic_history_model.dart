@@ -9,36 +9,37 @@ T? asT<T>(dynamic value) {
 
 class UserComicHistoryModel {
   UserComicHistoryModel({
-    required this.uid,
-    required this.type,
+    this.uid,
+    this.type,
     required this.comicId,
     this.chapterId,
-    required this.record,
-    required this.viewingTime,
+    this.record,
+    this.viewingTime,
     required this.comicName,
     required this.cover,
     this.chapterName,
   });
 
   factory UserComicHistoryModel.fromJson(Map<String, dynamic> json) =>
+      // 接口不知道那些可能为空，所以全部变为可空
       UserComicHistoryModel(
-        uid: asT<int>(json['uid'])!,
-        type: asT<int>(json['type'])!,
-        comicId: asT<int>(json['comic_id'])!,
-        chapterId: asT<int?>(json['chapter_id']),
-        record: asT<int?>(json['record']),
-        viewingTime: asT<int>(json['viewing_time'])!,
-        comicName: asT<String>(json['comic_name'])!,
-        cover: asT<String>(json['cover'])!,
-        chapterName: asT<String?>(json['chapter_name']),
+        uid: asT<int?>(json['uid']) ?? 0,
+        type: asT<int?>(json['type']) ?? 0,
+        comicId: asT<int?>(json['comic_id']) ?? 0,
+        chapterId: asT<int?>(json['chapter_id']) ?? 0,
+        record: asT<int?>(json['record']) ?? 0,
+        viewingTime: asT<int?>(json['viewing_time']) ?? 0,
+        comicName: asT<String?>(json['comic_name']) ?? "未知漫画",
+        cover: asT<String?>(json['cover']) ?? "",
+        chapterName: asT<String?>(json['chapter_name']) ?? "-",
       );
 
-  int uid;
-  int type;
+  int? uid;
+  int? type;
   int comicId;
   int? chapterId;
   int? record;
-  int viewingTime;
+  int? viewingTime;
   String comicName;
   String cover;
   String? chapterName;
