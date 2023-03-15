@@ -255,57 +255,54 @@ class NovelDetailPage extends StatelessWidget {
   }
 
   Widget _buildChapter() {
-    return LayoutBuilder(builder: (ctx, constraints) {
-      var count = constraints.maxWidth ~/ 160;
-      if (count < 3) count = 3;
-      return Obx(
-        () => Column(
-          children: controller.detail.value.volume
-              .map(
-                (item) => ExpansionTile(
-                  title: Text(
-                    "${item.volumeName}(共${item.chapters.length}章)",
-                    style: Get.textTheme.titleSmall,
-                  ),
-                  tilePadding: AppStyle.edgeInsetsH4,
-                  children: [
-                    MasonryGridView.count(
-                      shrinkWrap: true,
-                      padding: AppStyle.edgeInsetsB12,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: item.chapters.length,
-                      itemBuilder: (_, i) {
-                        return Tooltip(
-                          message: item.chapters[i].chapterName,
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Get.textTheme.bodyMedium!.color,
-                              textStyle: const TextStyle(fontSize: 14),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              minimumSize: const Size.fromHeight(40),
-                            ),
-                            onPressed: () {
-                              controller.readChapter(item, item.chapters[i]);
-                            },
-                            child: Text(
-                              item.chapters[i].chapterName,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        );
-                      },
-                      crossAxisCount: count,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                    )
-                  ],
+    return Obx(
+      () => Column(
+        children: controller.detail.value.volume
+            .map(
+              (item) => ExpansionTile(
+                title: Text(
+                  "${item.volumeName}(共${item.chapters.length}章)",
+                  style: Get.textTheme.titleSmall,
                 ),
-              )
-              .toList(),
-        ),
-      );
-    });
+                tilePadding: AppStyle.edgeInsetsH4,
+                children: [
+                  ListView.separated(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: item.chapters.length,
+                    separatorBuilder: (_, i) => const Divider(
+                      height: 1,
+                    ),
+                    itemBuilder: (context, i) {
+                      var chapter = item.chapters[i];
+                      return ListTile(
+                        title: Text(
+                          chapter.chapterName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Get.textTheme.bodyMedium!.copyWith(
+                            color: controller.history.value?.chapterId ==
+                                    chapter.chapterId
+                                ? Colors.blue
+                                : null,
+                          ),
+                        ),
+                        contentPadding: AppStyle.edgeInsetsA4,
+                        visualDensity: const VisualDensity(
+                            vertical: VisualDensity.minimumDensity),
+                        onTap: () {
+                          controller.readChapter(item, chapter);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            )
+            .toList(),
+      ),
+    );
   }
 
   Widget _buildInfo({
