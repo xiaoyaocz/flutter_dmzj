@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
@@ -298,6 +299,10 @@ class ComicReaderController extends BaseController {
                   return ListTile(
                     selected: i == chapterIndex.value,
                     title: Text(item.chapterTitle),
+                    subtitle: item.updateTime != 0
+                        ? Text(
+                            "更新于${Utils.formatTimestampToDate(item.updateTime)}")
+                        : null,
                     onTap: () {
                       chapterIndex.value = i;
                       loadDetail();
