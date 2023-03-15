@@ -1,7 +1,7 @@
 {
-    "version": "2.0.1-beta",
-    "version_num": 20001,
-    "version_desc": "完全重写的2.0全新版本\n1. Android/iOS/Mac/Windows/Linux全平台支持\n2. 适配各种屏幕尺寸\n3. 支持离线缓存\n4. 全新设计的UI\n5. 修复一堆的BUG",
+    "version": "2.0.2-beta",
+    "version_num": 20002,
+    "version_desc": "1. 修复分类详情页数错误问题 #91\n2. 修复用户中心下载数显示错误问题 #88\n3. 禁止点击免责声明对话框外侧 #86\n4. 增加字体大小跟随系统设置 #94\n5. 阅读新增左手模式设置 #93 \n6. 修复小说本地插图浏览出错\n7. 修改轻小说章节展示方式 #92\n8. 修复漫画浏览记录无法加载 #98,#100\n9. 修改iOS的CFBundleName #89\n10. 增加漫画加载高清图选项 #102\n11. 漫画章节增加更新日期显示 #110",
     "prerelease":true,
     "download_url": "https://github.com/xiaoyaocz/flutter_dmzj/releases"
 }

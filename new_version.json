@@ -1,9 +1,0 @@
-{
-    "version":"2.0.1",
-    "version_code":"230314",
-    "message":"完全重写的2.0全新版本",
-    "android_url":"https://github.com/xiaoyaocz/flutter_dmzj/releases",
-    "ios_url":"",
-    "hide_banner":false,
-    "remark":"此文件用于旧版本的检查更新，新版本检查更新文件为document/app_version.json"
-}
