@@ -1,5 +1,5 @@
 name: flutter_dmzj
-version: 2.0.1+20001
+version: 2.0.2+20002
 publish_to: none
 description: "动漫之家X"
 environment: 
@@ -57,6 +57,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   build_runner: ^2.3.3
   hive_generator: ^2.0.0
+  msix: ^3.9.1
   flutter_test: 
     sdk: flutter
 

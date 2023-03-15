@@ -1,0 +1,21 @@
+display_name: 动漫之家X
+package_name: dmzjx
+maintainer:
+  name: xiaoyaocz
+  email: xiaoyaocz@52uwp.com
+priority: optional
+section: x11
+installed_size: 24400
+essential: false
+icon: assets/images/logo.png
+
+keywords:
+  - 动漫之家
+  - DMZJ
+
+generic_name: 动漫之家X
+
+categories:
+  - Media
+
+startup_notify: true
