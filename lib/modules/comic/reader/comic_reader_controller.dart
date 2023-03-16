@@ -393,96 +393,106 @@ class ComicReaderController extends BaseController {
       constraints: const BoxConstraints(
         maxWidth: 500,
       ),
+      isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
       builder: (context) => Theme(
         data: AppStyle.darkTheme,
-        child: Column(
-          children: [
-            ListTile(
-              title: Text("吐槽(${viewPoints.length})"),
-              trailing: IconButton(
-                onPressed: Get.back,
-                icon: const Icon(Icons.close),
+        child: FractionallySizedBox(
+          heightFactor: 0.8,
+          child: Column(
+            children: [
+              ListTile(
+                title: Text("吐槽(${viewPoints.length})"),
+                trailing: IconButton(
+                  onPressed: Get.back,
+                  icon: const Icon(Icons.close),
+                ),
+                contentPadding: AppStyle.edgeInsetsL12,
               ),
-              contentPadding: AppStyle.edgeInsetsL12,
-            ),
-            Divider(
-              height: 1.0,
-              color: Colors.grey.withOpacity(.2),
-            ),
-            Expanded(
-              child: EasyRefresh(
-                header: const MaterialHeader(),
-                onRefresh: () async {
-                  loadViewPoints();
-                },
-                child: Obx(
-                  () => ListView.separated(
-                    padding: EdgeInsets.zero,
-                    itemCount: viewPoints.length,
-                    separatorBuilder: (_, i) => Divider(
-                      indent: 12,
-                      endIndent: 12,
-                      height: 1.0,
-                      color: Colors.grey.withOpacity(.2),
-                    ),
-                    itemBuilder: (_, i) {
-                      var item = viewPoints[i];
-                      return Padding(
-                        padding:
-                            AppStyle.edgeInsetsA12.copyWith(top: 4, bottom: 4),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                item.content,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
+              Divider(
+                height: 1.0,
+                color: Colors.grey.withOpacity(.2),
+              ),
+              Expanded(
+                child: EasyRefresh(
+                  header: const MaterialHeader(),
+                  onRefresh: () async {
+                    loadViewPoints();
+                  },
+                  child: Obx(
+                    () => ListView.separated(
+                      padding: EdgeInsets.zero,
+                      itemCount: viewPoints.length,
+                      separatorBuilder: (_, i) => Divider(
+                        indent: 12,
+                        endIndent: 12,
+                        height: 1.0,
+                        color: Colors.grey.withOpacity(.2),
+                      ),
+                      itemBuilder: (_, i) {
+                        var item = viewPoints[i];
+                        return Padding(
+                          padding: AppStyle.edgeInsetsA12
+                              .copyWith(top: 8, bottom: 8),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  item.content,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
                                 ),
                               ),
-                            ),
-                            TextButton.icon(
-                              onPressed: () {
-                                likeViewPoint(item);
-                              },
-                              icon: const Icon(
-                                Remix.thumb_up_line,
-                                size: 20,
+                              AppStyle.hGap12,
+                              TextButton.icon(
+                                style: TextButton.styleFrom(
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                onPressed: () {
+                                  likeViewPoint(item);
+                                },
+                                icon: const Icon(
+                                  Remix.thumb_up_line,
+                                  size: 16,
+                                ),
+                                label: Obx(() => Text("${item.num.value}")),
                               ),
-                              label: Obx(() => Text("${item.num.value}")),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              padding: AppStyle.edgeInsetsA8.copyWith(
-                bottom: 8 + AppStyle.bottomBarHeight,
-              ),
-              child: TextField(
-                controller: tucaoController,
-                onSubmitted: (e) {
-                  sendViewPoint(e);
-                },
-                decoration: InputDecoration(
-                  hintText: "发表吐槽",
-                  contentPadding: AppStyle.edgeInsetsH12,
-                  border: const OutlineInputBorder(),
-                  suffixIcon: TextButton(
-                    onPressed: () {
-                      sendViewPoint(tucaoController.text);
-                    },
-                    child: const Text("发布"),
+              Container(
+                padding: AppStyle.edgeInsetsA8.copyWith(
+                  bottom: 8 + AppStyle.bottomBarHeight,
+                ),
+                child: TextField(
+                  controller: tucaoController,
+                  onSubmitted: (e) {
+                    sendViewPoint(e);
+                  },
+                  decoration: InputDecoration(
+                    hintText: "发表吐槽",
+                    contentPadding: AppStyle.edgeInsetsH12,
+                    border: const OutlineInputBorder(),
+                    suffixIcon: TextButton(
+                      onPressed: () {
+                        sendViewPoint(tucaoController.text);
+                      },
+                      child: const Text("发布"),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       routeSettings: const RouteSettings(name: "/modalBottomSheet"),
