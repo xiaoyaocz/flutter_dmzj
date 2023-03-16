@@ -83,7 +83,10 @@ class ComicReaderController extends BaseController {
   var direction = 0.obs;
 
   /// 左手模式
-  var leftHandMode = false;
+  bool get leftHandMode => settings.comicReaderLeftHandMode.value;
+
+  /// 翻页动画
+  bool get pageAnimation => settings.comicReaderPageAnimation.value;
 
   /// 观点、吐槽
   RxList<ComicViewPointModel> viewPoints = RxList<ComicViewPointModel>();
@@ -103,7 +106,6 @@ class ComicReaderController extends BaseController {
     initConnectivity();
     initBattery();
     direction.value = settings.comicReaderDirection.value;
-    leftHandMode = settings.comicReaderLeftHandMode.value;
     if (settings.comicReaderFullScreen.value) {
       setFull();
     }
@@ -369,7 +371,7 @@ class ComicReaderController extends BaseController {
     if (direction.value == ReaderDirection.kUpToDown) {
       itemScrollController.jumpTo(index: page);
     } else {
-      anime
+      anime && pageAnimation
           ? preloadPageController.animateToPage(page,
               duration: const Duration(milliseconds: 200), curve: Curves.linear)
           : preloadPageController.jumpToPage(page);
@@ -573,7 +575,6 @@ class ComicReaderController extends BaseController {
                       child: SwitchListTile(
                         value: settings.comicReaderLeftHandMode.value,
                         onChanged: (e) {
-                          leftHandMode = e;
                           settings.setComicReaderLeftHandMode(e);
                         },
                         title: const Text("左手模式"),
@@ -613,6 +614,16 @@ class ComicReaderController extends BaseController {
                           setShowViewPoint(e);
                         },
                         title: const Text("显示观点/吐槽"),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.comicReaderPageAnimation.value,
+                        onChanged: (e) {
+                          settings.setComicReaderPageAnimation(e);
+                        },
+                        title: const Text("翻页动画"),
                       ),
                     ),
                   ],
