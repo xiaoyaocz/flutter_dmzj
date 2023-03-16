@@ -27,6 +27,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderLeftHandMode, false);
     comicReaderHD.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderHD, false);
+    comicReaderPageAnimation.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderPageAnimation, true);
     //小说
     novelReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
@@ -42,6 +44,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kNovelReaderShowStatus, true);
     novelReaderLeftHandMode.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderLeftHandMode, false);
+    novelReaderPageAnimation.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNovelReaderPageAnimation, true);
     //下载
     downloadAllowCellular.value = LocalStorageService.instance
         .getValue(LocalStorageService.kDownloadAllowCellular, true);
@@ -55,6 +59,7 @@ class AppSettingsService extends GetxController {
     //字体大小
     useSystemFontSize.value = LocalStorageService.instance
         .getValue(LocalStorageService.kUseSystemFontSize, false);
+
     super.onInit();
   }
 
@@ -271,6 +276,22 @@ class AppSettingsService extends GetxController {
     comicReaderHD.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicReaderHD, value);
+  }
+
+  /// 漫画阅读翻页动画
+  RxBool comicReaderPageAnimation = true.obs;
+  void setComicReaderPageAnimation(bool value) {
+    comicReaderPageAnimation.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderPageAnimation, value);
+  }
+
+  /// 小说阅读翻页动画
+  RxBool novelReaderPageAnimation = true.obs;
+  void setNovelReaderPageAnimation(bool value) {
+    novelReaderPageAnimation.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kNovelReaderPageAnimation, value);
   }
 
   void setNoFirstRun() {

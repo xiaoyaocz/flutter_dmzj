@@ -78,6 +78,12 @@ class LocalStorageService extends GetxService {
   /// 漫画阅读优先加载高清图
   static const String kComicReaderHD = "ComicReaderHD";
 
+  /// 漫画阅读-翻页动画
+  static const String kComicReaderPageAnimation = "ComicReaderPageAnimation";
+
+  /// 小说阅读-翻页动画
+  static const String kNovelReaderPageAnimation = "NovelReaderPageAnimation";
+
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();

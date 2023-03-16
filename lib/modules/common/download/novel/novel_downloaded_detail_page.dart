@@ -4,7 +4,6 @@ import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/modules/common/download/novel/novel_downloaded_detail_controller.dart';
 
 import 'package:flutter_dmzj/services/novel_download_service.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 

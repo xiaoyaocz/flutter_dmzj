@@ -97,14 +97,16 @@ class NovelReaderController extends BaseController {
   var direction = 0.obs;
 
   /// 左手模式
-  var leftHandMode = false;
+  bool get leftHandMode => settings.novelReaderLeftHandMode.value;
+
+  /// 翻页动画
+  bool get pageAnimation => settings.novelReaderPageAnimation.value;
 
   @override
   void onInit() {
     initConnectivity();
     initBattery();
     direction.value = settings.novelReaderDirection.value;
-    leftHandMode = settings.novelReaderLeftHandMode.value;
 
     scrollController.addListener(listenVertical);
     setFull();
@@ -384,7 +386,7 @@ class NovelReaderController extends BaseController {
       final viewportHeight = scrollController.position.viewportDimension;
       scrollController.jumpTo(viewportHeight * page);
     } else {
-      anime
+      anime && pageAnimation
           ? pageController.animateToPage(page,
               duration: const Duration(milliseconds: 200), curve: Curves.linear)
           : pageController.jumpToPage(page);
@@ -465,7 +467,6 @@ class NovelReaderController extends BaseController {
                       child: SwitchListTile(
                         value: settings.novelReaderLeftHandMode.value,
                         onChanged: (e) {
-                          leftHandMode = e;
                           settings.setNovelReaderLeftHandMode(e);
                         },
                         title: const Text("左手模式"),
@@ -479,6 +480,16 @@ class NovelReaderController extends BaseController {
                           settings.setNovelReaderShowStatus(e);
                         },
                         title: const Text("显示状态信息"),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.novelReaderPageAnimation.value,
+                        onChanged: (e) {
+                          settings.setNovelReaderPageAnimation(e);
+                        },
+                        title: const Text("翻页动画"),
                       ),
                     ),
                     AppStyle.vGap12,

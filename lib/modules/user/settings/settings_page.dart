@@ -164,6 +164,13 @@ class SettingsPage extends StatelessWidget {
             },
             title: const Text("显示观点/吐槽"),
           ),
+          SwitchListTile(
+            value: controller.settings.comicReaderPageAnimation.value,
+            onChanged: (e) {
+              controller.settings.setComicReaderPageAnimation(e);
+            },
+            title: const Text("翻页动画"),
+          ),
         ],
       ),
     );
@@ -220,11 +227,18 @@ class SettingsPage extends StatelessWidget {
           //   title: const Text("全屏阅读"),
           // ),
           SwitchListTile(
-            value: controller.settings.comicReaderShowStatus.value,
+            value: controller.settings.novelReaderShowStatus.value,
             onChanged: (e) {
-              controller.settings.setComicReaderShowStatus(e);
+              controller.settings.setNovelReaderShowStatus(e);
             },
             title: const Text("显示状态信息"),
+          ),
+          SwitchListTile(
+            value: controller.settings.novelReaderPageAnimation.value,
+            onChanged: (e) {
+              controller.settings.setNovelReaderPageAnimation(e);
+            },
+            title: const Text("翻页动画"),
           ),
           ListTile(
             title: const Text("字体大小"),
