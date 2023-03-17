@@ -4,3 +4,4 @@ identity_name: com.xycz.dmzjx
 logo_path: assets/images/logo.png
 capabilities: internetClient
 languages: zh-cn
+install_certificate: "false"
