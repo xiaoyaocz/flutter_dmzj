@@ -131,15 +131,6 @@ class UserHomePage extends GetView<UserHomeController> {
                           onTap: controller.toUserHistory,
                         ),
                       ),
-                      ListTile(
-                        leading: const Icon(Remix.file_history_line),
-                        title: const Text("本机记录"),
-                        trailing: const Icon(
-                          Icons.chevron_right,
-                          color: Colors.grey,
-                        ),
-                        onTap: controller.toLocalHistory,
-                      ),
                       Visibility(
                         visible: UserService.instance.logined.value,
                         child: ListTile(
@@ -152,82 +143,105 @@ class UserHomePage extends GetView<UserHomeController> {
                           onTap: controller.userComment,
                         ),
                       ),
-                      ListTile(
-                        leading: const Icon(Remix.download_line),
-                        title: const Text("漫画下载"),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Obx(
-                              () => Visibility(
-                                visible: ComicDownloadService
-                                    .instance.taskQueues.isNotEmpty,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: AppStyle.radius24,
-                                  ),
-                                  width: 20,
-                                  height: 20,
-                                  child: Center(
-                                    child: Text(
-                                      "${ComicDownloadService.instance.taskQueues.length}",
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Icon(
-                              Icons.chevron_right,
-                              color: Colors.grey,
-                            ),
-                          ],
-                        ),
-                        onTap: controller.comicDownload,
-                      ),
-                      ListTile(
-                        leading: const Icon(Remix.download_line),
-                        title: const Text("小说下载"),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Obx(
-                              () => Visibility(
-                                visible: NovelDownloadService
-                                    .instance.taskQueues.isNotEmpty,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: AppStyle.radius24,
-                                  ),
-                                  width: 20,
-                                  height: 20,
-                                  child: Center(
-                                    child: Text(
-                                      "${NovelDownloadService.instance.taskQueues.length}",
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Icon(
-                              Icons.chevron_right,
-                              color: Colors.grey,
-                            ),
-                          ],
-                        ),
-                        onTap: controller.novelDownload,
-                      ),
                     ],
                   ),
+                ),
+                _buildCard(
+                  context,
+                  children: [
+                    ListTile(
+                      leading: const Icon(Remix.file_history_line),
+                      title: const Text("本机记录"),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey,
+                      ),
+                      onTap: controller.toLocalHistory,
+                    ),
+                    ListTile(
+                      leading: const Icon(Remix.star_line),
+                      title: const Text("本机收藏"),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey,
+                      ),
+                      onTap: controller.toFavorite,
+                    ),
+                    ListTile(
+                      leading: const Icon(Remix.download_line),
+                      title: const Text("漫画下载"),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Obx(
+                            () => Visibility(
+                              visible: ComicDownloadService
+                                  .instance.taskQueues.isNotEmpty,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: AppStyle.radius24,
+                                ),
+                                width: 20,
+                                height: 20,
+                                child: Center(
+                                  child: Text(
+                                    "${ComicDownloadService.instance.taskQueues.length}",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                      onTap: controller.comicDownload,
+                    ),
+                    ListTile(
+                      leading: const Icon(Remix.download_line),
+                      title: const Text("小说下载"),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Obx(
+                            () => Visibility(
+                              visible: NovelDownloadService
+                                  .instance.taskQueues.isNotEmpty,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: AppStyle.radius24,
+                                ),
+                                width: 20,
+                                height: 20,
+                                child: Center(
+                                  child: Text(
+                                    "${NovelDownloadService.instance.taskQueues.length}",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                      onTap: controller.novelDownload,
+                    ),
+                  ],
                 ),
                 _buildCard(
                   context,

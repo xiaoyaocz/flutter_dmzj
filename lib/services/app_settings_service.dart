@@ -62,6 +62,9 @@ class AppSettingsService extends GetxController {
     //新闻字体
     newsFontSize.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNewsFontSize, 15);
+    //自动添加神隐漫画至收藏夹
+    collectHideComic.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kCollectHideComic, true);
     super.onInit();
   }
 
@@ -302,6 +305,14 @@ class AppSettingsService extends GetxController {
     newsFontSize.value = size;
     LocalStorageService.instance
         .setValue(LocalStorageService.kNewsFontSize, size);
+  }
+
+  /// 自动添加神隐漫画至收藏夹
+  RxBool collectHideComic = true.obs;
+  void setCollectHideComic(bool value) {
+    collectHideComic.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kCollectHideComic, value);
   }
 
   void setNoFirstRun() {

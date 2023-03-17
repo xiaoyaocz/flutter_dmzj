@@ -87,6 +87,14 @@ class SettingsPage extends StatelessWidget {
             title: const Text("字体大小跟随系统"),
             subtitle: const Text("开启可能会有布局错乱"),
           ),
+          SwitchListTile(
+            value: controller.settings.collectHideComic.value,
+            onChanged: (e) {
+              controller.settings.setCollectHideComic(e);
+            },
+            title: const Text("自动收藏神隐漫画"),
+            subtitle: const Text("浏览神隐漫画时自动添加到本机收藏"),
+          ),
         ],
       ),
     );

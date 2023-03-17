@@ -84,4 +84,7 @@ class RoutePath {
 
   /// 用户的评论
   static const kUserComment = "/user/comment";
+
+  /// 本机收藏
+  static const kLocalFavorite = "/user/local/favorite";
 }

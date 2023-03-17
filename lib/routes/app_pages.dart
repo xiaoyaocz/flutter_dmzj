@@ -28,6 +28,7 @@ import 'package:flutter_dmzj/modules/novel/search/novel_search_page.dart';
 import 'package:flutter_dmzj/modules/novel/select_chapter/novel_select_chapter_page.dart';
 import 'package:flutter_dmzj/modules/user/comment/user_comment_page.dart';
 import 'package:flutter_dmzj/modules/user/history/user_history_page.dart';
+import 'package:flutter_dmzj/modules/user/local_favorite/local_favorite_page.dart';
 import 'package:flutter_dmzj/modules/user/local_history/local_history_page.dart';
 import 'package:flutter_dmzj/modules/user/settings/settings_page.dart';
 import 'package:flutter_dmzj/modules/user/subscribe/user_subscribe_pgae.dart';
@@ -266,6 +267,11 @@ class AppPages {
           page: () => UserCommentPage(
             settings.arguments as int,
           ),
+        );
+      case RoutePath.kLocalFavorite:
+        return GetPageRoute(
+          settings: settings,
+          page: () => LocalFavoritePage(),
         );
       default:
         return GetPageRoute(page: () => const EmptyPage());

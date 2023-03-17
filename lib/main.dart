@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/models/db/comic_download_info.dart';
 import 'package:flutter_dmzj/models/db/download_status.dart';
+import 'package:flutter_dmzj/models/db/local_favorite.dart';
 import 'package:flutter_dmzj/models/db/novel_download_info.dart';
 import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/log.dart';
@@ -64,6 +65,7 @@ Future initServices() async {
   Hive.registerAdapter(DownloadStatusAdapter());
   Hive.registerAdapter(ComicDownloadInfoAdapter());
   Hive.registerAdapter(NovelDownloadInfoAdapter());
+  Hive.registerAdapter(LocalFavoriteAdapter());
   await Get.put(DBService()).init();
 
   //初始化设置服务

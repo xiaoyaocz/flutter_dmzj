@@ -87,6 +87,9 @@ class LocalStorageService extends GetxService {
   /// 新闻字体大小
   static const String kNewsFontSize = "NewsFontSize";
 
+  /// 自动添加神隐漫画至收藏夹
+  static const String kCollectHideComic = "CollectHideComic";
+
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();
