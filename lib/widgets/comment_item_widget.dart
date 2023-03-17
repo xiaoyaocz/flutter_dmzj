@@ -298,8 +298,8 @@ class CommentItemWidget extends StatelessWidget {
           title: const Text("复制内容"),
           leading: const Icon(Icons.content_copy),
           onTap: () {
-            Clipboard.setData(ClipboardData(text: item.content));
-            SmartDialog.showToast('已将内容复制到剪贴板');
+            Utils.copyText(item.content);
+
             AppNavigator.closePage();
           },
         ),

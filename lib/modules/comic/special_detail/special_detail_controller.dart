@@ -28,8 +28,7 @@ class SpecialDetailController extends BaseController {
       var result = await request.specialDetail(id: id);
       detail.value = result;
     } catch (e) {
-      pageError.value = true;
-      errorMsg.value = e.toString();
+      handleError(e, showPageError: true);
     } finally {
       pageLoadding.value = false;
     }

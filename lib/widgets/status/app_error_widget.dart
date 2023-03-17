@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -46,11 +47,8 @@ class AppErrorWidget extends StatelessWidget {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     onPressed: () {
-                      Clipboard.setData(
-                        ClipboardData(
-                          text: "$errorMsg\n${error?.stackTrace?.toString()}",
-                        ),
-                      );
+                      Utils.copyText(
+                          "$errorMsg\n${error?.stackTrace?.toString()}");
                       SmartDialog.showToast("已复制详细信息");
                     },
                     child: const Text("复制详细信息"),

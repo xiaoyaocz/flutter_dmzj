@@ -93,6 +93,7 @@ class ComicRequest {
     var list = <ComicCategoryItemModel>[];
     var result = await HttpClient.instance.getJson(
       '/0/category.json',
+      checkCode: true,
     );
     for (var item in result) {
       list.add(ComicCategoryItemModel.fromJson(item));
@@ -186,6 +187,7 @@ class ComicRequest {
     var list = <ComicSpecialModel>[];
     var result = await HttpClient.instance.getJson(
       '/subject/0/$page.json',
+      checkCode: true,
     );
     for (var item in result) {
       list.add(ComicSpecialModel.fromJson(item));
@@ -197,6 +199,7 @@ class ComicRequest {
   Future<ComicSpecialDetailModel> specialDetail({required int id}) async {
     var result = await HttpClient.instance.getJson(
       '/subject/$id.json',
+      checkCode: true,
     );
 
     return ComicSpecialDetailModel.fromJson(result);

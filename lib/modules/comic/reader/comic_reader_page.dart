@@ -203,18 +203,22 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                                   icon: const Icon(Remix.skip_back_line),
                                 ),
                               ),
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: controller.showComment,
-                                  icon: Obx(
-                                    () => Badge(
-                                      label: Text(
-                                        "${controller.viewPoints.length}",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                              Obx(
+                                () => Visibility(
+                                  visible: controller
+                                      .settings.comicReaderShowViewPoint.value,
+                                  child: Expanded(
+                                    child: IconButton(
+                                      onPressed: controller.showComment,
+                                      icon: Badge(
+                                        label: Text(
+                                          "${controller.viewPoints.length}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                        child:
+                                            const Icon(Remix.chat_smile_2_line),
                                       ),
-                                      child:
-                                          const Icon(Remix.chat_smile_2_line),
                                     ),
                                   ),
                                 ),

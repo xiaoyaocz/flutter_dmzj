@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/requests/common_request.dart';
@@ -94,7 +96,6 @@ class Utils {
 
   /// 保存图片
   static void saveImage(String url) async {
-    //TODO Windows\MacOS\Linux另外处理
     if (Platform.isIOS && !await Utils.checkPhotoPermission()) {
       return;
     }
@@ -111,28 +112,95 @@ class Utils {
         SmartDialog.showToast("图片保存失败");
         return;
       }
-      var cacheDir = await getTemporaryDirectory();
-      var file = File(p.join(cacheDir.path, p.basename(url)));
-      await file.writeAsBytes(data);
-      final result = await ImageGallerySaver.saveFile(
-        file.path,
-        name: p.basename(url),
-        isReturnPathOfIOS: true,
-      );
-      Log.d(result.toString());
-      SmartDialog.showToast("保存成功");
+      if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+        saveImageDetktop(p.basename(url), data);
+      } else {
+        var cacheDir = await getTemporaryDirectory();
+        var file = File(p.join(cacheDir.path, p.basename(url)));
+        await file.writeAsBytes(data);
+        final result = await ImageGallerySaver.saveFile(
+          file.path,
+          name: p.basename(url),
+          isReturnPathOfIOS: true,
+        );
+        Log.d(result.toString());
+        SmartDialog.showToast("保存成功");
+      }
     } catch (e) {
       SmartDialog.showToast("保存失败");
     }
   }
 
+  /// 保存图片-桌面平台
+  static void saveImageDetktop(String fileName, Uint8List list) async {
+    final String? path = await getSavePath(suggestedName: fileName);
+    if (path == null) {
+      return;
+    }
+    final XFile file = XFile.fromData(list, name: fileName);
+    await file.saveTo(path);
+  }
+
   /// 分享
   static void share(String url, {String content = ""}) {
     //TODO 分享处理
-
-    Share.share(content.isEmpty ? url : "$content\n$url");
+    showModalBottomSheet(
+      context: Get.context!,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+      constraints: const BoxConstraints(
+        maxWidth: 500,
+      ),
+      useSafeArea: true,
+      backgroundColor: Get.theme.cardColor,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.copy),
+            title: const Text("复制链接"),
+            onTap: () {
+              Get.back();
+              Utils.copyText(url);
+            },
+          ),
+          Visibility(
+            visible: content.isNotEmpty,
+            child: ListTile(
+              leading: const Icon(Icons.copy),
+              title: const Text("复制标题与链接"),
+              onTap: () {
+                Get.back();
+                Utils.copyText("$content\n$url");
+              },
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.public),
+            title: const Text("浏览器打开"),
+            onTap: () {
+              Get.back();
+              launchUrlString(url, mode: LaunchMode.externalApplication);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.share),
+            title: const Text("系统分享"),
+            onTap: () {
+              Get.back();
+              Share.share(content.isEmpty ? url : "$content\n$url");
+            },
+          ),
+        ],
+      ),
+    );
   }
 
+  /// 检查更新
   static void checkUpdate({bool showMsg = false}) async {
     try {
       int currentVer = Utils.parseVersion(packageInfo.version);
@@ -193,6 +261,16 @@ class Utils {
       if (showMsg) {
         SmartDialog.showToast("检查更新失败");
       }
+    }
+  }
+
+  /// 复制文本
+  static void copyText(String text) async {
+    try {
+      await Clipboard.setData(ClipboardData(text: text));
+      SmartDialog.showToast("已复制到剪切板");
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
     }
   }
 }
