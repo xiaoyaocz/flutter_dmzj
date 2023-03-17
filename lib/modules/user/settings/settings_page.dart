@@ -170,7 +170,14 @@ class SettingsPage extends StatelessWidget {
             onChanged: (e) {
               controller.settings.setComicReaderShowViewPoint(e);
             },
-            title: const Text("显示观点/吐槽"),
+            title: const Text("显示吐槽"),
+          ),
+          SwitchListTile(
+            value: controller.settings.comicReaderOldViewPoint.value,
+            onChanged: (e) {
+              controller.settings.setComicReaderOldViewPoint(e);
+            },
+            title: const Text("旧版吐槽"),
           ),
           SwitchListTile(
             value: controller.settings.comicReaderPageAnimation.value,

@@ -36,6 +36,9 @@ class LocalStorageService extends GetxService {
   /// 漫画阅读尾页显示观点/吐槽
   static const String kComicReaderShowViewPoint = "ComicReaderShowViewPoint";
 
+  /// 启用旧版吐槽
+  static const String kComicReaderOldViewPoint = "ComicReaderOldViewPoint";
+
   /// 小说阅读方向
   static const String kNovelReaderDirection = "NovelReaderDirection";
 

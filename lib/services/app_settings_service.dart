@@ -29,6 +29,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderHD, false);
     comicReaderPageAnimation.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderPageAnimation, true);
+    comicReaderOldViewPoint.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderOldViewPoint, false);
     //小说
     novelReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
@@ -149,6 +151,14 @@ class AppSettingsService extends GetxController {
     comicReaderShowViewPoint.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicReaderShowViewPoint, value);
+  }
+
+  /// 启用旧板吐槽
+  RxBool comicReaderOldViewPoint = false.obs;
+  void setComicReaderOldViewPoint(bool value) {
+    comicReaderOldViewPoint.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderOldViewPoint, value);
   }
 
   /// 小说阅读方向

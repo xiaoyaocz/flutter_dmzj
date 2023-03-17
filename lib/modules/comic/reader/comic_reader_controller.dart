@@ -398,101 +398,130 @@ class ComicReaderController extends BaseController {
       backgroundColor: AppStyle.darkTheme.scaffoldBackgroundColor,
       builder: (context) => Theme(
         data: AppStyle.darkTheme,
-        child: FractionallySizedBox(
-          heightFactor: 0.8,
-          child: Column(
-            children: [
-              ListTile(
-                title: Text("吐槽(${viewPoints.length})"),
-                trailing: IconButton(
-                  onPressed: Get.back,
-                  icon: const Icon(Icons.close),
-                ),
-                contentPadding: AppStyle.edgeInsetsL12,
+        child: Column(
+          children: [
+            ListTile(
+              title: Text("吐槽(${viewPoints.length})"),
+              trailing: IconButton(
+                onPressed: Get.back,
+                icon: const Icon(Icons.close),
               ),
-              Divider(
-                height: 1.0,
-                color: Colors.grey.withOpacity(.2),
-              ),
-              Expanded(
-                child: EasyRefresh(
-                  header: const MaterialHeader(),
-                  onRefresh: () async {
-                    loadViewPoints();
-                  },
-                  child: Obx(
-                    () => ListView.separated(
-                      padding: EdgeInsets.zero,
-                      itemCount: viewPoints.length,
-                      separatorBuilder: (_, i) => Divider(
-                        indent: 12,
-                        endIndent: 12,
-                        height: 1.0,
-                        color: Colors.grey.withOpacity(.2),
-                      ),
-                      itemBuilder: (_, i) {
-                        var item = viewPoints[i];
-                        return Padding(
-                          padding: AppStyle.edgeInsetsA12
-                              .copyWith(top: 8, bottom: 8),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  item.content,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
+              contentPadding: AppStyle.edgeInsetsL12,
+            ),
+            Divider(
+              height: 1.0,
+              color: Colors.grey.withOpacity(.2),
+            ),
+            Expanded(
+              child: EasyRefresh(
+                header: const MaterialHeader(),
+                onRefresh: () async {
+                  loadViewPoints();
+                },
+                child: Obx(
+                  () => settings.comicReaderOldViewPoint.value
+                      ? SingleChildScrollView(
+                          child: Padding(
+                            padding: AppStyle.edgeInsetsA12,
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: viewPoints.map<Widget>((item) {
+                                return InkWell(
+                                  onTap: () {
+                                    likeViewPoint(item);
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: AppStyle.radius8,
+                                    ),
+                                    child: Text(
+                                      item.content,
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              AppStyle.hGap12,
-                              TextButton.icon(
-                                style: TextButton.styleFrom(
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                onPressed: () {
-                                  likeViewPoint(item);
-                                },
-                                icon: const Icon(
-                                  Remix.thumb_up_line,
-                                  size: 16,
-                                ),
-                                label: Obx(() => Text("${item.num.value}")),
-                              ),
-                            ],
+                                );
+                              }).toList(),
+                            ),
                           ),
-                        );
-                      },
-                    ),
+                        )
+                      : ListView.separated(
+                          padding: EdgeInsets.zero,
+                          itemCount: viewPoints.length,
+                          separatorBuilder: (_, i) => Divider(
+                            indent: 12,
+                            endIndent: 12,
+                            height: 1.0,
+                            color: Colors.grey.withOpacity(.2),
+                          ),
+                          itemBuilder: (_, i) {
+                            var item = viewPoints[i];
+                            return Padding(
+                              padding: AppStyle.edgeInsetsA12
+                                  .copyWith(top: 8, bottom: 8),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      item.content,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                  AppStyle.hGap12,
+                                  TextButton.icon(
+                                    style: TextButton.styleFrom(
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () {
+                                      likeViewPoint(item);
+                                    },
+                                    icon: const Icon(
+                                      Remix.thumb_up_line,
+                                      size: 16,
+                                    ),
+                                    label: Obx(() => Text("${item.num.value}")),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ),
+            ),
+            Container(
+              padding: AppStyle.edgeInsetsA8.copyWith(
+                bottom: 8 + AppStyle.bottomBarHeight,
+              ),
+              child: TextField(
+                controller: tucaoController,
+                onSubmitted: (e) {
+                  sendViewPoint(e);
+                },
+                decoration: InputDecoration(
+                  hintText: "发表吐槽",
+                  contentPadding: AppStyle.edgeInsetsH12,
+                  border: const OutlineInputBorder(),
+                  suffixIcon: TextButton(
+                    onPressed: () {
+                      sendViewPoint(tucaoController.text);
+                    },
+                    child: const Text("发布"),
                   ),
                 ),
               ),
-              Container(
-                padding: AppStyle.edgeInsetsA8.copyWith(
-                  bottom: 8 + AppStyle.bottomBarHeight,
-                ),
-                child: TextField(
-                  controller: tucaoController,
-                  onSubmitted: (e) {
-                    sendViewPoint(e);
-                  },
-                  decoration: InputDecoration(
-                    hintText: "发表吐槽",
-                    contentPadding: AppStyle.edgeInsetsH12,
-                    border: const OutlineInputBorder(),
-                    suffixIcon: TextButton(
-                      onPressed: () {
-                        sendViewPoint(tucaoController.text);
-                      },
-                      child: const Text("发布"),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       routeSettings: const RouteSettings(name: "/modalBottomSheet"),
@@ -623,7 +652,17 @@ class ComicReaderController extends BaseController {
                           settings.setComicReaderShowViewPoint(e);
                           setShowViewPoint(e);
                         },
-                        title: const Text("显示观点/吐槽"),
+                        title: const Text("显示吐槽"),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.comicReaderOldViewPoint.value,
+                        onChanged: (e) {
+                          settings.setComicReaderOldViewPoint(e);
+                        },
+                        title: const Text("旧板吐槽"),
                       ),
                     ),
                     AppStyle.vGap12,
