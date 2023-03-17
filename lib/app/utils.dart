@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:file_selector/file_selector.dart';
@@ -143,7 +142,6 @@ class Utils {
 
   /// 分享
   static void share(String url, {String content = ""}) {
-    //TODO 分享处理
     showModalBottomSheet(
       context: Get.context!,
       shape: const RoundedRectangleBorder(

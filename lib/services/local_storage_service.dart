@@ -84,6 +84,9 @@ class LocalStorageService extends GetxService {
   /// 小说阅读-翻页动画
   static const String kNovelReaderPageAnimation = "NovelReaderPageAnimation";
 
+  /// 新闻字体大小
+  static const String kNewsFontSize = "NewsFontSize";
+
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();

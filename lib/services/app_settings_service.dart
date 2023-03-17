@@ -59,7 +59,9 @@ class AppSettingsService extends GetxController {
     //字体大小
     useSystemFontSize.value = LocalStorageService.instance
         .getValue(LocalStorageService.kUseSystemFontSize, false);
-
+    //新闻字体
+    newsFontSize.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNewsFontSize, 15);
     super.onInit();
   }
 
@@ -292,6 +294,14 @@ class AppSettingsService extends GetxController {
     novelReaderPageAnimation.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kNovelReaderPageAnimation, value);
+  }
+
+  /// 下载漫画最大任务数
+  var newsFontSize = 15.obs;
+  void setNewsFontSize(int size) {
+    newsFontSize.value = size;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kNewsFontSize, size);
   }
 
   void setNoFirstRun() {
