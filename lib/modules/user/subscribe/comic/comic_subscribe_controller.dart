@@ -2,7 +2,9 @@ import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/models/user/subscribe_comic_model.dart';
 import 'package:flutter_dmzj/requests/user_request.dart';
+import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
 class ComicSubscribeController
@@ -59,5 +61,17 @@ class ComicSubscribeController
     cancelEdit();
     await UserService.instance.cancelSubscribe(ids, AppConstant.kTypeComic);
     easyRefreshController.callRefresh();
+  }
+
+  void addFavorite() async {
+    for (var item in list.where((x) => x.isChecked.value)) {
+      DBService.instance.putComicFavorite(
+        title: item.name,
+        cover: item.subImg,
+        comicId: item.id,
+      );
+    }
+    cancelEdit();
+    SmartDialog.showToast("已添加至本机收藏");
   }
 }

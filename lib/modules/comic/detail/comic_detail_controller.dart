@@ -11,6 +11,7 @@ import 'package:flutter_dmzj/modules/comic/detail/comic_detail_related_page.dart
 import 'package:flutter_dmzj/requests/comic_request.dart';
 import 'package:flutter_dmzj/requests/user_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -30,6 +31,10 @@ class ComicDetailControler extends BaseController {
   /// 是否已订阅
   var subscribeStatus = false.obs;
 
+  /// 是否已收藏
+  /// 收藏是收藏到本地的，订阅是同步到动漫之家服务器的
+  var favorited = false.obs;
+
   /// 阅读记录
   Rx<ComicHistory?> history = Rx<ComicHistory?>(null);
 
@@ -46,6 +51,7 @@ class ComicDetailControler extends BaseController {
         }
       },
     );
+    favorited.value = DBService.instance.hasComicFavorited(comicId: comicId);
     // 从本地读取订阅状态
     subscribeStatus.value =
         UserService.instance.subscribedComicIds.contains(comicId);
@@ -93,6 +99,9 @@ class ComicDetailControler extends BaseController {
         SmartDialog.showToast("没有找到任何章节");
         return;
       }
+      if (result.isHide && AppSettingsService.instance.collectHideComic.value) {
+        favorite();
+      }
       detail.update((val) {
         val!.volumes = result.volumes;
       });
@@ -110,6 +119,9 @@ class ComicDetailControler extends BaseController {
       detail.value = result;
       if (result.volumes.isEmpty && !result.isHide) {
         refreshV1();
+      }
+      if (result.isHide && AppSettingsService.instance.collectHideComic.value) {
+        favorite();
       }
     } catch (e) {
       pageError.value = true;
@@ -279,5 +291,24 @@ class ComicDetailControler extends BaseController {
     } else {
       AppNavigator.toComicCategoryDetail(e.tagId);
     }
+  }
+
+  void favorite() {
+    if (detail.value.id == 0) {
+      return;
+    }
+    DBService.instance.putComicFavorite(
+      comicId: comicId,
+      title: detail.value.title,
+      cover: detail.value.cover,
+    );
+    favorited.value = true;
+    SmartDialog.showToast("已将漫画添加至本地收藏");
+  }
+
+  void cancelFavorite() {
+    DBService.instance.removeComicFavorite(comicId: comicId);
+    favorited.value = false;
+    SmartDialog.showToast("已从本地收藏删除漫画");
   }
 }

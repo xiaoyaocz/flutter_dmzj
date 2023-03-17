@@ -128,12 +128,12 @@ class NewsDetailPage extends StatelessWidget {
                   style: TextButton.styleFrom(
                     textStyle: const TextStyle(fontSize: 14),
                   ),
-                  onPressed: controller.photoView,
+                  onPressed: controller.showSettings,
                   icon: const Icon(
-                    Remix.image_2_line,
+                    Remix.settings_line,
                     size: 20,
                   ),
-                  label: const Text("图集"),
+                  label: const Text("设置"),
                 ),
               ),
             ],
@@ -160,6 +160,9 @@ class NewsDetailPage extends StatelessWidget {
           AppStyle.vGap12,
           HtmlWidget(
             controller.htmlContent.value,
+            textStyle: TextStyle(
+              fontSize: controller.settings.newsFontSize.value.toDouble(),
+            ),
             customWidgetBuilder: (e) {
               if (e.localName == "img") {
                 var imgSrc = e.attributes["src"];

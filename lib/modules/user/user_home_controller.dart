@@ -104,4 +104,8 @@ class UserHomeController extends GetxController {
   void userComment() {
     AppNavigator.toUserComment(int.tryParse(UserService.instance.userId) ?? 0);
   }
+
+  void toFavorite() {
+    AppNavigator.tolocalFavorite();
+  }
 }

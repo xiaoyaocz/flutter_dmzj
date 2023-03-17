@@ -254,6 +254,11 @@ class AppNavigator {
     toUserComment(userId);
   }
 
+  /// 打开本机收藏
+  static void tolocalFavorite() {
+    toContentPage(RoutePath.kLocalFavorite);
+  }
+
   static void showBottomSheet(
     Widget widget, {
     bool isScrollControlled = false,

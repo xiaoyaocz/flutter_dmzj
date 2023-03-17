@@ -32,6 +32,16 @@ class ComicDetailPage extends StatelessWidget {
           ),
         ),
         actions: [
+          Obx(
+            () => IconButton(
+              onPressed: controller.favorited.value
+                  ? controller.cancelFavorite
+                  : controller.favorite,
+              icon: Icon(controller.favorited.value
+                  ? Remix.star_fill
+                  : Remix.star_line),
+            ),
+          ),
           IconButton(
             onPressed: controller.share,
             icon: const Icon(Icons.share),

@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
+import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/requests/news_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -23,6 +26,7 @@ class NewsDetailController extends BaseController {
   final String title;
   final int id;
   final NewsRequest request = NewsRequest();
+  AppSettingsService get settings => AppSettingsService.instance;
   NewsDetailController(
       {required this.newsUrl, this.title = "资讯详情", required this.id}) {
     newsTitle.value = title;
@@ -87,6 +91,7 @@ class NewsDetailController extends BaseController {
         },
         onPageFinished: (String url) async {
           try {
+            await setFontSize();
             //防止亮瞎24K钛合金狗眼
             if (Get.isDarkMode) {
               await webViewController!.runJavaScript("""
@@ -302,6 +307,92 @@ getImgLinks();
     } else {
       SmartDialog.showToast("无法打开链接:$url");
       return true;
+    }
+  }
+
+  void showSettings() {
+    AppNavigator.showBottomSheet(
+      SizedBox(
+        height: 400,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const ListTile(
+              title: Text("设置"),
+              trailing: IconButton(
+                onPressed: AppNavigator.closePage,
+                icon: Icon(Icons.close),
+              ),
+              contentPadding: AppStyle.edgeInsetsL12,
+            ),
+            Divider(
+              height: 1.0,
+              color: Colors.grey.withOpacity(.2),
+            ),
+            Obx(
+              () => ListTile(
+                title: const Text("字体大小"),
+                leading: const Icon(Icons.text_fields_rounded),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        settings.setNewsFontSize(
+                          settings.newsFontSize.value + 1,
+                        );
+                        setFontSize();
+                      },
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    AppStyle.hGap12,
+                    Text("${settings.newsFontSize.value}"),
+                    AppStyle.hGap12,
+                    OutlinedButton(
+                      onPressed: () {
+                        settings.setNewsFontSize(
+                          settings.newsFontSize.value - 1,
+                        );
+                        setFontSize();
+                      },
+                      child: const Icon(
+                        Icons.remove,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo),
+              title: const Text("进入看图模式"),
+              onTap: () {
+                AppNavigator.closePage();
+                photoView();
+              },
+              trailing: const Icon(Icons.chevron_right),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future setFontSize() async {
+    try {
+      if (webViewController == null) {
+        return;
+      }
+      await webViewController!.runJavaScript(
+          '''document.getElementsByClassName("news_box")[0].style.fontSize="${settings.newsFontSize}px";
+document.getElementsByClassName("news_box")[0].style.lineHeight="1.6em";
+''');
+    } catch (e) {
+      Log.logPrint(e);
     }
   }
 }

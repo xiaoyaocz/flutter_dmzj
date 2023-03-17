@@ -59,7 +59,12 @@ class AppSettingsService extends GetxController {
     //字体大小
     useSystemFontSize.value = LocalStorageService.instance
         .getValue(LocalStorageService.kUseSystemFontSize, false);
-
+    //新闻字体
+    newsFontSize.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNewsFontSize, 15);
+    //自动添加神隐漫画至收藏夹
+    collectHideComic.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kCollectHideComic, true);
     super.onInit();
   }
 
@@ -292,6 +297,22 @@ class AppSettingsService extends GetxController {
     novelReaderPageAnimation.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kNovelReaderPageAnimation, value);
+  }
+
+  /// 下载漫画最大任务数
+  var newsFontSize = 15.obs;
+  void setNewsFontSize(int size) {
+    newsFontSize.value = size;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kNewsFontSize, size);
+  }
+
+  /// 自动添加神隐漫画至收藏夹
+  RxBool collectHideComic = true.obs;
+  void setCollectHideComic(bool value) {
+    collectHideComic.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kCollectHideComic, value);
   }
 
   void setNoFirstRun() {

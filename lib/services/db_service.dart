@@ -1,5 +1,7 @@
+import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/db/comic_history.dart';
+import 'package:flutter_dmzj/models/db/local_favorite.dart';
 import 'package:flutter_dmzj/models/db/novel_history.dart';
 import 'package:flutter_dmzj/models/user/comic_history_model.dart';
 import 'package:flutter_dmzj/models/user/novel_history_model.dart';
@@ -12,6 +14,7 @@ class DBService extends GetxService {
   late Box newsLikeBox;
   late Box<ComicHistory> comicHistoryBox;
   late Box<NovelHistory> novelHistoryBox;
+  late Box<LocalFavorite> localFavoriteBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();
     newsLikeBox = await Hive.openBox(
@@ -24,6 +27,10 @@ class DBService extends GetxService {
     );
     novelHistoryBox = await Hive.openBox(
       "NovelHistory",
+      path: dir.path,
+    );
+    localFavoriteBox = await Hive.openBox(
+      "LocalFavorite",
       path: dir.path,
     );
   }
@@ -177,5 +184,31 @@ class DBService extends GetxService {
     } catch (e) {
       Log.logPrint(e);
     }
+  }
+
+  bool hasComicFavorited({required int comicId}) {
+    var id = "${AppConstant.kTypeComic}_$comicId";
+    return localFavoriteBox.containsKey(id);
+  }
+
+  void putComicFavorite(
+      {required String title, required String cover, required int comicId}) {
+    var id = "${AppConstant.kTypeComic}_$comicId";
+    localFavoriteBox.put(
+      id,
+      LocalFavorite(
+        id: id,
+        cover: cover,
+        objId: comicId,
+        title: title,
+        type: AppConstant.kTypeComic,
+        updateTime: DateTime.now(),
+      ),
+    );
+  }
+
+  void removeComicFavorite({required int comicId}) {
+    var id = "${AppConstant.kTypeComic}_$comicId";
+    localFavoriteBox.delete(id);
   }
 }
