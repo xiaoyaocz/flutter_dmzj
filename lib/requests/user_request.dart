@@ -24,14 +24,10 @@ class UserRequest {
       {required String nickname, required String password}) async {
     var pwd = md5.convert(utf8.encode(password)).toString().toUpperCase();
 
-    Map<String, dynamic> data = Api.getDefaultParameter();
-    data.addAll({
-      "_m": "D6132DCE99D329CACDE913C7FA952CF3",
-      "_a": "05CDFDA93076FC56950D6598B94FD986",
-      "_i": "8508AEE02C57308631D8E5F774D3AABC",
+    Map<String, dynamic> data = {
       "nickname": Uri.encodeComponent(nickname),
       "pwd": pwd,
-    });
+    };
 
     var result = await HttpClient.instance.postJson(
       "/loginV2/m_confirm",
