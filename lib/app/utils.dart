@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/log.dart';
@@ -94,7 +95,6 @@ class Utils {
 
   /// 保存图片
   static void saveImage(String url) async {
-    //TODO Windows\MacOS\Linux另外处理
     if (Platform.isIOS && !await Utils.checkPhotoPermission()) {
       return;
     }
@@ -111,25 +111,39 @@ class Utils {
         SmartDialog.showToast("图片保存失败");
         return;
       }
-      var cacheDir = await getTemporaryDirectory();
-      var file = File(p.join(cacheDir.path, p.basename(url)));
-      await file.writeAsBytes(data);
-      final result = await ImageGallerySaver.saveFile(
-        file.path,
-        name: p.basename(url),
-        isReturnPathOfIOS: true,
-      );
-      Log.d(result.toString());
+      if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+        saveImageDetktop(p.basename(url), data);
+      } else {
+        var cacheDir = await getTemporaryDirectory();
+        var file = File(p.join(cacheDir.path, p.basename(url)));
+        await file.writeAsBytes(data);
+        final result = await ImageGallerySaver.saveFile(
+          file.path,
+          name: p.basename(url),
+          isReturnPathOfIOS: true,
+        );
+        Log.d(result.toString());
+      }
+
       SmartDialog.showToast("保存成功");
     } catch (e) {
       SmartDialog.showToast("保存失败");
     }
   }
 
+  /// 保存图片-桌面平台
+  static void saveImageDetktop(String fileName, Uint8List list) async {
+    final String? path = await getSavePath(suggestedName: fileName);
+    if (path == null) {
+      return;
+    }
+    final XFile file = XFile.fromData(list, name: fileName);
+    await file.saveTo(path);
+  }
+
   /// 分享
   static void share(String url, {String content = ""}) {
     //TODO 分享处理
-
     Share.share(content.isEmpty ? url : "$content\n$url");
   }
 
