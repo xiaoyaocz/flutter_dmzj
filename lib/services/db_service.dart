@@ -67,12 +67,12 @@ class DBService extends GetxService {
     try {
       for (var item in items) {
         var remoteTime =
-            DateTime.fromMillisecondsSinceEpoch(item.viewingTime ?? 0 * 1000);
+            DateTime.fromMillisecondsSinceEpoch((item.viewingTime ?? 0) * 1000);
         //本地是否存在记录
         var local = comicHistoryBox.get(item.comicId);
         if (local != null && local.chapterId != 0) {
           //与本地记录时间做比对，如果较新则覆盖，否则直接跳过处理
-          if (local.updateTime.millisecondsSinceEpoch <
+          if ((local.updateTime.millisecondsSinceEpoch ~/ 1000) <
               remoteTime.millisecondsSinceEpoch) {
             putComicHistory(
               ComicHistory(
@@ -141,12 +141,12 @@ class DBService extends GetxService {
     try {
       for (var item in items) {
         var remoteTime =
-            DateTime.fromMillisecondsSinceEpoch(item.viewingTime ?? 0 * 1000);
+            DateTime.fromMillisecondsSinceEpoch((item.viewingTime ?? 0) * 1000);
         //本地是否存在记录
         var local = novelHistoryBox.get(item.lnovelId);
         if (local != null && local.chapterId != 0) {
           //与本地记录时间做比对，如果较新则覆盖，否则直接跳过处理
-          if (local.updateTime.millisecondsSinceEpoch <
+          if ((local.updateTime.millisecondsSinceEpoch ~/ 1000) <
               remoteTime.millisecondsSinceEpoch) {
             putNovelHistory(
               NovelHistory(
