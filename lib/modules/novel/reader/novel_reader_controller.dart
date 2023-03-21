@@ -465,6 +465,43 @@ class NovelReaderController extends BaseController {
                     ),
                     AppStyle.vGap12,
                     buildBGItem(
+                      child: ListTile(
+                        title: const Text("阅读主题"),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: AppColor.novelThemes.keys
+                              .map(
+                                (e) => GestureDetector(
+                                  onTap: () {
+                                    settings.setNovelReaderTheme(e);
+                                  },
+                                  child: Container(
+                                    margin: AppStyle.edgeInsetsL8,
+                                    height: 36,
+                                    width: 36,
+                                    decoration: BoxDecoration(
+                                      color: AppColor.novelThemes[e]!.first,
+                                      borderRadius: AppStyle.radius24,
+                                    ),
+                                    child: Visibility(
+                                      visible: AppColor.novelThemes.keys
+                                              .toList()
+                                              .indexOf(e) ==
+                                          settings.novelReaderTheme.value,
+                                      child: Icon(
+                                        Icons.check,
+                                        color: AppColor.novelThemes[e]!.last,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
                       child: SwitchListTile(
                         value: settings.novelReaderLeftHandMode.value,
                         onChanged: (e) {
@@ -564,43 +601,6 @@ class NovelReaderController extends BaseController {
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                    ),
-                    AppStyle.vGap12,
-                    buildBGItem(
-                      child: ListTile(
-                        title: const Text("阅读主题"),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: AppColor.novelThemes.keys
-                              .map(
-                                (e) => GestureDetector(
-                                  onTap: () {
-                                    settings.setNovelReaderTheme(e);
-                                  },
-                                  child: Container(
-                                    margin: AppStyle.edgeInsetsL8,
-                                    height: 36,
-                                    width: 36,
-                                    decoration: BoxDecoration(
-                                      color: AppColor.novelThemes[e]!.first,
-                                      borderRadius: AppStyle.radius24,
-                                    ),
-                                    child: Visibility(
-                                      visible: AppColor.novelThemes.keys
-                                              .toList()
-                                              .indexOf(e) ==
-                                          settings.novelReaderTheme.value,
-                                      child: Icon(
-                                        Icons.check,
-                                        color: AppColor.novelThemes[e]!.last,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
                         ),
                       ),
                     ),
