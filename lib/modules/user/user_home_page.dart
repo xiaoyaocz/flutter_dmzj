@@ -24,8 +24,12 @@ class UserHomePage extends GetView<UserHomeController> {
           : AppColor.backgroundColor,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: Get.isDarkMode
-            ? SystemUiOverlayStyle.light
-            : SystemUiOverlayStyle.dark,
+            ? SystemUiOverlayStyle.light.copyWith(
+                systemNavigationBarColor: Colors.transparent,
+              )
+            : SystemUiOverlayStyle.dark.copyWith(
+                systemNavigationBarColor: Colors.transparent,
+              ),
         child: SafeArea(
           child: EasyRefresh(
             header: const MaterialHeader(),

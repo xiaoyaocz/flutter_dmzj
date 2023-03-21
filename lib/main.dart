@@ -32,9 +32,11 @@ void main() async {
   //初始化服务
   await initServices();
   //设置状态栏为透明
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarColor: Colors.transparent,
   );
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   runZonedGuarded(
