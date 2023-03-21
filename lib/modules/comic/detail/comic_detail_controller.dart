@@ -297,13 +297,15 @@ class ComicDetailControler extends BaseController {
     if (detail.value.id == 0) {
       return;
     }
-    DBService.instance.putComicFavorite(
-      comicId: comicId,
-      title: detail.value.title,
-      cover: detail.value.cover,
-    );
-    favorited.value = true;
-    SmartDialog.showToast("已将漫画添加至本地收藏");
+    if (!DBService.instance.hasComicFavorited(comicId: comicId)) {
+      DBService.instance.putComicFavorite(
+        comicId: comicId,
+        title: detail.value.title,
+        cover: detail.value.cover,
+      );
+      favorited.value = true;
+      SmartDialog.showToast("已将漫画添加至本地收藏");
+    }
   }
 
   void cancelFavorite() {
