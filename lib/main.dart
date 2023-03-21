@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -25,9 +26,19 @@ import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:windows_single_instance/windows_single_instance.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isWindows) {
+    await WindowsSingleInstance.ensureSingleInstance(
+      [],
+      "com.xycz.dmzjx",
+      onSecondWindow: (args) {
+        Log.logPrint(args);
+      },
+    );
+  }
   await Hive.initFlutter();
   //初始化服务
   await initServices();

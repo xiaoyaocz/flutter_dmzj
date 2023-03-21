@@ -49,6 +49,7 @@ dependencies:
   connectivity_plus: ^3.0.3 #连接状态
   battery_plus: ^3.0.3 #电池状态
   file_selector: ^0.9.2+4 #文件选择
+  windows_single_instance: ^0.1.5 #Windows单实例
   
   flutter: 
     sdk: flutter
