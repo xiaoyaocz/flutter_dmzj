@@ -104,7 +104,8 @@ class ComicDetailInfo {
             )
             .toList(),
       );
-  factory ComicDetailInfo.fromV1(ComicDetailV1Model model) {
+  factory ComicDetailInfo.fromV1(ComicDetailV1Model model,
+      {bool isHide = false}) {
     var lastChapterId = 0;
     List<ComicDetailVolume> volumes = [];
     List<ComicDetailChapterItem> serialItems = [];
@@ -136,12 +137,13 @@ class ComicDetailInfo {
     }
     volumes.add(
       ComicDetailVolume(
-          title: "神隐", chapters: RxList<ComicDetailChapterItem>(serialItems)),
+          title: isHide ? "神隐" : "连载",
+          chapters: RxList<ComicDetailChapterItem>(serialItems)),
     );
     if (aloneItems.isNotEmpty) {
       volumes.add(
         ComicDetailVolume(
-            title: "神隐-单行本",
+            title: isHide ? "神隐-单行本" : "单行本",
             chapters: RxList<ComicDetailChapterItem>(aloneItems)),
       );
     }
@@ -160,7 +162,7 @@ class ComicDetailInfo {
       subscribeNum: 0,
       firstLetter: model.info.firstLetter,
       comicPy: "",
-      isHide: true,
+      isHide: isHide,
       types: model.info.types
           .split("/")
           .map(

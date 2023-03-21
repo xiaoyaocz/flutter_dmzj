@@ -66,7 +66,7 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kNewsFontSize, 15);
     //自动添加神隐漫画至收藏夹
     collectHideComic.value = LocalStorageService.instance
-        .getValue(LocalStorageService.kCollectHideComic, true);
+        .getValue(LocalStorageService.kCollectHideComic, false);
     super.onInit();
   }
 
@@ -318,7 +318,7 @@ class AppSettingsService extends GetxController {
   }
 
   /// 自动添加神隐漫画至收藏夹
-  RxBool collectHideComic = true.obs;
+  RxBool collectHideComic = false.obs;
   void setCollectHideComic(bool value) {
     collectHideComic.value = value;
     LocalStorageService.instance

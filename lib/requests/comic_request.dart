@@ -229,7 +229,8 @@ class ComicRequest {
     var errorMsg = "";
     try {
       if (priorityV1) {
-        info = ComicDetailInfo.fromV1(await comicDetailV1(comicId: comicId));
+        info = ComicDetailInfo.fromV1(await comicDetailV1(comicId: comicId),
+            isHide: true);
       } else {
         info = ComicDetailInfo.fromV4(await comicDetailV4(comicId: comicId));
       }
@@ -239,7 +240,8 @@ class ComicRequest {
         if (priorityV1) {
           info = ComicDetailInfo.fromV4(await comicDetailV4(comicId: comicId));
         } else {
-          info = ComicDetailInfo.fromV1(await comicDetailV1(comicId: comicId));
+          info = ComicDetailInfo.fromV1(await comicDetailV1(comicId: comicId),
+              isHide: e.toString() == "漫画不存在");
         }
       } catch (e) {
         errorMsg += "\n${priorityV1 ? "V4" : "V1"}：$e";
