@@ -1,7 +1,7 @@
 {
-    "version": "2.0.3-beta",
-    "version_num": 20003,
-    "version_desc": "1. 新增关闭翻页动画选项 #115\n2. 调整吐槽，支持启用旧版吐槽 #109 #119\n3. 新增本地收藏夹功能 #116\n4. 新闻支持调整字体大小 #113\n5. 更新图标 @Mango绘制 #117\n6. 优化分享功能\n7. 完善桌面平台保存图片",
+    "version": "2.0.4-beta",
+    "version_num": 20004,
+    "version_desc": "1. 修复浏览记录同步错误问题 #129\n2. 修复神隐漫画相关问题 #133\n3. 底部导航条及状态栏适配 #135 #137 #117\n4. Windows限制单窗口运行 #126\n5. 增加翻页按键监听 #134\n6. 优化小说阅读背景颜色 #127",
     "prerelease":true,
     "download_url": "https://github.com/xiaoyaocz/flutter_dmzj/releases"
 }
