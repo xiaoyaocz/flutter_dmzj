@@ -14,11 +14,16 @@ class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: Get.isDarkMode
-          ? SystemUiOverlayStyle.light
-          : SystemUiOverlayStyle.dark,
+          ? SystemUiOverlayStyle.light.copyWith(
+              systemNavigationBarColor: Colors.transparent,
+            )
+          : SystemUiOverlayStyle.dark.copyWith(
+              systemNavigationBarColor: Colors.transparent,
+            ),
       child: Container(
-        padding: EdgeInsets.only(top: AppStyle.statusBarHeight, right: 4),
-        height: 56 + AppStyle.statusBarHeight,
+        padding:
+            EdgeInsets.only(top: MediaQuery.of(context).padding.top, right: 4),
+        height: 56 + MediaQuery.of(context).padding.top,
         child: Row(
           children: [
             Expanded(

@@ -26,7 +26,9 @@ class AppStyle {
         fontSize: 16,
         color: AppColor.black333,
       ),
-      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+        systemNavigationBarColor: Colors.transparent,
+      ),
     ),
   );
   static ThemeData darkTheme = ThemeData.dark().copyWith(
@@ -55,7 +57,9 @@ class AppStyle {
       iconTheme: const IconThemeData(
         color: Colors.white,
       ),
-      systemOverlayStyle: SystemUiOverlayStyle.light,
+      systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
+        systemNavigationBarColor: Colors.transparent,
+      ),
     ),
   );
   static const vGap4 = SizedBox(
