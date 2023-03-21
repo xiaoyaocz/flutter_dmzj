@@ -1,9 +1,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/modules/comic/reader/comic_reader_controller.dart';
 import 'package:flutter_dmzj/widgets/custom_header.dart';
 import 'package:flutter_dmzj/widgets/local_image.dart';
@@ -21,227 +23,161 @@ class ComicReaderPage extends GetView<ComicReaderController> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: AppStyle.darkTheme,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Obx(
-              () => Offstage(
-                offstage: controller.detail.value.chapterId == 0,
-                child: GestureDetector(
-                  onTap: () {
-                    controller.setShowControls();
-                  },
-                  child: controller.direction.value == ReaderDirection.kUpToDown
-                      ? buildVertical()
-                      : buildHorizontal(),
-                ),
-              ),
-            ),
-            Positioned.fill(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        controller.leftHandMode
-                            ? controller.nextPage()
-                            : controller.forwardPage();
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        color: Colors.transparent,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 8,
-                    child: Container(),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        controller.leftHandMode
-                            ? controller.forwardPage()
-                            : controller.nextPage();
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        color: Colors.transparent,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Obx(
-              () => Offstage(
-                offstage: !controller.pageLoadding.value,
-                child: const AppLoaddingWidget(),
-              ),
-            ),
-            Obx(
-              () => Offstage(
-                offstage: !controller.pageError.value,
-                child: AppErrorWidget(
-                  errorMsg: controller.errorMsg.value,
-                  onRefresh: () => controller.loadDetail(),
-                ),
-              ),
-            ),
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Obx(
+    return RawKeyboardListener(
+      onKey: (e) {
+        if (e.runtimeType == RawKeyUpEvent) {
+          controller.keyDown(e.logicalKey);
+          Log.d(e.toString());
+        }
+      },
+      focusNode: controller.focusNode,
+      child: Theme(
+        data: AppStyle.darkTheme,
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Stack(
+            children: [
+              Obx(
                 () => Offstage(
-                  offstage: !controller.settings.comicReaderShowStatus.value,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.black38,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                      ),
-                    ),
-                    padding: AppStyle.edgeInsetsA12.copyWith(top: 4, bottom: 4),
-                    child: Obx(
-                      () => Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          buildConnectivity(),
-                          buildBattery(),
-                          Container(
-                            constraints: const BoxConstraints(maxWidth: 100),
-                            child: Text(
-                              controller.detail.value.chapterTitle,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 12, height: 1.0),
-                            ),
-                          ),
-                          AppStyle.hGap8,
-                          Text(
-                            "${controller.currentIndex.value + 1} / ${controller.detail.value.pageUrls.length}",
-                            style: const TextStyle(fontSize: 12, height: 1.0),
-                          ),
-                        ],
-                      ),
-                    ),
+                  offstage: controller.detail.value.chapterId == 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.setShowControls();
+                    },
+                    child:
+                        controller.direction.value == ReaderDirection.kUpToDown
+                            ? buildVertical()
+                            : buildHorizontal(),
                   ),
                 ),
               ),
-            ),
-            //顶部
-            Obx(
-              () => AnimatedPositioned(
-                top: controller.showControls.value
-                    ? 0
-                    : -(48 + AppStyle.statusBarHeight),
-                left: 0,
-                right: 0,
-                duration: const Duration(milliseconds: 100),
-                child: Container(
-                  color: AppStyle.darkTheme.cardColor,
-                  height: 48 + AppStyle.statusBarHeight,
-                  padding: EdgeInsets.only(top: AppStyle.statusBarHeight),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: Get.back,
-                        icon: const Icon(Icons.arrow_back),
-                      ),
-                      AppStyle.hGap12,
-                      Expanded(
-                        child: Obx(
-                          () => Text(
-                            controller.chapters[controller.chapterIndex.value]
-                                .chapterTitle,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+              Positioned.fill(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          controller.leftHandMode
+                              ? controller.nextPage()
+                              : controller.forwardPage();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: Colors.transparent,
                         ),
                       ),
-                    ],
+                    ),
+                    Expanded(
+                      flex: 8,
+                      child: Container(),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          controller.leftHandMode
+                              ? controller.forwardPage()
+                              : controller.nextPage();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Obx(
+                () => Offstage(
+                  offstage: !controller.pageLoadding.value,
+                  child: const AppLoaddingWidget(),
+                ),
+              ),
+              Obx(
+                () => Offstage(
+                  offstage: !controller.pageError.value,
+                  child: AppErrorWidget(
+                    errorMsg: controller.errorMsg.value,
+                    onRefresh: () => controller.loadDetail(),
                   ),
                 ),
               ),
-            ),
-            //底部
-            Obx(
-              () => AnimatedPositioned(
-                bottom: controller.showControls.value
-                    ? 0
-                    : -(104 + AppStyle.bottomBarHeight),
-                left: 0,
+              Positioned(
                 right: 0,
-                duration: const Duration(milliseconds: 100),
-                child: Container(
-                  color: AppStyle.darkTheme.cardColor,
-                  height: 104 + AppStyle.bottomBarHeight,
-                  padding: EdgeInsets.only(bottom: AppStyle.bottomBarHeight),
-                  alignment: Alignment.center,
-                  child: Container(
-                    constraints: const BoxConstraints(
-                      maxWidth: 500,
+                bottom: 0,
+                child: Obx(
+                  () => Offstage(
+                    offstage: !controller.settings.comicReaderShowStatus.value,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.black38,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                        ),
+                      ),
+                      padding:
+                          AppStyle.edgeInsetsA12.copyWith(top: 4, bottom: 4),
+                      child: Obx(
+                        () => Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            buildConnectivity(),
+                            buildBattery(),
+                            Container(
+                              constraints: const BoxConstraints(maxWidth: 100),
+                              child: Text(
+                                controller.detail.value.chapterTitle,
+                                overflow: TextOverflow.ellipsis,
+                                style:
+                                    const TextStyle(fontSize: 12, height: 1.0),
+                              ),
+                            ),
+                            AppStyle.hGap8,
+                            Text(
+                              "${controller.currentIndex.value + 1} / ${controller.detail.value.pageUrls.length}",
+                              style: const TextStyle(fontSize: 12, height: 1.0),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    child: Column(
+                  ),
+                ),
+              ),
+              //顶部
+              Obx(
+                () => AnimatedPositioned(
+                  top: controller.showControls.value
+                      ? 0
+                      : -(48 + AppStyle.statusBarHeight),
+                  left: 0,
+                  right: 0,
+                  duration: const Duration(milliseconds: 100),
+                  child: Container(
+                    color: AppStyle.darkTheme.cardColor,
+                    height: 48 + AppStyle.statusBarHeight,
+                    padding: EdgeInsets.only(top: AppStyle.statusBarHeight),
+                    child: Row(
                       children: [
-                        buildSilderBar(),
-                        Material(
-                          color: AppStyle.darkTheme.cardColor,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: controller.forwardChapter,
-                                  icon: const Icon(Remix.skip_back_line),
-                                ),
-                              ),
-                              Obx(
-                                () => Visibility(
-                                  visible: controller
-                                      .settings.comicReaderShowViewPoint.value,
-                                  child: Expanded(
-                                    child: IconButton(
-                                      onPressed: controller.showComment,
-                                      icon: Badge(
-                                        label: Text(
-                                          "${controller.viewPoints.length}",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                        child:
-                                            const Icon(Remix.chat_smile_2_line),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: controller.showMenu,
-                                  icon: const Icon(Remix.file_list_line),
-                                ),
-                              ),
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: controller.showSettings,
-                                  icon: const Icon(Remix.settings_line),
-                                ),
-                              ),
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: controller.nextChapter,
-                                  icon: const Icon(Remix.skip_forward_line),
-                                ),
-                              ),
-                            ],
+                        IconButton(
+                          onPressed: Get.back,
+                          icon: const Icon(Icons.arrow_back),
+                        ),
+                        AppStyle.hGap12,
+                        Expanded(
+                          child: Obx(
+                            () => Text(
+                              controller.chapters[controller.chapterIndex.value]
+                                  .chapterTitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                       ],
@@ -249,8 +185,86 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                   ),
                 ),
               ),
-            ),
-          ],
+              //底部
+              Obx(
+                () => AnimatedPositioned(
+                  bottom: controller.showControls.value
+                      ? 0
+                      : -(104 + AppStyle.bottomBarHeight),
+                  left: 0,
+                  right: 0,
+                  duration: const Duration(milliseconds: 100),
+                  child: Container(
+                    color: AppStyle.darkTheme.cardColor,
+                    height: 104 + AppStyle.bottomBarHeight,
+                    padding: EdgeInsets.only(bottom: AppStyle.bottomBarHeight),
+                    alignment: Alignment.center,
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: 500,
+                      ),
+                      child: Column(
+                        children: [
+                          buildSilderBar(),
+                          Material(
+                            color: AppStyle.darkTheme.cardColor,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: controller.forwardChapter,
+                                    icon: const Icon(Remix.skip_back_line),
+                                  ),
+                                ),
+                                Obx(
+                                  () => Visibility(
+                                    visible: controller.settings
+                                        .comicReaderShowViewPoint.value,
+                                    child: Expanded(
+                                      child: IconButton(
+                                        onPressed: controller.showComment,
+                                        icon: Badge(
+                                          label: Text(
+                                            "${controller.viewPoints.length}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                          child: const Icon(
+                                              Remix.chat_smile_2_line),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: controller.showMenu,
+                                    icon: const Icon(Remix.file_list_line),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: controller.showSettings,
+                                    icon: const Icon(Remix.settings_line),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: controller.nextChapter,
+                                    icon: const Icon(Remix.skip_forward_line),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

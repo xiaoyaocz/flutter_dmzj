@@ -149,7 +149,8 @@ class SettingsPage extends StatelessWidget {
             onChanged: (e) {
               controller.settings.setComicReaderLeftHandMode(e);
             },
-            title: const Text("左手模式"),
+            title: const Text("操作反转"),
+            subtitle: const Text("点击左侧下一页，右侧上一页"),
           ),
           SwitchListTile(
             value: controller.settings.comicReaderFullScreen.value,
@@ -232,7 +233,8 @@ class SettingsPage extends StatelessWidget {
             onChanged: (e) {
               controller.settings.setNovelReaderLeftHandMode(e);
             },
-            title: const Text("左手模式"),
+            title: const Text("操作反转"),
+            subtitle: const Text("点击左侧下一页，右侧上一页"),
           ),
           // SwitchListTile(
           //   value: settings.novelReaderFullScreen.value,

@@ -30,6 +30,7 @@ class ComicReaderController extends BaseController {
   final String comicCover;
   final ComicDetailChapterItem chapter;
   final List<ComicDetailChapterItem> chapters;
+  final FocusNode focusNode = FocusNode();
   final ComicRequest request = ComicRequest();
   ComicReaderController({
     required this.comicId,
@@ -153,6 +154,7 @@ class ComicReaderController extends BaseController {
 
   @override
   void onClose() {
+    focusNode.dispose();
     connectivitySubscription?.cancel();
     batterySubscription?.cancel();
     exitFull();
@@ -346,6 +348,7 @@ class ComicReaderController extends BaseController {
   /// 下一页
   void nextPage() {
     var value = currentIndex.value;
+    Log.w("下一页$value");
     var max = detail.value.pageUrls.length;
     if (value >= max - 1) {
       nextChapter();
@@ -357,7 +360,7 @@ class ComicReaderController extends BaseController {
   /// 上一页
   void forwardPage() {
     var value = currentIndex.value;
-
+    Log.w("上一页$value");
     if (value == 0) {
       forwardChapter();
     } else {
@@ -616,7 +619,8 @@ class ComicReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setComicReaderLeftHandMode(e);
                         },
-                        title: const Text("左手模式"),
+                        title: const Text("操作反转"),
+                        subtitle: const Text("点击左侧下一页，右侧上一页"),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -811,6 +815,24 @@ class ComicReaderController extends BaseController {
       SmartDialog.showToast(e.toString());
     } finally {
       SmartDialog.dismiss(status: SmartStatus.loading);
+    }
+  }
+
+  void keyDown(LogicalKeyboardKey key) {
+    if (key == LogicalKeyboardKey.arrowLeft ||
+        key == LogicalKeyboardKey.pageUp) {
+      if (leftHandMode) {
+        nextPage();
+      } else {
+        forwardPage();
+      }
+    } else if (key == LogicalKeyboardKey.arrowRight ||
+        key == LogicalKeyboardKey.pageDown) {
+      if (leftHandMode) {
+        forwardPage();
+      } else {
+        nextPage();
+      }
     }
   }
 }
