@@ -30,8 +30,8 @@ class AppColor {
       Colors.black,
     ],
     3: [
-      const Color.fromRGBO(40, 53, 72, 1),
-      const Color.fromRGBO(200, 200, 200, 1),
+      const Color(0xff3b3a39),
+      const Color.fromRGBO(230, 230, 230, 1),
     ],
     4: [
       Colors.black,
