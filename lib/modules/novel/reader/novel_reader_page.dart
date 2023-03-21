@@ -1,10 +1,12 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
+import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/modules/novel/reader/novel_horizontal_reader.dart';
 
 import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
@@ -24,172 +26,123 @@ class NovelReaderPage extends GetView<NovelReaderController> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: AppStyle.darkTheme,
-      child: Obx(
-        () => Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: AppColor
-              .novelThemes[controller.settings.novelReaderTheme.value]!.first,
-          body: Stack(
-            children: [
-              Obx(
-                () => Offstage(
-                  offstage: controller.content.value.isEmpty,
-                  child: GestureDetector(
-                    onTap: () {
-                      controller.setShowControls();
-                    },
-                    child: controller.isPicture.value
-                        ? buildPicture()
-                        : (controller.direction.value ==
-                                ReaderDirection.kUpToDown
-                            ? buildVertical()
-                            : buildHorizontal()),
+    return RawKeyboardListener(
+      onKey: (e) {
+        if (e.runtimeType == RawKeyUpEvent) {
+          controller.keyDown(e.logicalKey);
+          Log.d(e.toString());
+        }
+      },
+      focusNode: controller.focusNode,
+      child: Theme(
+        data: AppStyle.darkTheme,
+        child: Obx(
+          () => Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: AppColor
+                .novelThemes[controller.settings.novelReaderTheme.value]!.first,
+            body: Stack(
+              children: [
+                Obx(
+                  () => Offstage(
+                    offstage: controller.content.value.isEmpty,
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.setShowControls();
+                      },
+                      child: controller.isPicture.value
+                          ? buildPicture()
+                          : (controller.direction.value ==
+                                  ReaderDirection.kUpToDown
+                              ? buildVertical()
+                              : buildHorizontal()),
+                    ),
                   ),
                 ),
-              ),
-              Positioned.fill(
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          controller.leftHandMode
-                              ? controller.nextPage()
-                              : controller.forwardPage();
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          color: Colors.transparent,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 8,
-                      child: Container(),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          controller.leftHandMode
-                              ? controller.forwardPage()
-                              : controller.nextPage();
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          color: Colors.transparent,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Obx(
-                () => Offstage(
-                  offstage: !controller.pageLoadding.value,
-                  child: const AppLoaddingWidget(),
-                ),
-              ),
-              Obx(
-                () => Offstage(
-                  offstage: !controller.pageError.value,
-                  child: AppErrorWidget(
-                    errorMsg: controller.errorMsg.value,
-                    onRefresh: () => controller.loadContent(),
-                  ),
-                ),
-              ),
-              buildBottomStatus(),
-              //顶部
-              Obx(
-                () => AnimatedPositioned(
-                  top: controller.showControls.value
-                      ? 0
-                      : -(48 + AppStyle.statusBarHeight),
-                  left: 0,
-                  right: 0,
-                  duration: const Duration(milliseconds: 100),
-                  child: Container(
-                    color: AppStyle.darkTheme.cardColor,
-                    height: 48 + AppStyle.statusBarHeight,
-                    padding: EdgeInsets.only(top: AppStyle.statusBarHeight),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: Get.back,
-                          icon: const Icon(Icons.arrow_back),
-                        ),
-                        AppStyle.hGap12,
-                        Expanded(
-                          child: Text(
-                            controller.chapters[controller.chapterIndex.value]
-                                .chapterName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                Positioned.fill(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            controller.leftHandMode
+                                ? controller.nextPage()
+                                : controller.forwardPage();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            color: Colors.transparent,
                           ),
                         ),
-                      ],
+                      ),
+                      Expanded(
+                        flex: 8,
+                        child: Container(),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            controller.leftHandMode
+                                ? controller.forwardPage()
+                                : controller.nextPage();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            color: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Obx(
+                  () => Offstage(
+                    offstage: !controller.pageLoadding.value,
+                    child: const AppLoaddingWidget(),
+                  ),
+                ),
+                Obx(
+                  () => Offstage(
+                    offstage: !controller.pageError.value,
+                    child: AppErrorWidget(
+                      errorMsg: controller.errorMsg.value,
+                      onRefresh: () => controller.loadContent(),
                     ),
                   ),
                 ),
-              ),
-              //底部
-              Obx(
-                () => AnimatedPositioned(
-                  bottom: controller.showControls.value
-                      ? 0
-                      : -(104 + AppStyle.bottomBarHeight),
-                  left: 0,
-                  right: 0,
-                  duration: const Duration(milliseconds: 100),
-                  child: Container(
-                    color: AppStyle.darkTheme.cardColor,
-                    height: 104 + AppStyle.bottomBarHeight,
-                    padding: EdgeInsets.only(bottom: AppStyle.bottomBarHeight),
-                    alignment: Alignment.center,
+                buildBottomStatus(),
+                //顶部
+                Obx(
+                  () => AnimatedPositioned(
+                    top: controller.showControls.value
+                        ? 0
+                        : -(48 + AppStyle.statusBarHeight),
+                    left: 0,
+                    right: 0,
+                    duration: const Duration(milliseconds: 100),
                     child: Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: 500,
-                      ),
-                      child: Column(
+                      color: AppStyle.darkTheme.cardColor,
+                      height: 48 + AppStyle.statusBarHeight,
+                      padding: EdgeInsets.only(top: AppStyle.statusBarHeight),
+                      child: Row(
                         children: [
-                          buildSilderBar(),
-                          Material(
-                            color: AppStyle.darkTheme.cardColor,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: controller.forwardChapter,
-                                    icon: const Icon(Remix.skip_back_line),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: controller.showMenu,
-                                    icon: const Icon(Remix.file_list_line),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: controller.showSettings,
-                                    icon: const Icon(Remix.settings_line),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: controller.nextChapter,
-                                    icon: const Icon(Remix.skip_forward_line),
-                                  ),
-                                ),
-                              ],
+                          IconButton(
+                            onPressed: Get.back,
+                            icon: const Icon(Icons.arrow_back),
+                          ),
+                          AppStyle.hGap12,
+                          Expanded(
+                            child: Text(
+                              controller.chapters[controller.chapterIndex.value]
+                                  .chapterName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -197,8 +150,67 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                     ),
                   ),
                 ),
-              ),
-            ],
+                //底部
+                Obx(
+                  () => AnimatedPositioned(
+                    bottom: controller.showControls.value
+                        ? 0
+                        : -(104 + AppStyle.bottomBarHeight),
+                    left: 0,
+                    right: 0,
+                    duration: const Duration(milliseconds: 100),
+                    child: Container(
+                      color: AppStyle.darkTheme.cardColor,
+                      height: 104 + AppStyle.bottomBarHeight,
+                      padding:
+                          EdgeInsets.only(bottom: AppStyle.bottomBarHeight),
+                      alignment: Alignment.center,
+                      child: Container(
+                        constraints: const BoxConstraints(
+                          maxWidth: 500,
+                        ),
+                        child: Column(
+                          children: [
+                            buildSilderBar(),
+                            Material(
+                              color: AppStyle.darkTheme.cardColor,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: controller.forwardChapter,
+                                      icon: const Icon(Remix.skip_back_line),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: controller.showMenu,
+                                      icon: const Icon(Remix.file_list_line),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: controller.showSettings,
+                                      icon: const Icon(Remix.settings_line),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: controller.nextChapter,
+                                      icon: const Icon(Remix.skip_forward_line),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
