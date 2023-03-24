@@ -26,15 +26,16 @@ class ComicWebSearchModel {
       ComicWebSearchModel(
         id: asT<int>(json['id'])!,
         comicName: asT<String>(json['comic_name'])!,
-        comicAuthor: asT<String>(json['comic_author'])!,
-        comicCover: asT<String>(json['comic_cover'])!,
-        cover: asT<String>(json['cover'])!,
-        lastUpdateChapterName: asT<String>(json['last_update_chapter_name'])!,
-        comicUrlRaw: asT<String>(json['comic_url_raw'])!,
-        comicUrl: asT<String>(json['comic_url'])!,
-        status: asT<String>(json['status'])!,
-        chapterUrlRaw: asT<String>(json['chapter_url_raw'])!,
-        chapterUrl: asT<String>(json['chapter_url'])!,
+        comicAuthor: asT<String?>(json['comic_author']) ?? "",
+        comicCover: asT<String?>(json['comic_cover']) ?? "",
+        cover: asT<String?>(json['cover']) ?? "",
+        lastUpdateChapterName:
+            asT<String?>(json['last_update_chapter_name']) ?? "",
+        comicUrlRaw: asT<String?>(json['comic_url_raw']) ?? "",
+        comicUrl: asT<String?>(json['comic_url']) ?? "",
+        status: asT<String?>(json['status']) ?? "",
+        chapterUrlRaw: asT<String?>(json['chapter_url_raw']) ?? "",
+        chapterUrl: asT<String?>(json['chapter_url']) ?? "",
       );
 
   int id;
