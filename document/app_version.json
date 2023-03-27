@@ -1,7 +1,7 @@
 {
-    "version": "2.0.4-beta",
-    "version_num": 20004,
-    "version_desc": "1. 修复浏览记录同步错误问题 #129\n2. 修复神隐漫画相关问题 #133\n3. 底部导航条及状态栏适配 #135 #137 #117\n4. Windows限制单窗口运行 #126\n5. 增加翻页按键监听 #134\n6. 优化小说阅读背景颜色 #127",
+    "version": "2.0.5-beta",
+    "version_num": 20005,
+    "version_desc": "1. 更新请求域名\n2. 完善漫画无法访问提示\n3. 修复Web搜索出错",
     "prerelease":true,
     "download_url": "https://github.com/xiaoyaocz/flutter_dmzj/releases"
 }
