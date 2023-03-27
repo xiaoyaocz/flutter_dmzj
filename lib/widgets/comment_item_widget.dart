@@ -85,11 +85,11 @@ class CommentItemWidget extends StatelessWidget {
                             return InkWell(
                               onTap: () {
                                 DialogUtils.showImageViewer(0, [
-                                  "https://images.dmzj.com/commentImg/${item.objId % 500}/$f"
+                                  "https://images.idmzj.com/commentImg/${item.objId % 500}/$f"
                                 ]);
                               },
                               child: NetImage(
-                                "https://images.dmzj.com/commentImg/${item.objId % 500}/${fileImg}_small.$fileImgSuffix",
+                                "https://images.idmzj.com/commentImg/${item.objId % 500}/${fileImg}_small.$fileImgSuffix",
                                 width: 100,
                                 height: 100,
                                 borderRadius: 4,
@@ -243,11 +243,11 @@ class CommentItemWidget extends StatelessWidget {
                           return InkWell(
                             onTap: () {
                               DialogUtils.showImageViewer(0, [
-                                "https://images.dmzj.com/commentImg/${item.objId % 500}/$f"
+                                "https://images.idmzj.com/commentImg/${item.objId % 500}/$f"
                               ]);
                             },
                             child: NetImage(
-                              "https://images.dmzj.com/commentImg/${item.objId % 500}/${fileImg}_small.$fileImgSuffix",
+                              "https://images.idmzj.com/commentImg/${item.objId % 500}/${fileImg}_small.$fileImgSuffix",
                               width: 100,
                               height: 100,
                               borderRadius: 4,

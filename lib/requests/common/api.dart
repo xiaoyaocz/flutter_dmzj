@@ -54,7 +54,7 @@ class Api {
     return md5.convert(utf8Content).toString();
   }
 
-  static const String VERSION = "3.0.0";
+  static const String VERSION = "3.8.2";
   static String get timeStamp =>
       (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0);
 
@@ -62,7 +62,7 @@ class Api {
   static Map<String, dynamic> getDefaultParameter({bool withUid = false}) {
     var map = <String, dynamic>{
       "channel": "android",
-      "version": VERSION,
+      //"version": VERSION,
       "timestamp": timeStamp
     };
     if (withUid && UserService.instance.logined.value) {
@@ -82,6 +82,6 @@ class Api {
     key += ts;
     key = md5.convert(utf8.encode(key)).toString().toLowerCase();
 
-    return "http://jurisdiction.dmzj.com$path?t=$ts&k=$key";
+    return "http://jurisdiction.idmzj.com$path?t=$ts&k=$key";
   }
 }

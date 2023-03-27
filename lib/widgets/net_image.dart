@@ -41,6 +41,9 @@ class _NetImageState extends State<NetImage>
     if (picUrl.contains("dmzj1.com")) {
       picUrl = picUrl.replaceAll("dmzj1.com", "dmzj.com");
     }
+    if (picUrl.contains(".dmzj.com")) {
+      picUrl = picUrl.replaceAll(".dmzj.com", ".idmzj.com");
+    }
     if (picUrl.isEmpty) {
       return Container(
         decoration: BoxDecoration(

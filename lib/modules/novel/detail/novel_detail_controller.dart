@@ -137,7 +137,7 @@ class NovelDetailControler extends BaseController {
   ///  分享
   void share() {
     Utils.share(
-      "http://q.dmzj.com/$novelId/index.shtml",
+      "http://q.idmzj.com/$novelId/index.shtml",
       content: detail.value.name,
     );
   }

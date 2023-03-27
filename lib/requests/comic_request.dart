@@ -245,7 +245,7 @@ class ComicRequest {
         }
       } catch (e) {
         errorMsg += "\n${priorityV1 ? "V4" : "V1"}：$e";
-        throw AppError("ComicID:$comicId\n无法读取漫画信息:\n$errorMsg");
+        throw AppError("ComicID:$comicId\n无法读取漫画信息，可能需要登录或有等级限制\n$errorMsg");
       }
     }
     return info;
@@ -273,14 +273,16 @@ class ComicRequest {
   }) async {
     var result = await HttpClient.instance.getJson(
       '/dynamic/comicinfo/$comicId.json',
-      baseUrl: "https://api.dmzj.com",
+      baseUrl: "https://api.idmzj.com",
       needLogin: true,
     );
     var data = json.decode(result);
     if (data["result"] != 1) {
       throw AppError(data["msg"]);
     }
-
+    if (data["data"]?["info"]?["id"] == null) {
+      throw AppError("无法读取漫画信息");
+    }
     return ComicDetailV1Model.fromJson(data["data"]);
   }
 
@@ -364,7 +366,7 @@ class ComicRequest {
       {required int comicId, required int chapterId}) async {
     var result = await HttpClient.instance.getJson(
       '/chapinfo/$comicId/$chapterId.html',
-      baseUrl: "https://m.dmzj.com",
+      baseUrl: "https://m.idmzj.com",
       needLogin: true,
     );
     if (result.toString().startsWith("{")) {
@@ -429,7 +431,7 @@ class ComicRequest {
   Future<List<SearchComicItem>> searchWeb({required String keyword}) async {
     var list = <ComicWebSearchModel>[];
     var result = await HttpClient.instance.getText(
-      'http://sacg.dmzj.com/comicsum/search.php',
+      'http://sacg.idmzj.com/comicsum/search.php',
       baseUrl: "",
       queryParameters: {
         "s": keyword,

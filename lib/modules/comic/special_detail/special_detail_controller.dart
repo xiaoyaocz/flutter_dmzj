@@ -49,7 +49,7 @@ class SpecialDetailController extends BaseController {
       return;
     }
     Utils.share(
-      "http://m.dmzj.com/zhuanti/${detail.value!.pageUrl}",
+      "http://m.idmzj.com/zhuanti/${detail.value!.pageUrl}",
       content: detail.value?.title ?? "",
     );
   }

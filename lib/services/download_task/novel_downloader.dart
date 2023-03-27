@@ -138,6 +138,9 @@ class NovelDownloader {
 
   Future _downloadImage(String url, int index) async {
     try {
+      if (url.contains(".dmzj.com")) {
+        url = url.replaceAll(".dmzj.com", ".idmzj.com");
+      }
       //检查本地是否有缓存，有缓存直接复制本地的
       Uint8List bytes;
       var localFile = await getCachedImageFile(url);
