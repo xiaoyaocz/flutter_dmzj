@@ -96,7 +96,6 @@ class ComicDetailControler extends BaseController {
       var result =
           await request.comicDetail(comicId: comicId, priorityV1: true);
       if (result.volumes.isEmpty) {
-        SmartDialog.showToast("没有找到任何章节");
         return;
       }
       if (result.isHide && AppSettingsService.instance.collectHideComic.value) {
@@ -160,7 +159,7 @@ class ComicDetailControler extends BaseController {
       return;
     }
     Utils.share(
-      "http://m.dmzj.com/info/${detail.value.comicPy}.html",
+      "http://m.idmzj.com/info/${detail.value.comicPy}.html",
       content: detail.value.title,
     );
   }

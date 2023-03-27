@@ -134,7 +134,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
       //社区=13
       //直接跳转至网页
       launchUrlString(
-        "http://m.forum.dmzj.com/thread/detail?tid=${item.objId}",
+        "http://m.forum.idmzj.com/thread/detail?tid=${item.objId}",
         mode: LaunchMode.externalApplication,
       );
       // AppNavigator.toWebView(

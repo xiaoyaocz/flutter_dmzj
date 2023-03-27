@@ -320,146 +320,160 @@ class ComicDetailPage extends StatelessWidget {
 
   Widget _buildChapter() {
     return Column(
-      children: controller.detail.value.volumes
-          .map(
-            (item) => Obx(
-              () => Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: AppStyle.edgeInsetsV8,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "${item.title}(共${item.chapters.length}话)",
-                            style: Get.textTheme.titleSmall,
-                          ),
+      children: controller.detail.value.volumes.isEmpty
+          ? [
+              const Padding(
+                padding: AppStyle.edgeInsetsA24,
+                child: Text(
+                  "(～￣▽￣)～\n没有可阅读的章节\n漫画可能已下架或您没有阅读的权限",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+              )
+            ]
+          : controller.detail.value.volumes
+              .map(
+                (item) => Obx(
+                  () => Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: AppStyle.edgeInsetsV8,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "${item.title}(共${item.chapters.length}话)",
+                                style: Get.textTheme.titleSmall,
+                              ),
+                            ),
+                            item.sortType.value == 1
+                                ? TextButton.icon(
+                                    style: TextButton.styleFrom(
+                                      textStyle: const TextStyle(fontSize: 14),
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () {
+                                      item.sortType.value = 0;
+                                      item.sort();
+                                    },
+                                    icon: const Icon(
+                                      Remix.sort_asc,
+                                      size: 20,
+                                    ),
+                                    label: const Text("升序"),
+                                  )
+                                : TextButton.icon(
+                                    style: TextButton.styleFrom(
+                                      textStyle: const TextStyle(fontSize: 14),
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () {
+                                      item.sortType.value = 1;
+                                      item.sort();
+                                    },
+                                    icon: const Icon(
+                                      Remix.sort_desc,
+                                      size: 20,
+                                    ),
+                                    label: const Text("倒序"),
+                                  ),
+                          ],
                         ),
-                        item.sortType.value == 1
-                            ? TextButton.icon(
-                                style: TextButton.styleFrom(
-                                  textStyle: const TextStyle(fontSize: 14),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                onPressed: () {
-                                  item.sortType.value = 0;
-                                  item.sort();
-                                },
-                                icon: const Icon(
-                                  Remix.sort_asc,
-                                  size: 20,
-                                ),
-                                label: const Text("升序"),
-                              )
-                            : TextButton.icon(
-                                style: TextButton.styleFrom(
-                                  textStyle: const TextStyle(fontSize: 14),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                onPressed: () {
-                                  item.sortType.value = 1;
-                                  item.sort();
-                                },
-                                icon: const Icon(
-                                  Remix.sort_desc,
-                                  size: 20,
-                                ),
-                                label: const Text("倒序"),
-                              ),
-                      ],
-                    ),
-                  ),
-                  LayoutBuilder(builder: (ctx, constraints) {
-                    var count = constraints.maxWidth ~/ 160;
-                    if (count < 3) count = 3;
+                      ),
+                      LayoutBuilder(builder: (ctx, constraints) {
+                        var count = constraints.maxWidth ~/ 160;
+                        if (count < 3) count = 3;
 
-                    return Obx(
-                      () => MasonryGridView.count(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: (item.showMoreButton && !item.showAll.value)
-                            ? 15
-                            : item.chapters.length,
-                        itemBuilder: (_, i) {
-                          if (item.showMoreButton &&
-                              !item.showAll.value &&
-                              i == 14) {
-                            return Tooltip(
-                              message: "展开全部章节",
-                              child: OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: Colors.grey,
-                                  textStyle: const TextStyle(fontSize: 14),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  minimumSize: const Size.fromHeight(40),
-                                ),
-                                onPressed: () {
-                                  item.showAll.value = true;
-                                },
-                                child: const Icon(Icons.arrow_drop_down),
-                              ),
-                            );
-                          }
-                          return Tooltip(
-                            message: item.chapters[i].chapterTitle,
-                            child: Obx(
-                              () => Stack(
-                                children: [
-                                  OutlinedButton(
+                        return Obx(
+                          () => MasonryGridView.count(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount:
+                                (item.showMoreButton && !item.showAll.value)
+                                    ? 15
+                                    : item.chapters.length,
+                            itemBuilder: (_, i) {
+                              if (item.showMoreButton &&
+                                  !item.showAll.value &&
+                                  i == 14) {
+                                return Tooltip(
+                                  message: "展开全部章节",
+                                  child: OutlinedButton(
                                     style: OutlinedButton.styleFrom(
-                                      foregroundColor:
-                                          item.chapters[i].chapterId ==
-                                                  controller
-                                                      .history.value?.chapterId
-                                              ? Colors.blue
-                                              : Get.textTheme.bodyMedium!.color,
+                                      foregroundColor: Colors.grey,
                                       textStyle: const TextStyle(fontSize: 14),
                                       tapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
                                       minimumSize: const Size.fromHeight(40),
                                     ),
                                     onPressed: () {
-                                      controller.readChapter(
-                                          item, item.chapters[i]);
+                                      item.showAll.value = true;
                                     },
-                                    child: Text(
-                                      item.chapters[i].chapterTitle,
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                    child: const Icon(Icons.arrow_drop_down),
                                   ),
-                                  Positioned(
-                                    left: -2,
-                                    top: 0,
-                                    child: Offstage(
-                                      offstage: !item.chapters[i].isVip,
-                                      child: Image.asset(
-                                        "assets/images/vip_chapter.png",
-                                        height: 16,
+                                );
+                              }
+                              return Tooltip(
+                                message: item.chapters[i].chapterTitle,
+                                child: Obx(
+                                  () => Stack(
+                                    children: [
+                                      OutlinedButton(
+                                        style: OutlinedButton.styleFrom(
+                                          foregroundColor: item
+                                                      .chapters[i].chapterId ==
+                                                  controller
+                                                      .history.value?.chapterId
+                                              ? Colors.blue
+                                              : Get.textTheme.bodyMedium!.color,
+                                          textStyle:
+                                              const TextStyle(fontSize: 14),
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          minimumSize:
+                                              const Size.fromHeight(40),
+                                        ),
+                                        onPressed: () {
+                                          controller.readChapter(
+                                              item, item.chapters[i]);
+                                        },
+                                        child: Text(
+                                          item.chapters[i].chapterTitle,
+                                          textAlign: TextAlign.center,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                    ),
+                                      Positioned(
+                                        left: -2,
+                                        top: 0,
+                                        child: Offstage(
+                                          offstage: !item.chapters[i].isVip,
+                                          child: Image.asset(
+                                            "assets/images/vip_chapter.png",
+                                            height: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                        crossAxisCount: count,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                      ),
-                    );
-                  })
-                ],
-              ),
-            ),
-          )
-          .toList(),
+                                ),
+                              );
+                            },
+                            crossAxisCount: count,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                          ),
+                        );
+                      })
+                    ],
+                  ),
+                ),
+              )
+              .toList(),
     );
   }
 

@@ -53,7 +53,7 @@ class NovelRecommendController extends BasePageController<NovelRecommendModel> {
       //社区=13
       //直接跳转至网页
       launchUrlString(
-          "http://m.forum.dmzj.com/thread/detail?tid=${item.objId}");
+          "http://m.forum.idmzj.com/thread/detail?tid=${item.objId}");
     } else {
       SmartDialog.showToast("未知类型，无法跳转");
     }
