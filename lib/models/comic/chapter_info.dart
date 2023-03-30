@@ -1,6 +1,7 @@
 import 'package:flutter_dmzj/models/comic/chapter_detail_web_model.dart';
 import 'package:flutter_dmzj/models/db/comic_download_info.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
+import 'package:flutter_dmzj/services/comic_download_service.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
@@ -61,7 +62,10 @@ class ComicChapterDetail {
         chapterOrder: item.chapterSort,
         direction: 1,
         chapterTitle: item.chapterName,
-        pageUrls: item.files.map((e) => p.join(item.savePath, e)).toList(),
+        pageUrls: item.files
+            .map((e) =>
+                p.join(ComicDownloadService.instance.savePath, item.taskId, e))
+            .toList(),
         picnum: item.files.length,
         commentCount: 0,
         isLocal: true,

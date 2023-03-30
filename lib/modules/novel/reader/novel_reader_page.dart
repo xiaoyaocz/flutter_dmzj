@@ -34,6 +34,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         }
       },
       focusNode: controller.focusNode,
+      autofocus: true,
       child: Theme(
         data: AppStyle.darkTheme,
         child: Obx(

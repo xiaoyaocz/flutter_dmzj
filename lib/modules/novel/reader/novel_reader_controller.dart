@@ -119,6 +119,12 @@ class NovelReaderController extends BaseController {
   /// 初始化电池信息
   void initBattery() async {
     try {
+      //没有电池的Mac似乎会闪退,暂时屏蔽Mac
+      //https://github.com/xiaoyaocz/flutter_dmzj/discussions/146
+      if (Platform.isMacOS) {
+        showBattery.value = false;
+        return;
+      }
       var battery = Battery();
       batterySubscription =
           battery.onBatteryStateChanged.listen((BatteryState state) async {
@@ -249,14 +255,17 @@ class NovelReaderController extends BaseController {
   Future loadFromLocal(NovelDownloadInfo local) async {
     try {
       isLocal = true;
-      var file = File(p.join(local.savePath, local.fileName));
+      var file = File(p.join(NovelDownloadService.instance.savePath,
+          local.taskId, local.fileName));
 
       var text = await file.readAsString();
 
       //检查是否是插画
       if (local.isImage) {
-        List<String> imgs =
-            local.imageFiles.map((e) => p.join(local.savePath, e)).toList();
+        List<String> imgs = local.imageFiles
+            .map((e) =>
+                p.join(NovelDownloadService.instance.savePath, local.taskId, e))
+            .toList();
 
         isPicture.value = true;
 

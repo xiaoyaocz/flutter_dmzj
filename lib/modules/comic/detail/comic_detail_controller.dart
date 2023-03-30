@@ -214,6 +214,7 @@ class ComicDetailControler extends BaseController {
           comicCover: detail.value.cover,
           chapters: chapters,
           chapter: chapter,
+          isLongComic: detail.value.isLong,
         );
       } else {
         SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读");
@@ -237,6 +238,7 @@ class ComicDetailControler extends BaseController {
       comicTitle: detail.value.title,
       chapters: chapters,
       chapter: chapter,
+      isLongComic: detail.value.isLong,
     );
   }
 
@@ -255,6 +257,7 @@ class ComicDetailControler extends BaseController {
       comicTitle: detail.value.title,
       chapters: chapters,
       chapter: item,
+      isLongComic: detail.value.isLong,
     );
   }
 

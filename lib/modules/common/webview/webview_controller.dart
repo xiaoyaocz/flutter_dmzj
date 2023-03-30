@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
@@ -20,9 +21,8 @@ class WebViewPageController extends BaseController {
   void initWebView() async {
     webViewController.setJavaScriptMode(JavaScriptMode.unrestricted);
 
-    webViewController.setBackgroundColor(Get.isDarkMode
-        ? AppColor.backgroundColorDark
-        : AppColor.backgroundColor);
+    webViewController.setBackgroundColor(
+        Get.isDarkMode ? Colors.black : AppColor.backgroundColor);
     webViewController.setNavigationDelegate(
       NavigationDelegate(
         onPageStarted: (String url) {

@@ -33,13 +33,14 @@ class ComicDownloadInfoAdapter extends TypeAdapter<ComicDownloadInfo> {
       urls: (fields[14] as List).cast<String>(),
       chapterName: fields[5] as String,
       isVip: (fields[15] ?? false) as bool,
+      isLongComic: (fields[16] ?? false) as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, ComicDownloadInfo obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.taskId)
       ..writeByte(1)
@@ -71,7 +72,9 @@ class ComicDownloadInfoAdapter extends TypeAdapter<ComicDownloadInfo> {
       ..writeByte(14)
       ..write(obj.urls)
       ..writeByte(15)
-      ..write(obj.isVip);
+      ..write(obj.isVip)
+      ..writeByte(16)
+      ..write(obj.isLongComic);
   }
 
   @override

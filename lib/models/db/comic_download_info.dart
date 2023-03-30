@@ -1,4 +1,5 @@
 import 'package:flutter_dmzj/models/db/download_status.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 part 'comic_download_info.g.dart';
 
@@ -21,6 +22,7 @@ class ComicDownloadInfo {
     required this.urls,
     required this.chapterName,
     required this.isVip,
+    required this.isLongComic,
   });
 
   ///TaskID 任务，由漫画ID_章节ID组成
@@ -86,4 +88,8 @@ class ComicDownloadInfo {
   /// * 暂时没啥用，总之先加上
   @HiveField(15)
   bool isVip;
+
+  /// 是否为条漫
+  @HiveField(16)
+  bool isLongComic;
 }

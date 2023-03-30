@@ -35,7 +35,7 @@ class AppStyle {
     brightness: Brightness.dark,
     primaryColor: Colors.blue,
     colorScheme: AppColor.colorSchemeDark,
-    scaffoldBackgroundColor: AppColor.backgroundColorDark,
+    scaffoldBackgroundColor: Colors.black,
     tabBarTheme: const TabBarTheme(
       indicatorColor: Colors.blue,
     ),

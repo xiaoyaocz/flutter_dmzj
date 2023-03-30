@@ -365,8 +365,10 @@ class NovelDownloadService extends GetxService {
   ///删除
   void delete(NovelDownloadInfo info) async {
     try {
-      var dir = Directory(info.savePath);
+      var dir = Directory(p.join(savePath, info.taskId));
       await dir.delete(recursive: true);
+    } catch (e) {
+      Log.logPrint(e);
     } finally {
       await box.delete(info.taskId);
       updateDownlaoded();

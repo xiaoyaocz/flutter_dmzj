@@ -165,6 +165,7 @@ class AppNavigator {
     required String comicCover,
     required List<ComicDetailChapterItem> chapters,
     required ComicDetailChapterItem chapter,
+    required bool isLongComic,
   }) async {
     // 使用主路由跳转
     await Get.toNamed(RoutePath.kComicReader, arguments: {
@@ -173,6 +174,7 @@ class AppNavigator {
       "comicCover": comicCover,
       "chapters": chapters,
       "chapter": chapter,
+      "isLongComic": isLongComic,
     });
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
@@ -38,6 +39,11 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
       return;
     }
 
+    if (int.tryParse(searchController.text) != null &&
+        await numberJumpComic()) {
+      return;
+    }
+
     if (searchController.text.startsWith("id:\\") && await handelJumpComic()) {
       return;
     }
@@ -47,7 +53,7 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
     refreshData();
   }
 
-  Future handelJumpComic() async {
+  Future<bool> handelJumpComic() async {
     var id = int.tryParse(searchController.text.replaceAll("id:\\", "")) ?? 0;
     if (id != 0) {
       AppNavigator.toComicDetail(id);
@@ -55,6 +61,16 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
     } else {
       return false;
     }
+  }
+
+  Future numberJumpComic() async {
+    if (!await DialogUtils.showAlertDialog(
+      "你输入了纯数字，是否跳转至对应的漫画?",
+      title: "漫画ID跳转",
+    )) {
+      return false;
+    }
+    return await handelJumpComic();
   }
 
   @override

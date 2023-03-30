@@ -16,7 +16,7 @@ class ComicDetailInfo {
     this.id = 0,
     this.title = "",
     this.direction = 0,
-    this.isLong = 0,
+    this.isLong = false,
     this.cover = "",
     this.description = "",
     this.lastUpdatetime = 0,
@@ -46,7 +46,7 @@ class ComicDetailInfo {
         id: proto.id.toInt(),
         title: proto.title,
         direction: proto.direction,
-        isLong: proto.islong,
+        isLong: proto.islong == 1,
         cover: proto.cover,
         description: proto.description,
         lastUpdateChapterId: proto.lastUpdateChapterId,
@@ -151,7 +151,7 @@ class ComicDetailInfo {
       id: int.tryParse(model.info.id) ?? 0,
       title: model.info.title,
       direction: int.tryParse(model.info.direction) ?? 0,
-      isLong: int.tryParse(model.info.islong) ?? 0,
+      isLong: (int.tryParse(model.info.islong) ?? 0) == 1,
       cover: model.info.cover,
       description: model.info.description,
       lastUpdateChapterId: lastChapterId,
@@ -194,7 +194,7 @@ class ComicDetailInfo {
   int id;
   String title;
   int direction;
-  int isLong;
+  bool isLong;
   String cover;
   String description;
   int lastUpdatetime;

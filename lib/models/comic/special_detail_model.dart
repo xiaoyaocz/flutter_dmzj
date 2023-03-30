@@ -72,12 +72,12 @@ class ComicSpecialComicModel {
 
   factory ComicSpecialComicModel.fromJson(Map<String, dynamic> json) =>
       ComicSpecialComicModel(
-        cover: asT<String>(json['cover'])!,
-        recommendBrief: asT<String>(json['recommend_brief'])!,
-        recommendReason: asT<String>(json['recommend_reason'])!,
+        cover: asT<String?>(json['cover']) ?? "",
+        recommendBrief: asT<String?>(json['recommend_brief']) ?? "",
+        recommendReason: asT<String?>(json['recommend_reason']) ?? "",
         id: asT<int>(json['id'])!,
-        name: asT<String>(json['name'])!,
-        aliasName: asT<String>(json['alias_name'])!,
+        name: asT<String?>(json['name']) ?? "",
+        aliasName: asT<String?>(json['alias_name']) ?? "",
       );
 
   String cover;
