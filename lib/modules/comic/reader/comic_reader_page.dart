@@ -31,6 +31,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         }
       },
       focusNode: controller.focusNode,
+      autofocus: true,
       child: Theme(
         data: AppStyle.darkTheme,
         child: Scaffold(
