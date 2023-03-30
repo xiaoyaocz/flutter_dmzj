@@ -81,9 +81,8 @@ class NewsDetailController extends BaseController {
   var currentUrl = "";
   void initWebView() {
     webViewController!.setJavaScriptMode(JavaScriptMode.unrestricted);
-    webViewController!.setBackgroundColor(Get.isDarkMode
-        ? AppColor.backgroundColorDark
-        : AppColor.backgroundColor);
+    webViewController!.setBackgroundColor(
+        Get.isDarkMode ? Colors.black : AppColor.backgroundColor);
     webViewController!.setNavigationDelegate(
       NavigationDelegate(
         onPageStarted: (String url) {
@@ -95,8 +94,8 @@ class NewsDetailController extends BaseController {
             //防止亮瞎24K钛合金狗眼
             if (Get.isDarkMode) {
               await webViewController!.runJavaScript("""
-document.body.style.background="#212121";
-document.getElementsByClassName("min_box")[0].style.background="#212121";
+document.body.style.background="#000000";
+document.getElementsByClassName("min_box")[0].style.background="#000000";
 document.getElementsByClassName("news_box")[0].style.color="#f1f2f6";
 document.getElementsByClassName("min_box_tit")[0].style.color="#fff";
 """);

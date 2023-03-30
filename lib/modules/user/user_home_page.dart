@@ -19,9 +19,7 @@ class UserHomePage extends GetView<UserHomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Get.isDarkMode
-          ? AppColor.backgroundColorDark
-          : AppColor.backgroundColor,
+      backgroundColor: Get.isDarkMode ? Colors.black : AppColor.backgroundColor,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: Get.isDarkMode
             ? SystemUiOverlayStyle.light.copyWith(
