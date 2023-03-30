@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:battery_plus/battery_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -119,6 +120,12 @@ class ComicReaderController extends BaseController {
   /// 初始化电池信息
   void initBattery() async {
     try {
+      //没有电池的Mac似乎会闪退,暂时屏蔽Mac
+      //https://github.com/xiaoyaocz/flutter_dmzj/discussions/146
+      if (Platform.isMacOS) {
+        showBattery.value = false;
+        return;
+      }
       var battery = Battery();
       batterySubscription =
           battery.onBatteryStateChanged.listen((BatteryState state) async {
