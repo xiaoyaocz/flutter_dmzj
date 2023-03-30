@@ -67,6 +67,7 @@ class AppPages {
           comicCover: Get.arguments["comicCover"],
           chapters: Get.arguments["chapters"],
           chapter: Get.arguments["chapter"],
+          isLongComic: Get.arguments["isLongComic"] ?? false,
         ),
       ),
     ),

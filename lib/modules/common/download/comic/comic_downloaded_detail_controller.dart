@@ -88,6 +88,7 @@ class ComicDownloadedDetailController extends GetxController {
           comicCover: info.comicCover,
           chapters: chapters,
           chapter: chapter,
+          isLongComic: info.isLongComic,
         );
       } else {
         SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读");
@@ -111,6 +112,7 @@ class ComicDownloadedDetailController extends GetxController {
       comicTitle: info.comicName,
       chapters: chapters,
       chapter: chapter,
+      isLongComic: info.isLongComic,
     );
   }
 
@@ -124,6 +126,7 @@ class ComicDownloadedDetailController extends GetxController {
       comicTitle: info.comicName,
       chapters: chapters,
       chapter: item,
+      isLongComic: info.isLongComic,
     );
   }
 

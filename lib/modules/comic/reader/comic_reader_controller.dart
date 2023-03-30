@@ -26,6 +26,8 @@ import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ComicReaderController extends BaseController {
+  /// 是否为条漫
+  final bool isLongComic;
   final int comicId;
   final String comicTitle;
   final String comicCover;
@@ -39,6 +41,7 @@ class ComicReaderController extends BaseController {
     required this.chapters,
     required this.chapter,
     required this.comicCover,
+    required this.isLongComic,
   }) {
     chapterIndex.value = chapters.indexOf(chapter);
   }
@@ -107,7 +110,12 @@ class ComicReaderController extends BaseController {
   void onInit() {
     initConnectivity();
     initBattery();
-    direction.value = settings.comicReaderDirection.value;
+    if (isLongComic) {
+      direction.value = ReaderDirection.kUpToDown;
+    } else {
+      direction.value = settings.comicReaderDirection.value;
+    }
+
     if (settings.comicReaderFullScreen.value) {
       setFull();
     }
@@ -582,40 +590,50 @@ class ComicReaderController extends BaseController {
                         subtitle: const Text("部分单行本可能未分页"),
                       ),
                     ),
-                    AppStyle.vGap12,
-                    buildBGItem(
-                      child: ListTile(
-                        title: const Text("阅读方向"),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            buildSelectedButton(
-                              onTap: () {
-                                setDirection(ReaderDirection.kLeftToRight);
-                              },
-                              selected: settings.comicReaderDirection.value ==
-                                  ReaderDirection.kLeftToRight,
-                              child: const Icon(Remix.arrow_right_line),
+                    //AppStyle.vGap12,
+                    Visibility(
+                      //条漫不允许修改阅读方向
+                      visible: !isLongComic,
+                      child: Padding(
+                        padding: AppStyle.edgeInsetsT12,
+                        child: buildBGItem(
+                          child: ListTile(
+                            title: const Text("阅读方向"),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                buildSelectedButton(
+                                  onTap: () {
+                                    setDirection(ReaderDirection.kLeftToRight);
+                                  },
+                                  selected:
+                                      settings.comicReaderDirection.value ==
+                                          ReaderDirection.kLeftToRight,
+                                  child: const Icon(Remix.arrow_right_line),
+                                ),
+                                AppStyle.hGap8,
+                                buildSelectedButton(
+                                  onTap: () {
+                                    setDirection(ReaderDirection.kRightToLeft);
+                                  },
+                                  selected:
+                                      settings.comicReaderDirection.value ==
+                                          ReaderDirection.kRightToLeft,
+                                  child: const Icon(Remix.arrow_left_line),
+                                ),
+                                AppStyle.hGap8,
+                                buildSelectedButton(
+                                  onTap: () {
+                                    setDirection(ReaderDirection.kUpToDown);
+                                  },
+                                  selected:
+                                      settings.comicReaderDirection.value ==
+                                          ReaderDirection.kUpToDown,
+                                  child: const Icon(Remix.arrow_down_line),
+                                )
+                              ],
                             ),
-                            AppStyle.hGap8,
-                            buildSelectedButton(
-                              onTap: () {
-                                setDirection(ReaderDirection.kRightToLeft);
-                              },
-                              selected: settings.comicReaderDirection.value ==
-                                  ReaderDirection.kRightToLeft,
-                              child: const Icon(Remix.arrow_left_line),
-                            ),
-                            AppStyle.hGap8,
-                            buildSelectedButton(
-                              onTap: () {
-                                setDirection(ReaderDirection.kUpToDown);
-                              },
-                              selected: settings.comicReaderDirection.value ==
-                                  ReaderDirection.kUpToDown,
-                              child: const Icon(Remix.arrow_down_line),
-                            )
-                          ],
+                          ),
                         ),
                       ),
                     ),

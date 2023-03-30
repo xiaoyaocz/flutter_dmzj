@@ -17,6 +17,7 @@ class ComicSelectChapterController extends BaseController {
 
   String comicTitle = "";
   String comicCover = "";
+  bool islong = false;
 
   @override
   void onInit() {
@@ -35,6 +36,7 @@ class ComicSelectChapterController extends BaseController {
       }
       comicTitle = result.title;
       comicCover = result.cover;
+      islong = result.isLong;
       for (var volume in result.volumes) {
         volume.sortType.value = 1;
         volume.sort();
@@ -53,6 +55,7 @@ class ComicSelectChapterController extends BaseController {
       var result = await request.comicDetail(comicId: comicId);
       comicTitle = result.title;
       comicCover = result.cover;
+      islong = result.isLong;
       if (result.volumes.isEmpty && !result.isHide) {
         refreshV1();
       } else {
@@ -135,6 +138,7 @@ class ComicSelectChapterController extends BaseController {
         comicCover: comicCover,
         chapterName: chapter.chapterTitle,
         isVip: chapter.isVip,
+        isLongComic: islong,
       );
     }
     chapterIds.clear();

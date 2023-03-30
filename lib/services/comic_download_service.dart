@@ -235,6 +235,7 @@ class ComicDownloadService extends GetxService {
       var items = comicMap[comicId]!;
       var comicName = items.first.comicName;
       var comicCover = items.first.comicCover;
+      var isLongComic = items.first.isLongComic;
       List<ComicDetailVolume> volumes = [];
       var volumeMap = groupBy(items, (ComicDownloadInfo x) => x.volumeName);
       for (var volumeName in volumeMap.keys) {
@@ -267,6 +268,7 @@ class ComicDownloadService extends GetxService {
           comicId: comicId,
           chapterCount: items.length,
           volumes: volumes,
+          isLongComic: isLongComic,
         ),
       );
     }
@@ -316,6 +318,7 @@ class ComicDownloadService extends GetxService {
     required String comicTitle,
     required String comicCover,
     required bool isVip,
+    required bool isLongComic,
   }) async {
     var taskId = "${comicId}_$chapterId";
     if (box.containsKey(taskId)) {
@@ -338,6 +341,7 @@ class ComicDownloadService extends GetxService {
       chapterName: chapterName,
       urls: [],
       isVip: isVip,
+      isLongComic: isLongComic,
     );
     await box.put(
       taskId,
@@ -365,8 +369,10 @@ class ComicDownloadService extends GetxService {
   ///删除
   void delete(ComicDownloadInfo info) async {
     try {
-      var dir = Directory(info.savePath);
+      var dir = Directory(p.join(savePath, info.taskId));
       await dir.delete(recursive: true);
+    } catch (e) {
+      Log.logPrint(e);
     } finally {
       await box.delete(info.taskId);
       updateDownlaoded();
@@ -389,11 +395,13 @@ class ComicDownloadedItem {
   final String comicCover;
   final List<ComicDetailVolume> volumes;
   final int chapterCount;
+  final bool isLongComic;
   ComicDownloadedItem({
     required this.comicName,
     required this.comicCover,
     required this.comicId,
     required this.chapterCount,
     required this.volumes,
+    required this.isLongComic,
   });
 }
