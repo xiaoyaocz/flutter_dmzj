@@ -56,7 +56,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                 child: Row(
                   children: [
                     Expanded(
-                      flex: 4,
+                      flex: 2,
                       child: GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
@@ -72,11 +72,11 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                       ),
                     ),
                     Expanded(
-                      flex: 2,
+                      flex: 4,
                       child: Container(),
                     ),
                     Expanded(
-                      flex: 4,
+                      flex: 2,
                       child: GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
