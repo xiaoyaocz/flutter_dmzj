@@ -273,7 +273,7 @@ class ComicRequest {
   }) async {
     var result = await HttpClient.instance.getJson(
       '/dynamic/comicinfo/$comicId.json',
-      baseUrl: "https://api.idmzj.com",
+      baseUrl: "https://api.dmzj.com",
       needLogin: true,
     );
     var data = json.decode(result);
