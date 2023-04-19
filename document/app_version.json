@@ -1,7 +1,7 @@
 {
-    "version": "2.0.6-beta",
-    "version_num": 20006,
-    "version_desc": "1. 更新API以支持部分漫画的阅读 #153\n2. 屏蔽Mac电量信息显示 #146\n3. 修复按键问题 #144\n4. 夜间模式背景修改为纯黑 #145\n5. 条漫自动切换纵向阅读 #152",
+    "version": "2.0.7-beta",
+    "version_num": 20007,
+    "version_desc": "1. 更新V1 API支持部分神隐漫画的阅读",
     "prerelease":true,
     "download_url": "https://github.com/xiaoyaocz/flutter_dmzj/releases"
 }
