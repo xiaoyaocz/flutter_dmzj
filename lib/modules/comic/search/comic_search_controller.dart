@@ -44,7 +44,7 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
       return;
     }
 
-    if (searchController.text.startsWith("id:\\") && await handelJumpComic()) {
+    if (searchController.text.startsWith("id") && await handelJumpComic()) {
       return;
     }
 
@@ -54,7 +54,7 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
   }
 
   Future<bool> handelJumpComic() async {
-    var id = int.tryParse(searchController.text.replaceAll("id:\\", "")) ?? 0;
+    var id = int.tryParse(searchController.text.replaceAll("id", "")) ?? 0;
     if (id != 0) {
       AppNavigator.toComicDetail(id);
       return true;
