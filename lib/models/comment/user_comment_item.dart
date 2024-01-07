@@ -25,16 +25,16 @@ class UserCommentItem {
 
   factory UserCommentItem.fromJson(Map<String, dynamic> json) =>
       UserCommentItem(
-        commentId: asT<int>(json['comment_id'])!,
-        content: asT<String>(json['content'])!,
-        replyAmount: asT<int>(json['reply_amount'])!,
-        likeAmount: asT<int>(json['like_amount'])!,
+        commentId: asT<int>(json['comment_id']) ?? 0,
+        content: asT<String>(json['content']) ?? '',
+        replyAmount: asT<int>(json['reply_amount']) ?? 0,
+        likeAmount: asT<int>(json['like_amount']) ?? 0,
         originCommentId: asT<int?>(json['origin_comment_id']),
-        objId: asT<int>(json['obj_id'])!,
-        createTime: asT<int>(json['create_time'])!,
+        objId: asT<int>(json['obj_id']) ?? 0,
+        createTime: asT<int>(json['create_time']) ?? 0,
         toCommentId: asT<int?>(json['to_comment_id']),
-        objCover: asT<String>(json['obj_cover'])!,
-        objName: asT<String>(json['obj_name'])!,
+        objCover: asT<String>(json['obj_cover']) ?? '',
+        objName: asT<String>(json['obj_name']) ?? '',
         pageUrl: asT<String?>(json['page_url']),
         mastercomment: json['masterComment'] == null
             ? null
