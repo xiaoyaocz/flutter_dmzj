@@ -1,7 +1,7 @@
 {
-    "version": "2.0.7-beta",
-    "version_num": 20007,
-    "version_desc": "1. 更新V1 API支持部分神隐漫画的阅读",
-    "prerelease":true,
+    "version": "2.0.8-beta",
+    "version_num": 20008,
+    "version_desc": "1. 修复一些问题 #204",
+    "prerelease":false,
     "download_url": "https://github.com/xiaoyaocz/flutter_dmzj/releases"
 }
