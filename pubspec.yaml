@@ -1,5 +1,5 @@
 name: flutter_dmzj
-version: 2.0.8+20008
+version: 2.0.9+20009
 publish_to: none
 description: "动漫之家X"
 environment: 
@@ -19,8 +19,8 @@ dependencies:
   crypto: ^3.0.2 #加解密
   logger: ^1.2.2 #日志输出
   protobuf: ^2.1.0 #Protobuf
-  intl: ^0.17.0
-  universal_html: ^2.0.9 #HTML解析
+  intl: any
+  universal_html: 2.0.9 #HTML解析
   html_unescape: ^2.0.0 #HTML解码
 
   #Widget
