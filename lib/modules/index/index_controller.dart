@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_dmzj/modules/news/home/news_home_page.dart';
 import 'package:flutter_dmzj/modules/novel/home/novel_home_controller.dart';
 import 'package:flutter_dmzj/modules/novel/home/novel_home_page.dart';
 import 'package:flutter_dmzj/modules/user/user_home_page.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 
@@ -22,6 +25,13 @@ class IndexController extends GetxController {
       MultiSplitViewController(areas: [
     Area(minimalSize: 400, size: 500),
   ]);
+
+  /// 双击退出Flag
+  bool doubleClickExit = false;
+
+  /// 双击退出Timer
+  Timer? doubleClickTimer;
+
   final pages = [
     const ComicHomePage(),
     const SizedBox(),
@@ -59,5 +69,19 @@ class IndexController extends GetxController {
     } else {
       Utils.checkUpdate();
     }
+  }
+
+  void setDoubleExitFlag() {
+    if (doubleClickExit) {
+      doubleClickTimer?.cancel();
+      Get.back();
+      return;
+    }
+    doubleClickExit = true;
+    SmartDialog.showToast("再按一次退出应用");
+    doubleClickTimer = Timer(const Duration(seconds: 2), () {
+      doubleClickExit = false;
+      doubleClickTimer!.cancel();
+    });
   }
 }
