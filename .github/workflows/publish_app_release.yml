@@ -98,8 +98,10 @@ jobs:
         with:
           flutter-version: "3.19.x"
           cache: true
+      - name: Update apt-get
+        run: sudo do-release-upgrade && sudo apt-get update
       - name: Install Dependencies
-        run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-0 libblkid1 liblzma5
+        run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
       - name: Enable Flutter Desktop
         run: flutter config --enable-linux-desktop
       - name: Restore Packages
