@@ -25,6 +25,7 @@ class UserSubscribePage extends StatelessWidget {
           child: TabBar(
             controller: controller.tabController,
             isScrollable: true,
+            tabAlignment: TabAlignment.start,
             labelPadding: AppStyle.edgeInsetsH24,
             indicatorSize: TabBarIndicatorSize.label,
             indicatorColor: Theme.of(context).colorScheme.primary,

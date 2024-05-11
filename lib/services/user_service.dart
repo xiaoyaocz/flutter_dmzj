@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/event_bus.dart';
@@ -286,9 +287,11 @@ class UserService extends GetxService {
   }
 
   void updateCookie() async {
-    final WebViewCookieManager cookieManager = WebViewCookieManager();
-    for (var item in getCookies()) {
-      await cookieManager.setCookie(item);
+    if (Platform.isAndroid || Platform.isIOS) {
+      final WebViewCookieManager cookieManager = WebViewCookieManager();
+      for (var item in getCookies()) {
+        await cookieManager.setCookie(item);
+      }
     }
   }
 

@@ -132,12 +132,13 @@ class Utils {
 
   /// 保存图片-桌面平台
   static void saveImageDetktop(String fileName, Uint8List list) async {
-    final String? path = await getSavePath(suggestedName: fileName);
-    if (path == null) {
+    final FileSaveLocation? location =
+        await getSaveLocation(suggestedName: fileName);
+    if (location == null) {
       return;
     }
     final XFile file = XFile.fromData(list, name: fileName);
-    await file.saveTo(path);
+    await file.saveTo(location.path);
   }
 
   /// 分享

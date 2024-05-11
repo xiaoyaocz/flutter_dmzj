@@ -4,10 +4,13 @@ import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:get/get.dart';
 
 class AppStyle {
-  static ThemeData lightTheme = ThemeData.light().copyWith(
+  static ThemeData lightTheme = ThemeData.light(
+    useMaterial3: false,
+  ).copyWith(
     brightness: Brightness.light,
     colorScheme: AppColor.colorSchemeLight,
     scaffoldBackgroundColor: Colors.white,
+    cardColor: Colors.white,
     appBarTheme: AppBarTheme(
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -31,9 +34,12 @@ class AppStyle {
       ),
     ),
   );
-  static ThemeData darkTheme = ThemeData.dark().copyWith(
+  static ThemeData darkTheme = ThemeData.dark(
+    useMaterial3: false,
+  ).copyWith(
     brightness: Brightness.dark,
     primaryColor: Colors.blue,
+    cardColor: const Color(0xff424242),
     colorScheme: AppColor.colorSchemeDark,
     scaffoldBackgroundColor: Colors.black,
     tabBarTheme: const TabBarTheme(

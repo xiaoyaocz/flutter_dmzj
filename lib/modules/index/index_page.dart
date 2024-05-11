@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/common/empty_page.dart';
 import 'package:flutter_dmzj/modules/index/index_controller.dart';
@@ -15,9 +14,13 @@ class IndexPage extends GetView<IndexController> {
   Widget build(BuildContext context) {
     final content = _buildContentNavigator();
     final indexStack = _buildIndexStack();
-    return MediaQuery.of(context).size.width > AppConstant.kTabletWidth
-        ? _buildWide(context, indexStack, content)
-        : _buildNarrow(context, indexStack, content);
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return orientation == Orientation.landscape
+            ? _buildWide(context, indexStack, content)
+            : _buildNarrow(context, indexStack, content);
+      },
+    );
   }
 
   Widget _buildNarrow(BuildContext context, Widget indexStack, Widget content) {
@@ -26,34 +29,40 @@ class IndexPage extends GetView<IndexController> {
         Obx(
           () => Scaffold(
             body: indexStack,
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: controller.index.value,
-              onTap: controller.setIndex,
-              type: BottomNavigationBarType.fixed,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Remix.bear_smile_line),
-                  activeIcon: Icon(Remix.bear_smile_fill),
-                  label: "漫画",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Remix.article_line),
-                  activeIcon: Icon(Remix.article_fill),
-                  label: "资讯",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Remix.book_open_line),
-                  activeIcon: Icon(Remix.book_open_fill),
-                  label: "轻小说",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Remix.user_smile_line),
-                  activeIcon: Icon(Remix.user_smile_fill),
-                  label: "我的",
-                ),
-              ],
+            bottomNavigationBar: Theme(
+              data: Theme.of(context).copyWith(
+                splashColor: Colors.transparent,
+              ),
+              child: BottomNavigationBar(
+                currentIndex: controller.index.value,
+                onTap: controller.setIndex,
+                type: BottomNavigationBarType.fixed,
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                backgroundColor: Theme.of(context).cardColor,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Remix.bear_smile_line),
+                    activeIcon: Icon(Remix.bear_smile_fill),
+                    label: "漫画",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Remix.article_line),
+                    activeIcon: Icon(Remix.article_fill),
+                    label: "资讯",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Remix.book_open_line),
+                    activeIcon: Icon(Remix.book_open_fill),
+                    label: "轻小说",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Remix.user_smile_line),
+                    activeIcon: Icon(Remix.user_smile_fill),
+                    label: "我的",
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -72,46 +81,42 @@ class IndexPage extends GetView<IndexController> {
       body: Row(
         children: [
           Obx(
-            () => Visibility(
-              visible:
-                  MediaQuery.of(context).size.width > AppConstant.kTabletWidth,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 2),
-                child: NavigationRail(
-                  elevation: 2,
-                  labelType: NavigationRailLabelType.all,
-                  onDestinationSelected: controller.setIndex,
-                  selectedIndex: controller.index.value,
-                  leading: SizedBox(
-                    height: AppStyle.statusBarHeight,
-                  ),
-                  selectedLabelTextStyle: TextStyle(
-                    fontSize: 10,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                  unselectedLabelTextStyle: TextStyle(
-                    fontSize: 10,
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  ),
-                  destinations: const [
-                    NavigationRailDestination(
-                      icon: Icon(Remix.bear_smile_line),
-                      label: Text("漫画"),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Remix.article_line),
-                      label: Text("资讯"),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Remix.book_open_line),
-                      label: Text("轻小说"),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Remix.user_smile_line),
-                      label: Text("我的"),
-                    ),
-                  ],
+            () => Padding(
+              padding: const EdgeInsets.only(right: 2),
+              child: NavigationRail(
+                elevation: 2,
+                labelType: NavigationRailLabelType.all,
+                onDestinationSelected: controller.setIndex,
+                selectedIndex: controller.index.value,
+                leading: SizedBox(
+                  height: AppStyle.statusBarHeight,
                 ),
+                selectedLabelTextStyle: TextStyle(
+                  fontSize: 10,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                unselectedLabelTextStyle: TextStyle(
+                  fontSize: 10,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+                destinations: const [
+                  NavigationRailDestination(
+                    icon: Icon(Remix.bear_smile_line),
+                    label: Text("漫画"),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Remix.article_line),
+                    label: Text("资讯"),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Remix.book_open_line),
+                    label: Text("轻小说"),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Remix.user_smile_line),
+                    label: Text("我的"),
+                  ),
+                ],
               ),
             ),
           ),
@@ -148,17 +153,30 @@ class IndexPage extends GetView<IndexController> {
   /// 子路由
   Widget _buildContentNavigator() {
     /// 拦截子路由的返回
-    return WillPopScope(
-      onWillPop: () async {
-        if (Navigator.canPop(Get.context!)) {
-          return true;
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          if (Navigator.canPop(Get.context!)) {
+            Get.back();
+            return;
+          }
+          if (AppNavigator.subNavigatorKey!.currentState!.canPop()) {
+            AppNavigator.subNavigatorKey!.currentState!.pop();
+            return;
+          }
         }
-        if (AppNavigator.subNavigatorKey!.currentState!.canPop()) {
-          AppNavigator.subNavigatorKey!.currentState!.pop();
-          return false;
-        }
-        return true;
       },
+      // onWillPop: () async {
+      //   if (Navigator.canPop(Get.context!)) {
+      //     return true;
+      //   }
+      //   if (AppNavigator.subNavigatorKey!.currentState!.canPop()) {
+      //     AppNavigator.subNavigatorKey!.currentState!.pop();
+      //     return false;
+      //   }
+      //   return true;
+      // },
       child: ClipRect(
         child: Navigator(
           key: AppNavigator.subNavigatorKey,

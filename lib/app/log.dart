@@ -22,7 +22,7 @@ class Log {
   }
 
   static e(String message, StackTrace stackTrace) {
-    logger.e("${DateTime.now().toString()}\n$message", null, stackTrace);
+    logger.e("${DateTime.now().toString()}\n$message", stackTrace: stackTrace);
   }
 
   static w(String message) {

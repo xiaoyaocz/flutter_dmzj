@@ -71,11 +71,11 @@ class HttpClient {
         }
       }
       return result.data;
-    } on DioError catch (e) {
-      if (e.type == DioErrorType.cancel) {
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.cancel) {
         rethrow;
       }
-      if (e.type == DioErrorType.badResponse) {
+      if (e.type == DioExceptionType.badResponse) {
         return throw AppError("请求失败：${e.response?.statusCode ?? -1}");
       }
       throw AppError("请求失败,请检查网络");
@@ -227,8 +227,8 @@ class HttpClient {
         }
       }
       return result.data;
-    } on DioError catch (e) {
-      if (e.type == DioErrorType.badResponse) {
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.badResponse) {
         return throw AppError("请求失败:状态码：${e.response?.statusCode ?? -1}");
       }
       throw AppError("请求失败,请检查网络");

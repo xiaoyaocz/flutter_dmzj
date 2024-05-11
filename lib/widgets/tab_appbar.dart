@@ -31,6 +31,7 @@ class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
                 isScrollable: true,
                 controller: controller,
                 labelColor: Theme.of(context).colorScheme.primary,
+                tabAlignment: TabAlignment.start,
                 unselectedLabelColor:
                     Get.isDarkMode ? Colors.white70 : Colors.black87,
                 labelStyle: const TextStyle(
@@ -44,6 +45,7 @@ class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
                 labelPadding: AppStyle.edgeInsetsH12,
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicatorColor: Colors.transparent,
+                dividerColor: Colors.transparent,
                 tabs: tabs,
               ),
             ),

@@ -86,8 +86,8 @@ class NovelRecommendView extends StatelessWidget {
   Widget buildShowMore({required Function() onTap}) {
     return GestureDetector(
       onTap: onTap,
-      child: Row(
-        children: const [
+      child: const Row(
+        children: [
           Text(
             "查看更多",
             style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -101,8 +101,8 @@ class NovelRecommendView extends StatelessWidget {
   Widget buildRefresh({required Function() onRefresh}) {
     return GestureDetector(
       onTap: onRefresh,
-      child: Row(
-        children: const [
+      child: const Row(
+        children: [
           Icon(Remix.refresh_line, size: 18, color: Colors.grey),
           AppStyle.hGap4,
           Text(
@@ -120,47 +120,65 @@ class NovelRecommendView extends StatelessWidget {
       child: ClipRRect(
         borderRadius: AppStyle.radius4,
         child: AspectRatio(
-          aspectRatio: 75 / 40,
+          aspectRatio: 7.5 / 4,
           child: Swiper(
             itemWidth: 750,
             itemHeight: 400,
             autoplay: true,
             itemCount: item.data.length,
-            itemBuilder: (_, i) => Stack(
-              children: [
-                NetImage(
-                  item.data[i].cover,
-                  width: 750,
-                  height: 400,
-                ),
-                Positioned(
-                    bottom: 4,
-                    left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        item.data[i].title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 6.0,
-                              color: Colors.black45,
-                              offset: Offset(2.0, 2.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ))
-              ],
+            itemBuilder: (_, i) => NetImage(
+              item.data[i].cover,
+              width: 750,
+              height: 400,
             ),
             onTap: (i) {
               controller.openDetail(item.data[i]);
             },
-            pagination: const SwiperPagination(
-              margin: AppStyle.edgeInsetsA8,
-              alignment: Alignment.bottomRight,
-              builder: DotSwiperPaginationBuilder(activeColor: Colors.blue),
+            pagination: SwiperCustomPagination(
+              builder: (BuildContext context, SwiperPluginConfig config) {
+                return Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                      right: 12,
+                      top: 4,
+                      bottom: 4,
+                    ),
+                    //color: Colors.black12,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Colors.black38,
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item.data[config.activeIndex].title,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.white),
+                          ),
+                        ),
+                        AppStyle.hGap8,
+                        PageIndicator(
+                          controller: config.pageController!,
+                          count: config.itemCount,
+                          size: 10,
+                          layout: PageIndicatorLayout.SCALE,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ),

@@ -19,6 +19,7 @@ class NovelDownloadPage extends StatelessWidget {
             padding: const EdgeInsets.only(right: 56),
             child: TabBar(
               isScrollable: true,
+              tabAlignment: TabAlignment.start,
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,

@@ -140,8 +140,8 @@ class ComicDownloader {
       await _saveInfo();
     } catch (e) {
       Log.logPrint(e);
-      if (e is DioError) {
-        if (e.type == DioErrorType.cancel) rethrow;
+      if (e is DioException) {
+        if (e.type == DioExceptionType.cancel) rethrow;
         if (status == DownloadStatus.waitNetwork ||
             status == DownloadStatus.pauseCellular) rethrow;
         if (retryTime < 3) {

@@ -21,6 +21,7 @@ class CommentPage extends StatelessWidget {
             child: TabBar(
               isScrollable: true,
               labelPadding: AppStyle.edgeInsetsH24,
+              tabAlignment: TabAlignment.start,
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,

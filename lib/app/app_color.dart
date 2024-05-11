@@ -8,7 +8,7 @@ class AppColor {
   static ColorScheme colorSchemeDark = ColorScheme.fromSwatch(
     primarySwatch: Colors.blue,
     accentColor: Colors.blue,
-    primaryColorDark: Colors.blue,
+    //primaryColorDark: Colors.blue,
     brightness: Brightness.dark,
   );
   static const Color backgroundColor = Color(0xfffafafa);

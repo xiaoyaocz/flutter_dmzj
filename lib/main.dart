@@ -50,15 +50,8 @@ void main() async {
     systemNavigationBarColor: Colors.transparent,
   );
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-  runZonedGuarded(
-    () {
-      runApp(const DMZJApp());
-    },
-    (error, stackTrace) {
-      //全局异常
-      Log.e(error.toString(), stackTrace);
-    },
-  );
+
+  runApp(const DMZJApp());
 }
 
 Future initServices() async {
@@ -124,7 +117,8 @@ class DMZJApp extends StatelessWidget {
           () => MediaQuery(
             data: AppSettingsService.instance.useSystemFontSize.value
                 ? MediaQuery.of(context)
-                : MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                : MediaQuery.of(context)
+                    .copyWith(textScaler: const TextScaler.linear(1.0)),
             child: child!,
           ),
         ),

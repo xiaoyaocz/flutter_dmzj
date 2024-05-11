@@ -1,5 +1,4 @@
 import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 part 'comic_download_info.g.dart';
 

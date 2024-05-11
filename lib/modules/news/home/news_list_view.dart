@@ -129,48 +129,70 @@ class NewsListView extends StatelessWidget {
           borderRadius: AppStyle.radius4,
           child: AspectRatio(
             aspectRatio: 75 / 40,
-            child: Swiper(
-              itemWidth: 750,
-              itemHeight: 400,
-              autoplay: true,
-              itemCount: controller.banners.length,
-              onTap: (i) {
-                controller.openBanner(controller.banners[i]);
-              },
-              itemBuilder: (_, i) => Stack(
-                children: [
-                  NetImage(
-                    controller.banners[i].picUrl,
-                    width: 750,
-                    height: 400,
-                  ),
-                  Positioned(
-                      bottom: 4,
-                      left: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          controller.banners[i].title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 6.0,
-                                color: Colors.black45,
-                                offset: Offset(2.0, 2.0),
+            child: controller.banners.isEmpty
+                ? const SizedBox()
+                : Swiper(
+                    itemWidth: 750,
+                    itemHeight: 400,
+                    autoplay: true,
+                    itemCount: controller.banners.length,
+                    onTap: (i) {
+                      controller.openBanner(controller.banners[i]);
+                    },
+                    itemBuilder: (_, i) => NetImage(
+                      controller.banners[i].picUrl,
+                      width: 750,
+                      height: 400,
+                    ),
+                    pagination: SwiperCustomPagination(
+                      builder:
+                          (BuildContext context, SwiperPluginConfig config) {
+                        return Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            padding: const EdgeInsets.only(
+                              left: 8,
+                              right: 12,
+                              top: 4,
+                              bottom: 4,
+                            ),
+                            //color: Colors.black12,
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.black38,
+                                  Colors.transparent,
+                                ],
                               ),
-                            ],
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    controller
+                                        .banners[config.activeIndex].title,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.white),
+                                  ),
+                                ),
+                                AppStyle.hGap8,
+                                PageIndicator(
+                                  controller: config.pageController!,
+                                  count: config.itemCount,
+                                  size: 10,
+                                  layout: PageIndicatorLayout.SCALE,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ))
-                ],
-              ),
-              pagination: const SwiperPagination(
-                margin: AppStyle.edgeInsetsA8,
-                alignment: Alignment.bottomRight,
-                builder: DotSwiperPaginationBuilder(activeColor: Colors.blue),
-              ),
-            ),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ),
       ),

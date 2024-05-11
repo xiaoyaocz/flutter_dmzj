@@ -11,46 +11,46 @@ dependencies:
   remixicon: ^1.0.0 #Remix图标
 
   #框架、工具
-  get: ^4.6.5 #状态管理
-  dio: ^5.0.0 #网络请求
+  get: ^4.6.6 #状态管理
+  dio: ^5.4.1 #网络请求
   hive: ^2.2.3 #持久化存储
   hive_flutter: ^1.1.0 #持久化存储
   crypton: ^2.1.0 #加解密
   crypto: ^3.0.2 #加解密
-  logger: ^1.2.2 #日志输出
+  logger: ^2.0.2+1 #日志输出
   protobuf: ^2.1.0 #Protobuf
   intl: any
-  universal_html: ^2.2.1 #HTML解析
+  universal_html: ^2.2.4 #HTML解析
   html_unescape: ^2.0.0 #HTML解码
-  csslib: 0.17.0 #CSS解析
+  csslib: ^1.0.0 #CSS解析
 
   #Widget
-  flutter_smart_dialog: ^4.8.2+5 #各种弹窗 Toast\Dialog\Popup
-  flutter_staggered_grid_view: ^0.6.2 #瀑布流/GridView
+  flutter_smart_dialog: ^4.9.6 #各种弹窗 Toast\Dialog\Popup
+  flutter_staggered_grid_view: ^0.7.0 #瀑布流/GridView
   multi_split_view: ^2.4.0 #SplitView
   tab_indicator_styler: ^2.0.0  #Tab样式
-  extended_image: ^7.0.2  #拓展Image
+  extended_image: ^8.2.0  #拓展Image
   flutter_swiper_view: ^1.1.8 #幻灯片
-  easy_refresh: ^3.3.1 #下拉刷新、上拉加载
-  lottie: ^1.4.3 #lottie动画
+  easy_refresh: ^3.3.4 #下拉刷新、上拉加载
+  lottie: ^3.0.0 #lottie动画
   photo_view: ^0.14.0 #图片浏览
-  preload_page_view: ^0.1.6 #预加载PageView
-  scrollable_positioned_list: ^0.3.5
+  preload_page_view: ^0.2.0 #预加载PageView
+  scrollable_positioned_list: ^0.3.8
   
 
   #系统交互
-  url_launcher: ^6.1.10 #打开链接
-  webview_flutter: ^4.0.5 #WebView
-  package_info_plus: ^4.2.0 #包信息
-  flutter_widget_from_html_core: ^0.10.0 #HTML转Widget
-  share_plus: ^7.2.1 #分享
-  permission_handler: ^10.2.0 #权限检查
-  path_provider: ^2.0.13 #常用目录
-  image_gallery_saver: ^1.7.1 #保存图片至相册
+  url_launcher: ^6.2.4 #打开链接
+  webview_flutter: ^4.7.0 #WebView
+  package_info_plus: ^5.0.1 #包信息
+  flutter_widget_from_html_core: ^0.14.11 #HTML转Widget
+  share_plus: ^7.2.2 #分享
+  permission_handler: ^11.3.0 #权限检查
+  path_provider: ^2.1.2 #常用目录
+  image_gallery_saver: ^2.0.3 #保存图片至相册
   connectivity_plus: ^5.0.2 #连接状态
-  battery_plus: ^5.0.2 #电池状态
-  file_selector: ^0.9.2+4 #文件选择
-  windows_single_instance: ^0.1.5 #Windows单实例
+  battery_plus: ^5.0.3 #电池状态
+  file_selector: ^1.0.3 #文件选择
+  windows_single_instance: ^1.0.1 #Windows单实例
   
   flutter: 
     sdk: flutter

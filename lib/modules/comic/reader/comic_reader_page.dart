@@ -23,9 +23,9 @@ class ComicReaderPage extends GetView<ComicReaderController> {
 
   @override
   Widget build(BuildContext context) {
-    return RawKeyboardListener(
-      onKey: (e) {
-        if (e.runtimeType == RawKeyUpEvent) {
+    return KeyboardListener(
+      onKeyEvent: (e) {
+        if (e.runtimeType == KeyUpEvent) {
           controller.keyDown(e.logicalKey);
           Log.d(e.toString());
         }

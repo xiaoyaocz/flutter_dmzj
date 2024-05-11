@@ -29,12 +29,8 @@ class ComicRequest {
   /// 漫画-推荐
   Future<List<ComicRecommendModel>> recommend() async {
     var list = <ComicRecommendModel>[];
-    var result = await HttpClient.instance.getJson(
-      '/recommend_new.json',
-        queryParameters: {
-          "version": "99.9.9"
-        }
-    );
+    var result = await HttpClient.instance
+        .getJson('/recommend_new.json', queryParameters: {"version": "99.9.9"});
     for (var item in result) {
       list.add(ComicRecommendModel.fromJson(item));
     }

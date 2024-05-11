@@ -18,6 +18,7 @@ class UserCommentPage extends StatelessWidget {
             padding: const EdgeInsets.only(right: 56),
             child: TabBar(
               isScrollable: true,
+              tabAlignment: TabAlignment.start,
               labelPadding: AppStyle.edgeInsetsH24,
               indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,

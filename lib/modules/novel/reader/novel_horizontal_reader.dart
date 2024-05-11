@@ -266,7 +266,7 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
         style: TextStyle(
           fontSize: fontSize,
           height: lineHeight,
-          locale: WidgetsBinding.instance.window.locale,
+          locale: PlatformDispatcher.instance.locale,
         ),
       ),
       textDirection: TextDirection.ltr,
