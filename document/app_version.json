@@ -1,7 +1,7 @@
 {
-    "version": "2.0.9-beta",
-    "version_num": 20009,
-    "version_desc": "1. 修复一些问题 #204",
+    "version": "2.1.0-beta",
+    "version_num": 20100,
+    "version_desc": "1. 适配Flutter 3.19\n2. 修复一些问题",
     "prerelease":false,
     "download_url": "https://github.com/xiaoyaocz/flutter_dmzj/releases"
 }
