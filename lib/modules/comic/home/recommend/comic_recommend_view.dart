@@ -5,10 +5,10 @@ import 'package:flutter_dmzj/modules/comic/home/recommend/comic_recommend_contro
 import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/page_list_view.dart';
+import 'package:flutter_dmzj/widgets/refresh_until_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:get/get.dart';
-import 'package:remixicon/remixicon.dart';
 
 class ComicRecommendView extends StatelessWidget {
   final ComicRecommendController controller;
@@ -154,20 +154,8 @@ class ComicRecommendView extends StatelessWidget {
     );
   }
 
-  Widget buildRefresh({required Function() onRefresh}) {
-    return GestureDetector(
-      onTap: onRefresh,
-      child: const Row(
-        children: [
-          Icon(Remix.refresh_line, size: 18, color: Colors.grey),
-          AppStyle.hGap4,
-          Text(
-            "换一批",
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-          ),
-        ],
-      ),
-    );
+  Widget buildRefresh({required Future Function() onRefresh}) {
+    return RefreshUntilWidget(onRefresh: onRefresh, text: "换一批");
   }
 
   Widget buildBanner(ComicRecommendModel item) {
