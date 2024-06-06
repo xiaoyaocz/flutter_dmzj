@@ -9,7 +9,6 @@ import 'package:flutter_dmzj/widgets/refresh_until_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:get/get.dart';
-import 'package:remixicon/remixicon.dart';
 
 class NovelRecommendView extends StatelessWidget {
   final NovelRecommendController controller;
