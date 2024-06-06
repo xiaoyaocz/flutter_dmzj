@@ -31,7 +31,7 @@ dependencies:
   tab_indicator_styler: ^2.0.0  #Tab样式
   extended_image: ^8.2.0  #拓展Image
   flutter_swiper_view: ^1.1.8 #幻灯片
-  easy_refresh: ^3.3.4 #下拉刷新、上拉加载
+  easy_refresh: ^3.4.0 #下拉刷新、上拉加载
   lottie: ^3.0.0 #lottie动画
   photo_view: ^0.14.0 #图片浏览
   preload_page_view: ^0.2.0 #预加载PageView
