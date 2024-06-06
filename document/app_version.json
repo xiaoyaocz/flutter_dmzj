@@ -1,7 +1,7 @@
 {
-    "version": "2.1.0-beta",
-    "version_num": 20100,
-    "version_desc": "1. 适配Flutter 3.19\n2. 修复一些问题",
+    "version": "2.1.1-beta",
+    "version_num": 20101,
+    "version_desc": "1. 适配Flutter 3.22\n2. 换一批刷新增加动画 #216 @GZGavinZhao",
     "prerelease":false,
     "download_url": "https://github.com/xiaoyaocz/flutter_dmzj/releases"
 }
