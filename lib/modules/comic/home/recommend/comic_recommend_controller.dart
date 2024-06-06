@@ -48,7 +48,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   }
 
   /// 加载随机漫画
-  void loadRandom() async {
+  Future<void> loadRandom() async {
     try {
       var result = await request.refreshRecommend(50);
       var index = list.indexWhere((x) => x.categoryId == 50);
@@ -66,7 +66,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   }
 
   /// 刷新国漫
-  void refreshGuoman() async {
+  Future<void> refreshGuoman() async {
     try {
       var result = await request.refreshRecommend(52);
       var index = list.indexWhere((x) => x.categoryId == 52);
@@ -94,7 +94,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   }
 
   /// 刷新热门连载
-  void refreshHot() async {
+  Future<void> refreshHot() async {
     try {
       var result = await request.refreshRecommend(54);
       var index = list.indexWhere((x) => x.categoryId == 54);
