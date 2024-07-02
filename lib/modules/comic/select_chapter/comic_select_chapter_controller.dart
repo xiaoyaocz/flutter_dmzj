@@ -142,6 +142,6 @@ class ComicSelectChapterController extends BaseController {
       );
     }
     chapterIds.clear();
-    SmartDialog.showToast("已添加到下载列表，下载过程中请保存APP在前台运行");
+    SmartDialog.showToast("已添加到下载列表，下载过程中请保持APP在前台运行");
   }
 }
