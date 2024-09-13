@@ -1,6 +1,6 @@
+import 'package:flutter_dmzj/models/comic/chapter_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/chapter_detail_web_model.dart';
 import 'package:flutter_dmzj/models/db/comic_download_info.dart';
-import 'package:flutter_dmzj/models/proto/comic.pb.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
 
 // ignore: depend_on_referenced_packages
@@ -40,7 +40,7 @@ class ComicChapterDetail {
         commentCount: item.commentCount,
       );
 
-  factory ComicChapterDetail.fromV4(ComicChapterDetailProto item, bool useHD) =>
+  factory ComicChapterDetail.fromV4(ComicChapterDetailModel item, bool useHD) =>
       ComicChapterDetail(
         chapterId: item.chapterId.toInt(),
         comicId: item.comicId.toInt(),
@@ -48,11 +48,11 @@ class ComicChapterDetail {
         direction: item.direction,
         chapterTitle: item.title,
         pageUrls: useHD
-            ? (item.pageUrlHD.isNotEmpty ? item.pageUrlHD : item.pageUrl)
-            : (item.pageUrl.isNotEmpty ? item.pageUrl : item.pageUrlHD),
+            ? (item.pageUrlHd.isNotEmpty ? item.pageUrlHd : item.pageUrl)
+            : (item.pageUrl.isNotEmpty ? item.pageUrl : item.pageUrlHd),
         //pageUrls: item.pageUrlHD.isNotEmpty ? item.pageUrlHD : item.pageUrl,
         picnum: item.picnum,
-        commentCount: item.commentCount,
+        commentCount: 0,
       );
 
   factory ComicChapterDetail.fromDownload(ComicDownloadInfo item) =>

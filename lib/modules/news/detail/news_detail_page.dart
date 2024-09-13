@@ -106,23 +106,23 @@ class NewsDetailPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: Obx(
-                  () => TextButton.icon(
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 14),
-                    ),
-                    onPressed: controller.collect,
-                    icon: Icon(
-                      controller.collected.value
-                          ? Remix.star_fill
-                          : Remix.star_line,
-                      size: 20,
-                    ),
-                    label: Text(controller.collected.value ? "已收藏" : "收藏"),
-                  ),
-                ),
-              ),
+              // Expanded(
+              //   child: Obx(
+              //     () => TextButton.icon(
+              //       style: TextButton.styleFrom(
+              //         textStyle: const TextStyle(fontSize: 14),
+              //       ),
+              //       onPressed: controller.collect,
+              //       icon: Icon(
+              //         controller.collected.value
+              //             ? Remix.star_fill
+              //             : Remix.star_line,
+              //         size: 20,
+              //       ),
+              //       label: Text(controller.collected.value ? "已收藏" : "收藏"),
+              //     ),
+              //   ),
+              // ),
               Expanded(
                 child: TextButton.icon(
                   style: TextButton.styleFrom(

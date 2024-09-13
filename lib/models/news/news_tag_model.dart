@@ -9,17 +9,17 @@ T? asT<T>(dynamic value) {
 
 class NewsTagModel {
   NewsTagModel({
-    required this.tagId,
-    required this.tagName,
+    required this.id,
+    required this.name,
   });
 
   factory NewsTagModel.fromJson(Map<String, dynamic> json) => NewsTagModel(
-        tagId: asT<int>(json['tag_id'])!,
-        tagName: asT<String>(json['tag_name'])!,
+        id: asT<int>(json['id'])!,
+        name: asT<String>(json['name'])!,
       );
 
-  int tagId;
-  String tagName;
+  int id;
+  String name;
 
   @override
   String toString() {
@@ -27,7 +27,7 @@ class NewsTagModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'tag_id': tagId,
-        'tag_name': tagName,
+        'id': id,
+        'name': name,
       };
 }

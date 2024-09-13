@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/comic/search_item.dart';
@@ -25,7 +24,7 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
 
   @override
   void onInit() {
-    loadHotWord();
+    // loadHotWord();
     if (keyword.isNotEmpty) {
       submit();
     }
@@ -78,15 +77,15 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
     if (searchController.text.isEmpty) {
       return [];
     }
-    if (AppSettingsService.instance.comicSearchUseWebApi.value) {
-      //WEB接口不能分页
-      if (page > 1) {
-        return [];
-      }
-      return await request.searchWeb(keyword: _keyword);
-    } else {
-      return await request.search(keyword: _keyword, page: page - 1);
-    }
+    // if (AppSettingsService.instance.comicSearchUseWebApi.value) {
+    //   //WEB接口不能分页
+    //   if (page > 1) {
+    //     return [];
+    //   }
+    //   return await request.searchWeb(keyword: _keyword);
+    // } else {
+    return await request.search(keyword: _keyword, page: page);
+    //}
   }
 
   void loadHotWord() async {

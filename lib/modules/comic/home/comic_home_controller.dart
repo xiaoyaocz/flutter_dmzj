@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/event_bus.dart';
 import 'package:flutter_dmzj/modules/comic/home/category/comic_category_controller.dart';
+//import 'package:flutter_dmzj/modules/comic/home/category/comic_category_controller.dart';
 import 'package:flutter_dmzj/modules/comic/home/latest/comic_latest_controller.dart';
 import 'package:flutter_dmzj/modules/comic/home/rank/comic_rank_controller.dart';
 import 'package:flutter_dmzj/modules/comic/home/recommend/comic_recommend_controller.dart';
-import 'package:flutter_dmzj/modules/comic/home/special/comic_special_controller.dart';
+//import 'package:flutter_dmzj/modules/comic/home/special/comic_special_controller.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +28,7 @@ class ComicHomeController extends GetxController
         }
       },
     );
-    tabController = TabController(length: 5, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
 
     super.onInit();
   }
@@ -43,9 +44,10 @@ class ComicHomeController extends GetxController
       controller = Get.find<ComicCategoryController>();
     } else if (tabIndex == 3) {
       controller = Get.find<ComicRankController>();
-    } else if (tabIndex == 4) {
-      controller = Get.find<ComicSpecialController>();
     }
+    //  else if (tabIndex == 4) {
+    //   controller = Get.find<ComicSpecialController>();
+    // }
     controller?.scrollToTopOrRefresh();
   }
 

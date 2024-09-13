@@ -26,7 +26,7 @@ class NovelHomeController extends GetxController
         }
       },
     );
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
 
     super.onInit();
   }

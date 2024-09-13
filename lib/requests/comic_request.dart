@@ -6,19 +6,22 @@ import 'package:flutter_dmzj/models/comic/author_model.dart';
 import 'package:flutter_dmzj/models/comic/category_comic_model.dart';
 import 'package:flutter_dmzj/models/comic/category_filter_model.dart';
 import 'package:flutter_dmzj/models/comic/category_item_model.dart';
+import 'package:flutter_dmzj/models/comic/chapter_detail_model.dart';
 import 'package:flutter_dmzj/models/comic/chapter_detail_web_model.dart';
 import 'package:flutter_dmzj/models/comic/chapter_info.dart';
 import 'package:flutter_dmzj/models/comic/comic_related_model.dart';
 import 'package:flutter_dmzj/models/comic/detail_info.dart';
+import 'package:flutter_dmzj/models/comic/detail_model.dart';
 import 'package:flutter_dmzj/models/comic/detail_v1_model.dart';
+import 'package:flutter_dmzj/models/comic/rank_item_model.dart';
 import 'package:flutter_dmzj/models/comic/recommend_model.dart';
 import 'package:flutter_dmzj/models/comic/search_item.dart';
 import 'package:flutter_dmzj/models/comic/search_model.dart';
 import 'package:flutter_dmzj/models/comic/special_model.dart';
+import 'package:flutter_dmzj/models/comic/update_item_model.dart';
 import 'package:flutter_dmzj/models/comic/view_point_model.dart';
 import 'package:flutter_dmzj/models/comic/web_search_model.dart';
 import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:flutter_dmzj/models/proto/comic.pb.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
@@ -29,8 +32,8 @@ class ComicRequest {
   /// 漫画-推荐
   Future<List<ComicRecommendModel>> recommend() async {
     var list = <ComicRecommendModel>[];
-    var result = await HttpClient.instance
-        .getJson('/recommend_new.json', queryParameters: {"version": "99.9.9"});
+    var result = await HttpClient.instance.getJson('/comic/recommend/index');
+
     for (var item in result) {
       list.add(ComicRecommendModel.fromJson(item));
     }
@@ -38,63 +41,63 @@ class ComicRequest {
   }
 
   /// 猜你喜欢
-  Future<ComicRecommendModel> refreshRecommend(int categoryId) async {
+  Future<List<ComicRecommendItemModel>> refreshRecommend(int categoryId,
+      {int page = 1, int size = 3}) async {
     var result = await HttpClient.instance.getJson(
-      '/recommend/batchUpdate',
-      needLogin: true,
-      queryParameters: {
-        "category_id": categoryId,
-      },
+      '/comic/recommend/more',
+      queryParameters: {"cateId": categoryId, "size": size, "page": page},
     );
-    var model = ComicRecommendModel.fromJson(result["data"]);
-    for (var item in model.data) {
-      if (categoryId == 50) {
-        item.objId = item.id;
-        item.type = 1;
-      }
+    List<ComicRecommendItemModel> list = [];
+
+    for (var item in result["data"]["recommendList"]) {
+      list.add(ComicRecommendItemModel.fromJson(item));
     }
-    return model;
+    return list;
   }
 
   /// 首页-我的订阅
   Future<ComicRecommendModel> recommendSubscribe() async {
     var result = await HttpClient.instance.getJson(
-      '/recommend/batchUpdate',
+      '/comic/sub/list',
       needLogin: true,
-      queryParameters: {
-        "category_id": 49,
-      },
+      checkCode: true,
+      queryParameters: {"status": 0, "firstLetter": "", "page": 1, "size": 3},
     );
-    var model = ComicRecommendModel.fromJson(result["data"]);
-    for (var item in model.data) {
-      item.objId = item.id;
-      item.type = 1;
+
+    var list = <ComicRecommendItemModel>[];
+    for (var item in result["subList"]) {
+      list.add(ComicRecommendItemModel.fromJson(item));
     }
-    return model;
+    return ComicRecommendModel(
+      categoryId: 49,
+      title: "我的订阅",
+      sort: 0,
+      data: list,
+    );
   }
 
   /// 最近更新
-  Future<List<ComicUpdateListInfoProto>> latest(
+  Future<List<ComicUpdateItemModel>> latest(
       {required int type, int page = 1}) async {
-    var result = await HttpClient.instance.getEncryptV4(
+    var result = await HttpClient.instance.getJson(
       '/comic/update/list/$type/$page',
-      needLogin: true,
     );
-    var data = ComicUpdateListResponseProto.fromBuffer(result);
-    if (data.errno != 0) {
-      throw AppError(data.errmsg);
+    var list = <ComicUpdateItemModel>[];
+    for (var item in result["data"]) {
+      list.add(ComicUpdateItemModel.fromJson(item));
     }
-    return data.data;
+    return list;
   }
 
   /// 分类
   Future<List<ComicCategoryItemModel>> categores() async {
     var list = <ComicCategoryItemModel>[];
     var result = await HttpClient.instance.getJson(
-      '/0/category.json',
+      '/comic/filter/category',
+      queryParameters: {"source": 1},
       checkCode: true,
     );
-    for (var item in result) {
+    for (var item in result["cateList"]) {
       list.add(ComicCategoryItemModel.fromJson(item));
     }
     return list;
@@ -102,14 +105,21 @@ class ComicRequest {
 
   /// 分类-筛选
   Future<List<ComicCategoryFilterModel>> categoryFilter() async {
-    var list = <ComicCategoryFilterModel>[];
     var result = await HttpClient.instance.getJson(
-      '/classify/filter.json',
+      '/comic/filter/category',
+      queryParameters: {"source": 1},
+      checkCode: true,
     );
-    for (var item in result) {
-      list.add(ComicCategoryFilterModel.fromJson(item));
+    // for (var item in result["cateList"]) {
+    //   list.add(ComicCategoryFilterModel.fromJson(item));
+    // }
+    var list = <ComicCategoryFilterItemModel>[];
+    for (var item in result["cateList"]) {
+      list.add(ComicCategoryFilterItemModel.fromJson(item));
     }
-    return list;
+    return [
+      ComicCategoryFilterModel(title: "全部分类", items: list),
+    ];
   }
 
   /// 分类下漫画
@@ -118,39 +128,36 @@ class ComicRequest {
   /// - [page] 页数，从0开始
   Future<List<ComicCategoryComicModel>> categoryComic({
     required List<int> ids,
-    int sort = 0,
+    int sort = 1,
     int page = 1,
+    int status = 0,
   }) async {
-    var path = "classify/";
-    for (var item in ids) {
-      if (item != 0) {
-        path += "$item-";
-      }
-    }
-    if (path == "classify/") {
-      path = "classify/0";
-    } else {
-      path = path.substring(0, path.length - 1);
-    }
-
     var list = <ComicCategoryComicModel>[];
     var result = await HttpClient.instance.getJson(
-      '/$path/$sort/$page.json',
+      '/comic/filter/list',
+      queryParameters: {
+        "tagId": ids.join(","),
+        "status": 0,
+        "sortType": sort,
+        "page": page,
+        "size": 20,
+      },
+      checkCode: true,
     );
-    for (var item in result) {
+    for (var item in result["comicList"]) {
       list.add(ComicCategoryComicModel.fromJson(item));
     }
     return list;
   }
 
   /// 排行榜
-  Future<List<ComicRankListInfoProto>> rank({
+  Future<List<ComicRankListItemModel>> rank({
     required int tagId,
     required byTime,
     required rankType,
     int page = 1,
   }) async {
-    var result = await HttpClient.instance.getEncryptV4(
+    var result = await HttpClient.instance.getJson(
       '/comic/rank/list',
       queryParameters: {
         'tag_id': tagId,
@@ -158,24 +165,25 @@ class ComicRequest {
         'rank_type': rankType,
         'page': page
       },
-      needLogin: true,
     );
-    var data = ComicRankListResponseProto.fromBuffer(result);
-    if (data.errno != 0) {
-      throw AppError(data.errmsg);
+    var list = <ComicRankListItemModel>[];
+    for (var item in result["data"]) {
+      list.add(ComicRankListItemModel.fromJson(item));
     }
-    return data.data;
+    return list;
   }
 
   /// 排行榜-分类
   Future<Map<int, String>> rankFilter() async {
     var result = await HttpClient.instance.getJson(
-      '/rank/type_filter.json',
+      '/comic/filter/category',
+      queryParameters: {"source": 1},
+      checkCode: true,
     );
     Map<int, String> map = {};
-    for (var item in result) {
+    for (var item in result["cateList"]) {
       map.addAll({
-        item["tag_id"]: item["tag_name"],
+        item["tagId"]: item["title"],
       });
     }
     return map;
@@ -251,18 +259,18 @@ class ComicRequest {
   }
 
   /// 漫画详情
-  Future<ComicDetailProto> comicDetailV4({
+  Future<ComicDetailModel> comicDetailV4({
     required int comicId,
   }) async {
-    var result = await HttpClient.instance.getEncryptV4(
-      '/comic/detail/$comicId?uid=2665531',
+    var result = await HttpClient.instance.getJson(
+      '/comic/detail/$comicId',
     );
-    var data = ComicDetailResponseProto.fromBuffer(result);
-    if (data.errno != 0) {
-      throw AppError(data.errmsg);
+    if (result["errno"] != 0) {
+      throw AppError(result["errmsg"]);
     }
+    var data = ComicDetailModel.fromJson(result["data"]);
 
-    return data.data;
+    return data;
   }
 
   /// 漫画详情
@@ -288,12 +296,18 @@ class ComicRequest {
   /// - [page] 页数从0开始
   /// - [keyword] 关键字
   Future<List<SearchComicItem>> search(
-      {required String keyword, int page = 0}) async {
+      {required String keyword, int page = 1}) async {
     var list = <ComicSearchModel>[];
     var result = await HttpClient.instance.getJson(
-      '/search/show/0/$keyword/$page.json',
+      '/search/index',
+      queryParameters: {
+        "keyword": keyword,
+        "page": page,
+        "size": 20,
+      },
+      checkCode: true,
     );
-    for (var item in result) {
+    for (var item in result["list"]) {
       list.add(ComicSearchModel.fromJson(item));
     }
     return list.map((e) => SearchComicItem.fromApi(e)).toList();
@@ -345,18 +359,16 @@ class ComicRequest {
   }
 
   /// 章节详情-V4
-  Future<ComicChapterDetailProto> chapterDetailV4(
+  Future<ComicChapterDetailModel> chapterDetailV4(
       {required int comicId, required int chapterId}) async {
-    var result = await HttpClient.instance.getEncryptV4(
-      '/comic/chapter/$comicId/$chapterId',
-      needLogin: true,
-    );
-    var data = ComicChapterResponseProto.fromBuffer(result);
-    if (data.errno != 0) {
-      throw AppError(data.errmsg);
+    var result =
+        await HttpClient.instance.getJson('/comic/chapter/$comicId/$chapterId');
+    if (result["errno"] != 0) {
+      throw AppError(result["errmsg"].toString());
     }
+    var data = ComicChapterDetailModel.fromJson(result["data"]["data"]);
 
-    return data.data;
+    return data;
   }
 
   /// 章节详情-WebAPI

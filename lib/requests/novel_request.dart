@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/novel/category_filter_model.dart';
 import 'package:flutter_dmzj/models/novel/category_model.dart';
 import 'package:flutter_dmzj/models/novel/category_novel_model.dart';
+import 'package:flutter_dmzj/models/novel/detail_model.dart';
 import 'package:flutter_dmzj/models/novel/latest_model.dart';
 import 'package:flutter_dmzj/models/novel/rank_model.dart';
 import 'package:flutter_dmzj/models/novel/recommend_model.dart';
 import 'package:flutter_dmzj/models/novel/search_model.dart';
-import 'package:flutter_dmzj/models/proto/novel.pb.dart';
+import 'package:flutter_dmzj/models/novel/volume_detail_model.dart';
 import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
@@ -16,10 +16,9 @@ class NovelRequest {
   /// 轻小说-推荐
   Future<List<NovelRecommendModel>> recommend() async {
     var list = <NovelRecommendModel>[];
-    var result = await HttpClient.instance.getJson(
-      '/novel/recommend.json',
-    );
-    for (var item in result) {
+    var result =
+        await HttpClient.instance.getJson('/novel/recommend', checkCode: true);
+    for (var item in result["recommendList"]) {
       list.add(NovelRecommendModel.fromJson(item));
     }
     return list;
@@ -27,12 +26,20 @@ class NovelRequest {
 
   /// 轻小说-更新
   /// - [page] 页数从0开始
-  Future<List<NovelLatestModel>> latest({int page = 0}) async {
+  Future<List<NovelLatestModel>> latest({int page = 1}) async {
     var list = <NovelLatestModel>[];
     var result = await HttpClient.instance.getJson(
-      '/novel/recentUpdate/$page.json',
+      '/novel/filter/list',
+      queryParameters: {
+        //status=0&sortType=1&page=1&size=20&tagId=0
+        "status": 0,
+        "sortType": 1,
+        "page": page,
+        "size": 20,
+      },
+      checkCode: true,
     );
-    for (var item in result) {
+    for (var item in result["novelList"]) {
       list.add(NovelLatestModel.fromJson(item));
     }
     return list;
@@ -42,9 +49,13 @@ class NovelRequest {
   Future<List<NovelCategoryModel>> categores() async {
     var list = <NovelCategoryModel>[];
     var result = await HttpClient.instance.getJson(
-      '/1/category.json',
+      '/comic/filter/category',
+      queryParameters: {
+        "source": 2,
+      },
+      checkCode: true,
     );
-    for (var item in result) {
+    for (var item in result["cateList"]) {
       list.add(NovelCategoryModel.fromJson(item));
     }
     return list;
@@ -52,14 +63,18 @@ class NovelRequest {
 
   /// 分类-筛选
   Future<List<NovelCategoryFilterModel>> categoryFilter() async {
-    var list = <NovelCategoryFilterModel>[];
     var result = await HttpClient.instance.getJson(
-      '/novel/filter.json',
+      '/comic/filter/category',
+      queryParameters: {"source": 2},
+      checkCode: true,
     );
-    for (var item in result) {
-      list.add(NovelCategoryFilterModel.fromJson(item));
+    var list = <NovelCategoryFilterItemModel>[];
+    for (var item in result["cateList"]) {
+      list.add(NovelCategoryFilterItemModel.fromJson(item));
     }
-    return list;
+    return [
+      NovelCategoryFilterModel(title: "题材", items: list),
+    ];
   }
 
   /// 分类下漫画
@@ -74,9 +89,17 @@ class NovelRequest {
   }) async {
     var list = <NovelCategoryNovelModel>[];
     var result = await HttpClient.instance.getJson(
-      '/novel/$cateId/$status/$sort/$page.json',
+      '/novel/filter/list',
+      queryParameters: {
+        "tagId": cateId,
+        "status": 0,
+        "sortType": sort,
+        "page": page,
+        "size": 20,
+      },
+      checkCode: true,
     );
-    for (var item in result) {
+    for (var item in result["novelList"]) {
       list.add(NovelCategoryNovelModel.fromJson(item));
     }
     return list;
@@ -101,12 +124,16 @@ class NovelRequest {
   /// 排行榜-分类
   Future<Map<int, String>> rankFilter() async {
     var result = await HttpClient.instance.getJson(
-      '/novel/tag.json',
+      '/comic/filter/category',
+      queryParameters: {
+        "source": 2,
+      },
+      checkCode: true,
     );
     Map<int, String> map = {};
-    for (var item in result) {
+    for (var item in result["cateList"]) {
       map.addAll({
-        item["tag_id"]: item["tag_name"],
+        item["tagId"]: item["title"],
       });
     }
     return map;
@@ -142,35 +169,33 @@ class NovelRequest {
   }
 
   /// 小说详情
-  Future<NovelDetailProto> novelDetailV4({
+  Future<NovelDetailModel> novelDetail({
     required int novelId,
   }) async {
-    var result = await HttpClient.instance.getEncryptV4(
+    var result = await HttpClient.instance.getJson(
       '/novel/detail/$novelId',
       needLogin: true,
+      checkCode: true,
     );
-    var data = NovelDetailResponseProto.fromBuffer(result);
-    if (data.errno != 0) {
-      throw AppError(data.errmsg);
-    }
+    var data = NovelDetailModel.fromJson(result);
 
-    return data.data;
+    return data;
   }
 
   /// 小说章节
-  Future<List<NovelVolumeDetailProto>> novelChapterV4({
+  Future<List<NovelVolumeDetailModel>> novelChapter({
     required int novelId,
   }) async {
-    var result = await HttpClient.instance.getEncryptV4(
+    var result = await HttpClient.instance.getJson(
       '/novel/chapter/$novelId',
       needLogin: true,
+      checkCode: true,
     );
-    var data = NovelChapterResponseProto.fromBuffer(result);
-    if (data.errno != 0) {
-      throw AppError(data.errmsg);
+    var list = <NovelVolumeDetailModel>[];
+    for (var item in result["data"]) {
+      list.add(NovelVolumeDetailModel.fromJson(item));
     }
-
-    return data.data;
+    return list;
   }
 
   /// 小说正文内容

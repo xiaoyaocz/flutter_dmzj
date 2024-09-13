@@ -57,7 +57,7 @@ class UserHomeController extends GetxController {
           ),
         ),
       ),
-      applicationName: "动漫之家X",
+      applicationName: "ZAI-X",
       applicationVersion: "Ver ${Utils.packageInfo.version}",
       applicationLegalese: "@xiaoyaocz",
     ));

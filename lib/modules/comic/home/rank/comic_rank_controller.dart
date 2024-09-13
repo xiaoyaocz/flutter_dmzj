@@ -1,10 +1,10 @@
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/proto/comic.pb.dart';
+import 'package:flutter_dmzj/models/comic/rank_item_model.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
-class ComicRankController extends BasePageController<ComicRankListInfoProto> {
+class ComicRankController extends BasePageController<ComicRankListItemModel> {
   final ComicRequest request = ComicRequest();
   RxMap<int, String> tags = {
     0: "全部分类",
@@ -17,7 +17,7 @@ class ComicRankController extends BasePageController<ComicRankListInfoProto> {
     2: "月排行",
     3: "总排行",
   };
-  var byTime = 0.obs;
+  var byTime = 3.obs;
 
   Map<int, String> rankTypes = {
     0: "人气排行",
@@ -41,7 +41,7 @@ class ComicRankController extends BasePageController<ComicRankListInfoProto> {
   }
 
   @override
-  Future<List<ComicRankListInfoProto>> getData(int page, int pageSize) async {
+  Future<List<ComicRankListItemModel>> getData(int page, int pageSize) async {
     var ls = await request.rank(
       tagId: tag.value,
       byTime: byTime.value,

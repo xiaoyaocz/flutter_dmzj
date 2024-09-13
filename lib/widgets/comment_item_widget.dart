@@ -34,7 +34,7 @@ class CommentItemWidget extends StatelessWidget {
                 AppNavigator.toUserCenter(item.userId);
               },
               child: UserPhoto(
-                url: item.avatarUrl,
+                url: item.photo,
               ),
             ),
             AppStyle.hGap12,
@@ -85,11 +85,11 @@ class CommentItemWidget extends StatelessWidget {
                             return InkWell(
                               onTap: () {
                                 DialogUtils.showImageViewer(0, [
-                                  "https://images.idmzj.com/commentImg/${item.objId % 500}/$f"
+                                  "https://images.zaimanhua.com/commentImg/${item.objId % 500}/$f"
                                 ]);
                               },
                               child: NetImage(
-                                "https://images.idmzj.com/commentImg/${item.objId % 500}/${fileImg}_small.$fileImgSuffix",
+                                "https://images.zaimanhua.com/commentImg/${item.objId % 500}/${fileImg}_small.$fileImgSuffix",
                                 width: 100,
                                 height: 100,
                                 borderRadius: 4,
@@ -285,7 +285,7 @@ class CommentItemWidget extends StatelessWidget {
         ListTile(
           title: Text(item.nickname),
           leading: UserPhoto(
-            url: item.avatarUrl,
+            url: item.photo,
             size: 32,
             showBoder: true,
           ),

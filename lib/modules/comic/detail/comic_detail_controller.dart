@@ -58,7 +58,7 @@ class ComicDetailControler extends BaseController {
     getHistory();
     loadDetail();
     loadSubscribeStatus();
-    updateSubscribeRead();
+    //updateSubscribeRead();
     super.onInit();
   }
 

@@ -14,8 +14,7 @@ class NewsListView extends StatelessWidget {
   final NewsTagModel tag;
   final NewsListController controller;
   NewsListView({Key? key, required this.tag})
-      : controller =
-            Get.put(NewsListController(tag), tag: tag.tagId.toString()),
+      : controller = Get.put(NewsListController(tag), tag: tag.id.toString()),
         super(key: key);
 
   @override
@@ -30,7 +29,7 @@ class NewsListView extends StatelessWidget {
           color: Colors.grey.withOpacity(.2),
           height: 1,
         ),
-        header: tag.tagId == 0 ? buildBanner() : null,
+        header: tag.id == 0 ? buildBanner() : null,
         itemBuilder: (context, i) {
           var item = controller.list[i];
           return InkWell(
@@ -38,7 +37,7 @@ class NewsListView extends StatelessWidget {
               AppNavigator.toNewsDetail(
                 newsId: item.articleId.toInt(),
                 title: item.title,
-                url: item.pageUrl,
+                url: item.pageUrl ?? "",
               );
             },
             child: Container(
@@ -47,7 +46,7 @@ class NewsListView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   NetImage(
-                    item.rowPicUrl,
+                    item.rowPicUrl ?? "",
                     width: 100,
                     height: 62,
                     borderRadius: 4,
@@ -71,41 +70,41 @@ class NewsListView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                Utils.formatTimestamp(item.createTime.toInt()),
+                                Utils.formatTimestamp(item.createTime ?? 0),
                                 style: const TextStyle(
                                     color: Colors.grey, fontSize: 12),
                               ),
-                              Row(
-                                children: <Widget>[
-                                  const Icon(
-                                    Icons.thumb_up,
-                                    size: 12.0,
-                                    color: Colors.grey,
-                                  ),
-                                  AppStyle.hGap4,
-                                  Text(
-                                    item.moodAmount.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  AppStyle.hGap8,
-                                  const Icon(
-                                    Icons.chat,
-                                    size: 12.0,
-                                    color: Colors.grey,
-                                  ),
-                                  AppStyle.hGap4,
-                                  Text(
-                                    item.commentAmount.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                    ),
-                                  )
-                                ],
-                              )
+                              // Row(
+                              //   children: <Widget>[
+                              //     const Icon(
+                              //       Icons.thumb_up,
+                              //       size: 12.0,
+                              //       color: Colors.grey,
+                              //     ),
+                              //     AppStyle.hGap4,
+                              //     Text(
+                              //       item.moodAmount.toString(),
+                              //       style: const TextStyle(
+                              //         color: Colors.grey,
+                              //         fontSize: 12,
+                              //       ),
+                              //     ),
+                              //     AppStyle.hGap8,
+                              //     const Icon(
+                              //       Icons.chat,
+                              //       size: 12.0,
+                              //       color: Colors.grey,
+                              //     ),
+                              //     AppStyle.hGap4,
+                              //     Text(
+                              //       item.commentAmount.toString(),
+                              //       style: const TextStyle(
+                              //         color: Colors.grey,
+                              //         fontSize: 12,
+                              //       ),
+                              //     )
+                              //   ],
+                              // )
                             ],
                           )
                         ],

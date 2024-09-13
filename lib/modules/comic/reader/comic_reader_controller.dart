@@ -205,7 +205,7 @@ class ComicReaderController extends BaseController {
         //禁止观看VIP章节
         throw AppError("请使用动漫之家官方APP观看VIP章节");
       }
-      loadViewPoints();
+      //loadViewPoints();
 
       var result = await request.chapterDetail(
         comicId: comicId,
@@ -223,9 +223,9 @@ class ComicReaderController extends BaseController {
         initialIndex = 0;
       }
       currentIndex.value = initialIndex;
-      if (settings.comicReaderShowViewPoint.value) {
-        result.pageUrls.add("TC");
-      }
+      // if (settings.comicReaderShowViewPoint.value) {
+      //   result.pageUrls.add("TC");
+      // }
 
       detail.value = result;
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -673,27 +673,27 @@ class ComicReaderController extends BaseController {
                         title: const Text("显示状态信息"),
                       ),
                     ),
-                    AppStyle.vGap12,
-                    buildBGItem(
-                      child: SwitchListTile(
-                        value: settings.comicReaderShowViewPoint.value,
-                        onChanged: (e) {
-                          settings.setComicReaderShowViewPoint(e);
-                          setShowViewPoint(e);
-                        },
-                        title: const Text("显示吐槽"),
-                      ),
-                    ),
-                    AppStyle.vGap12,
-                    buildBGItem(
-                      child: SwitchListTile(
-                        value: settings.comicReaderOldViewPoint.value,
-                        onChanged: (e) {
-                          settings.setComicReaderOldViewPoint(e);
-                        },
-                        title: const Text("旧板吐槽"),
-                      ),
-                    ),
+                    // AppStyle.vGap12,
+                    // buildBGItem(
+                    //   child: SwitchListTile(
+                    //     value: settings.comicReaderShowViewPoint.value,
+                    //     onChanged: (e) {
+                    //       settings.setComicReaderShowViewPoint(e);
+                    //       setShowViewPoint(e);
+                    //     },
+                    //     title: const Text("显示吐槽"),
+                    //   ),
+                    // ),
+                    // AppStyle.vGap12,
+                    // buildBGItem(
+                    //   child: SwitchListTile(
+                    //     value: settings.comicReaderOldViewPoint.value,
+                    //     onChanged: (e) {
+                    //       settings.setComicReaderOldViewPoint(e);
+                    //     },
+                    //     title: const Text("旧板吐槽"),
+                    //   ),
+                    // ),
                     AppStyle.vGap12,
                     buildBGItem(
                       child: SwitchListTile(

@@ -29,8 +29,7 @@ class NewsHomePage extends GetView<NewsHomeController> {
         }
         return Scaffold(
           appBar: TabAppBar(
-            tabs:
-                controller.categores.map((e) => Tab(text: e.tagName)).toList(),
+            tabs: controller.categores.map((e) => Tab(text: e.name)).toList(),
             controller: controller.tabController,
           ),
           body: TabBarView(

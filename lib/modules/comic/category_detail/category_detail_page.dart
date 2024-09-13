@@ -125,7 +125,7 @@ class CategoryDetailPage extends StatelessWidget {
                       AspectRatio(
                         aspectRatio: 27 / 36,
                         child: NetImage(
-                          item.cover,
+                          item.cover ?? "",
                           borderRadius: 4,
                         ),
                       ),
@@ -145,7 +145,7 @@ class CategoryDetailPage extends StatelessWidget {
                           padding:
                               AppStyle.edgeInsetsH8.copyWith(top: 2, bottom: 2),
                           child: Text(
-                            item.status,
+                            item.status ?? "",
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -159,7 +159,7 @@ class CategoryDetailPage extends StatelessWidget {
                   Padding(
                     padding: AppStyle.edgeInsetsH4,
                     child: Text(
-                      item.title,
+                      item.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -171,7 +171,7 @@ class CategoryDetailPage extends StatelessWidget {
                   Padding(
                     padding: AppStyle.edgeInsetsH4,
                     child: Text(
-                      item.authors,
+                      item.authors ?? "",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

@@ -8,7 +8,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
 class ComicSubscribeController
-    extends BasePageController<UserSubscribeComicModel> {
+    extends BasePageController<UserSubscribeComicItemModel> {
   ComicSubscribeController() {
     for (var item in List.generate(
         26, (index) => String.fromCharCode(index + 65).toLowerCase())) {
@@ -17,10 +17,10 @@ class ComicSubscribeController
   }
   final UserRequest request = UserRequest();
 
-  var letter = "all".obs;
+  var letter = "".obs;
 
   Map letters = {
-    "all": "全部",
+    "": "全部",
     "number": "数字开头",
   };
 
@@ -35,7 +35,8 @@ class ComicSubscribeController
   var editMode = false.obs;
 
   @override
-  Future<List<UserSubscribeComicModel>> getData(int page, int pageSize) async {
+  Future<List<UserSubscribeComicItemModel>> getData(
+      int page, int pageSize) async {
     var ls = await request.comicSubscribes(
       subType: type.value,
       letter: letter.value,
@@ -66,8 +67,8 @@ class ComicSubscribeController
   void addFavorite() async {
     for (var item in list.where((x) => x.isChecked.value)) {
       DBService.instance.putComicFavorite(
-        title: item.name,
-        cover: item.subImg,
+        title: item.title,
+        cover: item.cover,
         comicId: item.id,
       );
     }

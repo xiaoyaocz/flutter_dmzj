@@ -15,23 +15,33 @@ class CommentRequest {
   /// - [objId] ID
   /// - [page] 页数
   /// - [pageSize] 每页数量
-  Future<List<CommentItem>> getLatestComment({
+  Future<List<CommentItem>> getComment({
     required int type,
     required int objId,
+    int sort = 1,
     int page = 1,
     int pageSize = 30,
   }) async {
     List<CommentItem> ls = [];
     Map result = await HttpClient.instance.getJson(
-      '/v1/$type/latest/$objId',
-      baseUrl: Api.BASE_URL_V3_COMMENT,
-      queryParameters: {"page_index": page, "limit": pageSize},
+      '/comment/list',
+      baseUrl: Api.BASE_URL,
+      queryParameters: {
+        "type": type,
+        "objId": objId,
+        "sort": sort,
+        "page": page - 1,
+        "size": pageSize,
+      },
     );
-    if (result.containsKey("code")) {
-      throw AppError(result["msg"].toString());
+    if (result["errno"] != 0) {
+      throw AppError(result["errmsg"].toString());
     }
-    var ids = result["commentIds"];
-    var comments = result["comments"];
+    if (result["data"]["commentIdList"] == null) {
+      return [];
+    }
+    var ids = result["data"]["commentIdList"];
+    var comments = result["data"]["commentList"];
     for (String id in ids) {
       var idSplit = id.split(",");
       var item = _parseLatestCommentItem(comments, idSplit.first, type);
@@ -59,7 +69,7 @@ class CommentRequest {
       id: int.tryParse(item["id"].toString()) ?? 0,
       objId: int.tryParse(item["obj_id"].toString()) ?? 0,
       content: unescape.convert(item["content"].toString()),
-      avatarUrl: item["avatar_url"].toString(),
+      photo: item["photo"].toString(),
       createTime: int.tryParse(item["create_time"].toString()) ?? 0,
       images: item["upload_images"]
           .toString()
@@ -73,69 +83,6 @@ class CommentRequest {
       userId: int.tryParse(item["sender_uid"].toString()) ?? 0,
       originId: int.tryParse(item["origin_comment_id"].toString()) ?? 0,
     );
-  }
-
-  /// 读取热门评论
-  /// - [type] 类型
-  /// - [objId] ID
-  /// - [page] 页数
-  /// - [pageSize] 每页数量
-  Future<List<CommentItem>> getHotComment({
-    required int type,
-    required int objId,
-    int page = 1,
-    int pageSize = 30,
-  }) async {
-    List<CommentItem> ls = [];
-    var result = await HttpClient.instance.getJson(
-      '/comment2/$type/1/$objId/3/$page.json',
-      baseUrl: Api.BASE_URL_V3_API,
-      queryParameters: {"page_index": page, "limit": pageSize},
-    );
-
-    if (result is Map && result.containsKey("code")) {
-      throw AppError(result["msg"].toString());
-    }
-    // DMZJ神奇的后端，啥类型都有可能会返回
-
-    for (var item in result) {
-      if (item is Map) {
-        var model = _parseHotCommentItem(item, type);
-        if (model.id != 0) {
-          ls.add(model);
-        }
-      }
-    }
-    return ls;
-  }
-
-  CommentItem _parseHotCommentItem(Map item, int type) {
-    List<CommentItem> parents = [];
-    if (item.containsKey("masterComment") && item["masterComment"] is List) {
-      for (var masterItem in item["masterComment"]) {
-        parents.add(_parseHotCommentItem(masterItem, type));
-      }
-    }
-
-    return CommentItem(
-      type: type,
-      id: int.tryParse(item["id"].toString()) ?? 0,
-      objId: int.tryParse(item["obj_id"].toString()) ?? 0,
-      content: unescape.convert(item["content"].toString()),
-      avatarUrl: item["cover"].toString(),
-      createTime: int.tryParse(item["create_time"].toString()) ?? 0,
-      images: item["upload_images"]
-          .toString()
-          .split(",")
-          .where((x) => x.isNotEmpty)
-          .toList(),
-      likeAmount: (int.tryParse(item["like_amount"].toString()) ?? 0).obs,
-      nickname: item["nickname"].toString(),
-      replyAmount: int.tryParse(item["reply_amount"].toString()) ?? 0,
-      userId: int.tryParse(item["sender_uid"].toString()) ?? 0,
-      gender: int.tryParse(item["sex"].toString()) ?? 0,
-      originId: int.tryParse(item["origin_comment_id"].toString()) ?? 0,
-    )..parents.addAll(parents);
   }
 
   /// 发表评论
@@ -155,7 +102,7 @@ class CommentRequest {
   }) async {
     var result = await HttpClient.instance.postJson(
       "/v1/$type/new/add/app",
-      baseUrl: Api.BASE_URL_V3_COMMENT,
+      baseUrl: Api.BASE_URL,
       data: {
         "obj_id": objId,
         "to_comment_id": toCommentId,
@@ -181,7 +128,7 @@ class CommentRequest {
   }) async {
     await HttpClient.instance.getJson(
       "/v1/$type/like/$commentId",
-      baseUrl: Api.BASE_URL_V3_COMMENT,
+      baseUrl: Api.BASE_URL,
       queryParameters: {
         "comment_id": commentId,
         "obj_id": objId,
@@ -209,7 +156,7 @@ class CommentRequest {
       type == 1
           ? '/comment/owner/1/$uid/$page.json'
           : '/v3/old/comment/owner/$type/$uid/$page.json',
-      baseUrl: Api.BASE_URL_V3,
+      baseUrl: Api.BASE_URL,
       withDefaultParameter: true,
       needLogin: true,
     );

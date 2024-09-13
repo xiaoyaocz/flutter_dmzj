@@ -45,8 +45,19 @@ class CategoryDetailController
         ComicCategoryFilterModel(
           title: "排序",
           items: [
-            ComicCategoryFilterItemModel(tagId: 0, tagName: "人气排序"),
             ComicCategoryFilterItemModel(tagId: 1, tagName: "更新排序"),
+            ComicCategoryFilterItemModel(tagId: 2, tagName: "热度排序"),
+          ],
+        )..selectId.value = 1,
+      );
+      filters.insert(
+        1,
+        ComicCategoryFilterModel(
+          title: "状态",
+          items: [
+            ComicCategoryFilterItemModel(tagId: 0, tagName: "全部"),
+            ComicCategoryFilterItemModel(tagId: 1, tagName: "连载中"),
+            ComicCategoryFilterItemModel(tagId: 2, tagName: "已完结"),
           ],
         ),
       );
@@ -58,14 +69,20 @@ class CategoryDetailController
   @override
   Future<List<ComicCategoryComicModel>> getData(int page, int pageSize) async {
     if (filters.isEmpty) {
-      return await request.categoryComic(ids: [id], page: page - 1);
+      return await request.categoryComic(ids: [id], page: page);
     } else {
       var sort = filters.first.selectId.value;
+      var status = filters[1].selectId.value;
       var ids = filters
           .where((x) => x.title != "排序")
           .map((e) => e.selectId.value)
           .toList();
-      return await request.categoryComic(ids: ids, sort: sort, page: page - 1);
+      return await request.categoryComic(
+        ids: ids,
+        sort: sort,
+        page: page,
+        status: status,
+      );
     }
   }
 }

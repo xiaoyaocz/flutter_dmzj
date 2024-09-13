@@ -7,7 +7,7 @@ class NovelLatestController extends BasePageController<NovelLatestModel> {
 
   @override
   Future<List<NovelLatestModel>> getData(int page, int pageSize) async {
-    var ls = await request.latest(page: page - 1);
+    var ls = await request.latest(page: page);
 
     return ls;
   }

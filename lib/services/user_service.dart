@@ -36,8 +36,8 @@ class UserService extends GetxService {
 
   Rx<UserProfileModel?> userProfile = Rx<UserProfileModel?>(null);
 
-  String get dmzjToken => userAuthInfo?.dmzjToken ?? '';
-  String get userId => userAuthInfo?.uid ?? '';
+  String get dmzjToken => userAuthInfo?.token ?? '';
+  String get userId => userAuthInfo?.uid.toString() ?? '';
   String get nickname => userAuthInfo?.nickname ?? '';
 
   bool get isVip => (userProfile.value?.userfeeinfo?.isVip ?? false);
@@ -74,7 +74,7 @@ class UserService extends GetxService {
     userAuthInfo = info;
     logined.value = true;
     if (logined.value) {
-      syncRemoteHistory();
+      //syncRemoteHistory();
     }
   }
 
@@ -84,7 +84,7 @@ class UserService extends GetxService {
     storage.setValue(LocalStorageService.kUserAuthInfo, info.toString());
     logined.value = true;
     UserService.loginedStreamController.add(true);
-    refreshProfile();
+    //refreshProfile();
     syncRemoteHistory();
   }
 
@@ -111,7 +111,7 @@ class UserService extends GetxService {
         return;
       }
       userProfile.value = await request.userProfile();
-      updateCookie();
+      //updateCookie();
       updateBindStatus();
     } catch (e) {
       Log.logPrint(e);
@@ -230,12 +230,12 @@ class UserService extends GetxService {
       if (!logined.value) {
         return;
       }
-      await request.uploadComicHistory(
-        comicId: comicId,
-        chapterId: chapterId,
-        page: page,
-        time: time,
-      );
+      // await request.uploadComicHistory(
+      //   comicId: comicId,
+      //   chapterId: chapterId,
+      //   page: page,
+      //   time: time,
+      // );
     } catch (e) {
       Log.logPrint(e);
     }

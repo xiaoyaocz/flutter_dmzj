@@ -12,22 +12,13 @@ class Api {
   static const String DMZJ_DOMAIN_NAME = "dmzj.com";
   static const String IDMZJ_DOMAIN_NAME = "idmzj.com";
   static const String MUWAI_DOMAIN_NAME = "muwai.com";
+  static const String DOMAIN_NAME = "zaimanhua.com";
 
   /// V3接口，无加密
-  static const String BASE_URL_V3 = "https://nnv3api.$IDMZJ_DOMAIN_NAME";
-
-  /// V4接口,返回加密数据的
-  static const String BASE_URL_V4 = "https://v4api.$IDMZJ_DOMAIN_NAME";
-
-  /// V3 API
-  static const String BASE_URL_V3_API = "https://v3api.$IDMZJ_DOMAIN_NAME";
-
-  /// V3 评论
-  static const String BASE_URL_V3_COMMENT =
-      "http://v3comment.$IDMZJ_DOMAIN_NAME";
+  static const String BASE_URL = "https://v4api.zaimanhua.com/app/v1";
 
   /// 用户
-  static const String BASE_URL_USER = "http://nnuser.$IDMZJ_DOMAIN_NAME";
+  static const String BASE_URL_USER = "https://account-api.zaimanhua.com/v1";
 
   /// Interface
   static const String BASE_URL_INTERFACE =
@@ -74,14 +65,17 @@ class Api {
   /// 小说正文链接
   static String getNovelContentUrl(
       {required int volumeId, required int chapterId}) {
-    var path = "/lnovel/${volumeId}_$chapterId.txt";
-    var ts = (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0);
-    var key =
-        "IBAAKCAQEAsUAdKtXNt8cdrcTXLsaFKj9bSK1nEOAROGn2KJXlEVekcPssKUxSN8dsfba51kmHM";
-    key += path;
-    key += ts;
-    key = md5.convert(utf8.encode(key)).toString().toLowerCase();
+    // var path = "/lnovel/${volumeId}_$chapterId.txt";
+    // var ts = (DateTime.now().millisecondsSinceEpoch / 1000).toStringAsFixed(0);
+    // var key =
+    //     "IBAAKCAQEAsUAdKtXNt8cdrcTXLsaFKj9bSK1nEOAROGn2KJXlEVekcPssKUxSN8dsfba51kmHM";
+    // key += path;
+    // key += ts;
+    // key = md5.convert(utf8.encode(key)).toString().toLowerCase();
 
-    return "http://jurisdiction.idmzj.com$path?t=$ts&k=$key";
+    // return "http://jurisdiction.idmzj.com$path?t=$ts&k=$key";
+
+    //https://v4api.zaimanhua.com/app/v1/novel/download/chapter?volumeId=12458&chapterId=127221
+    return "$BASE_URL/novel/download/chapter?volumeId=$volumeId&chapterId=$chapterId";
   }
 }

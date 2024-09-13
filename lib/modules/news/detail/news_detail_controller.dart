@@ -73,8 +73,8 @@ class NewsDetailController extends BaseController {
     } else {
       loadHtml();
     }
-    loadStat();
-    checkCollected();
+    // loadStat();
+    // checkCollected();
     super.onInit();
   }
 
@@ -143,7 +143,8 @@ getImgLinks();
       ),
     );
     Log.d(newsUrl);
-    currentUrl = "https://v3api.idmzj.com/article/show/v2/$newsId.html";
+    currentUrl = "https://v3api.zaimanhua.com/v3/article/show/$newsId.html";
+
     webViewController!.loadRequest(Uri.parse(currentUrl));
   }
 

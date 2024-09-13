@@ -27,18 +27,18 @@ class ComicRecommendView extends StatelessWidget {
         showPageLoadding: true,
         itemBuilder: (context, i) {
           var item = controller.list[i];
-          if (item.categoryId == 46) {
+          if (item.categoryId == 95) {
             return buildBanner(item);
           }
           //随便看看
-          if (item.categoryId == 50) {
-            return buildCard(
-              context,
-              child: buildTreeColumnGridView(item.data),
-              title: item.title.toString(),
-              action: buildRefresh(onRefresh: controller.loadRandom),
-            );
-          }
+          // if (item.categoryId == 50) {
+          //   return buildCard(
+          //     context,
+          //     child: buildTreeColumnGridView(item.data),
+          //     title: item.title.toString(),
+          //     action: buildRefresh(onRefresh: controller.loadRandom),
+          //   );
+          // }
           //我的订阅
           if (item.categoryId == 49) {
             return buildCard(
@@ -55,6 +55,9 @@ class ComicRecommendView extends StatelessWidget {
               item.categoryId == 56) {
             Widget? action;
             //刷新国漫
+            if (item.categoryId == 47) {
+              action = buildRefresh(onRefresh: controller.refreshRecommend);
+            }
             if (item.categoryId == 52) {
               action = buildRefresh(onRefresh: controller.refreshGuoman);
             }

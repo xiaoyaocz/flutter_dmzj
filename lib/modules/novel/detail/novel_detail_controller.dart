@@ -51,7 +51,7 @@ class NovelDetailControler extends BaseController {
     getHistory();
     loadDetail();
     loadSubscribeStatus();
-    updateSubscribeRead();
+    //updateSubscribeRead();
     super.onInit();
   }
 
@@ -89,9 +89,9 @@ class NovelDetailControler extends BaseController {
     try {
       pageLoadding.value = true;
       pageError.value = false;
-      var result = await request.novelDetailV4(novelId: novelId);
+      var result = await request.novelDetail(novelId: novelId);
 
-      detail.value = NovelDetailInfo.fromV4(result);
+      detail.value = NovelDetailInfo.fromJson(result.data);
       await loadChapter();
     } catch (e) {
       pageError.value = true;
@@ -103,9 +103,9 @@ class NovelDetailControler extends BaseController {
 
   Future loadChapter() async {
     try {
-      var result = await request.novelChapterV4(novelId: novelId);
+      var result = await request.novelChapter(novelId: novelId);
       detail.value.volume.value =
-          result.map((e) => NovelDetailVolume.fromV4(e)).toList();
+          result.map((e) => NovelDetailVolume.fromJson(e)).toList();
     } catch (e) {
       SmartDialog.showToast("无法读取小说章节:$e");
     }

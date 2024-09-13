@@ -121,30 +121,30 @@ class UserHomePage extends GetView<UserHomeController> {
                           onTap: controller.toUserSubscribe,
                         ),
                       ),
-                      Visibility(
-                        visible: UserService.instance.logined.value,
-                        child: ListTile(
-                          leading: const Icon(Remix.history_line),
-                          title: const Text("浏览记录"),
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
-                          onTap: controller.toUserHistory,
-                        ),
-                      ),
-                      Visibility(
-                        visible: UserService.instance.logined.value,
-                        child: ListTile(
-                          leading: const Icon(Remix.chat_smile_2_line),
-                          title: const Text("我的评论"),
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
-                          onTap: controller.userComment,
-                        ),
-                      ),
+                      // Visibility(
+                      //   visible: UserService.instance.logined.value,
+                      //   child: ListTile(
+                      //     leading: const Icon(Remix.history_line),
+                      //     title: const Text("浏览记录"),
+                      //     trailing: const Icon(
+                      //       Icons.chevron_right,
+                      //       color: Colors.grey,
+                      //     ),
+                      //     onTap: controller.toUserHistory,
+                      //   ),
+                      // ),
+                      // Visibility(
+                      //   visible: UserService.instance.logined.value,
+                      //   child: ListTile(
+                      //     leading: const Icon(Remix.chat_smile_2_line),
+                      //     title: const Text("我的评论"),
+                      //     trailing: const Icon(
+                      //       Icons.chevron_right,
+                      //       color: Colors.grey,
+                      //     ),
+                      //     onTap: controller.userComment,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

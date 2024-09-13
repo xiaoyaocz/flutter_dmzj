@@ -160,19 +160,19 @@ class ComicDetailPage extends StatelessWidget {
                   label: const Text("下载"),
                 ),
               ),
-              Expanded(
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 14),
-                  ),
-                  onPressed: controller.related,
-                  icon: const Icon(
-                    Remix.links_line,
-                    size: 20,
-                  ),
-                  label: const Text("相关"),
-                ),
-              ),
+              // Expanded(
+              //   child: TextButton.icon(
+              //     style: TextButton.styleFrom(
+              //       textStyle: const TextStyle(fontSize: 14),
+              //     ),
+              //     onPressed: controller.related,
+              //     icon: const Icon(
+              //       Remix.links_line,
+              //       size: 20,
+              //     ),
+              //     label: const Text("相关"),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -209,7 +209,6 @@ class ComicDetailPage extends StatelessWidget {
                         style: Get.textTheme.titleMedium,
                       ),
                       AppStyle.vGap8,
-
                       _buildInfoItems(
                         iconData: Remix.user_smile_line,
                         children: controller.detail.value.authors
@@ -259,14 +258,14 @@ class ComicDetailPage extends StatelessWidget {
                             )
                             .toList(),
                       ),
-                      _buildInfo(
-                        title: "人气 ${controller.detail.value.hitNum}",
-                        iconData: Remix.fire_line,
-                      ),
-                      _buildInfo(
-                        title: "订阅 ${controller.detail.value.subscribeNum}",
-                        iconData: Remix.heart_line,
-                      ),
+                      // _buildInfo(
+                      //   title: "人气 ${controller.detail.value.hitNum}",
+                      //   iconData: Remix.fire_line,
+                      // ),
+                      // _buildInfo(
+                      //   title: "订阅 ${controller.detail.value.subscribeNum}",
+                      //   iconData: Remix.heart_line,
+                      // ),
                       _buildInfo(
                         title:
                             "${Utils.formatTimestampToDate(controller.detail.value.lastUpdatetime)} ${controller.detail.value.status.map((e) => e.tagName).join("/")}",

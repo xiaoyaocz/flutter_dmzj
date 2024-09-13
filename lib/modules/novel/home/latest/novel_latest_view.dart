@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/novel/latest_model.dart';
 import 'package:flutter_dmzj/modules/novel/home/latest/novel_latest_controller.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
@@ -49,7 +48,7 @@ class NovelLatestView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             NetImage(
-              item.cover,
+              item.cover ?? "",
               width: 80,
               height: 110,
               borderRadius: 4,
@@ -60,7 +59,7 @@ class NovelLatestView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.name,
+                    item.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -83,13 +82,10 @@ class NovelLatestView extends StatelessWidget {
                     ]),
                   ),
                   const SizedBox(height: 2),
-                  Text(item.types.join("/"),
+                  Text(item.types ?? "",
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text(item.lastUpdateChapterName,
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
-                  const SizedBox(height: 2),
-                  Text("更新于${Utils.formatTimestamp(item.lastUpdateTime)}",
+                  Text(item.lastName ?? "",
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

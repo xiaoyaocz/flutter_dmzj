@@ -8,7 +8,7 @@
 PRODUCT_NAME = flutter_dmzj
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.xycz.dmzjx
+PRODUCT_BUNDLE_IDENTIFIER = com.xycz.zmhx
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2022 com.example. All rights reserved.

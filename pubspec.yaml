@@ -1,7 +1,7 @@
 name: flutter_dmzj
 version: 2.1.1+20101
 publish_to: none
-description: "动漫之家X"
+description: "ZAI-X"
 environment: 
   sdk: '>=2.17.3 <3.0.0'
 

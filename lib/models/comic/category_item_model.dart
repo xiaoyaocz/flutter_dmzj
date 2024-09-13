@@ -16,7 +16,7 @@ class ComicCategoryItemModel {
 
   factory ComicCategoryItemModel.fromJson(Map<String, dynamic> json) =>
       ComicCategoryItemModel(
-        tagId: asT<int>(json['tag_id'])!,
+        tagId: asT<int>(json['tagId'])!,
         title: asT<String>(json['title'])!,
         cover: asT<String>(json['cover'])!,
       );
@@ -31,7 +31,7 @@ class ComicCategoryItemModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'tag_id': tagId,
+        'tagId': tagId,
         'title': title,
         'cover': cover,
       };

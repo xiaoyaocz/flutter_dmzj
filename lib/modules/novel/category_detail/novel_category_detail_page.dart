@@ -123,7 +123,7 @@ class NovelCategoryDetailPage extends StatelessWidget {
                   AspectRatio(
                     aspectRatio: 27 / 36,
                     child: NetImage(
-                      item.cover,
+                      item.cover ?? "",
                       borderRadius: 4,
                     ),
                   ),
@@ -131,7 +131,7 @@ class NovelCategoryDetailPage extends StatelessWidget {
                   Padding(
                     padding: AppStyle.edgeInsetsH4,
                     child: Text(
-                      item.name,
+                      item.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -143,7 +143,7 @@ class NovelCategoryDetailPage extends StatelessWidget {
                   Padding(
                     padding: AppStyle.edgeInsetsH4,
                     child: Text(
-                      item.authors,
+                      item.authors ?? "",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

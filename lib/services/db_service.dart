@@ -18,19 +18,19 @@ class DBService extends GetxService {
   Future init() async {
     var dir = await getApplicationSupportDirectory();
     newsLikeBox = await Hive.openBox(
-      "NewsLike",
+      "ZaiNewsLike",
       path: dir.path,
     );
     comicHistoryBox = await Hive.openBox(
-      "ComicHistory",
+      "ZaiComicHistory",
       path: dir.path,
     );
     novelHistoryBox = await Hive.openBox(
-      "NovelHistory",
+      "ZaiNovelHistory",
       path: dir.path,
     );
     localFavoriteBox = await Hive.openBox(
-      "LocalFavorite",
+      "ZaiLocalFavorite",
       path: dir.path,
     );
   }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_dmzj/models/comic/detail_model.dart';
 import 'package:flutter_dmzj/models/comic/detail_v1_model.dart';
-import 'package:flutter_dmzj/models/proto/comic.pb.dart';
 import 'package:get/get.dart';
 
 T? asT<T>(dynamic value) {
@@ -42,23 +42,23 @@ class ComicDetailInfo {
         volumes: [],
       );
 
-  factory ComicDetailInfo.fromV4(ComicDetailProto proto) => ComicDetailInfo(
-        id: proto.id.toInt(),
-        title: proto.title,
-        direction: proto.direction,
-        isLong: proto.islong == 1,
-        cover: proto.cover,
-        description: proto.description,
-        lastUpdateChapterId: proto.lastUpdateChapterId,
-        lastUpdatechapterName: proto.lastUpdateChapterName,
-        lastUpdatetime: proto.lastUpdatetime.toInt(),
-        hitNum: proto.hitNum.toInt(),
-        hotNum: proto.hotNum.toInt(),
-        subscribeNum: proto.subscribeNum.toInt(),
-        firstLetter: proto.firstLetter,
-        comicPy: proto.comicPy,
-        isVip: proto.isFee != 0,
-        types: proto.types
+  factory ComicDetailInfo.fromV4(ComicDetailModel data) => ComicDetailInfo(
+        id: data.data.id,
+        title: data.data.title,
+        direction: data.data.direction ?? 0,
+        isLong: data.data.islong == 1,
+        cover: data.data.cover ?? "",
+        description: data.data.description ?? "",
+        lastUpdateChapterId: data.data.lastUpdateChapterId ?? 0,
+        lastUpdatechapterName: data.data.lastUpdateChapterName ?? "",
+        lastUpdatetime: data.data.lastUpdatetime ?? 0,
+        hitNum: 0,
+        hotNum: 0,
+        subscribeNum: 0,
+        firstLetter: data.data.firstLetter ?? "",
+        comicPy: data.data.comicPy ?? "",
+        isVip: false,
+        types: (data.data.types ?? [])
             .map(
               (e) => ComicDetailTag(
                 tagId: e.tagId.toInt(),
@@ -66,7 +66,7 @@ class ComicDetailInfo {
               ),
             )
             .toList(),
-        status: proto.status
+        status: (data.data.status ?? [])
             .map(
               (e) => ComicDetailTag(
                 tagId: e.tagId.toInt(),
@@ -74,28 +74,28 @@ class ComicDetailInfo {
               ),
             )
             .toList(),
-        authors: proto.authors
+        authors: (data.data.authors ?? [])
             .map(
               (e) => ComicDetailTag(
-                tagId: e.tagId.toInt(),
+                tagId: e.tagId,
                 tagName: e.tagName,
               ),
             )
             .toList(),
-        volumes: proto.chapters
+        volumes: (data.data.chapters ?? [])
             .map(
               (e) => ComicDetailVolume(
-                title: e.title,
+                title: e.title!,
                 chapters: RxList<ComicDetailChapterItem>(
-                  e.data
+                  (e.data ?? [])
                       .map(
                         (x) => ComicDetailChapterItem(
                           chapterId: x.chapterId.toInt(),
                           chapterTitle: x.chapterTitle,
-                          updateTime: x.updateTime.toInt(),
-                          fileSize: x.fileSize,
+                          updateTime: x.updatetime ?? 0,
+                          fileSize: 0,
                           chapterOrder: x.chapterOrder,
-                          isVip: x.isFee != 0,
+                          isVip: false,
                         ),
                       )
                       .toList(),

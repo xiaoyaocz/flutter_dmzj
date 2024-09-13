@@ -8,7 +8,7 @@ class CommentItem {
     required this.id,
     required this.objId,
     required this.content,
-    required this.avatarUrl,
+    required this.photo,
     required this.createTime,
     required this.images,
     required this.likeAmount,
@@ -26,7 +26,7 @@ class CommentItem {
       id: 0,
       objId: 0,
       content: "该评论不存在，可能已被删除",
-      avatarUrl: "",
+      photo: "",
       createTime: 0,
       images: [],
       likeAmount: 0.obs,
@@ -47,7 +47,7 @@ class CommentItem {
   Rx<int> likeAmount;
   int replyAmount;
   String nickname;
-  String avatarUrl;
+  String photo;
   List<String> images;
   int userId;
   List<CommentItem> parents = [];

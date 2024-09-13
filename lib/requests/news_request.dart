@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/news/news_banner_model.dart';
+import 'package:flutter_dmzj/models/news/news_list_item_model.dart';
 import 'package:flutter_dmzj/models/news/news_stat_model.dart';
 import 'package:flutter_dmzj/models/news/news_tag_model.dart';
-import 'package:flutter_dmzj/models/proto/news.pb.dart';
 import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
@@ -14,9 +14,9 @@ class NewsRequest {
   Future<List<NewsTagModel>> category() async {
     var list = <NewsTagModel>[];
     var result = await HttpClient.instance.getJson(
-      '/article/category.json',
+      '/news/category',
     );
-    for (var item in result) {
+    for (var item in result["data"]["cateList"]) {
       list.add(NewsTagModel.fromJson(item));
     }
     return list;
@@ -25,11 +25,8 @@ class NewsRequest {
   /// 新闻Banner
   Future<List<NewsBannerModel>> banner() async {
     var list = <NewsBannerModel>[];
-    var result = await HttpClient.instance.getJson(
-      '/v3/article/recommend/header.json',
-      checkCode: true,
-    );
-    for (var item in result) {
+    var result = await HttpClient.instance.getJson('/news/recommend');
+    for (var item in result["data"]["recommendList"]) {
       list.add(NewsBannerModel.fromJson(item));
     }
     return list;
@@ -38,15 +35,19 @@ class NewsRequest {
   /// 读取新闻列表
   /// - [id] 新闻分类ID
   /// - [page] 页数，从1开始
-  Future<List<NewsListInfoProto>> getNewsList(int id, int page) async {
-    var result = await HttpClient.instance.getEncryptV4(
+  Future<List<NewsListItemModel>> getNewsList(int id, int page) async {
+    var result = await HttpClient.instance.getJson(
       '/news/list/$id/${id == 0 ? 2 : 3}/$page',
     );
-    var response = NewsListResponseProto.fromBuffer(result);
-    if (response.errno != 0) {
-      throw AppError(response.errmsg);
+
+    if (result["errno"] != 0) {
+      throw AppError(result["errmsg"]);
     }
-    return response.data;
+    var list = <NewsListItemModel>[];
+    for (var item in result["data"]["newsList"]) {
+      list.add(NewsListItemModel.fromJson(item));
+    }
+    return list;
   }
 
   /// 新闻数据

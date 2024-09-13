@@ -16,7 +16,7 @@ class NovelCategoryModel {
 
   factory NovelCategoryModel.fromJson(Map<String, dynamic> json) =>
       NovelCategoryModel(
-        tagId: asT<int>(json['tag_id'])!,
+        tagId: asT<int>(json['tagId'])!,
         title: asT<String>(json['title'])!,
         cover: asT<String>(json['cover'])!,
       );

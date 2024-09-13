@@ -1,6 +1,6 @@
-display_name: 动漫之家X
+display_name: ZAI-X
 publisher_display_name: xiaoyaocz
-identity_name: com.xycz.dmzjx
+identity_name: com.xycz.zmhx
 logo_path: assets/images/logo.png
 capabilities: internetClient
 languages: zh-cn

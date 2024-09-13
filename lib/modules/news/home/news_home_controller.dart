@@ -45,7 +45,7 @@ class NewsHomeController extends GetxController
       error = false;
       update();
       var category = await request.category();
-      category.insert(0, NewsTagModel(tagId: 0, tagName: "最新"));
+      category.insert(0, NewsTagModel(id: 0, name: "最新"));
       tabController = TabController(length: category.length, vsync: this);
 
       categores = category;
@@ -61,8 +61,7 @@ class NewsHomeController extends GetxController
   void refreshOrScrollTop() {
     var tabIndex = tabController.index;
     BasePageController controller;
-    controller =
-        Get.find<NewsListController>(tag: "${categores[tabIndex].tagId}");
+    controller = Get.find<NewsListController>(tag: "${categores[tabIndex].id}");
     controller.scrollToTopOrRefresh();
   }
 }

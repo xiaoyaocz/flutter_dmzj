@@ -54,8 +54,8 @@ class ComicCategoryFilterItemModel {
 
   factory ComicCategoryFilterItemModel.fromJson(Map<String, dynamic> json) =>
       ComicCategoryFilterItemModel(
-        tagId: asT<int>(json['tag_id'])!,
-        tagName: asT<String>(json['tag_name'])!,
+        tagId: asT<int>(json['tagId'])!,
+        tagName: asT<String>(json['title'])!,
       );
 
   int tagId;

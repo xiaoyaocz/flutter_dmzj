@@ -1,4 +1,4 @@
-display_name: 动漫之家X
+display_name: ZAI-X
 package_name: dmzjx
 maintainer:
   name: xiaoyaocz
@@ -13,7 +13,7 @@ keywords:
   - 动漫之家
   - DMZJ
 
-generic_name: 动漫之家X
+generic_name: ZAI-X
 
 categories:
   - Media

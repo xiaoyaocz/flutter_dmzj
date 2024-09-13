@@ -18,11 +18,11 @@ class SearchComicItem {
   });
 
   factory SearchComicItem.fromApi(ComicSearchModel item) => SearchComicItem(
-        author: item.authors,
+        author: item.authors ?? "",
         comicId: item.id,
-        cover: item.cover,
-        lastChapterName: item.lastName,
-        tags: item.types,
+        cover: item.cover ?? "",
+        lastChapterName: item.lastName ?? "",
+        tags: item.types ?? "",
         title: item.title,
       );
   factory SearchComicItem.fromWeb(ComicWebSearchModel item) => SearchComicItem(

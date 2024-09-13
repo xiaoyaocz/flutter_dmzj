@@ -10,53 +10,38 @@ T? asT<T>(dynamic value) {
 class NovelLatestModel {
   NovelLatestModel({
     required this.id,
-    required this.status,
-    required this.name,
-    required this.authors,
-    required this.cover,
-    required this.types,
-    required this.lastUpdateChapterId,
-    required this.lastUpdateVolumeId,
-    required this.lastUpdateVolumeName,
-    required this.lastUpdateChapterName,
-    required this.lastUpdateTime,
+    required this.title,
+    this.authors,
+    this.cover,
+    this.hotHits,
+    this.lastName,
+    this.status,
+    this.types,
+    this.subNums,
   });
 
-  factory NovelLatestModel.fromJson(Map<String, dynamic> json) {
-    final List<String>? types = json['types'] is List ? <String>[] : null;
-    if (types != null) {
-      for (final dynamic item in json['types']!) {
-        if (item != null) {
-          types.add(asT<String>(item)!);
-        }
-      }
-    }
-    return NovelLatestModel(
-      id: asT<int>(json['id'])!,
-      status: asT<String>(json['status'])!,
-      name: asT<String>(json['name'])!,
-      authors: asT<String>(json['authors'])!,
-      cover: asT<String>(json['cover'])!,
-      types: types!,
-      lastUpdateChapterId: asT<int>(json['last_update_chapter_id'])!,
-      lastUpdateVolumeId: asT<int>(json['last_update_volume_id'])!,
-      lastUpdateVolumeName: asT<String>(json['last_update_volume_name'])!,
-      lastUpdateChapterName: asT<String>(json['last_update_chapter_name'])!,
-      lastUpdateTime: asT<int>(json['last_update_time'])!,
-    );
-  }
+  factory NovelLatestModel.fromJson(Map<String, dynamic> json) =>
+      NovelLatestModel(
+        id: asT<int>(json['id'])!,
+        title: asT<String>(json['title'])!,
+        authors: asT<String?>(json['authors']),
+        cover: asT<String?>(json['cover']),
+        hotHits: asT<int?>(json['hot_hits']),
+        lastName: asT<String?>(json['last_name']),
+        status: asT<String?>(json['status']),
+        types: asT<String?>(json['types']),
+        subNums: asT<int?>(json['sub_nums']),
+      );
 
   int id;
-  String status;
-  String name;
-  String authors;
-  String cover;
-  List<String> types;
-  int lastUpdateChapterId;
-  int lastUpdateVolumeId;
-  String lastUpdateVolumeName;
-  String lastUpdateChapterName;
-  int lastUpdateTime;
+  String title;
+  String? authors;
+  String? cover;
+  int? hotHits;
+  String? lastName;
+  String? status;
+  String? types;
+  int? subNums;
 
   @override
   String toString() {
@@ -65,15 +50,13 @@ class NovelLatestModel {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
-        'status': status,
-        'name': name,
+        'title': title,
         'authors': authors,
         'cover': cover,
+        'hot_hits': hotHits,
+        'last_name': lastName,
+        'status': status,
         'types': types,
-        'last_update_chapter_id': lastUpdateChapterId,
-        'last_update_volume_id': lastUpdateVolumeId,
-        'last_update_volume_name': lastUpdateVolumeName,
-        'last_update_chapter_name': lastUpdateChapterName,
-        'last_update_time': lastUpdateTime,
+        'sub_nums': subNums,
       };
 }

@@ -101,7 +101,7 @@ class ComicSubscribeView extends StatelessWidget {
     );
   }
 
-  Widget buildItem(UserSubscribeComicModel item) {
+  Widget buildItem(UserSubscribeComicItemModel item) {
     return ShadowCard(
       onTap: () {
         if (controller.editMode.value) {
@@ -130,7 +130,7 @@ class ComicSubscribeView extends StatelessWidget {
                   AspectRatio(
                     aspectRatio: 27 / 36,
                     child: NetImage(
-                      item.subImg,
+                      item.cover,
                       borderRadius: 4,
                     ),
                   ),
@@ -190,7 +190,7 @@ class ComicSubscribeView extends StatelessWidget {
               Padding(
                 padding: AppStyle.edgeInsetsH4,
                 child: Text(
-                  item.name,
+                  item.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -202,7 +202,7 @@ class ComicSubscribeView extends StatelessWidget {
               Padding(
                 padding: AppStyle.edgeInsetsH4,
                 child: Text(
-                  "更新 ${item.subUpdate}",
+                  "更新 ${item.lastUpdateChapterName}",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

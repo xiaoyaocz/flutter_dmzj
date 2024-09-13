@@ -11,34 +11,31 @@ class LoginResultModel {
   LoginResultModel({
     required this.uid,
     required this.nickname,
-    required this.dmzjToken,
+    required this.token,
     required this.photo,
     required this.bindPhone,
     required this.email,
-    required this.passwd,
-    required this.cookieVal,
+    required this.setPasswd,
   });
 
   factory LoginResultModel.fromJson(Map<String, dynamic> json) =>
       LoginResultModel(
-        uid: asT<String>(json['uid'])!,
+        uid: asT<int>(json['uid'])!,
         nickname: asT<String>(json['nickname'])!,
-        dmzjToken: asT<String>(json['dmzj_token'])!,
+        token: asT<String>(json['token'])!,
         photo: asT<String>(json['photo'])!,
         bindPhone: asT<String>(json['bind_phone'])!,
         email: asT<String>(json['email'])!,
-        passwd: asT<String>(json['passwd'])!,
-        cookieVal: asT<String>(json['cookie_val'])!,
+        setPasswd: asT<int>(json['setPasswd'])!,
       );
 
-  String uid;
+  int uid;
   String nickname;
-  String dmzjToken;
+  String token;
   String photo;
   String bindPhone;
   String email;
-  String passwd;
-  String cookieVal;
+  int setPasswd;
 
   @override
   String toString() {
@@ -48,11 +45,10 @@ class LoginResultModel {
   Map<String, dynamic> toJson() => <String, dynamic>{
         'uid': uid,
         'nickname': nickname,
-        'dmzj_token': dmzjToken,
+        'token': token,
         'photo': photo,
         'bind_phone': bindPhone,
         'email': email,
-        'passwd': passwd,
-        'cookie_val': cookieVal,
+        'setPasswd': setPasswd
       };
 }

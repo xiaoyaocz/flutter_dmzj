@@ -31,11 +31,11 @@ class NovelSelectChapterController extends BaseController {
     try {
       pageLoadding.value = true;
       pageError.value = false;
-      var result = await request.novelDetailV4(novelId: novelId);
-      novelTitle = result.name;
-      novelCover = result.cover;
-      var chpaterResult = await request.novelChapterV4(novelId: novelId);
-      var ls = chpaterResult.map((e) => NovelDetailVolume.fromV4(e)).toList();
+      var result = await request.novelDetail(novelId: novelId);
+      novelTitle = result.data.name;
+      novelCover = result.data.cover;
+      var chpaterResult = await request.novelChapter(novelId: novelId);
+      var ls = chpaterResult.map((e) => NovelDetailVolume.fromJson(e)).toList();
       selectIds.value = {};
       for (var item in ls) {
         selectIds.addAll({

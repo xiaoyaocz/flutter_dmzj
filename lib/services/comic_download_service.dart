@@ -40,7 +40,7 @@ class ComicDownloadService extends GetxService {
   Future init() async {
     var dir = await getApplicationSupportDirectory();
     box = await Hive.openBox(
-      "ComicDownload",
+      "ZaiComicDownload",
       path: dir.path,
     );
     savePath = await getSavePath();

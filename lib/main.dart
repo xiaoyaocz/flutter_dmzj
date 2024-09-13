@@ -33,7 +33,7 @@ void main() async {
   if (Platform.isWindows) {
     await WindowsSingleInstance.ensureSingleInstance(
       [],
-      "com.xycz.dmzjx",
+      "com.xycz.zmhx",
       onSecondWindow: (args) {
         Log.logPrint(args);
       },

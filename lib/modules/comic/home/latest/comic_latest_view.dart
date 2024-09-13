@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/proto/comic.pb.dart';
+import 'package:flutter_dmzj/models/comic/update_item_model.dart';
 import 'package:flutter_dmzj/modules/comic/home/latest/comic_latest_controller.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
@@ -56,7 +56,7 @@ class ComicLatestView extends StatelessWidget {
     );
   }
 
-  Widget buildItem(ComicUpdateListInfoProto item) {
+  Widget buildItem(ComicUpdateItemModel item) {
     return InkWell(
       onTap: () {
         AppNavigator.toComicDetail(item.comicId.toInt());
@@ -67,7 +67,7 @@ class ComicLatestView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             NetImage(
-              item.cover,
+              item.cover ?? '',
               width: 80,
               height: 110,
               borderRadius: 4,
@@ -101,14 +101,13 @@ class ComicLatestView extends StatelessWidget {
                     ]),
                   ),
                   const SizedBox(height: 2),
-                  Text(item.types,
+                  Text(item.types ?? '',
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text(item.lastUpdateChapterName,
+                  Text(item.lastUpdateChapterName ?? '',
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text(
-                      "更新于${Utils.formatTimestamp(item.lastUpdatetime.toInt())}",
+                  Text("更新于${Utils.formatTimestamp(item.lastUpdatetime ?? 0)}",
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

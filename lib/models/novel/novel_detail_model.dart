@@ -1,3 +1,5 @@
+import 'package:flutter_dmzj/models/novel/detail_model.dart';
+import 'package:flutter_dmzj/models/novel/volume_detail_model.dart';
 import 'package:flutter_dmzj/models/proto/novel.pb.dart';
 import 'package:get/get.dart';
 
@@ -46,6 +48,25 @@ class NovelDetailInfo {
         firstLetter: "",
         subscribeNum: 0,
       );
+  factory NovelDetailInfo.fromJson(NovelDetailDataModel item) =>
+      NovelDetailInfo(
+        novelId: item.novelId.toInt(),
+        name: item.name,
+        zone: item.zone,
+        status: item.status,
+        lastUpdateVolumeName: item.lastUpdateVolumeName,
+        lastUpdateChapterName: item.lastUpdateChapterName,
+        lastUpdateVolumeId: item.lastUpdateVolumeId.toInt(),
+        lastUpdateChapterId: item.lastUpdateChapterId.toInt(),
+        lastUpdateTime: item.lastUpdateTime.toInt(),
+        cover: item.cover,
+        hotHits: item.hotHits.toInt(),
+        introduction: item.introduction,
+        types: item.types,
+        authors: item.authors,
+        firstLetter: item.firstLetter,
+        subscribeNum: 0,
+      );
 
   factory NovelDetailInfo.fromV4(NovelDetailProto item) => NovelDetailInfo(
         novelId: item.novelId.toInt(),
@@ -92,6 +113,22 @@ class NovelDetailVolume {
     required this.volumeOrder,
     required this.chapters,
   });
+  factory NovelDetailVolume.fromJson(NovelVolumeDetailModel item) =>
+      NovelDetailVolume(
+        volumeId: item.volumeId.toInt(),
+        volumeName: item.volumeName,
+        volumeOrder: item.volumeOrder,
+        chapters: item.chapters
+            .map(
+              (e) => NovelDetailChapter.fromJson(
+                e,
+                item.volumeId.toInt(),
+                item.volumeName,
+                item.volumeOrder,
+              ),
+            )
+            .toList(),
+      );
 
   factory NovelDetailVolume.fromV4(NovelVolumeDetailProto item) =>
       NovelDetailVolume(
@@ -125,6 +162,16 @@ class NovelDetailChapter {
     required this.volumeName,
     required this.volumeOrder,
   });
+  factory NovelDetailChapter.fromJson(NovelVolumeDetailChapterModel item,
+          int volumeId, String volumeName, int volumeOrder) =>
+      NovelDetailChapter(
+        chapterId: item.chapterId.toInt(),
+        chapterName: item.chapterName,
+        chapterOrder: item.chapterOrder,
+        volumeId: volumeId,
+        volumeName: volumeName,
+        volumeOrder: volumeOrder,
+      );
 
   factory NovelDetailChapter.fromV4(NovelChapterDetailProto item, int volumeId,
           String volumeName, int volumeOrder) =>

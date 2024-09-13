@@ -22,33 +22,29 @@ class UserRequest {
   /// - [password] 密码
   Future<LoginResultModel> login(
       {required String nickname, required String password}) async {
-    var pwd = md5.convert(utf8.encode(password)).toString().toUpperCase();
+    var pwd = md5.convert(utf8.encode(password)).toString().toLowerCase();
 
     Map<String, dynamic> data = {
-      "nickname": Uri.encodeComponent(nickname),
-      "pwd": pwd,
+      "username": Uri.encodeComponent(nickname),
+      "passwd": pwd,
     };
 
     var result = await HttpClient.instance.postJson(
-      "/loginV2/m_confirm",
+      "/login/passwd",
       baseUrl: Api.BASE_URL_USER,
       data: data,
       formUrlEncoded: true,
+      checkCode: true,
     );
-    var jsonResult = json.decode(result);
-    if (jsonResult["result"] == 1) {
-      var data = LoginResultModel.fromJson(jsonResult["data"]);
-      return data;
-    } else {
-      throw AppError(jsonResult["msg"].toString());
-    }
+
+    return LoginResultModel.fromJson(result["user"]);
   }
 
   /// 用户资料
   Future<UserProfileModel> userProfile() async {
     var result = await HttpClient.instance.getJson(
       "/UCenter/comicsv2/${UserService.instance.userId}.json",
-      baseUrl: Api.BASE_URL_V3,
+      baseUrl: Api.BASE_URL,
       queryParameters: {
         "dmzj_token": UserService.instance.dmzjToken,
       },
@@ -62,7 +58,7 @@ class UserRequest {
   Future<UserBindStatusModel> isBindTelPwd() async {
     var result = await HttpClient.instance.getJson(
       "/account/isbindtelpwd",
-      baseUrl: Api.BASE_URL_V3,
+      baseUrl: Api.BASE_URL,
       queryParameters: {
         "dmzj_token": UserService.instance.dmzjToken,
       },
@@ -77,28 +73,28 @@ class UserRequest {
   /// - [page] 页数从0开始
   /// - [subType] 全部=1，未读=2，已读=3，完结=4
   /// - [letter] all=全部
-  Future<List<UserSubscribeComicModel>> comicSubscribes(
-      {required int subType, int page = 0, String letter = "all"}) async {
-    var list = <UserSubscribeComicModel>[];
+  Future<List<UserSubscribeComicItemModel>> comicSubscribes(
+      {required int subType, int page = 0, String letter = ""}) async {
+    var list = <UserSubscribeComicItemModel>[];
     var result = await HttpClient.instance.getJson(
-      '/UCenter/subscribe',
+      '/comic/sub/list',
       queryParameters: {
         //uid=$uid&sub_type=$subType&letter=$letter&dmzj_token=$token&page=$page&type=$type
-        "type": 0,
-        "sub_type": subType,
-        "letter": letter,
-        "dmzj_token": UserService.instance.dmzjToken,
+        "status": subType,
+        "firstLetter": letter,
         "page": page,
+        "size": 20
       },
       needLogin: true,
+      checkCode: true,
     );
-    for (var item in result) {
-      list.add(UserSubscribeComicModel.fromJson(item));
+    for (var item in result["subList"]) {
+      list.add(UserSubscribeComicItemModel.fromJson(item));
     }
     return list;
   }
 
-  /// 我的漫画订阅
+  /// 我的小说订阅
   /// - [page] 页数从0开始
   /// - [subType] 全部=1，未读=2，已读=3，完结=4
   /// - [letter] all=全部
@@ -153,20 +149,25 @@ class UserRequest {
   /// 添加订阅
   /// - [type] 类型，对应AppConstant
   Future<bool> addSubscribe({required List<int> ids, required int type}) async {
-    var typeStr = "mh";
+    var requestUrl = "/comic/sub/add";
+    var requestQuery = <String, dynamic>{};
     if (type == AppConstant.kTypeComic) {
-      typeStr = "mh";
+      requestUrl = "/comic/sub/add";
+      requestQuery = {
+        "comic_id": ids.join(","),
+      };
     } else if (type == AppConstant.kTypeNovel) {
-      typeStr = "xs";
+      requestUrl = "/novel/sub/add";
+      requestQuery = {
+        "novel_id": ids.join(","),
+      };
     }
 
-    await HttpClient.instance.postJson(
-      '/subscribe/add',
-      data: {
-        "obj_ids": ids.join(","),
-        "type": typeStr,
-        "uid": UserService.instance.userId,
-      },
+    await HttpClient.instance.getJson(
+      requestUrl,
+      queryParameters: requestQuery,
+      needLogin: true,
+      checkCode: true,
     );
     return true;
   }
@@ -197,20 +198,25 @@ class UserRequest {
   /// - [type] 类型，对应AppConstant
   Future<bool> removeSubscribe(
       {required List<int> ids, required int type}) async {
-    var typeStr = "mh";
+    var requestUrl = "/comic/sub/del";
+    var requestQuery = <String, dynamic>{};
     if (type == AppConstant.kTypeComic) {
-      typeStr = "mh";
+      requestUrl = "/comic/sub/del";
+      requestQuery = {
+        "comic_id": ids.join(","),
+      };
     } else if (type == AppConstant.kTypeNovel) {
-      typeStr = "xs";
+      requestUrl = "/novel/sub/del";
+      requestQuery = {
+        "novel_id": ids.join(","),
+      };
     }
 
     await HttpClient.instance.getJson(
-      '/subscribe/cancel',
-      queryParameters: {
-        "obj_ids": ids.join(","),
-        "type": typeStr,
-        "uid": UserService.instance.userId,
-      },
+      requestUrl,
+      queryParameters: requestQuery,
+      needLogin: true,
+      checkCode: true,
     );
     return true;
   }
@@ -220,17 +226,23 @@ class UserRequest {
   /// - [type] 类型，对应AppConstant
   Future<bool> checkSubscribeStatus(
       {required int objId, required int type}) async {
-    var typeId = 0;
+    var typeId = 1;
     if (type == AppConstant.kTypeComic) {
-      typeId = 0;
-    } else if (type == AppConstant.kTypeNovel) {
       typeId = 1;
+    } else if (type == AppConstant.kTypeNovel) {
+      typeId = 2;
     }
-    await HttpClient.instance.getJson(
-      '/subscribe/$typeId/${UserService.instance.userId}/$objId',
+
+    var result = await HttpClient.instance.getJson(
+      '/comic/sub/checkIsSub',
       checkCode: true,
+      queryParameters: {
+        "objId": objId,
+        "source": typeId,
+      },
+      needLogin: true,
     );
-    return true;
+    return result["isSub"];
   }
 
   /// 漫画阅读记录

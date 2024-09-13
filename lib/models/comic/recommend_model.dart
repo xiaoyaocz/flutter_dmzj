@@ -30,7 +30,7 @@ class ComicRecommendModel {
       categoryId: asT<int>(json['category_id'])!,
       title: asT<String>(json['title'])!,
       sort: asT<int>(json['sort'])!,
-      data: data??[],
+      data: data ?? [],
     );
   }
 
@@ -38,7 +38,7 @@ class ComicRecommendModel {
   String title;
   int sort;
   List<ComicRecommendItemModel> data;
-
+  int page = 1;
   @override
   String toString() {
     return jsonEncode(this);

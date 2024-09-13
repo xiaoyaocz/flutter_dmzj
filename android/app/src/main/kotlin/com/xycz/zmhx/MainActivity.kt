@@ -1,4 +1,4 @@
-package com.xycz.dmzjx
+package com.xycz.zmhx
 
 import io.flutter.embedding.android.FlutterActivity
 
