@@ -19,7 +19,7 @@ class NovelSearchController extends BasePageController<NovelSearchModel> {
 
   @override
   void onInit() {
-    loadHotWord();
+    //  loadHotWord();
     if (keyword.isNotEmpty) {
       submit();
     }
@@ -42,7 +42,7 @@ class NovelSearchController extends BasePageController<NovelSearchModel> {
     if (searchController.text.isEmpty) {
       return [];
     }
-    return await request.search(keyword: _keyword, page: page - 1);
+    return await request.search(keyword: _keyword, page: page);
   }
 
   void loadHotWord() async {

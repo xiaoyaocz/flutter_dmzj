@@ -180,7 +180,9 @@ class ComicRequest {
       queryParameters: {"source": 1},
       checkCode: true,
     );
-    Map<int, String> map = {};
+    Map<int, String> map = {
+      0: "全部分类",
+    };
     for (var item in result["cateList"]) {
       map.addAll({
         item["tagId"]: item["title"],

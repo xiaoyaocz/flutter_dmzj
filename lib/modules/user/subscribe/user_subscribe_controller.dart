@@ -9,7 +9,7 @@ class UserSubscribeController extends GetxController
 
   @override
   void onInit() {
-    tabController = TabController(length: 3, vsync: this, initialIndex: type);
+    tabController = TabController(length: 2, vsync: this, initialIndex: type);
 
     super.onInit();
   }

@@ -124,7 +124,7 @@ class NovelSubscribeView extends StatelessWidget {
                   AspectRatio(
                     aspectRatio: 27 / 36,
                     child: NetImage(
-                      item.subImg,
+                      item.cover ?? "",
                       borderRadius: 4,
                     ),
                   ),
@@ -143,7 +143,7 @@ class NovelSubscribeView extends StatelessWidget {
                       padding:
                           AppStyle.edgeInsetsH8.copyWith(top: 2, bottom: 2),
                       child: Text(
-                        item.status,
+                        item.status ?? "-",
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white,
@@ -184,7 +184,7 @@ class NovelSubscribeView extends StatelessWidget {
               Padding(
                 padding: AppStyle.edgeInsetsH4,
                 child: Text(
-                  item.name,
+                  item.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -196,7 +196,7 @@ class NovelSubscribeView extends StatelessWidget {
               Padding(
                 padding: AppStyle.edgeInsetsH4,
                 child: Text(
-                  "更新 ${item.subUpdate}",
+                  "更新 ${item.lastUpdateChapterName}",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

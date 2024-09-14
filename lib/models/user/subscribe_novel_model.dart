@@ -11,44 +11,45 @@ T? asT<T>(dynamic value) {
 
 class UserSubscribeNovelModel {
   UserSubscribeNovelModel({
-    required this.name,
-    required this.subUpdate,
-    required this.subImg,
-    required this.subUptime,
-    required this.subFirstLetter,
-    required this.subReaded,
     required this.id,
-    required this.status,
+    required this.title,
+    this.cover,
+    this.subReaded,
+    this.lastUpdateChapterId,
+    this.lastUpdateChapterName,
+    this.comicPy,
+    this.status,
+    required this.readingRecord,
     required this.hasNew,
   });
 
   factory UserSubscribeNovelModel.fromJson(Map<String, dynamic> json) =>
       UserSubscribeNovelModel(
-        name: asT<String>(json['name'])!,
-        subUpdate: asT<String>(json['sub_update'])!,
-        subImg: asT<String>(json['sub_img'])!,
-        subUptime: asT<int>(json['sub_uptime'])!,
-        subFirstLetter: asT<String>(json['sub_first_letter'])!,
-        subReaded: asT<int>(json['sub_readed'])!,
         id: asT<int>(json['id'])!,
-        status: asT<String>(json['status'])!,
+        title: asT<String>(json['title'])!,
+        cover: asT<String?>(json['cover']),
+        subReaded: asT<int?>(json['sub_readed']),
+        lastUpdateChapterId: asT<int?>(json['last_update_chapter_id']),
+        lastUpdateChapterName: asT<String?>(json['last_update_chapter_name']),
+        comicPy: asT<String?>(json['comic_py']),
+        status: asT<String?>(json['status']),
+        readingRecord: UserSubscribeNovelReadingRecordModel.fromJson(
+            asT<Map<String, dynamic>>(json['readingRecord'])!),
         hasNew: (asT<int>(json['sub_readed']) == 0).obs,
       );
 
-  String name;
-  String subUpdate;
-  String subImg;
-  int subUptime;
-  String subFirstLetter;
-  int subReaded;
   int id;
-  String status;
+  String title;
+  String? cover;
+  int? subReaded;
+  int? lastUpdateChapterId;
+  String? lastUpdateChapterName;
+  String? comicPy;
+  String? status;
+  UserSubscribeNovelReadingRecordModel readingRecord;
 
-  //是否有新的更新
-  Rx<bool> hasNew = false.obs;
-
-  //是否被选中
-  Rx<bool> isChecked = false.obs;
+  var isChecked = false.obs;
+  var hasNew = false.obs;
 
   @override
   String toString() {
@@ -56,13 +57,77 @@ class UserSubscribeNovelModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'sub_update': subUpdate,
-        'sub_img': subImg,
-        'sub_uptime': subUptime,
-        'sub_first_letter': subFirstLetter,
-        'sub_readed': subReaded,
         'id': id,
+        'title': title,
+        'cover': cover,
+        'sub_readed': subReaded,
+        'last_update_chapter_id': lastUpdateChapterId,
+        'last_update_chapter_name': lastUpdateChapterName,
+        'comic_py': comicPy,
         'status': status,
+        'readingRecord': readingRecord,
+      };
+}
+
+class UserSubscribeNovelReadingRecordModel {
+  UserSubscribeNovelReadingRecordModel({
+    this.typeName,
+    this.uid,
+    this.source,
+    this.bizId,
+    this.chapterId,
+    this.viewingTime,
+    this.record,
+    this.volumeId,
+    this.totalNum,
+    this.chapterName,
+    this.volumeName,
+  });
+
+  factory UserSubscribeNovelReadingRecordModel.fromJson(
+          Map<String, dynamic> json) =>
+      UserSubscribeNovelReadingRecordModel(
+        typeName: asT<String?>(json['type_name']),
+        uid: asT<int?>(json['uid']),
+        source: asT<int?>(json['source']),
+        bizId: asT<int?>(json['biz_id']),
+        chapterId: asT<int?>(json['chapter_id']),
+        viewingTime: asT<int?>(json['viewing_time']),
+        record: asT<int?>(json['record']),
+        volumeId: asT<int?>(json['volume_id']),
+        totalNum: asT<int?>(json['total_num']),
+        chapterName: asT<String?>(json['chapter_name']),
+        volumeName: asT<String?>(json['volume_name']),
+      );
+
+  String? typeName;
+  int? uid;
+  int? source;
+  int? bizId;
+  int? chapterId;
+  int? viewingTime;
+  int? record;
+  int? volumeId;
+  int? totalNum;
+  String? chapterName;
+  String? volumeName;
+
+  @override
+  String toString() {
+    return jsonEncode(this);
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'type_name': typeName,
+        'uid': uid,
+        'source': source,
+        'biz_id': bizId,
+        'chapter_id': chapterId,
+        'viewing_time': viewingTime,
+        'record': record,
+        'volume_id': volumeId,
+        'total_num': totalNum,
+        'chapter_name': chapterName,
+        'volume_name': volumeName,
       };
 }

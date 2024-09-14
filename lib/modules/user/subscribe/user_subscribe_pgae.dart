@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/modules/user/subscribe/comic/comic_subscribe_view.dart';
-import 'package:flutter_dmzj/modules/user/subscribe/news/news_subscribe_view.dart';
 import 'package:flutter_dmzj/modules/user/subscribe/novel/novel_subscribe_view.dart';
 import 'package:flutter_dmzj/modules/user/subscribe/user_subscribe_controller.dart';
 import 'package:get/get.dart';
@@ -35,7 +34,7 @@ class UserSubscribePage extends StatelessWidget {
             tabs: const [
               Tab(text: "漫画"),
               Tab(text: "小说"),
-              Tab(text: "新闻"),
+              // Tab(text: "新闻"),
             ],
           ),
         ),
@@ -45,7 +44,7 @@ class UserSubscribePage extends StatelessWidget {
         children: [
           ComicSubscribeView(),
           NovelSubscribeView(),
-          NewsSubscribeView(),
+          // NewsSubscribeView(),
         ],
       ),
     );

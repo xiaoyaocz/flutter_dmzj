@@ -9,48 +9,39 @@ T? asT<T>(dynamic value) {
 
 class NovelSearchModel {
   NovelSearchModel({
-    required this.biz,
-    required this.addtime,
-    required this.authors,
-    required this.copyright,
-    required this.cover,
-    required this.hidden,
-    required this.hotHits,
-    required this.lastName,
-    required this.status,
-    required this.title,
-    required this.types,
     required this.id,
+    required this.title,
+    this.authors,
+    this.cover,
+    this.hotHits,
+    this.lastName,
+    this.status,
+    this.types,
+    this.subNums,
   });
 
   factory NovelSearchModel.fromJson(Map<String, dynamic> json) =>
       NovelSearchModel(
-        biz: asT<String>(json['_biz'])!,
-        addtime: asT<int>(json['addtime'])!,
-        authors: asT<String>(json['authors'])!,
-        copyright: asT<int>(json['copyright'])!,
-        cover: asT<String>(json['cover'])!,
-        hidden: asT<int>(json['hidden'])!,
-        hotHits: asT<int>(json['hot_hits'])!,
-        lastName: asT<String>(json['last_name'])!,
-        status: asT<int>(json['status'])!,
-        title: asT<String>(json['title'])!,
-        types: asT<String>(json['types'])!,
         id: asT<int>(json['id'])!,
+        title: asT<String>(json['title'])!,
+        authors: asT<String?>(json['authors']),
+        cover: asT<String?>(json['cover']),
+        hotHits: asT<int?>(json['hot_hits']),
+        lastName: asT<String?>(json['last_name']),
+        status: asT<String?>(json['status']),
+        types: asT<String?>(json['types']),
+        subNums: asT<int?>(json['sub_nums']),
       );
 
-  String biz;
-  int addtime;
-  String authors;
-  int copyright;
-  String cover;
-  int hidden;
-  int hotHits;
-  String lastName;
-  int status;
-  String title;
-  String types;
   int id;
+  String title;
+  String? authors;
+  String? cover;
+  int? hotHits;
+  String? lastName;
+  String? status;
+  String? types;
+  int? subNums;
 
   @override
   String toString() {
@@ -58,17 +49,14 @@ class NovelSearchModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        '_biz': biz,
-        'addtime': addtime,
+        'id': id,
+        'title': title,
         'authors': authors,
-        'copyright': copyright,
         'cover': cover,
-        'hidden': hidden,
         'hot_hits': hotHits,
         'last_name': lastName,
         'status': status,
-        'title': title,
         'types': types,
-        'id': id,
+        'sub_nums': subNums,
       };
 }

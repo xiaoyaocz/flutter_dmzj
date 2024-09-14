@@ -143,12 +143,19 @@ class NovelRequest {
   /// - [page] 页数从0开始
   /// - [keyword] 关键字
   Future<List<NovelSearchModel>> search(
-      {required String keyword, int page = 0}) async {
+      {required String keyword, int page = 1}) async {
     var list = <NovelSearchModel>[];
     var result = await HttpClient.instance.getJson(
-      '/search/show/1/$keyword/$page.json',
+      '/search/index',
+      queryParameters: {
+        "keyword": keyword,
+        "page": page,
+        "size": 20,
+        "source": 1,
+      },
+      checkCode: true,
     );
-    for (var item in result) {
+    for (var item in result["list"]) {
       list.add(NovelSearchModel.fromJson(item));
     }
     return list;

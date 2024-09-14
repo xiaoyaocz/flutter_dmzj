@@ -121,7 +121,7 @@ class NovelSearchPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             NetImage(
-              item.cover,
+              item.cover ?? "",
               width: 80,
               height: 110,
               borderRadius: 4,
@@ -155,10 +155,10 @@ class NovelSearchPage extends StatelessWidget {
                     ]),
                   ),
                   AppStyle.vGap4,
-                  Text(item.types,
+                  Text(item.types ?? "",
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   AppStyle.vGap4,
-                  Text(item.lastName,
+                  Text(item.lastName ?? "",
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

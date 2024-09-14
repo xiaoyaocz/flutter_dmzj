@@ -15,10 +15,10 @@ class NovelSubscribeController
   }
   final UserRequest request = UserRequest();
 
-  var letter = "all".obs;
+  var letter = "".obs;
 
   Map letters = {
-    "all": "全部",
+    "": "全部",
     "number": "数字开头",
   };
 

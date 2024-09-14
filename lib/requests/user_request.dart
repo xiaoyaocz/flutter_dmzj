@@ -102,18 +102,18 @@ class UserRequest {
       {required int subType, int page = 0, String letter = "all"}) async {
     var list = <UserSubscribeNovelModel>[];
     var result = await HttpClient.instance.getJson(
-      '/UCenter/subscribe',
+      '/novel/sub/list',
       queryParameters: {
         //uid=$uid&sub_type=$subType&letter=$letter&dmzj_token=$token&page=$page&type=$type
-        "type": 1,
-        "sub_type": subType,
-        "letter": letter,
-        "dmzj_token": UserService.instance.dmzjToken,
+        "status": subType,
+        "firstLetter": letter,
         "page": page,
+        "size": 20
       },
       needLogin: true,
+      checkCode: true,
     );
-    for (var item in result) {
+    for (var item in result["subList"]) {
       list.add(UserSubscribeNovelModel.fromJson(item));
     }
     return list;
