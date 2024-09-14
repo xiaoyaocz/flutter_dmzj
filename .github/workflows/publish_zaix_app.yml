@@ -14,7 +14,7 @@ jobs:
       # 1.1 签出代码
       - uses: actions/checkout@v3
         with:
-          ref: main
+          ref: zaimanhua
       # 1.2 写出相关签名
       - name: Get Android Keystore
         id: android_keystore
@@ -91,7 +91,7 @@ jobs:
       # 2.1 签出代码
       - uses: actions/checkout@v3
         with:
-          ref: main
+          ref: zaimanhua
       # 2.2 设置Flutter环境
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -132,7 +132,7 @@ jobs:
       # 3.1 签出代码
       - uses: actions/checkout@v3
         with:
-          ref: main
+          ref: zaimanhua
       # 3.2 设置Flutter环境
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
