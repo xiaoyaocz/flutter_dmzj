@@ -7,7 +7,7 @@
 <h2 align="center">ZAI-X</h2>
 
 <p align="center">
-使用Flutter编写的动漫之家跨平台第三方客户端
+使用Flutter编写的再漫画跨平台第三方客户端
 </p>
 
 ![浅色模式](/document/screenshot_light.jpg)
@@ -28,7 +28,7 @@
 
 ## 声明
 
-- 本项目为[动漫之家](https://dmzj.com)第三方开源APP
+- 本项目为[再漫画](https://zaimanhua.com)第三方开源APP
 
 - 本项目仅用于学习交流编程技术，严禁将本项目用于商业目的。如有任何商业行为，均与本项目无关。
 
