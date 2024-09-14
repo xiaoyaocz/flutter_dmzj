@@ -72,14 +72,14 @@ class SettingsPage extends StatelessWidget {
               child: const Text("清除"),
             ),
           ),
-          SwitchListTile(
-            value: controller.settings.comicSearchUseWebApi.value,
-            onChanged: (e) {
-              controller.settings.setComicSearchUseWebApi(e);
-            },
-            title: const Text("使用Web接口搜索漫画"),
-            subtitle: const Text("开启后可以搜索到更多漫画"),
-          ),
+          // SwitchListTile(
+          //   value: controller.settings.comicSearchUseWebApi.value,
+          //   onChanged: (e) {
+          //     controller.settings.setComicSearchUseWebApi(e);
+          //   },
+          //   title: const Text("使用Web接口搜索漫画"),
+          //   subtitle: const Text("开启后可以搜索到更多漫画"),
+          // ),
           SwitchListTile(
             value: controller.settings.useSystemFontSize.value,
             onChanged: (e) {

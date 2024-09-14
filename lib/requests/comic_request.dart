@@ -127,7 +127,7 @@ class ComicRequest {
   /// - [sort] 排序,0=人气,1=更新
   /// - [page] 页数，从0开始
   Future<List<ComicCategoryComicModel>> categoryComic({
-    required List<int> ids,
+    required int id,
     int sort = 1,
     int page = 1,
     int status = 0,
@@ -136,7 +136,7 @@ class ComicRequest {
     var result = await HttpClient.instance.getJson(
       '/comic/filter/list',
       queryParameters: {
-        "tagId": ids.join(","),
+        "tagId": id,
         "status": 0,
         "sortType": sort,
         "page": page,

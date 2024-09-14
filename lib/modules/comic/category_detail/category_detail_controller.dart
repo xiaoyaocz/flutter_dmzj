@@ -69,16 +69,13 @@ class CategoryDetailController
   @override
   Future<List<ComicCategoryComicModel>> getData(int page, int pageSize) async {
     if (filters.isEmpty) {
-      return await request.categoryComic(ids: [id], page: page);
+      return await request.categoryComic(id: id, page: page);
     } else {
       var sort = filters.first.selectId.value;
       var status = filters[1].selectId.value;
-      var ids = filters
-          .where((x) => x.title != "排序")
-          .map((e) => e.selectId.value)
-          .toList();
+
       return await request.categoryComic(
-        ids: ids,
+        id: filters.last.selectId.value,
         sort: sort,
         page: page,
         status: status,
