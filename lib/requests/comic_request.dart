@@ -266,13 +266,11 @@ class ComicRequest {
   }) async {
     var result = await HttpClient.instance.getJson(
       '/comic/detail/$comicId',
+      needLogin: true,
+      checkCode: true,
     );
-    if (result["errno"] != 0) {
-      throw AppError(result["errmsg"]);
-    }
-    var data = ComicDetailModel.fromJson(result["data"]);
 
-    return data;
+    return ComicDetailModel.fromJson(result);
   }
 
   /// 漫画详情
@@ -363,12 +361,13 @@ class ComicRequest {
   /// 章节详情-V4
   Future<ComicChapterDetailModel> chapterDetailV4(
       {required int comicId, required int chapterId}) async {
-    var result =
-        await HttpClient.instance.getJson('/comic/chapter/$comicId/$chapterId');
-    if (result["errno"] != 0) {
-      throw AppError(result["errmsg"].toString());
-    }
-    var data = ComicChapterDetailModel.fromJson(result["data"]["data"]);
+    var result = await HttpClient.instance.getJson(
+      '/comic/chapter/$comicId/$chapterId',
+      needLogin: true,
+      checkCode: true,
+    );
+
+    var data = ComicChapterDetailModel.fromJson(result["data"]);
 
     return data;
   }
