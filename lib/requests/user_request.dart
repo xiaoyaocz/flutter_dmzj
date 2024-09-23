@@ -25,7 +25,7 @@ class UserRequest {
     var pwd = md5.convert(utf8.encode(password)).toString().toLowerCase();
 
     Map<String, dynamic> data = {
-      "username": Uri.encodeComponent(nickname),
+      "username": nickname,
       "passwd": pwd,
     };
 

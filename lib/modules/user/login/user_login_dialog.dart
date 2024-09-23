@@ -36,8 +36,8 @@ class UserLoginDialog extends StatelessWidget {
                 autofocus: true,
                 textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
-                  hintText: "请输入用户名",
-                  labelText: "用户名",
+                  hintText: "请输入用户名/手机号",
+                  labelText: "用户名/手机号",
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   contentPadding: AppStyle.edgeInsetsH8,
                   border: OutlineInputBorder(),
