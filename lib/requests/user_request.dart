@@ -74,7 +74,7 @@ class UserRequest {
   /// - [subType] 全部=1，未读=2，已读=3，完结=4
   /// - [letter] all=全部
   Future<List<UserSubscribeComicItemModel>> comicSubscribes(
-      {required int subType, int page = 0, String letter = ""}) async {
+      {required int subType, int page = 1, String letter = ""}) async {
     var list = <UserSubscribeComicItemModel>[];
     var result = await HttpClient.instance.getJson(
       '/comic/sub/list',

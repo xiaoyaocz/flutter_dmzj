@@ -40,7 +40,7 @@ class ComicSubscribeController
     var ls = await request.comicSubscribes(
       subType: type.value,
       letter: letter.value,
-      page: page - 1,
+      page: page,
     );
     UserService.instance.subscribedComicIds.addAll(ls.map((e) => e.id));
     return ls;
