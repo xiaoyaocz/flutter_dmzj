@@ -69,7 +69,7 @@ jobs:
       # 1.10 build MAC ZIP\DMG
       - name: Build MacOS
         run: flutter_distributor package --platform macos --targets dmg,zip --skip-clean
-      # 1.11 上传APK\IPA\MAC DMG\ZIP
+      # 1.11 上传APK\IPA\MAC DMG
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         with:
@@ -79,7 +79,6 @@ jobs:
             build/app/outputs/flutter-apk/app-release.apk
             build/ios/iphoneos/ios_no_sign.ipa
             build/dist/*/*.dmg
-            build/dist/*/*.zip
         #完成
       - run: echo "🍏 MacOS job's status is ${{ job.status }}."
   # Linux 镜像
