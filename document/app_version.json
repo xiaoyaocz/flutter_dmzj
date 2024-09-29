@@ -1,7 +1,7 @@
 {
-    "version": "1.0.2-test",
-    "version_num": 10002,
-    "version_desc": "1. 修复部分漫画无法观看\n2. 修复中文用户名无法登录\n3. 修复订阅重复加载",
+    "version": "1.0.3-test",
+    "version_num": 10003,
+    "version_desc": "1. 修复漫画下载失败",
     "prerelease":true,
     "download_url": "https://github.com/xiaoyaocz/flutter_dmzj/releases"
 }
