@@ -26,7 +26,7 @@ class ComicDownloader {
   CancelToken? cancelToken;
   Dio dio = Dio(BaseOptions(
     headers: {
-      'Referer': "http://www.dmzj.com/",
+      'Referer': "http://www.zaimanhua.com/",
     },
   ));
   void start() {
@@ -111,9 +111,6 @@ class ComicDownloader {
 
   Future _downloadImage(String url, int index) async {
     try {
-      if (url.contains(".dmzj.com")) {
-        url = url.replaceAll(".dmzj.com", ".idmzj.com");
-      }
       //检查本地是否有缓存，有缓存直接复制本地的
       Uint8List bytes;
       var localFile = await getCachedImageFile(url);
@@ -131,8 +128,8 @@ class ComicDownloader {
         );
         bytes = result.data;
       }
-
-      var fileName = await _saveImage(bytes, index, p.extension(url));
+      var baseName = Uri.parse(url).path;
+      var fileName = await _saveImage(bytes, index, p.extension(baseName));
       info.update((val) {
         val!.index = index;
         val.files.add(fileName);
@@ -188,6 +185,7 @@ class ComicDownloader {
       var dir = Directory(info.value.savePath);
       await dir.delete(recursive: true);
     } finally {
+      ComicDownloadService.instance.downloadIds.remove(info.value.taskId);
       await ComicDownloadService.instance.box.delete(info.value.taskId);
       updateStatus(DownloadStatus.cancel);
     }

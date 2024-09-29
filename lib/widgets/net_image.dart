@@ -38,12 +38,7 @@ class _NetImageState extends State<NetImage>
   @override
   Widget build(BuildContext context) {
     var picUrl = widget.picUrl;
-    if (picUrl.contains("dmzj1.com")) {
-      picUrl = picUrl.replaceAll("dmzj1.com", "dmzj.com");
-    }
-    if (picUrl.contains(".dmzj.com")) {
-      picUrl = picUrl.replaceAll(".dmzj.com", ".idmzj.com");
-    }
+
     if (picUrl.isEmpty) {
       return Container(
         decoration: BoxDecoration(
@@ -66,7 +61,7 @@ class _NetImageState extends State<NetImage>
         shape: BoxShape.rectangle,
         handleLoadingProgress: widget.progress,
         borderRadius: BorderRadius.circular(widget.borderRadius),
-        headers: const {'Referer': "http://www.dmzj.com/"},
+        headers: const {'Referer': "http://www.zaimanhua.com/"},
         loadStateChanged: (e) {
           if (e.extendedImageLoadState == LoadState.loading) {
             animationController.reset();
