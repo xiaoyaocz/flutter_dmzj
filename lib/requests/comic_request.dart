@@ -81,6 +81,7 @@ class ComicRequest {
       {required int type, int page = 1}) async {
     var result = await HttpClient.instance.getJson(
       '/comic/update/list/$type/$page',
+      needLogin: true,
     );
     var list = <ComicUpdateItemModel>[];
     for (var item in result["data"]) {
