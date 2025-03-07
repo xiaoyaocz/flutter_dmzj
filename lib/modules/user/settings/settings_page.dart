@@ -96,6 +96,19 @@ class SettingsPage extends StatelessWidget {
             title: const Text("自动收藏神隐漫画"),
             subtitle: const Text("浏览神隐漫画时自动添加到本机收藏"),
           ),
+          ListTile(
+            title: const Text("代理地址"),
+            subtitle: TextField(
+              controller: TextEditingController(text: controller.settings.proxyAddress.value),
+              decoration: const InputDecoration(
+                hintText: "仅支持http协议,重启生效 eg:127.0.0.1:7890",
+              ),
+              onSubmitted: (e){
+                controller.settings.setProxyAddress(e);
+              },
+            ),
+
+          )
         ],
       ),
     );
