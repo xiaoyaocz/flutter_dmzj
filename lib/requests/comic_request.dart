@@ -137,13 +137,14 @@ class ComicRequest {
     var result = await HttpClient.instance.getJson(
       '/comic/filter/list',
       queryParameters: {
-        "tagId": id,
+        "theme": id,
         "status": 0,
         "sortType": sort,
         "page": page,
         "size": 20,
       },
       checkCode: true,
+      needLogin: true // 登录可以更多内容
     );
     for (var item in result["comicList"]) {
       list.add(ComicCategoryComicModel.fromJson(item));
