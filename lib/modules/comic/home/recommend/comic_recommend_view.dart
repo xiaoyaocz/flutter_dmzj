@@ -27,7 +27,8 @@ class ComicRecommendView extends StatelessWidget {
         showPageLoadding: true,
         itemBuilder: (context, i) {
           var item = controller.list[i];
-          if (item.categoryId == 95) {
+          //大图推荐
+          if (item.categoryId == 109) {
             return buildBanner(item);
           }
           //随便看看
@@ -49,19 +50,19 @@ class ComicRecommendView extends StatelessWidget {
             );
           }
           //近期必看\国漫\热门连载\最新上架
-          if (item.categoryId == 47 ||
-              item.categoryId == 52 ||
-              item.categoryId == 54 ||
+          if (item.categoryId == 110 ||
+              item.categoryId == 111 ||
+              item.categoryId == 112 ||
               item.categoryId == 56) {
             Widget? action;
             //刷新国漫
-            if (item.categoryId == 47) {
+            if (item.categoryId == 110) {
               action = buildRefresh(onRefresh: controller.refreshRecommend);
             }
-            if (item.categoryId == 52) {
+            if (item.categoryId == 111) {
               action = buildRefresh(onRefresh: controller.refreshGuoman);
             }
-            if (item.categoryId == 54) {
+            if (item.categoryId == 112) {
               action = buildRefresh(onRefresh: controller.refreshHot);
             }
             return buildCard(

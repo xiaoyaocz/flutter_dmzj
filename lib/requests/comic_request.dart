@@ -101,6 +101,8 @@ class ComicRequest {
     for (var item in result["cateList"]) {
       list.add(ComicCategoryItemModel.fromJson(item));
     }
+    // 百合赛高
+    list.add(ComicCategoryItemModel(tagId: 3243, title: "ゆり", cover: ""));
     return list;
   }
 
@@ -184,6 +186,7 @@ class ComicRequest {
     );
     Map<int, String> map = {
       0: "全部分类",
+      3243: "ゆり"
     };
     for (var item in result["cateList"]) {
       map.addAll({

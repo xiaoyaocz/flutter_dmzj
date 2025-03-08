@@ -68,9 +68,9 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   /// 刷新国漫
   Future<void> refreshGuoman() async {
     try {
-      var index = list.indexWhere((x) => x.categoryId == 52);
+      var index = list.indexWhere((x) => x.categoryId == 111);
       var result =
-          await request.refreshRecommend(52, size: 6, page: list[index].page);
+          await request.refreshRecommend(111, size: 6, page: list[index].page);
 
       if (index != -1) {
         list[index].data = result;
@@ -85,9 +85,9 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   /// 刷新近期必看
   Future<void> refreshRecommend() async {
     try {
-      var index = list.indexWhere((x) => x.categoryId == 47);
+      var index = list.indexWhere((x) => x.categoryId == 110);
 
-      var result = await request.refreshRecommend(47, page: list[index].page);
+      var result = await request.refreshRecommend(110, page: list[index].page);
 
       if (index != -1) {
         list[index].data = result;
@@ -117,9 +117,9 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   /// 刷新热门连载
   Future<void> refreshHot() async {
     try {
-      var index = list.indexWhere((x) => x.categoryId == 54);
+      var index = list.indexWhere((x) => x.categoryId == 112);
       var result =
-          await request.refreshRecommend(54, page: list[index].page, size: 6);
+          await request.refreshRecommend(112, page: list[index].page, size: 6);
 
       if (index != -1) {
         list[index].data = result;
