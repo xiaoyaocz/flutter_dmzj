@@ -67,6 +67,9 @@ class AppSettingsService extends GetxController {
     //自动添加神隐漫画至收藏夹
     collectHideComic.value = LocalStorageService.instance
         .getValue(LocalStorageService.kCollectHideComic, false);
+    //代理地址
+    proxyAddress.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kProxyAddress, "");
     super.onInit();
   }
 
@@ -323,6 +326,14 @@ class AppSettingsService extends GetxController {
     collectHideComic.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kCollectHideComic, value);
+  }
+
+  /// 代理地址
+  var proxyAddress = "".obs;
+  void setProxyAddress(String address) {
+    proxyAddress.value = address;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kProxyAddress, address);
   }
 
   void setNoFirstRun() {

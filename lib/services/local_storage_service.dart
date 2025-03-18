@@ -93,6 +93,9 @@ class LocalStorageService extends GetxService {
   /// 自动添加神隐漫画至收藏夹
   static const String kCollectHideComic = "CollectHideComic";
 
+  /// 代理地址
+  static const String kProxyAddress = "ProxyAddress";
+
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();

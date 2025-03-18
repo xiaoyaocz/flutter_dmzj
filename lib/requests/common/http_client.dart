@@ -1,12 +1,17 @@
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
+import 'dart:io' as io;
 import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/custom_interceptor.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
+import 'package:get/get.dart';
 
 class HttpClient {
   static HttpClient? _httpUtil;
+  AppSettingsService settings = AppSettingsService.instance;
 
   static HttpClient get instance {
     _httpUtil ??= HttpClient();
@@ -23,6 +28,18 @@ class HttpClient {
       ),
     );
     dio.interceptors.add(CustomInterceptor());
+    // 检查代理设置,为空就不使用代理
+    if (settings.proxyAddress.isNotEmpty) {
+      dio.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          final client = io.HttpClient();
+          client.findProxy = (uri) {
+            return 'PROXY ${settings.proxyAddress}';
+          };
+          return client;
+        },
+      );
+    }
   }
 
   /// Get请求
