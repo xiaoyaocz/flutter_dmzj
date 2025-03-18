@@ -101,6 +101,8 @@ class ComicRequest {
     for (var item in result["cateList"]) {
       list.add(ComicCategoryItemModel.fromJson(item));
     }
+    // 百合赛高
+    list.add(ComicCategoryItemModel(tagId: 3243, title: "ゆり", cover: ""));
     return list;
   }
 
@@ -137,13 +139,14 @@ class ComicRequest {
     var result = await HttpClient.instance.getJson(
       '/comic/filter/list',
       queryParameters: {
-        "tagId": id,
+        "theme": id,
         "status": 0,
         "sortType": sort,
         "page": page,
         "size": 20,
       },
       checkCode: true,
+      needLogin: true // 登录可以更多内容
     );
     for (var item in result["comicList"]) {
       list.add(ComicCategoryComicModel.fromJson(item));
@@ -183,6 +186,7 @@ class ComicRequest {
     );
     Map<int, String> map = {
       0: "全部分类",
+      3243: "ゆり"
     };
     for (var item in result["cateList"]) {
       map.addAll({
