@@ -17,7 +17,7 @@ class Api {
   static const String BASE_URL_V3 = "https://nnv3api.$IDMZJ_DOMAIN_NAME";
 
   /// V4接口,返回加密数据的
-  static const String BASE_URL_V4 = "https://v4api.$IDMZJ_DOMAIN_NAME";
+  static const String BASE_URL_V4 = "https://nnv4api.$IDMZJ_DOMAIN_NAME";
 
   /// V3 API
   static const String BASE_URL_V3_API = "https://v3api.$IDMZJ_DOMAIN_NAME";
