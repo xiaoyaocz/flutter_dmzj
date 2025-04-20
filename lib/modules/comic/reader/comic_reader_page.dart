@@ -17,6 +17,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 
 class ComicReaderPage extends GetView<ComicReaderController> {
   const ComicReaderPage({Key? key}) : super(key: key);
@@ -35,6 +36,10 @@ class ComicReaderPage extends GetView<ComicReaderController> {
       child: Theme(
         data: AppStyle.darkTheme,
         child: Scaffold(
+          // Change background based on E-Ink mode
+          backgroundColor: controller.eInkMode
+              ? Colors.white
+              : AppStyle.darkTheme.scaffoldBackgroundColor,
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
@@ -56,7 +61,8 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                 child: Row(
                   children: [
                     Expanded(
-                      flex: 1,
+                      // Increase touch target size in E-Ink mode
+                      flex: controller.eInkMode ? 4 : 1,
                       child: GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
@@ -76,7 +82,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                       child: Container(),
                     ),
                     Expanded(
-                      flex: 1,
+                      flex: controller.eInkMode ? 4 : 1,
                       child: GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
@@ -330,13 +336,16 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             onScaleEnd: (context, detail, e) {
               controller.lockSwipe.value = (e.scale ?? 1) > 1.0;
             },
-            child: controller.detail.value.isLocal
-                ? LocalImage(url, fit: BoxFit.contain)
-                : NetImage(
-                    url,
-                    fit: BoxFit.contain,
-                    progress: true,
-                  ),
+            child: Container(
+              color: controller.eInkMode ? Colors.white : Colors.black,
+              child: controller.detail.value.isLocal
+                  ? LocalImage(url, fit: BoxFit.contain)
+                  : NetImage(
+                      url,
+                      fit: BoxFit.contain,
+                      progress: true,
+                    ),
+            )
           );
         },
       ),

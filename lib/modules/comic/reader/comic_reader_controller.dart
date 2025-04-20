@@ -93,6 +93,9 @@ class ComicReaderController extends BaseController {
   /// 翻页动画
   bool get pageAnimation => settings.comicReaderPageAnimation.value;
 
+  /// EInk模式
+  bool get eInkMode => settings.comicReaderEInkMode.value;
+
   /// 观点、吐槽
   RxList<ComicViewPointModel> viewPoints = RxList<ComicViewPointModel>();
 
@@ -389,7 +392,7 @@ class ComicReaderController extends BaseController {
     if (direction.value == ReaderDirection.kUpToDown) {
       itemScrollController.jumpTo(index: page);
     } else {
-      anime && pageAnimation
+      anime && pageAnimation && !eInkMode
           ? preloadPageController.animateToPage(page,
               duration: const Duration(milliseconds: 200), curve: Curves.linear)
           : preloadPageController.jumpToPage(page);
@@ -702,6 +705,7 @@ class ComicReaderController extends BaseController {
                           settings.setComicReaderPageAnimation(e);
                         },
                         title: const Text("翻页动画"),
+                        subtitle: eInkMode ? const Text("已开启墨水屏模式，翻页不会生效") : null,
                       ),
                     ),
                   ],
