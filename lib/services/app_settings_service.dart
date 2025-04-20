@@ -31,6 +31,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderPageAnimation, true);
     comicReaderOldViewPoint.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderOldViewPoint, false);
+    comicReaderEInkMode.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderEInkMode, false);
     //小说
     novelReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
@@ -162,6 +164,14 @@ class AppSettingsService extends GetxController {
     comicReaderOldViewPoint.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicReaderOldViewPoint, value);
+  }
+
+  /// 漫画阅读器E-Ink模式
+  RxBool comicReaderEInkMode = false.obs;
+  void setComicReaderEInkMode(bool value) {
+    comicReaderEInkMode.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderEInkMode, value);
   }
 
   /// 小说阅读方向

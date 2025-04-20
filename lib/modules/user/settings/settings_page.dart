@@ -201,6 +201,14 @@ class SettingsPage extends StatelessWidget {
             },
             title: const Text("翻页动画"),
           ),
+          SwitchListTile(
+            value: controller.settings.comicReaderEInkMode.value,
+            onChanged: (e) {
+              controller.settings.setComicReaderEInkMode(e);
+            },
+            title: const Text("墨水屏模式"),
+            subtitle: const Text("关闭翻页动画，白色背景，增加左右轻触翻页热区"),
+          )
         ],
       ),
     );

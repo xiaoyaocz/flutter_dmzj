@@ -84,6 +84,9 @@ class LocalStorageService extends GetxService {
   /// 漫画阅读-翻页动画
   static const String kComicReaderPageAnimation = "ComicReaderPageAnimation";
 
+  /// 漫画阅读-EInk模式
+  static const String kComicReaderEInkMode = "ComicReaderEInkMode";
+
   /// 小说阅读-翻页动画
   static const String kNovelReaderPageAnimation = "NovelReaderPageAnimation";
 
