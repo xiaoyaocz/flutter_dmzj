@@ -58,10 +58,11 @@ class HttpClient {
     bool needLogin = false,
     ResponseType responseType = ResponseType.json,
     bool checkCode = false,
+    Map<String, dynamic>? headers,
+    bool useCoreToken = false,
   }) async {
-    Map<String, dynamic> header = {};
     queryParameters ??= <String, dynamic>{};
-    var query = Api.getDefaultParameter(withUid: needLogin);
+    var query = Api.getDefaultParameter(withUid: needLogin, useCoreToken: useCoreToken);
     if (withDefaultParameter) {
       queryParameters.addAll(query);
     }
@@ -72,7 +73,7 @@ class HttpClient {
         queryParameters: queryParameters,
         options: Options(
           responseType: responseType,
-          headers: header,
+          headers: headers ?? {},
         ),
         cancelToken: cancel,
       );
@@ -162,19 +163,22 @@ class HttpClient {
     Map<String, dynamic>? queryParameters,
     String baseUrl = Api.BASE_URL_V4,
     CancelToken? cancel,
-    bool withDefaultParameter = true,
     bool needLogin = false,
+    bool useCoreToken = true, 
+    Map<String, dynamic>? customHeaders
   }) async {
     var result = await get(
       path,
       queryParameters: queryParameters,
       baseUrl: baseUrl,
       cancel: cancel,
-      withDefaultParameter: withDefaultParameter,
+      withDefaultParameter: true,
       needLogin: needLogin,
       responseType: ResponseType.plain,
+      useCoreToken: useCoreToken,
+      headers: customHeaders
     );
-    var resultBytes = Api.decryptV4(result);
+    var resultBytes = Api.decryptV4New(result);
     return resultBytes;
   }
 
