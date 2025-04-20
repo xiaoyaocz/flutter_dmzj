@@ -45,3 +45,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# FVM Version Cache
+.fvm/
+
+.vscode
+/ext_projs
+ios/Flutter/flutter_export_environment.sh

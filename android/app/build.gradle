@@ -68,7 +68,7 @@ android {
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
         }
         profile {
             signingConfig signingConfigs.release

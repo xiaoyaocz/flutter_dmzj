@@ -19,6 +19,7 @@ import 'package:flutter_dmzj/models/comic/view_point_model.dart';
 import 'package:flutter_dmzj/models/comic/web_search_model.dart';
 import 'package:flutter_dmzj/models/db/download_status.dart';
 import 'package:flutter_dmzj/models/proto/comic.pb.dart';
+import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
@@ -250,12 +251,19 @@ class ComicRequest {
     return info;
   }
 
-  /// 漫画详情
+  static const String COMIC_UA = "Android,DMZJ1,${Api.VERSION}";
+  static const String COMIC_DEFAULT_UID = "2665531";
+  /// 漫画详情 V4, updated api
   Future<ComicDetailProto> comicDetailV4({
     required int comicId,
   }) async {
+    // Use getEncryptV2 which includes coreToken and correct UA
     var result = await HttpClient.instance.getEncryptV4(
-      '/comic/detail/$comicId?uid=2665531',
+      '/v2/comic/detail/$comicId?uid=$COMIC_DEFAULT_UID',
+      customHeaders: {
+        "User-Agent": COMIC_UA,
+      },
+      useCoreToken: true
     );
     var data = ComicDetailResponseProto.fromBuffer(result);
     if (data.errno != 0) {
@@ -344,12 +352,17 @@ class ComicRequest {
     return info;
   }
 
-  /// 章节详情-V4
+  /// 章节详情-V4, updated with 3.9.1 apk results.
   Future<ComicChapterDetailProto> chapterDetailV4(
       {required int comicId, required int chapterId}) async {
+    var uid = UserService.instance.userId ?? COMIC_DEFAULT_UID;
     var result = await HttpClient.instance.getEncryptV4(
-      '/comic/chapter/$comicId/$chapterId',
-      needLogin: true,
+      '/v2/comic/chapter/$comicId/$chapterId?uid=$uid',
+      needLogin: false,
+      useCoreToken: true,
+      customHeaders: {
+        "User-Agent": COMIC_UA,
+      }
     );
     var data = ComicChapterResponseProto.fromBuffer(result);
     if (data.errno != 0) {
