@@ -355,7 +355,7 @@ class ComicRequest {
   /// 章节详情-V4, updated with 3.9.1 apk results.
   Future<ComicChapterDetailProto> chapterDetailV4(
       {required int comicId, required int chapterId}) async {
-    var uid = UserService.instance.userId ?? COMIC_DEFAULT_UID;
+    var uid = COMIC_DEFAULT_UID;
     var result = await HttpClient.instance.getEncryptV4(
       '/v2/comic/chapter/$comicId/$chapterId?uid=$uid',
       needLogin: false,
